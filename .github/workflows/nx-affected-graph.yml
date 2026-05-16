@@ -1,0 +1,50 @@
+name: Nx Affected Graph
+
+on:
+  pull_request:
+
+jobs:
+  graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necessario per nrwl/nx-set-shas
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Set NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: main
+          workflow-id: nx-affected-graph.yml
+          fallback-sha: "HEAD~1"
+          error-on-no-successful-workflow: false
+
+      - name: Generate affected graph HTML
+        run: |
+          mkdir -p tmp
+          npx nx affected:graph --file=tmp/affected.html --base=$NX_BASE --head=$NX_HEAD
+          npx nx graph --file=tmp/graph-full.html
+
+      - name: Upload graph artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nx-graph-pr-${{ github.event.pull_request.number }}
+          path: tmp/
+          retention-days: 14
