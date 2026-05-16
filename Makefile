@@ -113,6 +113,14 @@ license-scan:
 ## Helm
 # -----------------------------------------------------------------------
 
-# Test smoke Helm su cluster k3d locale (plan 06)
+# Test smoke Helm su cluster k3d locale (D-20)
+# Prerequisiti: helm (https://helm.sh), k3d (https://k3d.io)
+# Installa: brew install helm k3d  oppure  vedi rispettivi siti upstream
+# Nota: in CI k3d viene installato automaticamente via AbsaOSS/k3d-action
 helm-test:
-	@echo "helm-test definito in plan 06 — eseguire dopo completamento plan 06"
+	@command -v helm >/dev/null || (echo "helm non trovato: brew install helm o https://helm.sh/docs/intro/install/" && exit 1)
+	@command -v k3d >/dev/null || (echo "k3d non trovato; per CI verra' installato via AbsaOSS/k3d-action" && exit 1)
+	helm dependency update infra/helm/sft-stack/
+	for chart in infra/helm/charts/*; do helm lint "$$chart"; done
+	helm lint infra/helm/sft-stack/
+	helm install sft-test infra/helm/sft-stack/ --values infra/helm/sft-stack/values-ci.yaml --dry-run

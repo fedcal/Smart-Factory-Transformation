@@ -1,0 +1,134 @@
+# Smart Factory Transformation — sft-stack umbrella chart values
+# Questi valori si propagano ai sotto-chart via subchart value overrides.
+# Struttura: <nome-chart>: { valori... }
+#
+# Documentazione: docs/operations/helm-deploy.md
+# SealedSecrets: docs/operations/sealed-secrets.md
+
+# ============================================================
+# DIPENDENZE UPSTREAM
+# ============================================================
+
+# --- PostgreSQL (Bitnami) ---
+postgresql:
+  enabled: true
+  auth:
+    # ATTENZIONE: non inserire password reali qui!
+    # In produzione usare SealedSecret (D-19, docs/operations/sealed-secrets.md)
+    postgresPassword: ""
+    database: "sft"
+  primary:
+    persistence:
+      size: 20Gi
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+
+# --- Qdrant (vector database) ---
+qdrant:
+  enabled: true
+  persistence:
+    size: 10Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+# --- NATS JetStream (message broker OT->agenti) ---
+nats:
+  enabled: true
+  config:
+    jetstream:
+      enabled: true
+      fileStore:
+        pvc:
+          size: 5Gi
+
+# --- Langfuse (LLM observability, self-hosted) ---
+langfuse:
+  enabled: true
+  # Langfuse necessita di PostgreSQL dedicato + ClickHouse + MinIO
+  # Le credenziali devono essere fornite via SealedSecret in produzione
+
+# --- ingress-nginx (opt-in) ---
+# Abilitare in produzione con: helm upgrade --set ingress-nginx.enabled=true
+ingress-nginx:
+  enabled: false
+
+# ============================================================
+# CHART LOCALI (SERVIZI SFT)
+# ============================================================
+
+# --- api-gateway ---
+api-gateway:
+  replicaCount: 2
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+  ingress:
+    enabled: false  # abilitare quando ingress-nginx.enabled=true
+    className: "nginx"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+# --- ot-bridge ---
+ot-bridge:
+  replicaCount: 1
+  # NetworkPolicy data-diode CRITICA — non modificare senza revisione sicurezza (D-18)
+  networkPolicy:
+    enabled: true
+
+# --- orchestrator ---
+orchestrator:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+# --- agents-ops (Operations cluster) ---
+agents-ops:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+
+# --- agents-mnt (Maintenance cluster) ---
+agents-mnt:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+
+# --- agents-trn (Knowledge/Training cluster) ---
+agents-trn:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+
+# --- agents-scm (Supply Chain Management cluster) ---
+agents-scm:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+
+# --- factory-ui (Angular SSR frontend) ---
+factory-ui:
+  replicaCount: 1
+  ingress:
+    enabled: false  # abilitare quando ingress-nginx.enabled=true
+    className: "nginx"

@@ -1,0 +1,80 @@
+apiVersion: v2
+name: sft-stack
+description: Smart Factory Transformation - Umbrella Chart (tutti i servizi + dipendenze upstream)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - umbrella
+  - production-ready
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com
+
+# Dipendenze locali (chart per-servizio) + upstream (PG/Qdrant/NATS/Langfuse)
+# Eseguire `helm dependency update infra/helm/sft-stack/` per generare Chart.lock
+# e scaricare i chart upstream in charts/
+dependencies:
+  # Chart locali (file:// relative a questa directory)
+  - name: api-gateway
+    version: "0.1.0"
+    repository: "file://../charts/api-gateway"
+
+  - name: ot-bridge
+    version: "0.1.0"
+    repository: "file://../charts/ot-bridge"
+
+  - name: orchestrator
+    version: "0.1.0"
+    repository: "file://../charts/orchestrator"
+
+  - name: agents-ops
+    version: "0.1.0"
+    repository: "file://../charts/agents-ops"
+
+  - name: agents-mnt
+    version: "0.1.0"
+    repository: "file://../charts/agents-mnt"
+
+  - name: agents-trn
+    version: "0.1.0"
+    repository: "file://../charts/agents-trn"
+
+  - name: agents-scm
+    version: "0.1.0"
+    repository: "file://../charts/agents-scm"
+
+  - name: factory-ui
+    version: "0.1.0"
+    repository: "file://../charts/factory-ui"
+
+  # Chart upstream (abilitati via condition per selettività per-environment)
+  - name: postgresql
+    version: "16.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+
+  - name: qdrant
+    version: "1.x.x"
+    repository: "https://qdrant.github.io/qdrant-helm"
+    condition: qdrant.enabled
+
+  - name: nats
+    version: "1.x.x"
+    repository: "https://nats-io.github.io/k8s/helm/charts/"
+    condition: nats.enabled
+
+  - name: langfuse
+    version: "1.x.x"
+    repository: "https://langfuse.github.io/langfuse-k8s"
+    condition: langfuse.enabled
+
+  # Ingress controller opzionale (disabilitato per default — opt-in per produzione)
+  - name: ingress-nginx
+    version: "4.x.x"
+    repository: "https://kubernetes.github.io/ingress-nginx"
+    condition: ingress-nginx.enabled

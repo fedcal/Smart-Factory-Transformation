@@ -1,0 +1,24 @@
+# k3d cluster config per CI smoke test (D-20)
+# Usato da: .github/workflows/helm-smoke-test.yml
+# Documentazione: docs/operations/helm-deploy.md
+#
+# Scelte:
+# - 1 server, 0 agent nodes: minimo per funzionare in GitHub Actions runner (2 CPU, 7GB RAM)
+# - traefik disabilitato: usiamo ingress-nginx come ingress controller (D-20)
+# - metrics-server disabilitato: non necessario per smoke test, risparmia risorse
+# - flannel (CNI default k3s): NetworkPolicy NON enforced in smoke test (Open Question 4 in RESEARCH)
+#   Il test funzionale NetworkPolicy data-diode arriva in Fase 11 con Calico CNI.
+
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: sft-test
+servers: 1
+agents: 0
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters: [server:*]
+      - arg: --disable=metrics-server
+        nodeFilters: [server:*]

@@ -1,0 +1,103 @@
+name: Helm Smoke Test
+
+# D-20: required check per PR che toccano infra/helm/** o infra/k3d/**
+# Verifica: helm lint + helm install (dry-run + real) + helm test su cluster k3d
+# Riferimento: docs/operations/helm-deploy.md
+
+on:
+  pull_request:
+    paths:
+      - 'infra/helm/**'
+      - 'infra/k3d/**'
+      - '.github/workflows/helm-smoke-test.yml'
+  push:
+    branches: [main]
+
+jobs:
+  helm-test:
+    name: Helm Smoke Test (k3d)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.0
+
+      - name: Setup k3d cluster
+        uses: AbsaOSS/k3d-action@v2
+        with:
+          cluster-name: sft-test
+          args: --config infra/k3d/ci-config.yaml
+
+      - name: Wait for k3d node ready
+        run: kubectl wait --for=condition=ready node --all --timeout=60s
+
+      - name: Install SealedSecrets controller (Pitfall 5 — deve precedere helm install umbrella)
+        run: |
+          helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+          helm repo update sealed-secrets
+          helm install sealed-secrets-controller sealed-secrets/sealed-secrets \
+            --namespace kube-system \
+            --set fullnameOverride=sealed-secrets-controller \
+            --wait \
+            --timeout 2m
+
+      - name: Add upstream Helm repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add qdrant https://qdrant.github.io/qdrant-helm
+          helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+          helm repo add langfuse https://langfuse.github.io/langfuse-k8s
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+
+      - name: Helm lint all per-service charts
+        run: |
+          for chart in infra/helm/charts/*; do
+            echo "Linting: $chart"
+            helm lint "$chart"
+          done
+
+      - name: Helm lint umbrella chart (sft-stack)
+        run: helm lint infra/helm/sft-stack/
+
+      - name: Helm dependency update (umbrella)
+        run: helm dependency update infra/helm/sft-stack/
+
+      - name: Helm install dry-run (smoke check manifest validity)
+        run: |
+          helm install sft-test infra/helm/sft-stack/ \
+            --values infra/helm/sft-stack/values-ci.yaml \
+            --dry-run \
+            --debug
+
+      - name: Helm install (deploy reale su k3d)
+        run: |
+          helm install sft-test infra/helm/sft-stack/ \
+            --values infra/helm/sft-stack/values-ci.yaml \
+            --timeout 5m \
+            --wait
+
+      - name: Wait for all pods ready
+        run: kubectl wait --for=condition=ready pod --all --namespace default --timeout=120s
+
+      - name: Helm test (HTTP probe sui service interni)
+        run: helm test sft-test --logs
+
+      - name: Debug on failure — pod status + logs
+        if: failure()
+        run: |
+          echo "=== Pods (all namespaces) ==="
+          kubectl get pods --all-namespaces
+          echo "=== Describe pods (default) ==="
+          kubectl describe pods --namespace default
+          echo "=== Events (default) ==="
+          kubectl get events --namespace default --sort-by='.metadata.creationTimestamp'
+          echo "=== Logs (sft-test instance) ==="
+          kubectl logs --all-containers=true -l app.kubernetes.io/instance=sft-test \
+            --namespace default --tail=50 || true
