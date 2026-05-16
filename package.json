@@ -3,10 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "npm@11.6.3",
+  "workspaces": [
+    "packages/sft-agents",
+    "packages/sft-domain",
+    "packages/sft-contracts"
+  ],
   "scripts": {
     "affected": "nx affected",
     "graph": "nx graph",
-    "format": "nx format:write"
+    "format": "nx format:write",
+    "changeset": "changeset",
+    "version-packages": "changeset version && python3 scripts/sync-python-versions.py",
+    "release": "echo 'PyPI publish deferred — emitting tags+release only'"
   },
   "devDependencies": {
     "@commitlint/cli": "19.5.0",

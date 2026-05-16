@@ -2,11 +2,14 @@
 """
 scripts/sync-python-versions.py
 
-Synchronizes Python package versions from package.json to __version__.py.
+Synchronizes Python package versions from package.json to:
+  - src/<module>/__version__.py
+  - pyproject.toml (version field)
 
 Used in the Changesets release workflow: after `changeset version` bumps
 package.json files, this script propagates the version to the corresponding
-Python __version__.py so that `sft_agents.__version__` etc. stay in sync.
+Python __version__.py and pyproject.toml so that `sft_agents.__version__`
+and `pyproject.toml` version fields stay in sync.
 
 Usage:
     python3 scripts/sync-python-versions.py [--dry-run]
@@ -18,6 +21,7 @@ Exit codes:
 import argparse
 import json
 import pathlib
+import re
 import sys
 
 WORKSPACE_ROOT = pathlib.Path(__file__).parent.parent
@@ -26,7 +30,7 @@ WORKSPACE_ROOT = pathlib.Path(__file__).parent.parent
 def sync_versions(dry_run: bool = False) -> bool:
     """
     Scan packages/ for package.json files and update the corresponding
-    __version__.py in src/<module_name>/.
+    __version__.py and pyproject.toml in each package directory.
 
     Returns True on success, False if any error occurred.
     """
@@ -75,6 +79,31 @@ def sync_versions(dry_run: bool = False) -> bool:
             print(f"Updated {py_version_file.relative_to(WORKSPACE_ROOT)} -> {version!r}")
         updated.append(pkg_dir.name)
 
+        # Also update pyproject.toml version field (idempotent regex replace)
+        pyproject = pkg_dir / "pyproject.toml"
+        if pyproject.exists():
+            content = pyproject.read_text()
+            new_pyproject_content = re.sub(
+                r'^version\s*=\s*"[^"]+"',
+                f'version = "{version}"',
+                content,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            if dry_run:
+                if new_pyproject_content != content:
+                    print(
+                        f"[dry-run] WOULD update {pyproject.relative_to(WORKSPACE_ROOT)}: -> {version!r}"
+                    )
+                else:
+                    print(
+                        f"[dry-run] {pyproject.relative_to(WORKSPACE_ROOT)}: already {version!r}"
+                    )
+            else:
+                if new_pyproject_content != content:
+                    pyproject.write_text(new_pyproject_content)
+                    print(f"Updated {pyproject.relative_to(WORKSPACE_ROOT)} -> {version!r}")
+
     if skipped:
         print(f"\nSkipped (no package.json or __version__.py): {', '.join(skipped)}")
     if errors:
@@ -89,7 +118,7 @@ def sync_versions(dry_run: bool = False) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Sync Python __version__.py from package.json (Changesets integration).",
+        description="Sync Python __version__.py and pyproject.toml from package.json (Changesets integration).",
     )
     parser.add_argument(
         "--dry-run",

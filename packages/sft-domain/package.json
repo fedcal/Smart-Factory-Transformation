@@ -1,0 +1,12 @@
+{
+  "name": "sft-domain",
+  "version": "0.1.0",
+  "description": "Textile domain models: defect taxonomy, asset registry, IT/EN glossary",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fedcal/Smart-Factory-Transformation.git",
+    "directory": "packages/sft-domain"
+  }
+}

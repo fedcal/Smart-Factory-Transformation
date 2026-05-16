@@ -71,6 +71,7 @@ site/
 .changeset/*.md
 !.changeset/README.md
 !.changeset/config.json
+!.changeset/initial-phase-1.md
 
 # Test artifacts
 test-results/
