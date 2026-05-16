@@ -6,7 +6,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 
 ## Phases
 
-- [ ] **Phase 1: Foundation & Monorepo** - Nx polyglot workspace, Docker Compose dev stack, GitHub Actions CI, license scanner, shared infra services
+- [x] **Phase 1: Foundation & Monorepo** - Nx polyglot workspace, Docker Compose dev stack, GitHub Actions CI, license scanner, shared infra services (completed 2026-05-16)
 - [ ] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN
 - [ ] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay
 - [ ] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail
@@ -182,7 +182,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Monorepo | 6/8 | In Progress|  |
+| 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
 | 2. Domain Modeling & Synthetic Corpus | 0/TBD | Not started | - |
 | 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
