@@ -1,0 +1,27 @@
+{
+  "name": "mnt-rca-specialist",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/agents/maintenance/rca-specialist/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/agents/maintenance/rca-specialist"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/agents/maintenance/rca-specialist"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-domain",
+    "sft-contracts"
+  ]
+}

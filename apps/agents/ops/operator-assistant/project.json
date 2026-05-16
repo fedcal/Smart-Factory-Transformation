@@ -1,0 +1,27 @@
+{
+  "name": "ops-operator-assistant",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/agents/ops/operator-assistant/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/agents/ops/operator-assistant"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/agents/ops/operator-assistant"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-domain",
+    "sft-contracts"
+  ]
+}

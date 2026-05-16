@@ -1,0 +1,27 @@
+{
+  "name": "trn-documentation-synthesizer",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/agents/knowledge/documentation-synthesizer/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/agents/knowledge/documentation-synthesizer"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/agents/knowledge/documentation-synthesizer"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-domain",
+    "sft-contracts"
+  ]
+}

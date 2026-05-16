@@ -1,0 +1,13 @@
+[project]
+name = "svc-ot-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+description = "OT Bridge: unidirectional data-diode from OPC-UA/PLC simulator to NATS JetStream"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/svc_ot_bridge"]

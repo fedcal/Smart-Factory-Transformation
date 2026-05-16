@@ -1,0 +1,23 @@
+{
+  "name": "sft-domain",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/sft-domain/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "packages/sft-domain"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "packages/sft-domain"
+      }
+    }
+  },
+  "implicitDependencies": []
+}

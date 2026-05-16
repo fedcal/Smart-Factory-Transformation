@@ -1,0 +1,25 @@
+{
+  "name": "sim-textile",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "simulators/sim-textile/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "simulators/sim-textile"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "simulators/sim-textile"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-contracts"
+  ]
+}

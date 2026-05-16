@@ -1,0 +1,27 @@
+{
+  "name": "trn-training-coach",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/agents/knowledge/training-coach/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/agents/knowledge/training-coach"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/agents/knowledge/training-coach"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-domain",
+    "sft-contracts"
+  ]
+}
