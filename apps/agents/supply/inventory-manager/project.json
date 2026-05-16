@@ -1,0 +1,27 @@
+{
+  "name": "scm-inventory-manager",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/agents/supply/inventory-manager/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/agents/supply/inventory-manager"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/agents/supply/inventory-manager"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-domain",
+    "sft-contracts"
+  ]
+}

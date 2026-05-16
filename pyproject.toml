@@ -1,0 +1,63 @@
+[project]
+name = "smart-factory-transformation"
+version = "0.0.0"
+requires-python = ">=3.12,<3.13"
+description = "Smart Factory Transformation - workspace root"
+
+[tool.uv.workspace]
+members = [
+  "packages/sft-agents",
+  "packages/sft-domain",
+  "packages/sft-contracts",
+  "apps/orchestrator",
+  "apps/api-gateway",
+  "apps/agents/ops/operator-assistant",
+  "apps/agents/ops/production-planner",
+  "apps/agents/ops/quality-inspector",
+  "apps/agents/ops/anomaly-detector",
+  "apps/agents/maintenance/predictive-maintenance",
+  "apps/agents/maintenance/rca-specialist",
+  "apps/agents/maintenance/maintenance-coach",
+  "apps/agents/maintenance/downtime-analyzer",
+  "apps/agents/knowledge/knowledge-curator",
+  "apps/agents/knowledge/training-coach",
+  "apps/agents/knowledge/shift-handover",
+  "apps/agents/knowledge/documentation-synthesizer",
+  "apps/agents/supply/inventory-manager",
+  "apps/agents/supply/energy-optimizer",
+  "apps/agents/supply/cost-analyzer",
+  "apps/agents/supply/demand-forecaster",
+  "services/ot-bridge",
+  "simulators/sim-textile",
+]
+
+[dependency-groups]
+dev = [
+  "pre-commit>=4.6",
+  "pytest>=8.0",
+  "pytest-asyncio>=0.24",
+  "mypy>=1.10",
+  "ruff>=0.11",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["packages", "apps", "services", "simulators"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = [
+  "packages/sft-agents/src",
+  "packages/sft-domain/src",
+  "packages/sft-contracts/src",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

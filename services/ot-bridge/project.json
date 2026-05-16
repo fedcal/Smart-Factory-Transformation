@@ -1,0 +1,25 @@
+{
+  "name": "svc-ot-bridge",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "services/ot-bridge/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "services/ot-bridge"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "services/ot-bridge"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-contracts"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "svc-api-gateway",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/api-gateway/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "apps/api-gateway"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "apps/api-gateway"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-agents",
+    "sft-contracts",
+    "sft-domain"
+  ]
+}

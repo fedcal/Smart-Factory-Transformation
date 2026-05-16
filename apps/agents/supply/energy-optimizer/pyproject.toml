@@ -1,0 +1,13 @@
+[project]
+name = "scm-energy-optimizer"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+description = "Supply chain agent: energy consumption optimization for factory machinery"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scm_energy_optimizer"]
