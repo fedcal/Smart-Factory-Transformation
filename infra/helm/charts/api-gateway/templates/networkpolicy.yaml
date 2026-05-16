@@ -1,0 +1,57 @@
+{{- if .Values.networkPolicy.enabled }}
+# NetworkPolicy per api-gateway: default-deny + ingress consentito da factory-ui e monitoring
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "api-gateway.fullname" . }}
+  labels:
+    {{- include "api-gateway.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "api-gateway.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Consenti ingresso dall'ingress controller nginx
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Consenti ingresso da factory-ui
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: ui
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Consenti ingresso da monitoring (Prometheus scrape)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    # Consenti verso orchestrator
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: orchestrator
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Consenti DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}

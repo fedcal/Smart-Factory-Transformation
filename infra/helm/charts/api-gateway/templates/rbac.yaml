@@ -1,0 +1,28 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "api-gateway.fullname" . }}
+  labels:
+    {{- include "api-gateway.labels" . | nindent 4 }}
+rules:
+  # Permesso minimo: lettura configmap nel namespace (per configurazione runtime)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "api-gateway.fullname" . }}
+  labels:
+    {{- include "api-gateway.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "api-gateway.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "api-gateway.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

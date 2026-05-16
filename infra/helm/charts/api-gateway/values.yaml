@@ -1,0 +1,77 @@
+# Smart Factory Transformation — api-gateway chart values
+# Valori di default. Sovrascrivere in values-ci.yaml (smoke test) o nei file environment-specifici.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/fedcal/sft-api-gateway
+  pullPolicy: IfNotPresent
+  # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Se true, crea un ServiceAccount dedicato
+  create: true
+  annotations: {}
+  # Nome SA; se vuoto usa il fullname del chart
+  name: ""
+
+podAnnotations: {}
+
+# PodSecurityContext applicato al Pod (T-1-04: EoP prevenzione, D-17)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# SecurityContext del container
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts: []
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

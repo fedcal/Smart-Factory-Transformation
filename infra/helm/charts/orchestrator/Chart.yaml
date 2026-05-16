@@ -1,0 +1,15 @@
+apiVersion: v2
+name: orchestrator
+description: Smart Factory Transformation - orchestrator service chart
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - orchestrator
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com

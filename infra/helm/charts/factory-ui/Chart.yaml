@@ -1,0 +1,16 @@
+apiVersion: v2
+name: factory-ui
+description: Smart Factory Transformation - factory-ui Angular SSR frontend chart
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - factory-ui
+  - angular
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com
