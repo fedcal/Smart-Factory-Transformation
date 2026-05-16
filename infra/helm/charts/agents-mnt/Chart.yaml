@@ -1,0 +1,16 @@
+apiVersion: v2
+name: agents-mnt
+description: Smart Factory Transformation - Maintenance agent cluster chart (predictive-maintenance, equipment-health, maintenance-planner, spare-parts)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - agents
+  - maintenance
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com

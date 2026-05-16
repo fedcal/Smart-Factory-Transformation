@@ -1,0 +1,74 @@
+{{- if .Values.networkPolicy.enabled }}
+# NetworkPolicy agents-mnt: component=agent label; ingress solo da orchestrator e api-gateway
+# NOTA: questo pod ha label component=agent e NON viene ammesso all'ingress di ot-bridge (D-18)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "agents-mnt.fullname" . }}
+  labels:
+    {{- include "agents-mnt.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "agents-mnt.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Ingress consentito da orchestrator
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: orchestrator
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Ingress consentito da api-gateway
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: gateway
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    # Consenti verso NATS (JetStream)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nats
+      ports:
+        - protocol: TCP
+          port: 4222
+    # Consenti verso Postgres
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: postgresql
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Consenti verso Qdrant
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: qdrant
+      ports:
+        - protocol: TCP
+          port: 6333
+    # Consenti verso Langfuse
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: langfuse
+      ports:
+        - protocol: TCP
+          port: 3000
+    # Consenti DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}

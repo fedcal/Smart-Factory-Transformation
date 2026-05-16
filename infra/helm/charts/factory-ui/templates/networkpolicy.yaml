@@ -1,0 +1,49 @@
+{{- if .Values.networkPolicy.enabled }}
+# NetworkPolicy per factory-ui: ingress da ingress-nginx, egress verso api-gateway
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "factory-ui.fullname" . }}
+  labels:
+    {{- include "factory-ui.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "factory-ui.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Consenti ingresso dall'ingress controller nginx
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 4000
+    # Consenti da monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 4000
+  egress:
+    # Consenti verso api-gateway
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: gateway
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Consenti DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}

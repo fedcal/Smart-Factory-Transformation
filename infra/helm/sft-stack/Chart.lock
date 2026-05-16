@@ -1,0 +1,42 @@
+dependencies:
+- name: api-gateway
+  repository: file://../charts/api-gateway
+  version: 0.1.0
+- name: ot-bridge
+  repository: file://../charts/ot-bridge
+  version: 0.1.0
+- name: orchestrator
+  repository: file://../charts/orchestrator
+  version: 0.1.0
+- name: agents-ops
+  repository: file://../charts/agents-ops
+  version: 0.1.0
+- name: agents-mnt
+  repository: file://../charts/agents-mnt
+  version: 0.1.0
+- name: agents-trn
+  repository: file://../charts/agents-trn
+  version: 0.1.0
+- name: agents-scm
+  repository: file://../charts/agents-scm
+  version: 0.1.0
+- name: factory-ui
+  repository: file://../charts/factory-ui
+  version: 0.1.0
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.7.27
+- name: qdrant
+  repository: https://qdrant.github.io/qdrant-helm
+  version: 1.18.0
+- name: nats
+  repository: https://nats-io.github.io/k8s/helm/charts/
+  version: 1.3.16
+- name: langfuse
+  repository: https://langfuse.github.io/langfuse-k8s
+  version: 1.5.30
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.15.1
+digest: sha256:8109256ad475d0cc3f73e0b65c94e545aa554652cb4dcef98c0bbae2d368320f
+generated: "2026-05-16T22:14:46.867226868+02:00"

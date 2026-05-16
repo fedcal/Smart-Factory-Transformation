@@ -1,0 +1,48 @@
+{{- if .Values.networkPolicy.enabled }}
+# NetworkPolicy data-diode: anticipa SEC-06 (Fase 11). Garantisce che il bridge OT->IT
+# pubblichi solo verso NATS (egress) e accetti connessioni solo dai simulatori OPC-UA
+# (component=simulator). Nessuna regola ingress consente al layer agenti
+# (component=agent) di raggiungere ot-bridge - implementa il principio data-diode (D-18).
+# ATTENZIONE: il smoke test CI usa k3d con flannel CNI di default che NON enforce
+# NetworkPolicy. Test funzionale completo arriva in Fase 11 con Calico CNI.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "ot-bridge.fullname" . }}-data-diode
+  labels:
+    {{- include "ot-bridge.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "ot-bridge.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    # Allowed: pubblicare su NATS
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: nats
+      ports:
+        - protocol: TCP
+          port: 4222
+    # Allowed: DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+  ingress:
+    # Allowed: connessione FROM simulatori OPC-UA (component=simulator)
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: simulator
+      ports:
+        - protocol: TCP
+          port: 4840
+    # Esplicitamente NESSUNA rule per ingress dal layer agenti
+    # (component=agent label viene DENY by default)
+{{- end }}

@@ -1,0 +1,71 @@
+# Smart Factory Transformation — orchestrator chart values
+# Valori di default. Sovrascrivere in values-ci.yaml (smoke test) o nei file environment-specifici.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/fedcal/sft-orchestrator
+  pullPolicy: IfNotPresent
+  # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+# PodSecurityContext (T-1-04: EoP prevenzione, D-17)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 8080
+
+# Orchestrator non espone ingress pubblico (comunicazione interna via api-gateway)
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,145 @@
+# Smart Factory Transformation — CI smoke test values (k3d)
+# Disabilita tutte le dipendenze pesanti (DB, NATS, Langfuse) per velocizzare CI.
+# Usa nginx:1.27-alpine come immagine placeholder per testare il deploy degli oggetti K8s
+# senza dover costruire le immagini applicative reali.
+#
+# Scopo: verificare che helm install produca manifest validi e i pod si avvino — D-20.
+# Il test funzionale reale avviene con le immagini applicative vere (Fase 2+).
+
+# ============================================================
+# DISABILITA DIPENDENZE UPSTREAM IN CI
+# ============================================================
+
+postgresql:
+  enabled: false
+
+qdrant:
+  enabled: false
+
+nats:
+  enabled: false
+
+langfuse:
+  enabled: false
+
+ingress-nginx:
+  enabled: false
+
+# ============================================================
+# CHART LOCALI — PLACEHOLDER NGINX PER SMOKE TEST
+# ============================================================
+# Nota: nginx:1.27-alpine ascolta su porta 80. I Service port dei chart
+# restano quelli definiti nel values.yaml principale (8080, 4000, 4840).
+# I test-hook (helm test) usano wget su /health — nginx risponde 404 su /health
+# ma wget --spider considera 404 come risposta HTTP valida (server raggiungibile).
+# Per smoke test questo e' sufficiente (verifica deploy + networking).
+
+api-gateway:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  ingress:
+    enabled: false
+  # Override port per nginx (ascolta su 80)
+  service:
+    port: 80
+
+ot-bridge:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  # Override service port per nginx
+  service:
+    port: 80
+
+orchestrator:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  service:
+    port: 80
+
+agents-ops:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  service:
+    port: 80
+
+agents-mnt:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  service:
+    port: 80
+
+agents-trn:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  service:
+    port: 80
+
+agents-scm:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  service:
+    port: 80
+
+factory-ui:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  autoscaling:
+    enabled: false
+  podDisruptionBudget:
+    enabled: false
+  ingress:
+    enabled: false
+  service:
+    port: 80
