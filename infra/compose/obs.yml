@@ -1,0 +1,161 @@
+# Smart Factory Transformation — Observability Dev Stack (Langfuse v3)
+# IMPORTANTE: ordine boot corretto = langfuse-pg + clickhouse + minio + langfuse-redis -> langfuse-web
+# Pitfall 1 fix: ClickHouse richiede start_period 30s e retries 20 (boot lento)
+# Pitfall 6 fix: MinIO healthcheck via curl (NON mc ready local — chainguard non ha mc)
+# Decisioni: D-07 (obs separato), OBS-01 (Langfuse v3 self-hosted)
+# NON usare in produzione: secrets gestiti via SealedSecrets (plan 06)
+
+services:
+  langfuse-pg:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${LANGFUSE_PG_USER:-langfuse}
+      POSTGRES_PASSWORD: ${LANGFUSE_PG_PASSWORD:-langfuse_dev_pass}
+      POSTGRES_DB: ${LANGFUSE_PG_DB:-langfuse}
+    volumes:
+      - langfuse-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${LANGFUSE_PG_USER:-langfuse}"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  clickhouse:
+    # Open Question 1: tag 24.3-alpine verificato disponibile (2026-05-16)
+    # Se il tag scompare in futuro, fallback su clickhouse/clickhouse-server:24.3
+    image: clickhouse/clickhouse-server:24.3-alpine
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB:-langfuse}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-langfuse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-langfuse_ch_dev_pass}
+    volumes:
+      - langfuse-clickhouse-data:/var/lib/clickhouse
+      - langfuse-clickhouse-logs:/var/log/clickhouse-server
+    ports:
+      - "${CLICKHOUSE_PORT:-8123}:8123"
+    healthcheck:
+      # Pitfall 1: ClickHouse impiega 30s+ per inizializzare — start_period obbligatorio
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  minio:
+    # Nota licenza: cgr.dev/chainguard/minio e' AGPL-3.0; vedere LICENSE-EXCEPTIONS.md
+    # latest e' accettato per chainguard/minio: il tag e' immutabile per commit SHA
+    image: cgr.dev/chainguard/minio:latest
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-langfuse}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-langfuse_minio_dev_pass}
+    volumes:
+      - langfuse-minio-data:/data
+    ports:
+      - "${MINIO_PORT:-9090}:9000"
+    healthcheck:
+      # Pitfall 6: chainguard/minio non ha mc — usare curl invece di mc ready local
+      test: ["CMD-SHELL", "curl -sf http://localhost:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  langfuse-redis:
+    image: redis:7-alpine
+    volumes:
+      - langfuse-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  langfuse-web:
+    image: langfuse/langfuse:3
+    environment:
+      DATABASE_URL: postgresql://${LANGFUSE_PG_USER:-langfuse}:${LANGFUSE_PG_PASSWORD:-langfuse_dev_pass}@langfuse-pg:5432/${LANGFUSE_PG_DB:-langfuse}
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET:-change_me_in_prod_32chars_minimum}
+      SALT: ${LANGFUSE_SALT:-change_me_in_prod_salt}
+      ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-langfuse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-langfuse_ch_dev_pass}
+      REDIS_HOST: langfuse-redis
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-langfuse}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-langfuse_minio_dev_pass}
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+      NEXTAUTH_URL: http://localhost:${LANGFUSE_PORT:-3000}
+    ports:
+      - "${LANGFUSE_PORT:-3000}:3000"
+    depends_on:
+      langfuse-pg:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      langfuse-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/public/health | grep -qiE 'OK|ok|status'"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  langfuse-worker:
+    image: langfuse/langfuse-worker:3
+    environment:
+      DATABASE_URL: postgresql://${LANGFUSE_PG_USER:-langfuse}:${LANGFUSE_PG_PASSWORD:-langfuse_dev_pass}@langfuse-pg:5432/${LANGFUSE_PG_DB:-langfuse}
+      SALT: ${LANGFUSE_SALT:-change_me_in_prod_salt}
+      ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-langfuse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-langfuse_ch_dev_pass}
+      REDIS_HOST: langfuse-redis
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-langfuse}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-langfuse_minio_dev_pass}
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+    depends_on:
+      langfuse-pg:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      langfuse-redis:
+        condition: service_healthy
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+volumes:
+  langfuse-pg-data:
+  langfuse-clickhouse-data:
+  langfuse-clickhouse-logs:
+  langfuse-minio-data:
+  langfuse-redis-data:
+
+networks:
+  sft-obs:
+    driver: bridge
