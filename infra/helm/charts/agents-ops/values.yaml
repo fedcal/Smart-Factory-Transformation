@@ -1,0 +1,73 @@
+# Smart Factory Transformation — agents-ops chart values
+# Operations agent cluster: operator-assistant, shift-report, kpi-monitor, anomaly-alert.
+# Fase 1: Deployment "cluster-stack" con 4 replicas come placeholder.
+# Nota: la decomposizione fine per-agente arriverà con D-03 (Fase 6-9) quando i singoli
+# agenti saranno deployati come app separate con chart dedicati.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/fedcal/sft-agents-ops
+  pullPolicy: IfNotPresent
+  # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+# PodSecurityContext (T-1-04: EoP prevenzione, D-17)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

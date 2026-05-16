@@ -1,0 +1,16 @@
+apiVersion: v2
+name: agents-ops
+description: Smart Factory Transformation - Operations agent cluster chart (operator-assistant, shift-report, kpi-monitor, anomaly-alert)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - agents
+  - operations
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com

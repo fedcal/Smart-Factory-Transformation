@@ -1,0 +1,28 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "ot-bridge.fullname" . }}
+  labels:
+    {{- include "ot-bridge.labels" . | nindent 4 }}
+rules:
+  # ot-bridge ha permessi minimi: solo lettura configmap
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "ot-bridge.fullname" . }}
+  labels:
+    {{- include "ot-bridge.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "ot-bridge.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "ot-bridge.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,74 @@
+# Smart Factory Transformation — ot-bridge chart values
+# Bridge OPC-UA -> NATS. Implementa principio data-diode (D-18, T-1-05).
+# ATTENZIONE: modificare la NetworkPolicy con cautela — rompe il principio data-diode.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/fedcal/sft-ot-bridge
+  pullPolicy: IfNotPresent
+  # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+# PodSecurityContext (T-1-04: EoP prevenzione, D-17)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  # Porta OPC-UA (4840 standard)
+  port: 4840
+
+# ot-bridge non ha ingress HTTP pubblico
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# NetworkPolicy data-diode CRITICA — non disabilitare in produzione (D-18, T-1-05)
+networkPolicy:
+  enabled: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

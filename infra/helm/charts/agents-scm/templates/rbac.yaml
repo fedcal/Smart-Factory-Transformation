@@ -1,0 +1,27 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "agents-scm.fullname" . }}
+  labels:
+    {{- include "agents-scm.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "agents-scm.fullname" . }}
+  labels:
+    {{- include "agents-scm.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "agents-scm.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "agents-scm.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
