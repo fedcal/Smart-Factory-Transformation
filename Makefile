@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs demo sbom helm-test ps logs
+.PHONY: up up-gpu up-core down reset test lint format docs demo sbom license-scan helm-test ps logs
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -89,10 +89,20 @@ demo:
 # -----------------------------------------------------------------------
 
 # Genera SBOM CycloneDX con Syft e verifica policy licenze con Trivy
-# Prerequisito: syft e trivy installati (plan 03)
+# Prerequisito: syft (https://github.com/anchore/syft) e trivy (https://aquasecurity.github.io/trivy/) installati
+# Uso: make sbom          — genera sbom.json e stampa report licenze a schermo
+# Per installare: brew install syft trivy  oppure  curl -sSfL ... (vedi link sopra)
 sbom:
+	@command -v syft >/dev/null || (echo "syft non trovato: installa via https://github.com/anchore/syft" && exit 1)
+	@command -v trivy >/dev/null || (echo "trivy non trovato: installa via https://aquasecurity.github.io/trivy/" && exit 1)
 	syft . --output cyclonedx-json=sbom.json
-	trivy sbom sbom.json --scanners license --config infra/license/trivy.yaml
+	trivy sbom sbom.json --scanners license --config infra/license/trivy.yaml --format table
+
+# Esegui solo la license scan su SBOM esistente (sbom.json deve gia' esistere)
+license-scan:
+	@command -v trivy >/dev/null || (echo "trivy non trovato: installa via https://aquasecurity.github.io/trivy/" && exit 1)
+	@[ -f sbom.json ] || (echo "sbom.json non trovato: eseguire prima 'make sbom'" && exit 1)
+	trivy sbom sbom.json --scanners license --config infra/license/trivy.yaml --format table
 
 ## Helm
 # -----------------------------------------------------------------------

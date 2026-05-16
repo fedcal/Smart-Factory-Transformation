@@ -1,0 +1,94 @@
+name: License Scan (SBOM)
+# Eseguito su ogni PR e push su main.
+# Required check su branch protection di main (vedi docs/operations/branch-protection.md).
+# Produce: SBOM CycloneDX (90gg), report licenze, PR comment con diff licenze.
+# Policy: infra/license/trivy.yaml — blocca GPL-*/AGPL-*/SSPL-1.0/BUSL-1.1.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  license-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0
+
+      - name: Generate SBOM (CycloneDX)
+        run: syft . --output cyclonedx-json=sbom.json
+
+      - name: License scan via Trivy
+        id: license-check
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'sbom'
+          input: 'sbom.json'
+          scanners: 'license'
+          format: 'json'
+          output: 'license-report.json'
+          exit-code: '1'
+          severity: 'CRITICAL'
+          trivy-config: 'infra/license/trivy.yaml'
+        continue-on-error: true
+
+      - name: Generate Markdown report
+        if: always()
+        run: |
+          docker run --rm -v "$PWD":/workspace aquasec/trivy:0.55.0 \
+            sbom /workspace/sbom.json \
+            --scanners license \
+            --config /workspace/infra/license/trivy.yaml \
+            --format table > license-report.md || true
+          {
+            echo "## License Scan Report"
+            echo ""
+            echo '```'
+            cat license-report.md
+            echo '```'
+          } > pr-comment.md
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.json
+          retention-days: 90
+
+      - name: Upload license report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: |
+            license-report.json
+            license-report.md
+          retention-days: 90
+
+      - name: Comment PR with license diff
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('pr-comment.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Fail step if forbidden license found
+        if: steps.license-check.outcome == 'failure'
+        run: |
+          echo "::error::License scan found forbidden licenses (see license-report artifact)"
+          exit 1
