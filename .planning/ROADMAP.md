@@ -1,0 +1,196 @@
+# Roadmap: Smart Factory Transformation
+
+## Overview
+
+The platform is built in 12 horizontal layers, each completing one coherent technical capability before the next begins. The dependency chain is non-negotiable: infrastructure before agents, HITL governance before any agent touches production decisions, IT/OT simulation before sensor-dependent agents, knowledge layer before knowledge-dependent agents, then four domain agent clusters, followed by backend API plus frontend, observability and security hardening, and finally documentation with economic deliverables. Every v1 requirement maps to exactly one phase.
+
+## Phases
+
+- [ ] **Phase 1: Foundation & Monorepo** - Nx polyglot workspace, Docker Compose dev stack, GitHub Actions CI, license scanner, shared infra services
+- [ ] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN
+- [ ] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay
+- [ ] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail
+- [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval
+- [ ] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests
+- [ ] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests
+- [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
+- [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
+- [ ] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests
+- [ ] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations
+- [ ] **Phase 12: Documentation, Economic Model & Competition Deliverables** - MkDocs Material i18n, all doc sections, OEPV simulator, TCO, ribasso analysis, deliverable bundle, brand-scrub CI check
+
+## Phase Details
+
+### Phase 1: Foundation & Monorepo
+**Goal**: The Nx polyglot workspace is fully operational with Docker Compose dev stack, CI/CD pipeline, license scanning, and all shared infrastructure services running locally.
+**Depends on**: Nothing (first phase)
+**Requirements**: PLAT-01, PLAT-02, PLAT-03, PLAT-04, PLAT-05, PLAT-06, PLAT-07, PLAT-08, PLAT-09, PLAT-10, OBS-01
+**Success Criteria** (what must be TRUE):
+  1. `make up` starts all dev services (PostgreSQL+TimescaleDB, Qdrant, NATS JetStream, Ollama, Langfuse) in a single Docker Compose command with no manual configuration
+  2. `nx affected --target=test` runs only the changed packages and correctly resolves Python-to-TypeScript dependency edges in the Nx project graph
+  3. A PR with a GPL-licensed transitive dependency is blocked automatically by the CI license scanner before merging
+  4. Pre-commit hooks (ruff, mypy strict, eslint, prettier) execute on every commit and fail fast on violations
+  5. A Helm chart skeleton deploys the core services to a local Kubernetes cluster without error
+**Plans**: 8 plans
+  - [ ] 01-PLAN-01-nx-workspace.md — Nx polyglot workspace skeleton (PLAT-01, PLAT-02, PLAT-03)
+  - [ ] 01-PLAN-02-compose.md — Docker Compose dev stack (PLAT-05 partial via Makefile, PLAT-07, PLAT-09, OBS-01)
+  - [ ] 01-PLAN-03-license-scanner.md — Syft + Trivy SBOM license scanner (PLAT-05)
+  - [ ] 01-PLAN-04-pre-commit.md — Pre-commit hooks + Conventional Commits + gitleaks (PLAT-06)
+  - [ ] 01-PLAN-05-ci.md — GitHub Actions CI with nx affected + Nx/uv cache (PLAT-04, PLAT-08 implicit, OBS-01 dev-only)
+  - [ ] 01-PLAN-06-helm.md — Helm umbrella + per-service charts + k3d smoke test + SealedSecrets (PLAT-08)
+  - [ ] 01-PLAN-07-mkdocs.md — MkDocs Material i18n scaffold + gh-pages deploy (PLAT-10 docs side)
+  - [ ] 01-PLAN-08-changesets.md — Changesets versioning + release.yml (PLAT-10 release side)
+
+### Phase 2: Domain Modeling & Synthetic Corpus
+**Goal**: The textile manufacturing domain is fully modeled in structured documents and a synthetic bilingue SOP corpus is seeded in the repository, providing the knowledge foundation for all downstream agents and documentation.
+**Depends on**: Phase 1
+**Requirements**: DOC-05, DOC-12, DOC-18, KNW-10
+**Success Criteria** (what must be TRUE):
+  1. A textile domain analysis document exists in `docs/` covering processes (weaving, spinning, warping, dyeing, finishing), roles (operator, technician, quality manager, shift supervisor), and pain points with explicit references to Mantis Textile Group
+  2. An assumption register enumerates all data quality assumptions, simulation boundaries, and scope limitations — with each assumption tagged by affected agent or component
+  3. A bilingual (IT+EN) glossary of textile and agentic terms is complete and linked from the docs index
+  4. At least 20 synthetic SOP documents (10 IT + 10 EN) covering loom troubleshooting, dyeing procedures, spinning maintenance, and quality grading are committed to `simulators/synthetic-corpus/` and pass a format validation check in CI
+**Plans**: TBD
+
+### Phase 3: IT/OT Simulation Layer
+**Goal**: A Python textile factory simulator emits realistic adversarial sensor streams via asyncua OPC-UA, a data-diode OT Bridge publishes events to NATS JetStream, TimescaleDB ingests time-series data, and NASA C-MAPSS plus UCI dataset replay scripts are available as tools.
+**Depends on**: Phase 1
+**Requirements**: IOT-01, IOT-02, IOT-03, IOT-04, IOT-05, IOT-06, IOT-07, IOT-08, IOT-09, IOT-10
+**Success Criteria** (what must be TRUE):
+  1. The simulator emits sensor events for loom, spinner, warper, dyehouse, and stenter assets including ambient temperature and humidity; fault injection produces NaN, drift, jitter, burst noise, and alarm storms configurable per asset
+  2. The OT Bridge publishes to NATS `sensor.events.*` subjects and is demonstrably incapable of receiving write commands from agents (Docker network ACL verified in an automated test)
+  3. TimescaleDB hypertables ingest sensor events at sustained throughput with latency p99 below 200ms under a 5,000 msg/s load test
+  4. NASA C-MAPSS and UCI Manufacturing dataset replay scripts execute without error and surface data to agents via standard tool interface
+  5. The ingest schema (asset registry, tag dictionary, units of measure) is documented with working examples
+**UI hint**: no
+**Plans**: TBD
+
+### Phase 4: Core Agentic Runtime & HITL
+**Goal**: The LangGraph supervisor graph with four cluster subgraph skeletons, PostgreSQL checkpointer, provider-agnostic LLM adapter, full HITL interrupt-to-resume loop, 4-tier escalation model, and immutable audit trail are operational end-to-end.
+**Depends on**: Phase 1, Phase 3
+**Requirements**: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06, CORE-07, CORE-08, CORE-09, CORE-10, HITL-01, HITL-02, HITL-03, HITL-04, HITL-05, HITL-06, HITL-07, HITL-08, HITL-09, HITL-10
+**Success Criteria** (what must be TRUE):
+  1. A full HITL cycle completes end-to-end: agent proposes action → LangGraph `interrupt()` fires → state persists to PostgreSQL → NATS publishes approval request → human decision resumes the graph → audit record is written to the immutable append-only PG table and NATS AUDIT_STREAM
+  2. The SDK `recursion_limit` is enforced on every `graph.invoke()` call; a graph exceeding the limit escalates to HITL rather than crashing
+  3. The LLM adapter switches between Ollama (Qwen2.5-7B Q4_K_M) and vLLM (Qwen2.5-14B AWQ) by changing one environment variable with no code changes in agents
+  4. A paused HITL approval thread survives a full service restart and resumes correctly from the PostgreSQL checkpoint
+  5. The approval rate governor fires an alert to the Manager role when more than 80% of consecutive actions are auto-approved
+**Plans**: TBD
+
+### Phase 5: Knowledge Layer (RAG + Graph)
+**Goal**: Qdrant collections with BGE-M3 hybrid retrieval, a document ingest pipeline with provenance and access control, incremental re-indexing, and a Neo4j/Memgraph entity graph are operational and validated for bilingual Italian-English retrieval quality.
+**Depends on**: Phase 1, Phase 2, Phase 4
+**Requirements**: KNW-01, KNW-02, KNW-03, KNW-04, KNW-05, KNW-06, KNW-07, KNW-08, KNW-09, TRN-01
+**Success Criteria** (what must be TRUE):
+  1. An Italian-language query for a procedure described only in an English SOP returns the correct document chunk with a relevance score above the configured threshold, verified in an automated cross-lingual eval suite
+  2. Every indexed chunk carries `source_uri`, `page`, `version`, `lang`, and access level tag; a query from an `operator`-role user cannot retrieve `restricted`-tagged chunks
+  3. A document update triggers incremental re-indexing of only the changed chunks within the configured staleness threshold; full reindex is not triggered
+  4. The entity graph contains machine → part → failure-mode → SOP relationships for all asset classes in the simulator; a traversal query returns a valid SOP for a given failure mode
+  5. The BGE-M3 vs multilingual-e5-large A/B evaluation results are documented in `docs/` with a justified model selection decision
+**Plans**: TBD
+
+### Phase 6: Agents — Operations & Production
+**Goal**: All four Operations cluster agents (OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector) are implemented with full HITL integration, textile-specific domain knowledge, and passing end-to-end tests on simulated scenarios.
+**Depends on**: Phase 3, Phase 4, Phase 5
+**Requirements**: OPS-01, OPS-02, OPS-03, OPS-04, OPS-05, OPS-06
+**Success Criteria** (what must be TRUE):
+  1. OperatorAssistant retrieves the correct loom troubleshooting procedure from the RAG store in response to a natural-language Italian-language query and cites the source chunk inline
+  2. QualityInspector applies the textile defect taxonomy (broken end, mispick, slub, neppy, selvage fault, shade deviation, unlevel dyeing) and 4-point grading to a simulated inspection event, routes to the correct HITL tier, and includes dye lot ID in every quality event
+  3. AnomalyDetector scores a real-time sensor anomaly with per-machine calibration, does not fire false positives on normal high-frequency loom vibration, and enforces the 12-alert/hour rate limit
+  4. ProductionPlanner generates a schedule draft and routes it to supervisor-level HITL before release
+  5. Each agent's end-to-end test covers three scenarios: happy path, degraded sensor input, and failure/escalation path
+**Plans**: TBD
+
+### Phase 7: Agents — Maintenance & Reliability
+**Goal**: All four Maintenance cluster agents (PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer) are implemented with C-MAPSS-adapted RUL estimation, 5-Why RCA, humidity-aware modeling, and integration with the asset registry and event store.
+**Depends on**: Phase 3, Phase 4, Phase 5
+**Requirements**: MNT-01, MNT-02, MNT-03, MNT-04, MNT-05, MNT-06
+**Success Criteria** (what must be TRUE):
+  1. PredictiveMaintenance estimates Remaining Useful Life for spindle, loom, and warper assets using degradation curves adapted from NASA C-MAPSS methodology; the model feature set includes ambient temperature and humidity sensors
+  2. RCASpecialist generates a 5-Why chain for a simulated downtime event, cites knowledge base sources with provenance, and routes the corrective action recommendation to supervisor-level HITL
+  3. MaintenanceCoach retrieves the correct step-by-step procedure from the RAG store for the current repair, tracks MTTR contribution, and escalates when the technician requests it
+  4. DowntimeAnalyzer calculates OEE decomposition (Availability, Performance, Quality) and produces a Pareto of downtime causes from the event store
+  5. A textile maintenance event taxonomy is documented and used consistently across all four agents
+**Plans**: TBD
+
+### Phase 8: Agents — Knowledge & Training
+**Goal**: All four Knowledge cluster agents (KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer) are implemented with citation provenance, adaptive training delivery, automated shift handover compilation, and bilingual document synthesis under HITL approval.
+**Depends on**: Phase 4, Phase 5
+**Requirements**: TRN-02, TRN-03, TRN-04, TRN-05
+**Success Criteria** (what must be TRUE):
+  1. ShiftHandover auto-compiles a structured handover report from the shift's event log (open alerts, completed work orders, equipment status, quality events) in under 3 minutes of elapsed time, with dual-supervisor HITL sign-off
+  2. TrainingCoach delivers a contextual coaching session to an operator persona, assesses competency via quiz, and routes the competency sign-off to supervisor HITL before recording
+  3. KnowledgeCurator detects a duplicate document during ingest, flags a stale document beyond its staleness threshold, and tracks the knowledge reuse rate KPI
+  4. DocumentationSynthesizer generates a bilingual SOP draft from historical maintenance events and routes it to HITL approval before indexing; every output includes `source_uri` and timestamp
+  5. All TRN agent outputs include citations with `source_uri` and timestamp; no opaque outputs are accepted by the test suite
+**Plans**: TBD
+
+### Phase 9: Agents — Supply Chain & Economics
+**Goal**: All four Supply Chain cluster agents (InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster) are implemented with realistic Mantis Textile Group example data, OEPV ribasso simulation, ISO 50001 energy tracking, and HITL-gated purchase recommendations.
+**Depends on**: Phase 4, Phase 5, Phase 6, Phase 7
+**Requirements**: SCM-01, SCM-02, SCM-03, SCM-04, SCM-05
+**Success Criteria** (what must be TRUE):
+  1. InventoryManager fires a reorder alert when a SKU falls below its reorder point, generates a purchase recommendation draft, and routes it to procurement supervisor HITL before any order action
+  2. EnergyOptimizer calculates energy per unit (kWh/kg) for dyeing and finishing processes against an ISO 50001 EnPI baseline and recommends off-peak scheduling via HITL-gated proposal
+  3. CostAnalyzer aggregates downtime cost, scrap cost, and energy cost into an ROI dashboard and produces a OEPV ribasso simulation with sensitivity analysis
+  4. DemandForecaster produces a demand plan for at least two fabric SKU groups, publishes it to ProductionPlanner via HITL-gated approval, and tracks forecast accuracy KPI
+  5. Realistic numerical examples for Mantis Textile Group (product lines, capacity, unit costs) are documented explicitly as synthetic in `docs/`
+**Plans**: TBD
+
+### Phase 10: Backend API & Frontend
+**Goal**: The FastAPI gateway with JWT/RBAC, SSE/WebSocket streaming, and the Angular 18+ SSR application with HITL approval UI, evidence panel, control room dashboard, bilingual i18n, touch-friendly design, and Playwright E2E tests are production-ready.
+**Depends on**: Phase 4, Phase 6, Phase 7, Phase 8, Phase 9
+**Requirements**: SRV-01, SRV-02, SRV-03, SRV-04, SRV-05, UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, UI-08, UI-09, UI-10
+**Success Criteria** (what must be TRUE):
+  1. An operator persona can log in, see the control room dashboard with live OEE, MTTR, MTBF, scrap rate KPIs streamed via SSE, and approve or reject a pending HITL action with the inline evidence panel visible — all with touch targets at minimum 64px
+  2. The Angular app renders correctly via SSR on first load and hydrates to a full SPA; Italian is the default language and English toggles without page reload
+  3. A Playwright E2E test covering the full HITL approval flow (alert fires → approval card appears → operator reviews evidence → approves → audit record created) passes in CI
+  4. The FastAPI OpenAPI spec exports correctly, Pydantic models and TypeScript types are contract-tested, and all endpoints have health/readiness probes with OTEL spans
+  5. The persona walkthrough demo (operator, shift supervisor, technician, CIO) is navigable in-app with no broken routes or missing data
+**UI hint**: yes
+**Plans**: TBD
+
+### Phase 11: Observability, Evaluation & Security Hardening
+**Goal**: OpenTelemetry instrumentation spans all services, Langfuse traces every LLM call, Grafana dashboards expose agent and factory KPIs, DeepEval gates PRs on hallucination rate, and STRIDE threat model mitigations are implemented including OWASP LLM Top 10 defenses.
+**Depends on**: Phase 4, Phase 5, Phase 10
+**Requirements**: OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-07
+**Success Criteria** (what must be TRUE):
+  1. A single trace ID propagates from the Angular UI through the FastAPI gateway, through the NATS agent command, to the LangGraph node execution, and appears as a single correlated trace in Langfuse with LLM token counts, latency, and HITL decision metadata
+  2. A PR introducing a RAG change that degrades hallucination rate above 5% or answer relevance below 0.75 is automatically blocked by the DeepEval CI gate before merge
+  3. A crafted PDF containing prompt-injection instructions is sanitized during document ingestion and does not influence any subsequent agent action, verified by a security test in CI
+  4. The STRIDE threat model document identifies at least one threat per category (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) for IT/OT boundary, RAG ingestion, and agent orchestration; each threat has a documented mitigation mapped to code
+  5. The OT Bridge data-diode boundary is verified by an automated network policy test that attempts to send a write command from the agent layer into the OPC-UA simulator and confirms it is blocked
+**Plans**: TBD
+
+### Phase 12: Documentation, Economic Model & Competition Deliverables
+**Goal**: The complete bilingual MkDocs Material documentation site is deployed to GitHub Pages covering all required sections, the OEPV economic model with TCO and ribasso simulator is complete and defensible, all competition deliverables are bundled, and a CI check confirms zero references to Accenture or the original brand.
+**Depends on**: Phase 2, Phase 10, Phase 11
+**Requirements**: DOC-01, DOC-02, DOC-03, DOC-04, DOC-06, DOC-07, DOC-08, DOC-09, DOC-10, DOC-11, DOC-13, DOC-14, DOC-15, DOC-16, DOC-17, ECO-01, ECO-02, ECO-03, ECO-04, ECO-05, ECO-06, ECO-07, ECO-08, DEL-01, DEL-02, DEL-03, DEL-04, DEL-05, DEL-06, DEL-07, DEL-08
+**Success Criteria** (what must be TRUE):
+  1. `mkdocs build` produces a complete bilingual (IT default, EN parallel) site with no broken links; GitHub Actions deploys it to `gh-pages` branch and the site is publicly accessible via GitHub Pages
+  2. The OEPV economic model document contains: Base d'Asta €108,000, GPU amortization over 3 years, electricity at 0.25 EUR/kWh under continuous inference, 1 FTE partial ops allocation, ribasso set at 10-15% below base d'asta with written justification, and a non-linear scoring sensitivity analysis table
+  3. All six competition deliverables (Target Architecture, End-to-End Workflows, Use Cases, Mock UI/User Journey, Adoption Roadmap, Economic Evaluation) are present as complete sections in `docs/` with no aspirational content that is not implemented in code
+  4. A CI grep scan finds zero occurrences of "Accenture" or the original brand name across all files in the repository, including generated docs
+  5. All diagrams in `docs/` are Mermaid or D2 source files committed as text; no binary diagram images are present in the repository
+**UI hint**: yes
+**Plans**: TBD
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Foundation & Monorepo | 0/TBD | Not started | - |
+| 2. Domain Modeling & Synthetic Corpus | 0/TBD | Not started | - |
+| 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
+| 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
+| 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
+| 6. Agents — Operations & Production | 0/TBD | Not started | - |
+| 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
+| 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
+| 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
+| 10. Backend API & Frontend | 0/TBD | Not started | - |
+| 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
+| 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |
