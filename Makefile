@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs demo sbom license-scan helm-test ps logs
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -75,9 +75,15 @@ format:
 ## Docs
 # -----------------------------------------------------------------------
 
-# Genera la documentazione MkDocs
+# Build del sito MkDocs in strict mode (fallisce su broken link o warning critici)
+# Prerequisito: mkdocs installato — cd docs && pip install -r requirements.txt
 docs:
-	cd docs && mkdocs build
+	@command -v mkdocs >/dev/null || (echo "mkdocs non trovato: cd docs && pip install -r requirements.txt" && exit 1)
+	cd docs && mkdocs build --strict
+
+# Preview locale con hot-reload su http://127.0.0.1:8000
+docs-serve:
+	cd docs && mkdocs serve -a 127.0.0.1:8000
 
 ## Demo
 # -----------------------------------------------------------------------
