@@ -75,3 +75,5 @@ site/
 # Test artifacts
 test-results/
 playwright-report/
+
+.angular
