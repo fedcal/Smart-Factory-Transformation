@@ -1,0 +1,93 @@
+site_name: Smart Factory Transformation
+site_description: Piattaforma opensource agentica per la trasformazione digitale di un'industria tessile manifatturiera
+site_url: https://fedcal.github.io/Smart-Factory-Transformation/
+repo_url: https://github.com/fedcal/Smart-Factory-Transformation
+repo_name: fedcal/Smart-Factory-Transformation
+edit_uri: edit/main/docs/docs/
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: it
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.instant
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: folder
+      languages:
+        - locale: it
+          name: Italiano
+          default: true
+          build: true
+          site_name: Smart Factory Transformation
+        - locale: en
+          name: English
+          build: true
+          site_name: Smart Factory Transformation
+          nav_translations:
+            Architettura: Architecture
+            Iniziare: Getting Started
+            Contributing: Contributing
+      reconfigure_material: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+extra_css:
+  - assets/custom.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/fedcal/Smart-Factory-Transformation
+
+nav:
+  - Home: index.md
+  - Iniziare: getting-started.md
+  - Architettura:
+    - Overview: architecture/overview.md
+  - Contributing: contributing/index.md
