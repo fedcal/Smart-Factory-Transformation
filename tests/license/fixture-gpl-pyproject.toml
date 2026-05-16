@@ -1,0 +1,30 @@
+# FIXTURE — NOT a real Python project.
+# Used by .github/workflows/test-license-fixture.yml to verify that
+# license-scan.yml correctly blocks PRs introducing GPL-licensed deps.
+#
+# Syft scans this file as a Python package manifest and includes the
+# declared license metadata in the SBOM. Trivy then reads the SBOM and
+# must exit with code != 0 because GPL-3.0-only is in the `forbidden` list
+# of infra/license/trivy.yaml.
+#
+# See tests/license/README.md for maintenance instructions.
+
+[project]
+name = "test-license-fixture"
+version = "0.0.0"
+description = "GPL fixture for license scanner CI test — do not install or distribute"
+requires-python = ">=3.12"
+# This package itself declares GPL-3.0-only to guarantee Trivy detects a forbidden license.
+# Trivy reads `License` from pyproject.toml/METADATA and includes it in the SBOM scan.
+license = { text = "GPL-3.0-only" }
+# Also includes a transitive dependency known to be GPL-licensed (pyreadline3, GPL-2.0).
+# Both the self-declared license AND the dep license should trigger the block.
+dependencies = [
+  # pyreadline3 is GPL-2.0 — intentionally forbidden by infra/license/trivy.yaml
+  # PyPI: https://pypi.org/project/pyreadline3/
+  "pyreadline3>=3.4.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
