@@ -1,0 +1,64 @@
+# Smart Factory Transformation — Core Dev Stack
+# Servizi core: Postgres+TimescaleDB, Redis, Qdrant
+# Decisioni: D-07 (split per area), D-09 (named volumes), D-10 (healthchecks)
+# NON usare in produzione: secrets gestiti via SealedSecrets (plan 06)
+
+services:
+  postgres:
+    image: timescale/timescaledb:2.18.0-pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sft}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sft_dev_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-sft}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sft}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sft-core
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - sft-core
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.16.1
+    volumes:
+      - qdrant-data:/qdrant/storage
+    ports:
+      - "${QDRANT_PORT:-6333}:6333"
+      - "6334:6334"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:6333/healthz | grep -q ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sft-core
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+  redis-data:
+  qdrant-data:
+
+networks:
+  sft-core:
+    driver: bridge
