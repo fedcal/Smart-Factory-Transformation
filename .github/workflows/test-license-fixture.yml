@@ -1,0 +1,59 @@
+name: Test License Scanner Fixture
+# Verifica che il license scanner blocchi correttamente la fixture GPL.
+# Se questo workflow passa, significa che license-scan.yml BLOCCHEREBBE
+# una PR reale con la stessa dipendenza GPL.
+#
+# Logica del test (meta-test):
+#   1. Genera SBOM dalla directory tests/license/ (contiene fixture-gpl-pyproject.toml)
+#   2. Esegue Trivy con exit-code: 1 e continue-on-error: true
+#   3. Asserisce che l'outcome di Trivy sia "failure"
+#      Se Trivy NON fallisce → il test fallisce (scanner rotto)
+#      Se Trivy fallisce     → il test passa (scanner funziona correttamente)
+
+on:
+  pull_request:
+    paths:
+      - 'infra/license/**'
+      - '.github/workflows/license-scan.yml'
+      - '.github/workflows/test-license-fixture.yml'
+      - 'tests/license/**'
+  schedule:
+    - cron: '0 0 * * 0'  # weekly regression check — ogni domenica alle 00:00 UTC
+
+jobs:
+  verify-block:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0
+
+      - name: Generate SBOM for fixture
+        run: syft tests/license/ --output cyclonedx-json=fixture-sbom.json
+
+      - name: Trivy scan — MUST FAIL (GPL fixture should be blocked)
+        id: trivy
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'sbom'
+          input: 'fixture-sbom.json'
+          scanners: 'license'
+          format: 'table'
+          exit-code: '1'
+          trivy-config: 'infra/license/trivy.yaml'
+        continue-on-error: true
+
+      - name: Assert Trivy detected GPL/AGPL (meta-test)
+        run: |
+          if [ "${{ steps.trivy.outcome }}" != "failure" ]; then
+            echo "::error::license scanner FAILED to detect forbidden GPL dep in fixture"
+            echo "::error::The fixture test-license-fixture/fixture-gpl-pyproject.toml declares"
+            echo "::error::GPL-3.0-only and depends on pyreadline3 (GPL-2.0), but Trivy did not block."
+            echo "::error::Possible causes:"
+            echo "::error::  1. pyreadline3 changed its license upstream — update the fixture dep"
+            echo "::error::  2. Trivy no longer reads pyproject.toml license declarations — check Trivy docs"
+            echo "::error::  3. infra/license/trivy.yaml no longer lists GPL-2.0/GPL-3.0-only as forbidden"
+            exit 1
+          fi
+          echo "::notice::license scanner correctly blocked the GPL fixture — scanner is working"
