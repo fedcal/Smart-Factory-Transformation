@@ -9,6 +9,8 @@
     "format": "nx format:write"
   },
   "devDependencies": {
+    "@commitlint/cli": "19.5.0",
+    "@commitlint/config-conventional": "19.5.0",
     "@angular-devkit/build-angular": "~19.2.0",
     "@angular-devkit/core": "~19.2.0",
     "@angular-devkit/schematics": "~19.2.0",

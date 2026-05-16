@@ -1,0 +1,18 @@
+title = "SFT gitleaks config"
+
+[extend]
+  useDefault = true
+
+[allowlist]
+  description = "Allow known fixture files and placeholder values"
+  paths = [
+    '''tests/license/.*''',
+    '''docs/.*\.md''',
+    '''infra/compose/\.env\.example''',
+    '''LICENSE-EXCEPTIONS\.md''',
+  ]
+  regexes = [
+    '''<CHANGE_ME[^>]*>''',
+    '''_dev_pass''',
+    '''0{32,}''',
+  ]

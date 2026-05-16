@@ -1,0 +1,69 @@
+repos:
+  # Python: ruff format + ruff check
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.10
+    hooks:
+      - id: ruff-format
+        types_or: [python, pyi]
+      - id: ruff
+        types_or: [python, pyi]
+        args: [--fix]
+
+  # Python: mypy --strict (SOLO packages/sft-agents, sft-domain, sft-contracts)
+  - repo: local
+    hooks:
+      - id: mypy-sft-packages
+        name: mypy --strict (packages/sft-*)
+        language: system
+        entry: uv run mypy --strict --config-file pyproject.toml
+        types: [python]
+        files: ^packages/sft-(agents|domain|contracts)/
+        pass_filenames: true
+
+  # TypeScript/Angular: eslint
+  - repo: local
+    hooks:
+      - id: eslint
+        name: ESLint
+        language: node
+        entry: npx eslint --fix
+        types_or: [ts, tsx]
+        files: \.(ts|tsx)$
+        exclude: ^(node_modules|dist|tmp|coverage)/
+        additional_dependencies: []
+
+  # TypeScript/Angular: prettier
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.5.3
+    hooks:
+      - id: prettier
+        types_or: [ts, tsx, json, yaml, markdown, scss, css, html]
+        exclude: ^(uv\.lock|package-lock\.json|pnpm-lock\.yaml|tmp/)$
+
+  # Commit message: commitlint (Conventional Commits)
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.18.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies:
+          - "@commitlint/config-conventional@19.5.0"
+
+  # Secret scanning: gitleaks
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+
+  # General pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+        exclude: ^\.changeset/
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]
