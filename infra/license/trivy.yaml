@@ -1,0 +1,50 @@
+# Trivy license policy per Smart Factory Transformation
+#
+# Categorie:
+#   notice    — licenze permissive, approvate senza restrizioni (MIT, Apache-2.0, BSD, ...)
+#   reciprocal — copyleft debole: genera warning CI ma non blocca la build (MPL-2.0, LGPL-*)
+#   forbidden — copyleft forte: blocca la build con exit code != 0 (GPL-*, AGPL-*, SSPL-*, BUSL-*)
+#
+# Per gestire eccezioni alle licenze `forbidden`, aggiungere il pacchetto a
+# `LICENSE-EXCEPTIONS.md` con motivazione tecnica e approvazione documentata.
+#
+# Riferimento: https://aquasecurity.github.io/trivy/latest/docs/scanner/license/
+
+license:
+  # Licenze permissive approvate senza restrizioni
+  # Compatibili con Apache-2.0 (licenza del progetto SFT)
+  notice:
+    - MIT
+    - Apache-2.0
+    - BSD-2-Clause
+    - BSD-3-Clause
+    - ISC
+    - Unlicense
+    - CC0-1.0
+    - PSF-2.0
+    - Python-2.0
+    - 0BSD
+
+  # Licenze copyleft debole — warning non bloccante
+  # Richiedono attenzione se il codice viene modificato e distribuito,
+  # ma compatibili con uso as-is in dipendenze runtime.
+  reciprocal:
+    - MPL-2.0
+    - LGPL-2.1
+    - LGPL-3.0
+
+  # Licenze copyleft forte — BLOCCANO la build (exit code != 0)
+  # Per eccezioni documentate vedere LICENSE-EXCEPTIONS.md
+  forbidden:
+    - GPL-1.0
+    - GPL-2.0
+    - GPL-3.0
+    - GPL-2.0-only
+    - GPL-3.0-only
+    - GPL-2.0-or-later
+    - GPL-3.0-or-later
+    - AGPL-3.0
+    - AGPL-3.0-only
+    - AGPL-3.0-or-later
+    - SSPL-1.0
+    - BUSL-1.1
