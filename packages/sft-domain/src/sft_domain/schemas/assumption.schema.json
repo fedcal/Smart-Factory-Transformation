@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sft-domain/schemas/assumption.schema.json",
+  "title": "SFT Assumption Register Entry",
+  "description": "Schema Draft 2020-12 per una entry del registro assunzioni di progetto (D-33, D-34, D-35)",
+  "type": "object",
+  "required": [
+    "id",
+    "statement",
+    "category",
+    "affected_components",
+    "rationale",
+    "validation_method",
+    "risk_if_wrong",
+    "status",
+    "created_in_phase",
+    "last_reviewed_in_phase",
+    "superseded_by"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^A-[0-9]{3}$",
+      "description": "Identificatore univoco assunzione nel formato A-NNN (es. A-001)"
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Formulazione dell'assunzione in linguaggio misurabile e verificabile"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "data-quality",
+        "simulation",
+        "scope-limit",
+        "external-dependency",
+        "regulatory",
+        "security",
+        "performance",
+        "cost"
+      ],
+      "description": "Categoria dell'assunzione (D-34) — 8 valori ammessi"
+    },
+    "affected_components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Componenti/servizi impattati dall'assunzione (D-34) — validati contro inventario Nx"
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Motivazione dell'assunzione con riferimento a fonti o decisioni di progetto"
+    },
+    "validation_method": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Metodo di validazione futura (es. test di integrazione, benchmark, review domain expert)"
+    },
+    "risk_if_wrong": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Conseguenza operativa se l'assunzione risulta errata"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "validated", "invalidated", "superseded"],
+      "description": "Stato corrente dell'assunzione nel ciclo di vita del progetto (D-35)"
+    },
+    "created_in_phase": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Fase di progetto in cui l'assunzione e' stata creata"
+    },
+    "last_reviewed_in_phase": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Ultima fase in cui l'assunzione e' stata revisionata"
+    },
+    "superseded_by": {
+      "type": ["string", "null"],
+      "pattern": "^A-[0-9]{3}$",
+      "description": "ID dell'assunzione che rimpiazza questa (null se non superseded)"
+    }
+  }
+}
