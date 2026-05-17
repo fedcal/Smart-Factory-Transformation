@@ -51,7 +51,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. A bilingual (IT+EN) glossary of textile and agentic terms is complete and linked from the docs index
   4. At least 20 synthetic SOP documents (10 IT + 10 EN) covering loom troubleshooting, dyeing procedures, spinning maintenance, and quality grading are committed to `simulators/synthetic-corpus/` and pass a format validation check in CI
 **Plans**: 7 plans
-  - [ ] 02-01-PLAN.md — Schemas + Pydantic glossary loader + bootstrap glossary (~70 terms) + pytest scaffold (DOC-18 foundation)
+  - [x] 02-01-PLAN.md — Schemas + Pydantic glossary loader + bootstrap glossary (~70 terms) + pytest scaffold (DOC-18 foundation)
   - [ ] 02-02-PLAN.md — Domain analysis IT (5 process + 4 role + index) + pytest structural tests (DOC-05 IT side)
   - [ ] 02-03-PLAN.md — Assumption register schema + 30 seed entries + validator + components-check + generator (DOC-12 part 1)
   - [ ] 02-04-PLAN.md — synthetic-corpus Nx project + 5 example IT SOPs + 3 corpus validators (KNW-10 foundation)
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
-| 2. Domain Modeling & Synthetic Corpus | 0/TBD | Not started | - |
+| 2. Domain Modeling & Synthetic Corpus | 1/7 | In Progress|  |
 | 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
