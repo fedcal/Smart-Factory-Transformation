@@ -25,6 +25,7 @@ Exit codes:
     1 - One or more pairing errors found
 """
 import argparse
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -51,7 +52,10 @@ def validate(corpus_dir: Path, allow_missing_en: bool) -> bool:
         print(f"OK: no SOPs found yet (corpus-dir does not exist: {corpus_rel})")
         return True
 
-    md_files = sorted(corpus_dir.rglob("*.md"))
+    # Only process files matching the SOP naming convention (skip README.md, etc.)
+    sop_filename_pattern = re.compile(r"^SOP-[A-Z]+-[0-9]{3}-[a-z0-9-]+-(it|en)\.md$")
+    all_md = sorted(corpus_dir.rglob("*.md"))
+    md_files = [f for f in all_md if sop_filename_pattern.match(f.name)]
     if not md_files:
         corpus_rel = corpus_dir.relative_to(WORKSPACE_ROOT) if corpus_dir.is_relative_to(WORKSPACE_ROOT) else corpus_dir
         print(f"OK: no SOPs found yet (corpus-dir empty: {corpus_rel})")

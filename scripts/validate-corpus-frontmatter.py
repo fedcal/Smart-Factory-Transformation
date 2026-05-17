@@ -148,7 +148,9 @@ def validate(corpus_dir: Path, schema_file: Path) -> bool:
         print(f"OK: no SOPs found yet (corpus-dir does not exist: {corpus_rel})")
         return True
 
-    md_files = sorted(corpus_dir.rglob("*.md"))
+    # Only process files matching the SOP naming convention (skip README.md, etc.)
+    all_md = sorted(corpus_dir.rglob("*.md"))
+    md_files = [f for f in all_md if FILENAME_PATTERN.match(f.name)]
     if not md_files:
         corpus_rel = corpus_dir.relative_to(WORKSPACE_ROOT) if corpus_dir.is_relative_to(WORKSPACE_ROOT) else corpus_dir
         print(f"OK: no SOPs found yet (corpus-dir empty: {corpus_rel})")
