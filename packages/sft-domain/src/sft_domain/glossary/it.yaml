@@ -1,0 +1,667 @@
+# Glossario bilingue IT — dominio textile + piattaforma agentica
+# Fonte canonica: sft_domain.glossary.it.yaml (D-29)
+# Categorie D-30: textile-{process,asset,defect,kpi,tool-ppe,material}, agentic-{platform,tool}, regulatory
+# Bootstrap Wave 1: ~70 termini (espansione a ~150 in wave successive)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-PROCESS (~10 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: tessitura
+  definition: "Processo di interlacciamento dei fili di ordito e di trama per produrre un tessuto piatto mediante un telaio."
+  category: textile-process
+  related_terms: [telaio, ordito, trama, densita_trama]
+  examples:
+    - "La tessitura a telaio rapier consente produzioni fino a 800 picks/min su cotone medio."
+  source: industry-standard
+
+- term: filatura
+  definition: "Processo di trasformazione delle fibre tessili (cotone, lana, lino) in filo continuo tramite stiro, torsione e avvolgimento."
+  category: textile-process
+  related_terms: [fuso, anello_rotante, stiro, titolo_filato]
+  examples:
+    - "La filatura ad anello produce fili Nm 40-80 per applicazioni di tessuto a camicia."
+  source: industry-standard
+
+- term: orditura
+  definition: "Operazione preliminare alla tessitura che consiste nel disporre in parallelo i fili di ordito sul subbio con tensione e densita' controllate."
+  category: textile-process
+  related_terms: [subbio, ordito, tensione_ordito, liccio]
+  examples:
+    - "Un'orditura sezionale e' preferita per partite brevi con molti colori diversi."
+  source: industry-standard
+
+- term: tintura
+  definition: "Processo chimico di colorazione delle fibre, filati o tessuti mediante immersione in bagni coloranti a temperatura e pH controllati."
+  category: textile-process
+  related_terms: [bagno_colorante, solidita_colore, jet_dyeing, delta_e]
+  examples:
+    - "La tintura in jet dyeing a 130 gradi Celsius e' standard per poliestere."
+  source: industry-standard
+
+- term: finissaggio
+  definition: "Insieme di trattamenti chimici e meccanici applicati al tessuto grezzo per migliorarne handle, aspetto, dimensioni stabili e proprieta' funzionali."
+  category: textile-process
+  related_terms: [calandratura, sanforizzazione, impermeabilizzazione]
+  examples:
+    - "Il finissaggio sanforizzato riduce il restringimento residuo a meno dell'1 percento."
+  source: industry-standard
+
+- term: controllo_qualita_tessile
+  definition: "Insieme sistematico di ispezioni, misurazioni e verifiche applicate a fili, tessuti o capi per garantire la conformita' agli standard di prodotto concordati."
+  category: textile-process
+  related_terms: [sistema_quattro_punti, analisi_difetti, tolleranza_colore]
+  examples:
+    - "Il controllo qualita' tessile include ispezione visiva e misurazione delta-E per deviazione colore."
+  source: industry-standard
+
+- term: stiro
+  definition: "Operazione meccanica che allontana progressivamente le fibre parallelizzandole durante la filatura per ridurre il titolo della mecha o del nastro."
+  category: textile-process
+  related_terms: [cilindro_stiro, rapporto_stiro, irregolarita_filato]
+  examples:
+    - "Un rapporto di stiro eccessivo causa irregolarita' e aumenta la frequenza di rotture."
+  source: industry-standard
+
+- term: pettinatura
+  definition: "Operazione che elimina le fibre corte (cascami) e parallelizza ulteriormente le fibre per produrre un filo pettinato piu' fine e regolare."
+  category: textile-process
+  related_terms: [fibre_corte, filato_pettinato, filato_cardato]
+  examples:
+    - "La pettinatura e' essenziale per titoli superiori a Nm 60 su cotone."
+  source: industry-standard
+
+- term: cardatura
+  definition: "Processo meccanico che apre, pulisce e parallelizza le fibre corte, producendo un nastro (velo) pronto per la filatura senza eliminare le fibre corte."
+  category: textile-process
+  related_terms: [nastro_carda, guarnizione_carda, neps]
+  examples:
+    - "La velocita' di cardatura eccessiva aumenta la presenza di neps nel nastro."
+  source: industry-standard
+
+- term: ispezione_rotolo
+  definition: "Verifica sistematica di un rotolo di tessuto finito su lightbox o tavolo d'ispezione, classificando i difetti per tipo, dimensione e frequenza per posizione."
+  category: textile-process
+  related_terms: [sistema_quattro_punti, difetto_trama, difetto_ordito, decisione_lotto]
+  examples:
+    - "L'ispezione rotolo classifica automaticamente i difetti sopra i 3 cm come major."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-ASSET (~15 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: telaio
+  definition: "Macchina tessile che interlaccia i fili di ordito (verticali) con quelli di trama (orizzontali) per produrre il tessuto. Disponibile in varianti rapier, projectile, air-jet, water-jet."
+  category: textile-asset
+  related_terms: [tessitura, cassa_battente, liccio, subbio, densita_trama]
+  examples:
+    - "Un telaio rapier Picanol OptiMax a 800 picks/min e' usato per tessuti tecnici medi."
+  source: industry-standard
+
+- term: subbio
+  definition: "Cilindro metallico o in composito su cui e' avvolto il filo di ordito, posizionato nella parte posteriore del telaio e che si svolge progressivamente durante la tessitura."
+  category: textile-asset
+  related_terms: [orditura, tensione_ordito, cambio_subbio]
+  examples:
+    - "La sostituzione del subbio richiede in media 45 minuti e un operatore qualificato."
+  source: industry-standard
+
+- term: liccio
+  definition: "Componente del telaio formato da cornici metalliche dotate di maglie (licci) attraverso cui passano i fili di ordito; il movimento alternato dei licci forma il passo per l'inserzione della trama."
+  category: textile-asset
+  related_terms: [armatura, passo, telaio, jacquard]
+  examples:
+    - "Un liccio usurato causa una tensione non uniforme tra i fili dello stesso gruppo."
+  source: industry-standard
+
+- term: cassa_battente
+  definition: "Componente oscillante del telaio che comprime il filo di trama inserito contro il tessuto gia' formato (vivo del tessuto), determinando la densita' di trama."
+  category: textile-asset
+  related_terms: [densita_trama, pick, telaio]
+  examples:
+    - "Un'anomalia nell'oscillazione della cassa battente produce una densita' trama irregolare."
+  source: industry-standard
+
+- term: fuso
+  definition: "Elemento rotante del filatoio ad anello su cui e' avvolto il filo durante la filatura; la sua velocita' angolare determina la torsione impressa al filo."
+  category: textile-asset
+  related_terms: [anello_rotante, filatoio_anello, torsione_filato]
+  examples:
+    - "Un fuso sbilanciato genera vibrazioni rilevabili con accelerometri a 50-200 Hz."
+  source: industry-standard
+
+- term: filatoio_anello
+  definition: "Macchina per la filatura che utilizza un anello e un cursore per torcere e avvolgere il filo sul fuso; principale macchina per filatura di fibre corte (cotone, lana pettinata)."
+  category: textile-asset
+  related_terms: [fuso, anello_rotante, filatura, titolo_filato]
+  examples:
+    - "Un filatoio anello con 1000 fusi produce circa 800 kg/giorno di filo Nm 40."
+  source: industry-standard
+
+- term: jet_dyeing
+  definition: "Macchina per tintura in continuo in cui il tessuto a corda viene trasportato attraverso il bagno colorante da getti di liquido ad alta pressione, senza contatto con superfici solide."
+  category: textile-asset
+  related_terms: [tintura, bagno_colorante, solidita_colore, rapporto_bagno]
+  examples:
+    - "Il jet dyeing Thies iMaster H2O riduce il rapporto bagno a 1:4 per sintetici."
+  source: industry-standard
+
+- term: carda
+  definition: "Macchina che apre, pulisce e parallelizza le fibre corte producendo un nastro continuo (velo); precede la filatura nei processi di filatura cardato."
+  category: textile-asset
+  related_terms: [cardatura, nastro_carda, guarnizione_carda, neps]
+  examples:
+    - "La velocita' cilindro principale di una carda e' tipicamente 200-350 m/min."
+  source: industry-standard
+
+- term: open_end_spinner
+  definition: "Macchina per filatura a rotore che spezza il nastro in fibre singole e le raccoglie in un rotore rotante formando il filo senza uso di fusi; alta produttivita' ma filo meno regolare."
+  category: textile-asset
+  related_terms: [filatura, filatoio_anello, titolo_filato]
+  examples:
+    - "L'open-end spinner e' preferito per filati grossi (Nm < 30) a basso costo."
+  source: industry-standard
+
+- term: pettinatrice
+  definition: "Macchina che elimina le fibre corte dal nastro cardato e parallelizza ulteriormente le fibre lunghe per produrre un nastro pettinato a bassa irregolarita'."
+  category: textile-asset
+  related_terms: [pettinatura, nastro_carda, cascami]
+  examples:
+    - "Una pettinatrice Rieter E 36 gestisce fino a 500 nips/min con eliminazione fino al 20% di cascami."
+  source: industry-standard
+
+- term: misuratore_tensione_ordito
+  definition: "Sensore o strumento che rileva la tensione dei fili di ordito sul telaio; valore tipico 10-30 N per cotone, con soglie di allarme per raddoppio o dimezzamento del valore nominale."
+  category: textile-asset
+  related_terms: [tensione_ordito, telaio, rottura_filo]
+  examples:
+    - "Un misuratore tensione ordito manda segnale OPC-UA ogni 500 ms al sistema di controllo."
+  source: industry-standard
+
+- term: conta_trama
+  definition: "Dispositivo ottico o meccanico che conta il numero di passate di trama per unita' di lunghezza del tessuto, verificando la densita' trama programmata."
+  category: textile-asset
+  related_terms: [densita_trama, pick, telaio, difetto_densita]
+  examples:
+    - "Un conta-trama digitale verifica la densita' ogni 10 cm di tessuto prodotto."
+  source: industry-standard
+
+- term: spettrofotometro
+  definition: "Strumento per la misurazione della riflessione spettrale del colore di un tessuto o campione, esprimendo il risultato come valori CIE L*a*b* o delta-E."
+  category: textile-asset
+  related_terms: [delta_e, solidita_colore, tolleranza_colore, tintura]
+  examples:
+    - "Uno spettrofotometro DataColor 800 misura delta-E CMC con precisione 0.01 unita'."
+  source: industry-standard
+
+- term: impianto_finissaggio
+  definition: "Linea di macchine per il trattamento chimico e meccanico del tessuto grezzo: puo' includere stenter, calandre, sanforizzatori, spazzolatrici e impianti di impermeabilizzazione."
+  category: textile-asset
+  related_terms: [finissaggio, sanforizzazione, calandratura]
+  examples:
+    - "La linea finissaggio Monforts processa fino a 60 m/min in cotone denim."
+  source: industry-standard
+
+- term: magazzino_automatizzato
+  definition: "Sistema AS/RS (Automated Storage and Retrieval System) o scaffalatura dinamica per lo stoccaggio e il prelievo automatico di materiali (rotoli, bancali, bobine)."
+  category: textile-asset
+  related_terms: [gestione_magazzino, movimentazione_materiali]
+  examples:
+    - "Il magazzino automatizzato integra 500 posizioni per rotoli da 1200 m ciascuno."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-DEFECT (~15 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: rottura_filo
+  definition: "Interruzione improvvisa del filo di ordito o trama durante la tessitura, che causa l'arresto automatico del telaio e richiede intervento dell'operatore per il rincorso."
+  category: textile-defect
+  related_terms: [telaio, tensione_ordito, rincorso, efficienza_telaio]
+  examples:
+    - "Un tasso superiore a 5 rotture/ora/macchina segnala problema di tensione o qualita' filato."
+  source: industry-standard
+
+- term: difetto_trama
+  definition: "Irregolarita' visibile del filo di trama nel tessuto: puo' essere un filo mancante (mispick), un filo doppio, un'adesione o un garbuglio."
+  category: textile-defect
+  related_terms: [mispick, densita_trama, ispezione_rotolo, sistema_quattro_punti]
+  examples:
+    - "Un difetto trama da filo doppio penalizza il tessuto con 4 punti nel sistema di ispezione."
+  source: industry-standard
+
+- term: mispick
+  definition: "Difetto di tessitura causato da un filo di trama inserito in modo errato: filo mancante, filo doppio o filo non interlacciato correttamente con l'ordito."
+  category: textile-defect
+  related_terms: [difetto_trama, densita_trama, ispezione_rotolo]
+  examples:
+    - "Un mispick ogni 10 m e' accettabile per tessuti destinati a sartoria industriale."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: slub
+  definition: "Ispessimento locale del filo causato da una concentrazione di fibre; difetto tipico della filatura che appare come un rigonfiamento irregolare nel tessuto."
+  category: textile-defect
+  related_terms: [irregolarita_filato, rottura_filo, neps, filatura]
+  examples:
+    - "Uno slub sopra 5 mm di diametro e' classificato major nel sistema di ispezione a 4 punti."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: difetto_catena
+  definition: "Striscia verticale (nel tessuto finito) causata da un filo di ordito di titolo errato, mancante o con tensione anomala rispetto agli adiacenti."
+  category: textile-defect
+  related_terms: [ordito, tensione_ordito, liccio, ispezione_rotolo]
+  examples:
+    - "Un difetto catena su 5 cm e' classificato come difetto major e invalida il rotolo."
+  source: industry-standard
+
+- term: caduta_di_trama
+  definition: "Difetto per cui uno o piu' fili di trama non vengono inseriti in una o piu' passate, lasciando una riga orizzontale visibile nel tessuto."
+  category: textile-defect
+  related_terms: [mispick, telaio, densita_trama]
+  examples:
+    - "Una caduta di trama su piu' di 3 cm richiede declassamento del rotolo a seconda qualita'."
+  source: industry-standard
+
+- term: neps
+  definition: "Piccoli grumi di fibre intrecciate presenti nel nastro cardato o nel filo, visibili nel tessuto come irregolarita' bianche o scure; aumentano con velocita' di cardatura eccessiva."
+  category: textile-defect
+  related_terms: [cardatura, slub, carda, irregolarita_filato]
+  examples:
+    - "La conta neps al Uster HVI non deve superare 200 neps/g per cotone shirting."
+  source: industry-standard
+
+- term: deviazione_tono
+  definition: "Differenza visibile di colore tra parti dello stesso rotolo o tra rotoli dello stesso lotto, misurata come delta-E e confrontata con la tolleranza concordata."
+  category: textile-defect
+  related_terms: [delta_e, solidita_colore, tolleranza_colore, tintura]
+  examples:
+    - "Una deviazione tono con delta-E CMC superiore a 1.0 causa il rifiuto del lotto."
+  source: industry-standard
+
+- term: screziatura
+  definition: "Variazione non uniforme del colore nella superficie del tessuto tinto, visibile come macchie o aree di diversa intensita' cromatica."
+  category: textile-defect
+  related_terms: [tintura, deviazione_tono, delta_e, jet_dyeing]
+  examples:
+    - "La screziatura e' causata da un rapporto bagno non uniforme o da movimentazione tessuto lenta."
+  source: industry-standard
+
+- term: pilling
+  definition: "Formazione di piccole sfere di fibre aggrovigliate sulla superficie del tessuto, causata dall'attrito durante l'uso; misurato con metodo ICI o Martindale."
+  category: textile-defect
+  related_terms: [finissaggio, solidita_abrasione]
+  examples:
+    - "Un pilling inferiore a grado 3 ICI non e' accettabile per abbigliamento outdoor."
+  source: iso-standard
+
+- term: difetto_orlatura
+  definition: "Irregolarita' ai bordi laterali (cimose) del tessuto: orlatura allentata, difetto di liccio o di inserzione ai bordi, che compromette la qualita' estetica del bordo."
+  category: textile-defect
+  related_terms: [cimosa, telaio, liccio]
+  examples:
+    - "Un difetto orlatura continuo per piu' di 2 m causa declassamento del rotolo."
+  source: industry-standard
+
+- term: irregolarita_filato
+  definition: "Variazione periodica o casuale del titolo e della torsione di un filo, misurata con lo Uster Tester come CVm%; un CVm% alto aumenta la frequenza di difetti nel tessuto."
+  category: textile-defect
+  related_terms: [slub, neps, filatura, titolo_filato]
+  examples:
+    - "Un CVm% superiore a 15 percento e' considerato inaccettabile per filati pettinati."
+  source: industry-standard
+
+- term: contaminazione_fibra
+  definition: "Presenza di materiali estranei (fibre colorate, plastica, cotone grezzo non pulito) mescolati alla fibra durante la preparazione o la filatura, visibili nel tessuto come punti scuri o colorati."
+  category: textile-defect
+  related_terms: [cardatura, neps, filatura]
+  examples:
+    - "La contaminazione da polipropilene e' tra le piu' critiche perche' non accetta tintura."
+  source: industry-standard
+
+- term: aloni
+  definition: "Macchie circolari o irregolari sul tessuto causate da gocciolamenti di acqua, olio o prodotti chimici durante la produzione o il finissaggio."
+  category: textile-defect
+  related_terms: [ispezione_rotolo, finissaggio, tintura]
+  examples:
+    - "Un alone da olio lubrificante superiore a 3 cm2 porta a declassamento immediato."
+  source: industry-standard
+
+- term: rigatura
+  definition: "Striscia orizzontale ripetuta a intervalli regolari nel tessuto, causata da una variazione periodica della tensione di trama o da un difetto meccanico del telaio (effetto barre)."
+  category: textile-defect
+  related_terms: [densita_trama, cassa_battente, telaio, difetto_trama]
+  examples:
+    - "Una rigatura a passo di 20 cm correla con la frequenza di oscillazione della cassa battente."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-KPI (~5 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: oee
+  definition: "Overall Equipment Effectiveness — indice composito di efficienza macchina calcolato come prodotto di Disponibilita' x Prestazione x Qualita'; valore world-class sopra 85 percento."
+  category: textile-kpi
+  related_terms: [mttr, mtbf, efficienza_telaio, fermi_macchina]
+  examples:
+    - "L'OEE medio su reparti tessitura e' tipicamente 65-75 percento in manifattura europea."
+  source: industry-standard
+
+- term: densita_trama
+  definition: "Numero di fili di trama per centimetro di tessuto misurati in direzione ortogonale all'ordito; determina la compattezza e le proprieta' meccaniche del tessuto."
+  category: textile-kpi
+  related_terms: [pick, telaio, cassa_battente, conta_trama, pick density]
+  examples:
+    - "Una densita' trama di 24 picks/cm e' tipica per cotone shirting medio."
+  source: industry-standard
+
+# nota: pick density e' il termine anglosassone comunemente usato anche in italiano tessile
+- term: pick density
+  definition: "Termine tecnico anglosassone per densita' di trama, diffusamente usato nel settore tessile italiano: numero di fili di trama per centimetro di tessuto, che determina compattezza e peso."
+  category: textile-kpi
+  related_terms: [densita_trama, pick, telaio, conta_trama]
+  examples:
+    - "Una pick density di 24 picks/cm e' tipica per cotone shirting di peso medio."
+  source: industry-standard
+
+- term: delta_e
+  definition: "Differenza di colore misurata nello spazio CIE L*a*b* tra il campione e lo standard; calcolata come delta-E CMC o CIEDE2000. Valori inferiori a 1.0 sono generalmente accettati."
+  category: textile-kpi
+  related_terms: [deviazione_tono, solidita_colore, spettrofotometro, tolleranza_colore]
+  examples:
+    - "La tolleranza aziendale standard e' delta-E CMC 1.0 per produzione e 0.5 per campionario."
+  source: iso-standard
+
+- term: mtbf
+  definition: "Mean Time Between Failures — tempo medio tra due guasti consecutivi di una macchina; indica l'affidabilita' intrinseca e alimenta i modelli di manutenzione predittiva."
+  category: textile-kpi
+  related_terms: [mttr, oee, manutenzione_predittiva, fermi_macchina]
+  examples:
+    - "Un telaio con MTBF inferiore a 100 ore segnala un problema strutturale da analizzare."
+  source: industry-standard
+
+- term: mttr
+  definition: "Mean Time To Repair — tempo medio necessario per ripristinare una macchina dopo un guasto; misura l'efficienza del processo di manutenzione correttiva."
+  category: textile-kpi
+  related_terms: [mtbf, oee, manutenzione_predittiva]
+  examples:
+    - "Un MTTR superiore a 4 ore per fermi non programmati indica carenza di spare parts o competenze."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-TOOL-PPE (~5 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: calibro_digitale
+  definition: "Strumento di misura dimensionale a lettura digitale, usato in tessile per misurare spessore filo, diametro elementi meccanici (fusi, anelli) e tolleranze di montaggio."
+  category: textile-tool-ppe
+  related_terms: [titolo_filato, ispezione_meccanica]
+  examples:
+    - "Il calibro digitale Mitutoyo 500 serie misura con risoluzione 0.01 mm."
+  source: industry-standard
+
+- term: igrometro
+  definition: "Strumento per la misurazione dell'umidita' relativa dell'aria; in tessile il controllo dell'umidita' (55-65 percento RH) e' critico per ridurre le rotture filo e la carica elettrostatica."
+  category: textile-tool-ppe
+  related_terms: [filatura, rottura_filo, condizionamento_aria]
+  examples:
+    - "Un igrometro a sonda psicrometrica e' posizionato ogni 20 m in reparto filatura."
+  source: industry-standard
+
+- term: durometro
+  definition: "Strumento per la misura della durezza (Shore A o D) di componenti in gomma o materiale plastico del macchinario; usato per verificare l'usura di guarnizioni, anelli e cuscinetti."
+  category: textile-tool-ppe
+  related_terms: [manutenzione_predittiva, ispezione_meccanica]
+  examples:
+    - "Un durometro Shore A sotto 40 indica che la guarnizione va sostituita."
+  source: industry-standard
+
+- term: otoprotettori
+  definition: "Dispositivi di protezione individuale (DPI) per l'udito, obbligatori in reparti con livello sonoro superiore a 85 dB(A); in tessiture il rumore da telai e' tipicamente 95-105 dB(A)."
+  category: textile-tool-ppe
+  related_terms: [sicurezza_lavoro, dpi, livello_sonoro]
+  examples:
+    - "Gli otoprotettori con SNR 30 dB sono obbligatori in reparto tessitura."
+  source: iso-standard
+
+- term: tavolo_ispezione
+  definition: "Piano luminoso inclinato con luce posteriore diffusa, usato per l'ispezione visiva del tessuto. Permette di classificare i difetti per tipo e dimensione secondo il sistema a 4 punti."
+  category: textile-tool-ppe
+  related_terms: [ispezione_rotolo, sistema_quattro_punti, difetto_trama]
+  examples:
+    - "La velocita' di scorrimento del tavolo d'ispezione non supera i 20 m/min per cotone."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEXTILE-MATERIAL (~5 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: titolo_filato
+  definition: "Indicatore della grossezza di un filo; espresso come Nm (metrico, lunghezza per unita' di massa) o tex (massa per unita' di lunghezza). Nm 40 equivale a 40 km/kg."
+  category: textile-material
+  related_terms: [filatura, irregolarita_filato, fuso, ordito]
+  examples:
+    - "Un titolo Nm 60/2 indica un filo ritorto da due capi da Nm 60 ciascuno."
+  source: iso-standard
+
+- term: ordito
+  definition: "Insieme dei fili paralleli longitudinali disposti sul subbio del telaio, che formano la struttura portante del tessuto e si interlacciano con i fili di trama."
+  category: textile-material
+  related_terms: [subbio, trama, telaio, tensione_ordito]
+  examples:
+    - "Un ordito da 2400 fili in cotone Nm 40 e' tipico per tessuti shirting leggeri."
+  source: industry-standard
+
+- term: trama
+  definition: "Filo inserito trasversalmente tra i fili di ordito durante la tessitura, formando la seconda dimensione del tessuto; la sua densita' per centimetro e' il pick count."
+  category: textile-material
+  related_terms: [ordito, densita_trama, telaio, mispick]
+  examples:
+    - "Una trama in poliestere testurizzato riduce il costo ma richiede parametri telaio diversi."
+  source: industry-standard
+
+- term: tessuto_grezzo
+  definition: "Tessuto uscito dal telaio prima di qualsiasi trattamento di finissaggio; presenta impurezze naturali, tensioni interne e dimensioni non stabilizzate."
+  category: textile-material
+  related_terms: [finissaggio, orditura, tessitura]
+  examples:
+    - "Il tessuto grezzo perde il 3-8 percento in larghezza durante il finissaggio per cotone."
+  source: industry-standard
+
+- term: bagno_colorante
+  definition: "Soluzione acquosa di coloranti, ausiliari chimici e acqua demineralizzata preparata per la tintura; il suo rapporto peso tessuto/volume liquido (rapporto bagno) influenza l'uniformita' della tintura."
+  category: textile-material
+  related_terms: [tintura, jet_dyeing, solidita_colore, rapporto_bagno]
+  examples:
+    - "Un rapporto bagno 1:8 e' tipico per tintura di cotone in jet dyeing tradizionale."
+  source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AGENTIC-PLATFORM (~15 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: hitl
+  definition: "Human-in-the-Loop — schema di interazione in cui un agente IA si ferma a un checkpoint definito e attende l'approvazione, la correzione o la decisione di un operatore umano prima di proseguire."
+  category: agentic-platform
+  related_terms: [interrupt, audit_trail, checkpoint, decisione_critica]
+  examples:
+    - "L'agente OperatorAssistant usa HITL prima di generare un ordine di manutenzione non pianificato."
+  source: agentic-community
+
+- term: interrupt
+  definition: "Meccanismo LangGraph che mette in pausa l'esecuzione del grafo agente a un nodo definito, serializza lo stato e restituisce il controllo all'orchestratore o all'utente per input umano."
+  category: agentic-platform
+  related_terms: [hitl, checkpoint_langgraph, stato_agente, langgraph]
+  examples:
+    - "Un interrupt su nodo 'classify_anomaly' permette all'operatore di correggere la classificazione prima dell'azione."
+  source: agentic-community
+
+- term: checkpoint_langgraph
+  definition: "Snapshot serializzato dello stato completo di un grafo LangGraph, persistito su Postgres o in-memory; consente ripristino, replay e branching delle esecuzioni agente."
+  category: agentic-platform
+  related_terms: [interrupt, stato_agente, langgraph, persistenza_stato]
+  examples:
+    - "Il checkpointer Postgres persiste lo stato ogni nodo per audit trail GDPR-compliant."
+  source: agentic-community
+
+- term: langgraph
+  definition: "Framework Python per la costruzione di agenti IA come grafi di stato ciclici; supporta flussi multi-agente, interrupt, checkpoint e supervisore gerarchico."
+  category: agentic-platform
+  related_terms: [checkpoint_langgraph, interrupt, supervisore, nodo_agente]
+  examples:
+    - "LangGraph 0.4+ e' il framework di riferimento per tutti gli agenti della piattaforma."
+  source: agentic-community
+
+- term: supervisore
+  definition: "Agente di controllo gerarchicamente superiore che distribuisce task, monitora i progressi e decide il flusso tra cluster di sotto-agenti in un'architettura multi-agente."
+  category: agentic-platform
+  related_terms: [langgraph, cluster_agenti, hitl, orchestratore]
+  examples:
+    - "Il SupervisorAgent riceve eventi OPC-UA e instrada alla cluster ops o maintenance."
+  source: agentic-community
+
+- term: audit_trail
+  definition: "Registro immutabile e sequenziale di tutte le azioni, decisioni e stati di un agente IA, prodotto per ciascuna sessione; base per accountability GDPR e review delle decisioni critiche."
+  category: agentic-platform
+  related_terms: [hitl, checkpoint_langgraph, langfuse, gdpr]
+  examples:
+    - "L'audit trail di ogni decisione HITL e' conservato per 7 anni come da requisito DOC-05."
+  source: project-specific
+
+- term: embedding
+  definition: "Rappresentazione numerica densa (vettore floating point) di un testo o documento, prodotta da un modello di embedding; usata per ricerca semantica in vector store."
+  category: agentic-platform
+  related_terms: [qdrant, bge_m3, retrieval, vector_store]
+  examples:
+    - "BGE-M3 produce embedding a 1024 dimensioni per testi IT/EN senza fine-tuning."
+  source: agentic-community
+
+- term: retrieval
+  definition: "Recupero dei documenti o passaggi piu' rilevanti da un vector store dato un query embedding; base del pattern RAG (Retrieval-Augmented Generation)."
+  category: agentic-platform
+  related_terms: [embedding, qdrant, rag, bge_m3]
+  examples:
+    - "Il retrieval restituisce i top-5 chunk SOP per la query 'sostituzione subbio' con score > 0.85."
+  source: agentic-community
+
+- term: rag
+  definition: "Retrieval-Augmented Generation — pattern che arricchisce il contesto di un LLM con passaggi recuperati da una knowledge base, riducendo allucinazioni e migliorando la precisione fattuale."
+  category: agentic-platform
+  related_terms: [retrieval, embedding, llm, vector_store]
+  examples:
+    - "Gli agenti knowledge usano RAG su corpus SOP per rispondere a domande operative."
+  source: agentic-community
+
+- term: nodo_agente
+  definition: "Unita' atomica di elaborazione in un grafo LangGraph; riceve lo stato corrente, esegue una funzione (tool call, LLM call, logica Python) e restituisce il nuovo stato."
+  category: agentic-platform
+  related_terms: [langgraph, supervisore, stato_agente, tool_call]
+  examples:
+    - "Il nodo 'analyze_vibration' applica un modello time-series al segnale OPC-UA e aggiorna lo stato."
+  source: agentic-community
+
+- term: stato_agente
+  definition: "Struttura dati tipizzata (TypedDict o Pydantic) che porta tutta l'informazione condivisa tra i nodi di un grafo LangGraph; persistita dal checkpointer tra interrupt."
+  category: agentic-platform
+  related_terms: [checkpoint_langgraph, nodo_agente, langgraph]
+  examples:
+    - "Lo stato dell'OperatorAssistant include asset_id, anomaly_score, sop_candidates e hitl_decision."
+  source: agentic-community
+
+- term: langfuse
+  definition: "Piattaforma open-source di osservabilita' per sistemi LLM; tracing di chiamate, token usage, latenze, valutazioni e feedback, con storage su ClickHouse."
+  category: agentic-platform
+  related_terms: [audit_trail, tracing, llm, orchestratore]
+  examples:
+    - "Langfuse v3 self-hosted tracing ogni LLM call con metadata agente e thread_id."
+  source: agentic-community
+
+- term: qdrant
+  definition: "Vector database open-source ad alta performance per ricerca approssimata di nearest neighbor (ANN); supporta filtri payload, named vectors e sharding orizzontale."
+  category: agentic-platform
+  related_terms: [embedding, retrieval, bge_m3, vector_store]
+  examples:
+    - "Qdrant 1.9+ gestisce 500k vettori da 1024 dimensioni con latenza p99 < 20 ms."
+  source: agentic-community
+
+- term: bge_m3
+  definition: "Modello di embedding multilingue BAAI/bge-m3 con supporto nativo IT/EN, dimensioni 1024, ottimizzato per recupero semantico cross-lingual senza fine-tuning."
+  category: agentic-platform
+  related_terms: [embedding, retrieval, qdrant, rag]
+  examples:
+    - "BGE-M3 e' il modello di embedding scelto per la knowledge base IT/EN della piattaforma."
+  source: agentic-community
+
+- term: tool_call
+  definition: "Meccanismo con cui un LLM genera una chiamata strutturata (JSON) a una funzione esterna definita in un tool schema; base del pattern function-calling per agenti con capacita' di azione."
+  category: agentic-platform
+  related_terms: [nodo_agente, mcp, langgraph, llm]
+  examples:
+    - "Il tool call 'fetch_sop' e' generato dall'LLM quando serve una procedura per un guasto specifico."
+  source: agentic-community
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AGENTIC-TOOL (~5 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: mcp
+  definition: "Model Context Protocol — protocollo aperto per la comunicazione tra LLM client e server di strumenti (tools), risorse e prompt; standardizza l'integrazione di capacita' esterne agli agenti."
+  category: agentic-tool
+  related_terms: [tool_call, nodo_agente, function_calling]
+  examples:
+    - "Il server MCP sft-knowledge espone tool fetch_sop, search_glossary, get_assumption."
+  source: agentic-community
+
+- term: opc_ua
+  definition: "OPC Unified Architecture — standard IEC 62541 per la comunicazione sicura tra sistemi di controllo industriali (PLC, SCADA) e applicazioni di supervisione; base del livello OT della piattaforma."
+  category: agentic-tool
+  related_terms: [ot_bridge, sensore, plc, timescaledb]
+  examples:
+    - "L'OT Bridge pubblica eventi OPC-UA da macchine tessili su NATS JetStream ogni 500 ms."
+  source: iso-standard
+
+- term: ot_bridge
+  definition: "Componente software che traduce i dati provenienti dal livello OT (macchine, PLC, sensori) in eventi strutturati pubblicati su un message broker (NATS JetStream) per il consumo da parte degli agenti."
+  category: agentic-tool
+  related_terms: [opc_ua, nats, sensore, timescaledb]
+  examples:
+    - "L'OT Bridge applica un pattern data-diode: trasmette dati OT verso IT senza percorso di ritorno."
+  source: project-specific
+
+- term: nats
+  definition: "NATS JetStream — sistema di messaggistica ad alta performance (< 1 ms latenza p99) usato come bus eventi tra OT Bridge, agenti e orchestratore; supporta persistenza, replay e consumer groups."
+  category: agentic-tool
+  related_terms: [ot_bridge, orchestratore, event_stream]
+  examples:
+    - "NATS JetStream gestisce 5000 messaggi/secondo dal layer OT senza perdita dati."
+  source: agentic-community
+
+- term: qwen
+  definition: "Famiglia di LLM open-weight di Alibaba Cloud (Qwen2.5-7B, 14B, 32B, 72B); modello principale per l'inferenza locale degli agenti della piattaforma, servito via Ollama o vLLM."
+  category: agentic-tool
+  related_terms: [llm, ollama, rag, tool_call]
+  examples:
+    - "Qwen2.5-14B-Instruct e' il modello di riferimento per OperatorAssistant in CPU inference."
+  source: agentic-community
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REGULATORY (~2 termini)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- term: gdpr
+  definition: "General Data Protection Regulation (Regolamento UE 2016/679) — normativa europea sulla protezione dei dati personali; impone requisiti di audit trail, minimizzazione dei dati e diritto alla spiegazione sulle decisioni automatizzate rilevanti per la piattaforma agentica."
+  category: regulatory
+  related_terms: [audit_trail, hitl, retention_dati]
+  examples:
+    - "L'audit trail HITL deve essere conservato per il periodo stabilito da GDPR e normativa italiana applicabile."
+  source: iso-standard
+
+- term: eu_ai_act
+  definition: "Regolamento dell'Unione Europea sull'intelligenza artificiale (AI Act, 2024); classifica i sistemi IA per livello di rischio e impone obblighi di trasparenza, audit e controllo umano per sistemi ad alto rischio."
+  category: regulatory
+  related_terms: [hitl, audit_trail, gdpr]
+  examples:
+    - "I sistemi di supporto decisionale per manutenzione potrebbero rientrare nella categoria ad alto rischio AI Act."
+  source: industry-standard

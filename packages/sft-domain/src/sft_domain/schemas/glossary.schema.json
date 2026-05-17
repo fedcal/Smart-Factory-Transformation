@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sft-domain/schemas/glossary.schema.json",
+  "title": "SFT Glossary Term",
+  "description": "Schema Draft 2020-12 per un termine del glossario bilingue (IT/EN) — dominio textile + agentic platform (D-29, D-30)",
+  "type": "object",
+  "required": ["term", "definition", "category"],
+  "additionalProperties": false,
+  "properties": {
+    "term": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Nome canonico del termine (minuscolo, snake_case per compound)"
+    },
+    "definition": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Definizione del termine nel contesto textile/agentic"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "textile-process",
+        "textile-asset",
+        "textile-defect",
+        "textile-kpi",
+        "textile-tool-ppe",
+        "textile-material",
+        "agentic-platform",
+        "agentic-tool",
+        "regulatory"
+      ],
+      "description": "Categoria tassonomica del termine (D-30) — 9 valori ammessi"
+    },
+    "related_terms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "default": [],
+      "description": "Termini correlati nel glossario (snake_case)"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 5
+      },
+      "default": [],
+      "description": "Esempi d'uso contestualizzati"
+    },
+    "source": {
+      "type": "string",
+      "nullable": true,
+      "description": "Fonte di autorita (es. industry-standard, ISO 5247, project-specific)"
+    },
+    "no_direct_equivalent": {
+      "type": "boolean",
+      "default": false,
+      "description": "True se il termine non ha equivalente diretto nell'altra lingua (D-31)"
+    }
+  }
+}

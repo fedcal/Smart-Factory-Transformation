@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sft-domain/schemas/sop.schema.json",
+  "title": "SFT SOP Frontmatter",
+  "description": "Schema Draft 2020-12 per il frontmatter YAML delle SOP (Standard Operating Procedures) del corpus tessile sintetico (D-26)",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "version",
+    "lang",
+    "asset",
+    "asset_family",
+    "role",
+    "hazard_level",
+    "estimated_duration_min",
+    "status",
+    "created_in_phase"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^SOP-[A-Z]+-[0-9]{3}$",
+      "description": "Identificatore univoco SOP nel formato SOP-ASSET-NNN (es. SOP-LOOM-001)"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Titolo descrittivo della SOP"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Versione semantica semplificata MAJOR.MINOR (es. 1.0)"
+    },
+    "lang": {
+      "type": "string",
+      "enum": ["it", "en"],
+      "description": "Lingua del documento SOP"
+    },
+    "asset": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Asset fisico coinvolto (es. loom, jet-dyeing-machine, ring-spinning-frame)"
+    },
+    "asset_family": {
+      "type": "string",
+      "enum": [
+        "weaving",
+        "spinning",
+        "warping",
+        "dyeing",
+        "finishing",
+        "quality_grading"
+      ],
+      "description": "Famiglia di asset SOP — copre le famiglie di processo tessile (weaving, spinning, warping, dyeing, finishing per D-21) e lo scope di ispezione trasversale (quality_grading — operativo su tutti i processi per D-27). NOTA: process (D-21) e asset_family (scope SOP) sono concetti distinti: ogni processo e' un asset_family valido, ma non ogni asset_family e' un processo."
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "operator",
+        "technician",
+        "quality-manager",
+        "shift-supervisor"
+      ],
+      "description": "Ruolo destinatario della SOP (D-21 ruoli)"
+    },
+    "hazard_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Livello di rischio operativo della procedura"
+    },
+    "estimated_duration_min": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 480,
+      "description": "Durata stimata della procedura in minuti (max 8 ore)"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Lista di ID SOP prerequisiti (es. [SOP-LOOM-000])"
+    },
+    "related_glossary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Termini del glossario referenziati nella SOP"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tag liberi per categorizzazione e retrieval"
+    },
+    "audience": {
+      "type": "string",
+      "description": "Destinatario previsto (es. operations, maintenance, quality)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["reviewed", "draft-unreviewed", "deprecated"],
+      "description": "Stato di revisione del documento (D-25 fallback: draft-unreviewed se review umano non completata)"
+    },
+    "created_in_phase": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Fase di progetto in cui la SOP e' stata creata"
+    }
+  }
+}
