@@ -155,3 +155,7 @@ None — no external service configuration required.
 ---
 *Phase: 02-domain-modeling-synthetic-corpus*
 *Completed: 2026-05-17*
+
+## Self-Check: PASSED
+
+All 14 expected files exist. Both task commits found: `4d29e18` (Task 1), `515d39e` (Task 2). pytest 32/32 passed.
