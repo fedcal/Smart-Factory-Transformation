@@ -836,32 +836,37 @@ Vedi sezione **Architecture Patterns** sopra (Pattern 1-6) per esempi completi v
 [VERIFIED: iso.org/standard/11244.html, iso.org/standard/11245.html, iso.org/standard/11246.html]
 [ASSUMED: che la mancanza di traduzione IT pubblica delle ISO 5247 sia accettabile come tradeoff. Da confermare con utente se serve compliance formale]
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `simulators/synthetic-corpus` be a real Nx project (con `project.json` + `pyproject.toml`)?**
    - What we know: D-25/D-26 implicano CI validation target Nx-driven (`nx affected --target=validate-frontmatter`).
    - What's unclear: se vale la pena creare un project Python "vuoto" solo per portare il target Nx, o se gli script Python possono girare direttamente in `ci.yml` come step shell.
    - Recommendation: **creare project Nx leggero** (`simulators/synthetic-corpus/project.json` con targets ma senza `pyproject.toml`/`src/` — è data-only). Beneficio: `nx affected` salta validation se corpus non toccato; coerente con D-05 (project naming) di Phase 1.
+   - **RESOLVED:** Plan 02-04 Task 1 — `simulators/synthetic-corpus/project.json` è un Nx project leggero (no `pyproject.toml`/`src/`, data-only) con targets `validate-frontmatter` e `validate-pairing`, `implicitDependencies: ["sft-domain"]`.
 
 2. **Glossary loader API: solo `load_terms(lang)` o anche `load_term(term, lang)` lookup singolo?**
    - What we know: D-29 specifica `load_terms(lang) -> list[Term]`.
    - What's unclear: agenti Phase 5 probabilmente vorranno lookup O(1) per singolo termine.
    - Recommendation: esporre **entrambi**: `load_terms(lang) -> list[Term]` + `load_terms_dict(lang) -> dict[str, Term]`. Il dict è semplicemente `{t.term.lower(): t for t in load_terms(lang)}` con `lru_cache`. Costo: 5 LOC.
+   - **RESOLVED:** Plan 02-01 Task 3 — `sft_domain.glossary.loader` espone sia `load_terms(lang)` sia `load_terms_dict(lang)`, entrambi `@lru_cache(maxsize=2)`. Test `test_load_terms_dict_lookup_pick_density` verifica il lookup O(1) case-insensitive.
 
 3. **Assumption pages — una pagina per assumption o tabella + drill-down inline?**
    - What we know: D-33 dice "una pagina dettaglio per assumption (slug = `id`)".
    - What's unclear: 50 pagine generate (×2 lingue = 100 file) potrebbero appesantire `mkdocs build` e la sidebar nav.
    - Recommendation: **una pagina per assumption** come da D-33, ma escludere dalla sidebar nav (`hidden: true` in frontmatter) e linkare solo da `assumptions/index.md` tabella. Riduce nav noise mantenendo deep-link audit-friendly.
+   - **RESOLVED:** Plan 02-03 Task 3 — `scripts/generate-assumption-pages.py` genera 50 pagine per lingua con `hidden: true` nel frontmatter; solo l'`assumptions/index.md` (tabella) è linkato nella sidebar nav.
 
 4. **Wave 1 vs Wave 2 split per glossary seed: ~70 termini bootstrap o glossario completo immediatamente?**
    - What we know: downstream_guidance suggerisce Wave 1 = ~70 termini bootstrap, Wave 3 = espansione a ~150.
    - What's unclear: se ~70 termini coprono i SOP esempio di Wave 2 (5 SOP — 1 per asset family). Se non coprono, il glossary coverage CI check fallisce in Wave 2.
    - Recommendation: bootstrap Wave 1 deve includere **tutti i termini che appariranno nei 5 SOP esempio di Wave 2** + ~50 termini textile core. Sequenza: prima draftare i 5 SOP esempio, estrarre i bold, comporre il seed glossary di conseguenza. Inverte parzialmente l'ordine implicito ma evita ping-pong CI.
+   - **RESOLVED:** Plan 02-01 Task 3 — il bootstrap glossary (~70 termini IT + ~70 EN) pre-include esplicitamente TUTTI i bold tokens dei 5 SOP esempio di Plan 02-04 (lista minimum-required terms nel `<behavior>` del task). Sequenza inversa documentata nel `<purpose>` del Plan 01.
 
 5. **Hybrid LLM-draft fallback `status: draft-unreviewed` — chi rivede e quando?**
    - What we know: D-25 fallback è marcare 10 reviewed + 10 draft.
    - What's unclear: se il review umano viene posticipato a Phase 14, gli agenti Phase 5+ indicheranno SOP draft come retrieval source autorevole? Risk = false ground truth in agent eval.
    - Recommendation: se fallback attivo, la query glossary/retrieval di Phase 5 deve **filtrare** `status: reviewed` di default. Documentare questa contract in `simulators/synthetic-corpus/README.md` per Phase 5 planner.
+   - **RESOLVED:** Plan 02-04 README — `simulators/synthetic-corpus/README.md` § "Retrieval contract for Phase 5 (Open Question #5)" pubblica esplicitamente il contratto: Phase 5 ingestion default-filtra `status: reviewed`; i draft sono visibili solo via opt-in esplicito. Plan 02-07 Task 3 promuove i SOP da `draft-unreviewed` a `reviewed` dopo user review batch.
 
 ## Environment Availability
 
