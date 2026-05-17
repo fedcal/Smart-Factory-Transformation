@@ -1,0 +1,780 @@
+# Registro delle assunzioni di progetto — Smart Factory Transformation
+# Fonte canonica: questo file (D-33, D-35). NON modificare le pagine MkDocs generate.
+# Schema: packages/sft-domain/src/sft_domain/schemas/assumption.schema.json
+# Generatore pagine: python3 scripts/generate-assumption-pages.py
+# Validatori: python3 scripts/validate-assumption-schema.py
+#             python3 scripts/validate-assumption-components.py
+#
+# Piano 06 espanderà il registro a ~50 voci (simulation 8, external-dependency 8,
+# performance 3, cost 1). Questo file contiene le prime 30 voci (Wave 2).
+
+- id: A-001
+  statement: >-
+    I sensori IoT inviano eventi con frequenza nominale stabile (es. 1 Hz per temperatura,
+    10 Hz per vibrazione); la variabilità di campionamento è < 5% rispetto alla frequenza
+    nominale in condizioni normali di rete OT.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, anomaly-detector]
+  rationale: >-
+    Il Phase 3 success criterion #2 richiede rilevamento anomalie su stream continui.
+    Se la variabilità supera il 5%, gli algoritmi di interpolazione e il calcolo
+    delle finestre temporali producono falsi positivi. Basato su specifiche IEC 61131-3
+    per OPC-UA sampling interval e su analisi di campo di impianti tessili simili.
+  validation_method: >-
+    Phase 3: test di ingestione con sim-textile che inietta stream a frequenza variabile
+    (±1%, ±5%, ±10%). Misurare il tasso di falsi positivi dell'AnomalyDetector vs baseline.
+  risk_if_wrong: >-
+    AnomalyDetector genera alert spurii o perde picchi reali; la HITL queue si satura
+    con falsi positivi, riducendo la fiducia dell'operatore nelle segnalazioni agente.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-002
+  statement: >-
+    I dati di telemetria prodotti da sensori PLC non contengono valori NaN o NULL in
+    condizioni normali di operatività; la presenza di NaN indica un guasto o una
+    disconnessione del sensore, non un dato valido a zero.
+  category: data-quality
+  affected_components: [ot-bridge, anomaly-detector, timescaledb]
+  rationale: >-
+    L'anomaly detector utilizza serie temporali complete per il calcolo delle feature.
+    NaN silenzioso interpretato come zero causa bias nei modelli di rilevamento.
+    Documentato come pitfall nei dataset industriali pubblici (NASA C-MAPSS, PRONOSTIA).
+  validation_method: >-
+    Phase 3: iniettare NaN controllati nel feed OPC-UA simulato (sim-textile) e
+    verificare che l'ot-bridge li marcasse esplicitamente come `sensor_fault=true`
+    anziché propagarli come zero o scartarli silenziosamente.
+  risk_if_wrong: >-
+    Modelli predittivi e rilevatori di anomalia producono previsioni errate su segmenti
+    con NaN non gestiti; baseline di KPI errate per la fase di addestramento (Phase 5+).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-003
+  statement: >-
+    Tutti i messaggi di telemetria OPC-UA ricevuti dall'ot-bridge portano il tag
+    `asset_id` popolato e non-null; non esistono messaggi anonimi nel flusso di produzione
+    normale.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, anomaly-detector, predictive-maintenance]
+  rationale: >-
+    Il routing per asset_id è fondamentale per associare eventi ai modelli specifici
+    di telaio o macchina di filatura. OPC-UA NodeId include l'identità macchina per
+    standard, ma configurazioni errate di PLC possono omettere il campo.
+  validation_method: >-
+    Phase 3: inspection del 100% dei messaggi ingeriti in un batch di test di 10 minuti
+    (sim-textile); verificare che il campo `asset_id` non sia mai null o stringa vuota.
+    Alert automatico se percentuale missing_asset_id > 0%.
+  risk_if_wrong: >-
+    Telemetria non attribuibile a un asset specifico; PredictiveMaintenance non può
+    calcolare RUL (Remaining Useful Life) per singolo impianto. Dati scartati o
+    aggregati erroneamente degradano la qualità del corpus di addestramento Phase 5.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-004
+  statement: >-
+    I timestamp dei messaggi OPC-UA sono espressi in UTC con precisione al millisecondo;
+    la differenza di orario (skew) tra il PLC simulato e il server TimescaleDB è < 500ms
+    in condizioni normali di operatività.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, sim-textile]
+  rationale: >-
+    TimescaleDB hypertable usa il timestamp come chiave di partizione primaria.
+    Skew > 500ms causa inserimenti fuori-ordine che degradano le query time-range e
+    possono violare i constraint di compressione delle chunk. Standard NTP su reti OT
+    garantisce tipicamente < 50ms, ma ambienti simulati possono divergere.
+  validation_method: >-
+    Phase 3: misurare il delta tra `event_time` del messaggio e `insert_time` del DB
+    su un campione di 10.000 messaggi. Verificare p99 < 500ms e assenza di timestamp
+    futuri (clock skew positivo > 0).
+  risk_if_wrong: >-
+    Query temporali su finestre sliding producono risultati errati; alert di anomalia
+    con timestamp incongruenti confondono l'operatore. Compressione TimescaleDB
+    disabilitata automaticamente su chunk con inserimenti fuori-ordine eccessivi.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-005
+  statement: >-
+    I valori di telemetria ricevuti dall'ot-bridge includono l'unità di misura come
+    metadato di tag OPC-UA (engineering unit); non si assume che l'unità sia implicita
+    dal nome del campo.
+  category: data-quality
+  affected_components: [ot-bridge, anomaly-detector, timescaledb]
+  rationale: >-
+    PLC di produttori diversi (Siemens S7, Allen-Bradley, Beckhoff) usano convenzioni
+    di unit engineering divergenti. Senza metadato esplicito, una temperatura in °F
+    viene interpretata come °C, causando threshold di anomalia errati per es. nel
+    controllo del bagno tintoreo (range tipico 40-98°C vs 104-208°F).
+  validation_method: >-
+    Phase 3: verifica del 100% dei DataPoint ricevuti in un batch di integrazione;
+    ogni campo deve avere `unit` non-null nel tag OPC-UA. Definire mapping whitelisting
+    per unità ammesse (°C, bar, RPM, %, g/m², Nm).
+  risk_if_wrong: >-
+    Alert di temperatura o pressione errati; modelli di PredictiveMaintenance calibrati
+    su range sbagliati producono RUL irrealistici. Difetti di tintura o di filatura
+    non rilevati se threshold basati su unità errate.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-006
+  statement: >-
+    Il buffer dell'ot-bridge ha capacità sufficiente per assorbire burst di messaggi
+    fino a 3x la frequenza nominale per almeno 30 secondi senza perdita di dati,
+    in attesa del ripristino della connessione verso TimescaleDB.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, nats]
+  rationale: >-
+    Picchi di telemetria durante eventi di fault (vibrazione elevata, picco di corrente)
+    coincidono spesso con la massima necessità di dati per il rilevamento. Il buffer
+    deve garantire zero-loss in burst transitori. NATS JetStream usato come buffer
+    intermedio supporta questa semantica via `max_msgs` e `storage: memory`.
+  validation_method: >-
+    Phase 3: test di stress con sim-textile che invia 3x la frequenza nominale per 60s
+    mentre TimescaleDB è temporaneamente offline (container pausato). Verificare che
+    il 100% dei messaggi sia persistito e ingerito al ripristino della connessione.
+  risk_if_wrong: >-
+    Perdita di dati nei momenti di guasto più critici (esattamente quando servono per
+    il rilevamento); gap nelle serie temporali degradano la qualità del training corpus
+    per Phase 5. PredictiveMaintenance non può calcolare RUL su dataset con buchi.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-007
+  statement: >-
+    I dataset di replay storico usati per il training dei modelli in Phase 5 coprono
+    almeno 90 giorni di operatività di produzione; la distribuzione di guasti nel dataset
+    è rappresentativa della distribuzione reale (non sovra-campionata artificialmente).
+  category: data-quality
+  affected_components: [sim-textile, anomaly-detector, predictive-maintenance]
+  rationale: >-
+    Modelli di anomaly detection addestrati su dataset con sottorappresentazione dei
+    periodi normali producono alta precisione ma basso recall (troppi falsi negativi
+    nei guasti rari). 90 giorni è il minimo industry standard per stagionalità produttiva
+    tessile (cambi stagione filati, cicli di manutenzione programmata).
+  validation_method: >-
+    Phase 5: analisi della distribuzione classe (normale vs fault) nel dataset di training;
+    verificare ratio fault/normale < 1:10. Audit del dataset replay per copertura
+    temporale effettiva vs dichiarata.
+  risk_if_wrong: >-
+    AnomalyDetector con bias verso la classe normale, basso recall su guasti rari
+    (rottura subbio, slittamento anello). PredictiveMaintenance con RUL
+    sovrastimati, mancato intervento preventivo.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-008
+  statement: >-
+    Lo schema dei messaggi OPC-UA non subisce breaking change (rimozione di campi
+    obbligatori, cambio di tipo) tra versioni consecutive del PLC firmware; le aggiunte
+    di campi opzionali non rompono il parser dell'ot-bridge.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, anomaly-detector]
+  rationale: >-
+    La mancanza di versioning esplicito degli schema OPC-UA nei PLC di campo è comune.
+    L'ot-bridge deve essere backward-compatible per evitare downtime durante aggiornamenti
+    firmware. Pattern Tolerant Reader (D-35 Assumption living doc) usato per i messaggi
+    in ingresso.
+  validation_method: >-
+    Phase 3: test di compatibilità forward/backward con 3 versioni di schema simulato
+    (campi aggiunti, campi rimossi con default, cambio tipo da int a float).
+    Verificare che l'ot-bridge gestisca tutti e 3 i casi senza eccezione non gestita.
+  risk_if_wrong: >-
+    Aggiornamento firmware PLC blocca l'ingestione di telemetria; downtime non pianificato
+    dell'intero stack di monitoring. Perdita di dati durante la finestra di aggiornamento
+    se il buffer non è sufficiente.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-009
+  statement: >-
+    Il tempo di skew tra PLC diversi sulla stessa linea produttiva è < 200ms; eventi
+    correlati (es. rottura trama su telaio + alert qualità) possono essere correlati
+    temporalmente con una finestra di correlazione di 500ms.
+  category: data-quality
+  affected_components: [ot-bridge, timescaledb, anomaly-detector]
+  rationale: >-
+    La correlazione tra eventi su asset diversi (es. vibrazione telaio + difetto tessuto)
+    richiede che i timestamp siano sufficientemente allineati da permettere analisi
+    causale. Skew > 500ms rende impossibile distinguere causa da effetto. Standard
+    IEC 61850 per reti di processo garantisce sincronizzazione < 1ms, ma reti OT
+    legacy possono avere skew fino a 200ms senza NTP dedicato.
+  validation_method: >-
+    Phase 3: misurare lo skew inter-PLC nel simulatore sim-textile inviando un evento
+    noto su due asset simultanei. Verificare che il delta timestamp registrato in
+    TimescaleDB sia < 200ms con precisione al millisecondo.
+  risk_if_wrong: >-
+    Analisi causale non affidabile; falsa correlazione tra eventi non correlati o
+    mancata correlazione tra eventi realmente connessi. RCA specialist produce
+    diagnosi errate basate su causalità temporale.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-010
+  statement: >-
+    I dati di replay storico disponibili per il training di Phase 5 includono
+    etichette di guasto (fault labels) per almeno il 30% degli eventi di anomalia
+    presenti nel dataset; la labelizzazione è stata eseguita da personale con
+    competenza tecnica di dominio.
+  category: data-quality
+  affected_components: [anomaly-detector, predictive-maintenance, sim-textile]
+  rationale: >-
+    L'addestramento supervisionato richiede ground truth affidabile. Se le etichette
+    sono generate automaticamente (es. da threshold semplici) o da personale non
+    qualificato, i modelli apprendono pattern sbagliati. Il 30% è la soglia minima
+    per training semi-supervisionato efficace documentata in letteratura (NASA C-MAPSS
+    benchmark usa 100% labeled — qui assumiamo scenario realistico di campo).
+  validation_method: >-
+    Phase 5: audit del dataset di training con campionamento stratificato del 10% degli
+    eventi etichettati; review da domain expert (tecnico manutentore) per verificare
+    la correttezza delle etichette su almeno 100 eventi campionati.
+  risk_if_wrong: >-
+    Modelli addestrati su etichette errate generano alert sbagliati sistematicamente;
+    regressione della qualità del rilevamento rispetto a sistemi basati su soglie semplici.
+    Perdita di fiducia degli operatori nel sistema agente.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-011
+  statement: >-
+    Il deployment iniziale del sistema è limitato a un singolo sito produttivo (Mantis
+    Textile Group); non è prevista la configurazione multi-sito o multi-tenant nell'MVP.
+    Ogni istanza del sistema gestisce un solo stabilimento.
+  category: scope-limit
+  affected_components: [orchestrator, postgresql, k8s, helm]
+  rationale: >-
+    La complessità multi-tenant (isolamento dati, routing agenti per tenant, billing
+    separato) è out-of-scope per la validazione della piattaforma agente. Un singolo
+    tenant permette iterazione rapida su UX e qualità degli agenti senza overhead
+    infrastrutturale. Decisione esplicita PROJECT.md (OEPV bid Mantis-first).
+  validation_method: >-
+    Architettura review pre-Phase 11: verificare che non esistano assunzioni di
+    single-tenant hard-coded che richiederebbero refactoring invasivo per multi-tenant
+    (es. schema PostgreSQL condiviso vs schema-per-tenant). Documentare migration path.
+  risk_if_wrong: >-
+    Refactoring di schema DB e routing agente per multi-tenant richiede ri-architettura
+    significativa in Phase 11+. Se il cliente richiede multi-sito prima del completamento
+    di Phase 11, l'MVP non è deployabile.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-012
+  statement: >-
+    Non è prevista integrazione con PLC fisici reali nell'MVP; l'ot-bridge riceve
+    dati esclusivamente dal simulatore sim-textile (OPC-UA mock). L'interfaccia PLC
+    reale è deferred a un engagement post-MVP con il cliente.
+  category: scope-limit
+  affected_components: [ot-bridge, sim-textile, orchestrator]
+  rationale: >-
+    L'integrazione con PLC reali richiede accesso fisico alla rete OT del cliente,
+    security assessment della data-diode, e test on-site. Queste attività sono
+    incompatibili con il timeline del bid OEPV e con il modello di sviluppo open-source.
+    Il simulatore copre il 95% dei casi d'uso di validazione agente.
+  validation_method: >-
+    Pre-deployment Mantis: test di compatibilità ot-bridge con OPC-UA server reale
+    Siemens S7-1500 (hardware disponibile presso Mantis). Periodo: post-award del
+    contratto OEPV, prima del go-live Phase 11.
+  risk_if_wrong: >-
+    Interfaccia OPC-UA simulata non compatibile con il PLC reale (versione protocollo,
+    namespace, rate di campionamento). Richiede adattamento ot-bridge post-MVP con
+    rischio di regressioni sull'interfaccia simulata.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-013
+  statement: >-
+    Non è previsto il tracciamento del flusso fisico di materiale (filato, tessuto,
+    bobine) nell'MVP; gli agenti ragionano su dati di processo (telemetria macchina)
+    e non su dati di inventory o material tracking.
+  category: scope-limit
+  affected_components: [orchestrator, anomaly-detector, predictive-maintenance]
+  rationale: >-
+    Il material tracking richiede integrazione con sistemi MES/ERP (out-of-scope,
+    vedi A-015) o con RFID/barcode reader fisici. Il valore della piattaforma agente
+    è dimostrabile su telemetria macchina senza material tracking. Deferred a
+    Phase 12+ o all'engagement cliente post-MVP.
+  validation_method: >-
+    Architettura review: verificare che gli agenti non assumano input di material
+    tracking nei loro workflow. Se un agente richiede `material_batch_id`, questo
+    deve essere fornito dall'operatore via HITL, non da un sistema automatico.
+  risk_if_wrong: >-
+    Agenti che assumono conoscenza del material batch producono raccomandazioni
+    inapplicabili (es. "scarta il lotto B-042" senza sapere dov'è fisicamente il lotto).
+    Necessità di aggiungere HITL gate per ogni decisione material-dipendente.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-014
+  statement: >-
+    Non sono disponibili dati reali di costo del lavoro (stipendi, straordinari,
+    costo per ora di fermo macchina) per il calcolo ROI nell'MVP; i moduli di cost
+    analysis usano parametri configurabili forniti dal cliente.
+  category: scope-limit
+  affected_components: [orchestrator, postgresql]
+  rationale: >-
+    I dati di costo del lavoro sono dati sensibili, spesso non condivisibili con
+    terze parti senza accordi NDA specifici. La piattaforma agente supporta configurazione
+    esplicita di costi via panel amministrativo; il calcolo ROI è basato su questi
+    parametri configurati, non su dati salariali reali.
+  validation_method: >-
+    Phase 11: audit della configurabilità dei parametri di costo; verifica che nessun
+    valore di costo sia hardcoded nel codice. Review legale per GDPR se i dati di
+    produttività individuale venissero utilizzati.
+  risk_if_wrong: >-
+    Calcolo ROI non applicabile al contesto reale del cliente se i parametri di costo
+    non sono configurabili con sufficiente granularità. Reportistica finanziaria non
+    credibile per il bid OEPV.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-015
+  statement: >-
+    Non è prevista integrazione con sistemi ERP reali (SAP, Oracle, Infor) nell'MVP;
+    gli agenti non accedono a dati di ordini di produzione, BOM, o planning ERP.
+    I dati di piano produzione sono inseriti manualmente via HITL o da file CSV importato.
+  category: scope-limit
+  affected_components: [orchestrator, postgresql, hitl-queue]
+  rationale: >-
+    L'integrazione ERP richiede sviluppo di connettori specifici per versione (SAP S/4HANA
+    vs SAP ECC) e accordi commerciali con il vendor ERP. Deferred a Phase 13+ (Enterprise
+    Integration cluster). Il valore dell'MVP è dimostrabile con piano produzione inserito
+    manualmente per la durata della demo.
+  validation_method: >-
+    Architettura review Phase 12: definire interfaccia di integration per ERP
+    (API REST vs file-based vs direct DB); stub implementato nell'MVP deve essere
+    rimpiazzabile senza cambiamenti agli agenti.
+  risk_if_wrong: >-
+    Agenti basano raccomandazioni su piano produzione non aggiornato (es. ritardo ordine
+    non comunicato); decisioni subottimali per cambio articolo non schedulato nell'ERP.
+    Dimostrazione OEPV con dati manuali può essere percepita come limitata.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-016
+  statement: >-
+    L'interfaccia utente del sistema supporta una sola lingua per sessione (italiano
+    o inglese); il cambio di lingua richiede logout e nuovo accesso. Non è previsto
+    il cambio lingua live durante una sessione attiva nell'MVP.
+  category: scope-limit
+  affected_components: [orchestrator, hitl-queue]
+  rationale: >-
+    Il live language switch richiede state management per tutte le stringhe UI e i
+    messaggi agente già prodotti. La complessità è sproporzionata rispetto al beneficio
+    nell'MVP (target primario: operatori italiani di Mantis). Deferred a Phase 14
+    (DOC & i18n polish). Le pagine MkDocs sono bilingue per il sito di documentazione,
+    ma l'interfaccia operativa è single-language per sessione.
+  validation_method: >-
+    Phase 14: test di switch lingua su sessione attiva con almeno 3 agenti in esecuzione.
+    Verificare che lo switch non perda messaggi in coda o non generi encoding errors.
+  risk_if_wrong: >-
+    Operatori anglofoni (es. tecnici di macchina stranieri) che lavorano in turno con
+    operatori italiani devono avere sessioni separate; potenziale disagio operativo
+    in contesti multi-lingua ma limitato all'MVP.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-017
+  statement: >-
+    Il sistema non garantisce SLO (Service Level Objectives) di produzione (uptime 99.9%,
+    RTO < 1h, RPO < 15min) nell'MVP; gli SLO sono obiettivi futuri documentati per
+    Phase 11 (Secure & Production-grade). Il sistema MVP è adatto per demo e pilota.
+  category: scope-limit
+  affected_components: [orchestrator, postgresql, timescaledb, k8s, helm]
+  rationale: >-
+    L'implementazione di SLO di produzione richiede Kubernetes multi-node con HA,
+    backup automatici, runbook di disaster recovery, e monitoring 24/7. Queste
+    capacità sono out-of-scope per validare il valore degli agenti in Phase 2-10.
+    Il bid OEPV copre esplicitamente la fase pilota, non il go-live produzione.
+  validation_method: >-
+    Phase 11: definire SLO target e implementare monitoring (Prometheus + alerting).
+    Eseguire chaos engineering test (kill pod, network partition) per misurare RTO/RPO
+    effettivi vs target.
+  risk_if_wrong: >-
+    Se il cliente richiede garanzie di uptime durante la fase pilota (es. per integrazione
+    con linea produttiva reale), l'MVP non soddisfa i requisiti. Necessità di accelerare
+    Phase 11 o di aggiungere infrastruttura HA prima del go-live pilota.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-018
+  statement: >-
+    Il sistema non raggiunge la conformità SOC2 Type II o ISO 27001 nell'MVP; i controlli
+    di sicurezza implementati (gitleaks, SBOM, sealed-secrets) sono adeguati per la
+    fase di sviluppo e pilota ma non per audit di terze parti.
+  category: scope-limit
+  affected_components: [k8s, sealed-secrets, audit-stream, postgresql]
+  rationale: >-
+    SOC2 Type II richiede un periodo di osservazione di 6-12 mesi e audit annuale.
+    ISO 27001 richiede un ISMS formale. Entrambi sono out-of-scope per il timeline del
+    bid OEPV. I controlli implementati seguono le best practice (NIST CSF, OWASP)
+    e sono progettati per essere estesi a conformità completa in Phase 11+.
+  validation_method: >-
+    Phase 11: gap analysis verso SOC2 Type II e ISO 27001 con consulente specializzato.
+    Prioritizzare i controlli mancanti in base al risk register aggiornato.
+  risk_if_wrong: >-
+    Se il cliente richiede SOC2 o ISO 27001 come prerequisito per il contratto OEPV,
+    il sistema MVP non è deployabile. Necessità di accelerare Phase 11 o di escludere
+    esplicitamente i requisiti di conformità dal contratto di pilota.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-019
+  statement: >-
+    Il meccanismo HITL (Human-in-the-Loop) implementato in LangGraph non è stato
+    sottoposto a verifica formale (model checking o proof-of-safety) per garantire
+    che un agente non possa intraprendere azioni irreversibili senza approvazione
+    umana; la sicurezza HITL è garantita per design e review di codice.
+  category: scope-limit
+  affected_components: [orchestrator, hitl-queue, audit-stream]
+  rationale: >-
+    La verifica formale di safety properties su sistemi agente LangGraph richiede
+    metodi di model checking (es. TLA+, Alloy) non applicati nel timeline MVP.
+    Il design HITL usa interrupt di LangGraph con review di codice e test di integrazione
+    come garanzia pratica. La verifica formale è deferred a Phase 11 (safety-critical
+    production deployment).
+  validation_method: >-
+    Phase 11: definire le safety properties HITL in logica temporale (LTL); esplorare
+    l'applicabilità di property-based testing (Hypothesis) per coverage di casi limite.
+    Audit del codice HITL da parte di un safety engineer.
+  risk_if_wrong: >-
+    Un agente potrebbe teoricamente bypassare il gate HITL in casi limite non testati
+    (es. timeout + retry automatico su azione irreversibile). Impatto limitato in
+    ambiente pilota ma critico in ambiente di produzione.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-020
+  statement: >-
+    Il sistema non implementa un meccanismo formale di tracciamento delle versioni
+    dei modelli LLM (model versioning) nell'MVP; aggiornamenti di Qwen2.5 o di altri
+    modelli Ollama possono essere applicati senza rollback automatico se le performance
+    regrediscono.
+  category: scope-limit
+  affected_components: [ollama, orchestrator, predictive-maintenance, anomaly-detector]
+  rationale: >-
+    Il model versioning richiede infrastruttura di model registry (MLflow, Weights &
+    Biases) non inclusa nel stack MVP. Le release di Ollama usano versioni specifiche
+    (`ollama pull qwen2.5:72b`) che possono essere pinned nel Dockerfile, ma il
+    rollback automatico non è implementato. Deferred a Phase 9 (LLM Infrastructure).
+  validation_method: >-
+    Phase 9: implementare model registry e A/B testing framework. Definire metriche
+    di regressione (benchmark su domande standard del dominio tessile) che triggherano
+    rollback automatico se le performance degradano > 10%.
+  risk_if_wrong: >-
+    Aggiornamento di modello LLM introduce regressione nelle risposte agente non rilevata
+    in produzione; degradazione invisibile della qualità delle raccomandazioni senza
+    alert. Necessità di rollback manuale con downtime.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-021
+  statement: >-
+    I dati di telemetria degli operatori (quali azioni intraprendono, frequenza di
+    approvazione/rifiuto delle raccomandazioni agente, tempo di risposta HITL) non
+    contengono dati personali identificativi (PII) nel log di audit; gli eventi sono
+    loggati con user_id pseudonimizzato e ruolo, non con nome o email.
+  category: regulatory
+  affected_components: [audit-stream, postgresql, langfuse, orchestrator]
+  rationale: >-
+    GDPR Art. 5(1)(c) principio di minimizzazione dei dati: raccogliere solo dati
+    strettamente necessari allo scopo. L'audit trail di Phase 11 richiede tracciabilità
+    delle azioni ma non richiede identificazione nominale per compliance operativa.
+    La pseudonimizzazione riduce il rischio in caso di data breach dell'audit log.
+  validation_method: >-
+    Phase 11: privacy review dell'audit log schema; test di de-pseudonimizzazione per
+    verificare che l'identità reale non sia deducibile dal solo log. DPIA (Data Protection
+    Impact Assessment) se l'analisi comportamentale degli operatori viene usata per
+    valutazione delle performance.
+  risk_if_wrong: >-
+    Violazione GDPR per raccolta di dati personali non giustificata; sanzione fino a
+    4% del fatturato annuale globale. Perdita di fiducia degli operatori se percepiscono
+    il sistema come strumento di sorveglianza.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-022
+  statement: >-
+    I log di audit delle azioni agente e delle decisioni HITL vengono conservati per
+    7 anni in conformità con gli obblighi di documentazione italiana per sistemi di
+    controllo industriale (D.lgs 81/2008); i log di debug e di telemetria operativa
+    vengono eliminati dopo 30 giorni.
+  category: regulatory
+  affected_components: [audit-stream, postgresql, timescaledb, langfuse]
+  rationale: >-
+    D.lgs 81/2008 (Testo Unico Sicurezza sul Lavoro) e le norme CEI EN 60204-1
+    richiedono documentazione delle ispezioni e delle manutenzioni per 7 anni.
+    I log di audit delle azioni agente (es. raccomandazione di arresto macchina)
+    rientrano in questa categoria. La distinzione tra audit (7 anni) e debug (30 giorni)
+    è necessaria per contenere il costo di storage a lungo termine.
+  validation_method: >-
+    Phase 11: implementare data retention policy automatica (TimescaleDB retention
+    policy + PostgreSQL partitioning by date). Verifica legale da consulente labor law
+    italiano sulla categorizzazione dei log come documentazione tecnica vs dati personali.
+  risk_if_wrong: >-
+    Cancellazione prematura di log di audit necessari per indagini di incidente;
+    responsabilità legale in caso di incidente sul lavoro dove i log sono stati
+    cancellati. Costo di storage eccessivo se tutti i log sono conservati 7 anni.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-023
+  statement: >-
+    Le raccomandazioni degli agenti (es. arresto macchina, cambio parametro di processo)
+    non costituiscono decisioni automatizzate vincolanti ai sensi dell'Art. 22 GDPR
+    perché richiedono sempre approvazione umana tramite HITL; la responsabilità
+    decisionale rimane sempre in capo all'operatore.
+  category: regulatory
+  affected_components: [orchestrator, hitl-queue, audit-stream]
+  rationale: >-
+    GDPR Art. 22 vieta le decisioni automatizzate che producono effetti giuridici o
+    significativi su persone fisiche senza supervisione umana. Il HITL gate di LangGraph
+    garantisce che ogni azione con impatto (arresto macchina, cambio turno) passi
+    attraverso approvazione esplicita dell'operatore. Il sistema è un decision support
+    system, non un decision making system automatico.
+  validation_method: >-
+    Phase 11: legal opinion da avvocato specializzato GDPR sulla classificazione del
+    sistema come decision support; verifica che ogni azione classificata come
+    "significativa" abbia un HITL gate non bypassabile nel codice LangGraph.
+  risk_if_wrong: >-
+    Rischio di classificazione come sistema di decisione automatizzata; obbligo di
+    implementare diritto di revisione umana esplicito e notifica all'interessato.
+    Potenziale reclamo all'Autorità Garante Privacy italiana.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-024
+  statement: >-
+    Il sistema di AI sviluppato non rientra nella categoria "alto rischio" ai sensi
+    dell'EU AI Act (Annex III) per i casi d'uso dell'MVP (decision support per
+    manutenzione e qualità in ambito manifatturiero); il deployment non richiede
+    conformità alle obbligazioni degli HRAIS prima del go-live pilota.
+  category: regulatory
+  affected_components: [orchestrator, anomaly-detector, predictive-maintenance, hitl-queue]
+  rationale: >-
+    L'Annex III EU AI Act include sistemi AI per "gestione e operatività di infrastrutture
+    critiche" (Art. 3(2)) ma il tessile non è classificato come infrastruttura critica.
+    Il sistema è un decision support tool con HITL obbligatorio, non un sistema autonomo
+    che controlla direttamente macchinari pericolosi. Valutazione preliminare interna
+    (non legal opinion definitiva — da aggiornare al momento del deployment).
+  validation_method: >-
+    Phase 11: legal opinion da avvocato specializzato EU AI Act; self-assessment HRAIS
+    con il formulario EU Commission; eventuale registrazione nel database EU AI se
+    richiesta. Aggiornare questa assumption se il perimetro d'uso si estende a sistemi
+    safety-critical.
+  risk_if_wrong: >-
+    Obbligo di conformità HRAIS: documentazione tecnica estesa, registrazione obbligatoria,
+    audit di terze parti prima del deployment. Timeline e costi del progetto aumentano
+    significativamente. Non-conformità espone a sanzione fino a 30M EUR o 6% fatturato.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-025
+  statement: >-
+    Le decisioni degli agenti che impattano le condizioni di lavoro degli operatori
+    (es. cadenza di lavoro, monitoraggio della produttività individuale) sono soggette
+    alla disciplina dell'Art. 4 dello Statuto dei Lavoratori e, nelle aziende con RSU,
+    richiedono accordo sindacale prima del deployment.
+  category: regulatory
+  affected_components: [orchestrator, hitl-queue, audit-stream, langfuse]
+  rationale: >-
+    D.lgs 81/2008 Art. 15 e Statuto dei Lavoratori Art. 4 regolamentano i sistemi
+    di controllo a distanza dei lavoratori in Italia. Un sistema che monitora la
+    produttività per operatore o suggerisce ottimizzazioni della cadenza di lavoro
+    può essere classificato come sistema di controllo a distanza. Mantis Textile Group
+    ha una RSU; l'accordo sindacale è prerequisito legale per il deployment.
+  validation_method: >-
+    Pre-deployment Mantis: analisi legale dell'accordo sindacale necessario; definire
+    quali feature del sistema rientrano nell'Art. 4 e quali sono escluse. Documento
+    di informativa ai lavoratori (privacy notice) da approvare prima del go-live.
+  risk_if_wrong: >-
+    Blocco del deployment da parte della RSU o ispezione dell'Ispettorato del Lavoro;
+    sanzione penale per il datore di lavoro (Art. 171 Statuto Lavoratori). Timeline
+    pilota ritardata di 3-6 mesi per negoziazione sindacale.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-026
+  statement: >-
+    Il sistema HITL garantisce una spiegazione comprensibile per ogni raccomandazione
+    agente che richiede approvazione umana; l'operatore può sempre esercitare il
+    diritto alla spiegazione (GDPR Art. 22(3)) leggendo il rationale dell'agente
+    nell'interfaccia di review.
+  category: regulatory
+  affected_components: [orchestrator, hitl-queue, audit-stream]
+  rationale: >-
+    GDPR Art. 22(3) richiede "informazioni significative sulla logica utilizzata" nelle
+    decisioni automatizzate. Il HITL gate di LangGraph include sempre il campo `rationale`
+    nella presentazione all'operatore. La qualità della spiegazione è garantita dal
+    prompt engineering dell'agente (Phase 4+) e non da un meccanismo di XAI formale.
+  validation_method: >-
+    Phase 4: user study con 3 operatori Mantis; misurare comprensibilità del rationale
+    agente (scala Likert 1-5). Se media < 3.5, migliorare il template di rationale
+    nel prompt dell'agente. Integrare con audit trail per tracciabilità.
+  risk_if_wrong: >-
+    Operatori non comprendono il rationale e approvano raccomandazioni "in bianco"
+    (rubber stamp), annullando il beneficio del HITL. Potenziale contestazione legale
+    se l'operatore sostiene di non aver capito la raccomandazione che ha approvato.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-027
+  statement: >-
+    Il confine dati tra la rete OT (Operational Technology) e la rete IT è implementato
+    tramite una data-diode unidirezionale a livello applicativo (ot-bridge); i dati
+    di telemetria fluiscono solo dalla rete OT alla rete IT, mai il contrario, durante
+    l'operatività normale dell'MVP.
+  category: security
+  affected_components: [ot-bridge, timescaledb, nats, k8s]
+  rationale: >-
+    La separazione OT/IT è un requisito di sicurezza industriale (IEC 62443-3-3 SR 5.1)
+    per proteggere i sistemi di controllo da attacchi dall'esterno. Una violazione
+    del confine OT può portare a manipolazione dei PLC e danni fisici agli impianti.
+    L'ot-bridge implementa la data-diode via design (solo publish, no subscribe verso OT)
+    ma l'enforcement a livello di rete non è verificato nell'MVP (network policy K8s
+    è pianificata ma non implementata).
+  validation_method: >-
+    Phase 11: penetration test del confine OT/IT da parte di un security engineer
+    specializzato in OT security. Verificare che le NetworkPolicy K8s blocchino
+    qualsiasi traffico da IT verso OT. Test di injection: tentativo di invio comandi
+    verso sim-textile via ot-bridge (deve fallire).
+  risk_if_wrong: >-
+    Compromissione della rete OT tramite un attacco che usa l'ot-bridge come pivot;
+    potenziale manipolazione dei PLC e incidenti fisici. Impatto safety critico in
+    deployment su PLC reali (non rilevante per simulatore, critico per go-live Mantis).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-028
+  statement: >-
+    I secret applicativi (credenziali DB, API key LLM, token Langfuse) sono gestiti
+    tramite Kubernetes SealedSecrets nell'MVP; non è implementata una soluzione di
+    secret management enterprise (HashiCorp Vault, AWS Secrets Manager) nell'MVP.
+  category: security
+  affected_components: [k8s, sealed-secrets, postgresql, langfuse, ollama]
+  rationale: >-
+    SealedSecrets permette di committare secret cifrati in git con chiave RSA gestita
+    dal controller in-cluster. È adeguato per MVP e piccoli team ma ha limitazioni:
+    nessuna rotation automatica, nessun audit log degli accessi ai secret, chiave
+    master nel cluster. Vault richiederebbe un HA deployment aggiuntivo sproporzionato
+    per l'MVP.
+  validation_method: >-
+    Phase 11: gap analysis SealedSecrets vs HashiCorp Vault per i requisiti di
+    produzione. Se Mantis richiede audit log degli accessi ai secret come prerequisito
+    del contratto, implementare Vault prima del go-live. Aggiornare questa assumption.
+  risk_if_wrong: >-
+    Compromissione del cluster K8s espone tutti i secret cifrati (non i plaintext,
+    ma la chiave master SealedSecrets è nel cluster). Se la rotation dei secret non
+    è implementata e una credenziale è esposta, non c'è meccanismo di revoca automatica.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-029
+  statement: >-
+    Langfuse è deployato in modalità self-hosted (Docker/K8s) nell'MVP; non sono
+    trasmessi dati di telemetria agente o prompt/completion a Langfuse cloud.
+    Il trade-off self-hosted vs cloud è accettato: manutenzione infrastruttura > 0
+    ma zero data residency risk.
+  category: security
+  affected_components: [langfuse, postgresql, clickhouse, k8s]
+  rationale: >-
+    Langfuse self-hosted garantisce che i prompt degli agenti (che potrebbero contenere
+    dati di produzione sensibili come specifiche di lotti o difetti) non lascino
+    l'infrastruttura del cliente. Il trade-off è l'overhead di manutenzione del
+    deployment ClickHouse + PostgreSQL per Langfuse. Accettabile per MVP e pilota.
+  validation_method: >-
+    Phase 11: verifica che non esistano chiamate all'endpoint cloud Langfuse
+    (app.langfuse.com) nei log di rete del cluster K8s. Test di data residency:
+    scansione dei log di rete durante una sessione agente completa.
+  risk_if_wrong: >-
+    Dati di produzione (prompt con dettagli di lotti, difetti, specifiche macchina)
+    trasmessi a Langfuse cloud esposti a Langfuse Inc. e potenzialmente a terze parti
+    in caso di violazione. Violazione di accordi NDA con Mantis su dati produttivi.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-030
+  statement: >-
+    I pesi del modello Qwen2.5 scaricati tramite Ollama provengono da un registro
+    verificato (Hugging Face Hub ufficiale o Ollama Registry); non si esclude il
+    rischio di supply-chain attack su modelli LLM open-weight, ma il rischio è accettato
+    come residuale per l'MVP dato il livello di adozione del modello.
+  category: security
+  affected_components: [ollama, vllm, orchestrator]
+  rationale: >-
+    I modelli LLM open-weight possono essere vettori di model poisoning o backdoor
+    (analoghi a package supply chain attack). Qwen2.5 è rilasciato da Alibaba DAMO
+    Academy con hash verificabili su Hugging Face. Ollama Registry riflette i modelli
+    HF con checksum. Per l'MVP il rischio è accettato; per il go-live produzione
+    Mantis è richiesta una verifica di integrità automatica.
+  validation_method: >-
+    Phase 9: implementare verifica automatica dell'hash SHA-256 dei pesi modello al
+    momento del pull Ollama vs hash pubblicato su Hugging Face. Alert se il hash
+    diverge. Audit periodico delle versioni dei modelli in uso.
+  risk_if_wrong: >-
+    Modello backdoored produce output malevoli in specifici scenari di prompt injection;
+    dati di produzione esfiltrati via side-channel nel completion dell'agente.
+    Impatto limitato nell'MVP (nessun dato sensibile critico in produzione) ma
+    critico nel go-live Mantis.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
