@@ -1,9 +1,9 @@
 ---
 phase: 2
 slug: domain-modeling-synthetic-corpus
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: ready
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-17
 ---
 
@@ -42,20 +42,21 @@ created: 2026-05-17
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| TBD-by-planner | TBD | TBD | DOC-05 | — | Bilingual mirror IT↔EN preserved (H1+first 5 H2 match) | structural | `python3 scripts/validate-bilingual-mirror.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-05 | — | Each process page contains Mermaid `flowchart LR` + KPI + pain point sections | content | `pytest tests/test_domain_pages.py::test_process_sections` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-12 | T-V5-yaml | Assumption register YAML schema-valid (Draft 2020-12) | schema | `python3 scripts/validate-assumption-schema.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-12 | — | `affected_components` references existing Nx project / known infra | reference | `python3 scripts/validate-assumption-components.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-12 | — | Generated assumption pages idempotent vs YAML | regression | `python3 scripts/generate-assumption-pages.py --check` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-18 | T-V5-yaml | Glossary YAML files schema-valid (IT + EN) | schema | `python3 scripts/validate-glossary-schema.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-18 | — | All `**bold**` tokens in docs/corpus have glossary entry (lang-matched) | coverage | `python3 scripts/validate-glossary-coverage.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-18 | — | Generated `glossary.md` idempotent vs YAML | regression | `python3 scripts/generate-glossary-pages.py --check` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | DOC-18 | — | `sft_domain.glossary.load_terms()` returns expected count | unit | `pytest packages/sft-domain/tests/test_glossary_loader.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | KNW-10 | — | Corpus has ≥20 SOPs distributed 5+5+5+5 (loom/dyeing/spinning/quality) per lang | inventory | `pytest tests/test_corpus_inventory.py::test_distribution` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | KNW-10 | T-V12-fm | Each SOP frontmatter validates against schema | schema | `python3 scripts/validate-corpus-frontmatter.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | KNW-10 | — | Each SOP has IT+EN counterpart with matching `id` | bilingual | `python3 scripts/validate-corpus-pairing.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | KNW-10 | — | Each SOP has required H2 sections (Scope, Prereq, Tools, Steps, Verif, Trouble, Refs) | structural | included in `validate-corpus-frontmatter.py` | ❌ W0 | ⬜ pending |
-| TBD-by-planner | TBD | TBD | ALL | — | MkDocs site builds clean with new content | integration | `mkdocs build --strict` | ✅ Phase 1 (`docs-deploy.yml`) | ⬜ pending |
+| 02-02-T2 | 02-02 | 2 | DOC-05 | T-02-10 | Bilingual mirror IT↔EN preserved (H1+first 5 H2 match) | structural | `python3 scripts/validate-bilingual-mirror.py` (with `--allow-missing-en` until 02-05; without after) | ❌ W0 (created 02-04) | ⬜ pending |
+| 02-02-T2 | 02-02 | 2 | DOC-05 | T-02-07 | Each process page contains Mermaid `flowchart LR` + KPI + pain point sections + Mantis admonition | content | `pytest tests/test_domain_pages.py::test_process_sections` | ❌ W0 (created 02-02) | ⬜ pending |
+| 02-03-T1 | 02-03 | 2 | DOC-12 | T-02-11 | Assumption register YAML schema-valid (Draft 2020-12) — 30 entries Plan 03, 50 after Plan 06 | schema | `python3 scripts/validate-assumption-schema.py` | ❌ W0 (created 02-03) | ⬜ pending |
+| 02-03-T2 | 02-03 | 2 | DOC-12 | T-02-12 | `affected_components` references existing Nx project / known infra | reference | `python3 scripts/validate-assumption-components.py` | ❌ W0 (created 02-03) | ⬜ pending |
+| 02-03-T3 | 02-03 | 2 | DOC-12 | T-02-15 | Generated assumption pages idempotent vs YAML | regression | `python3 scripts/generate-assumption-pages.py --check` | ❌ W0 (created 02-03) | ⬜ pending |
+| 02-06-T1 | 02-06 | 3 | DOC-18 | T-02-27 | Glossary YAML files schema-valid (IT + EN) | schema | `python3 scripts/validate-glossary-schema.py` | ❌ W0 (created 02-06) | ⬜ pending |
+| 02-06-T1 | 02-06 | 3 | DOC-18 | T-02-28 | All `**bold**` tokens in docs/corpus have glossary entry (lang-matched) — Pitfall-5 hardened | coverage | `python3 scripts/validate-glossary-coverage.py` | ❌ W0 (created 02-06) | ⬜ pending |
+| 02-06-T2 | 02-06 | 3 | DOC-18 | T-02-29 | Generated `glossary.md` idempotent vs YAML | regression | `python3 scripts/generate-glossary-pages.py --check` | ❌ W0 (created 02-06) | ⬜ pending |
+| 02-01-T3 | 02-01 | 1 | DOC-18 | T-02-02 | `sft_domain.glossary.load_terms()` returns ≥70 (Plan 01) / ≥150 (after Plan 05) | unit | `uv run --project packages/sft-domain pytest packages/sft-domain/tests/test_glossary_loader.py` | ✅ created 02-01 | ⬜ pending |
+| 02-05-T1 | 02-05 | 3 | KNW-10 | — | Corpus has 5+5+5+5 = 20 IT SOPs (40 with EN) | inventory | `pytest tests/test_corpus_inventory.py::test_distribution_phase04` (relaxed Plan 04 ≥1, tightened in Plan 05) | ❌ W0 (created 02-04) | ⬜ pending |
+| 02-04-T2 | 02-04 | 2 | KNW-10 | T-02-17 | Each SOP frontmatter validates against sop.schema.json | schema | `python3 scripts/validate-corpus-frontmatter.py` | ❌ W0 (created 02-04) | ⬜ pending |
+| 02-04-T2 | 02-04 | 2 | KNW-10 | T-02-18 | Each SOP has IT+EN counterpart with matching `id` + asset + role + hazard | bilingual | `python3 scripts/validate-corpus-pairing.py` (with `--allow-missing-en` Plan 04 only) | ❌ W0 (created 02-04) | ⬜ pending |
+| 02-04-T2 | 02-04 | 2 | KNW-10 | T-02-17 | Each SOP has required 7 H2 sections in fixed order (Scope, Prereq, Tools, Steps, Verif, Trouble, Refs) | structural | included in `validate-corpus-frontmatter.py` | ❌ W0 (created 02-04) | ⬜ pending |
+| 02-07-T1+T2+T4 | 02-07 | 4 | ALL | T-02-35 | MkDocs site builds clean with full Phase 2 content + extended nav + tags plugin | integration | `mkdocs build --strict` via `make docs` | ✅ Phase 1 (`docs-deploy.yml`) | ⬜ pending |
+| 02-07-T3 | 02-07 | 4 | KNW-10 | T-02-33 | D-25 user review batch — SOPs promoted from draft-unreviewed to reviewed | manual | checkpoint:human-verify (Plan 07 Task 3) | ✅ manual | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
