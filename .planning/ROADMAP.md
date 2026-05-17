@@ -52,9 +52,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. At least 20 synthetic SOP documents (10 IT + 10 EN) covering loom troubleshooting, dyeing procedures, spinning maintenance, and quality grading are committed to `simulators/synthetic-corpus/` and pass a format validation check in CI
 **Plans**: 7 plans
   - [x] 02-01-PLAN.md — Schemas + Pydantic glossary loader + bootstrap glossary (~70 terms) + pytest scaffold (DOC-18 foundation)
-  - [ ] 02-02-PLAN.md — Domain analysis IT (5 process + 4 role + index) + pytest structural tests (DOC-05 IT side)
-  - [ ] 02-03-PLAN.md — Assumption register schema + 30 seed entries + validator + components-check + generator (DOC-12 part 1)
-  - [ ] 02-04-PLAN.md — synthetic-corpus Nx project + 5 example IT SOPs + 3 corpus validators (KNW-10 foundation)
+  - [x] 02-02-PLAN.md — Domain analysis IT (5 process + 4 role + index) + pytest structural tests (DOC-05 IT side)
+  - [x] 02-03-PLAN.md — Assumption register schema + 30 seed entries + validator + components-check + generator (DOC-12 part 1)
+  - [x] 02-04-PLAN.md — synthetic-corpus Nx project + 5 example IT SOPs + 3 corpus validators (KNW-10 foundation)
   - [ ] 02-05-PLAN.md — Remaining 15 IT SOPs + all 20 EN SOPs + 10 EN domain pages + glossary expansion to ≥150 (KNW-10 + DOC-05 EN + DOC-18 esaustivo)
   - [ ] 02-06-PLAN.md — Assumption register expansion to 50 + glossary schema/coverage scripts + 6 Nx targets + CI wiring (DOC-12 close + DOC-18 gates live)
   - [ ] 02-07-PLAN.md — mkdocs nav + tags plugin + SOP indexes + regenerate derived content + D-25 user review checkpoint + mkdocs strict build + Phase 2 sign-off (all 4 requirements close)
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
-| 2. Domain Modeling & Synthetic Corpus | 1/7 | In Progress|  |
+| 2. Domain Modeling & Synthetic Corpus | 4/7 | In Progress|  |
 | 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
