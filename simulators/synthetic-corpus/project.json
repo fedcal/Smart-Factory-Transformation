@@ -1,0 +1,40 @@
+{
+  "name": "synthetic-corpus",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "simulators/synthetic-corpus",
+  "targets": {
+    "validate-frontmatter": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 scripts/validate-corpus-frontmatter.py --corpus-dir simulators/synthetic-corpus"
+      },
+      "inputs": [
+        "{projectRoot}/**/*.md",
+        "{workspaceRoot}/packages/sft-domain/src/sft_domain/schemas/sop.schema.json",
+        "{workspaceRoot}/scripts/validate-corpus-frontmatter.py"
+      ]
+    },
+    "validate-pairing": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 scripts/validate-corpus-pairing.py --corpus-dir simulators/synthetic-corpus"
+      },
+      "inputs": [
+        "{projectRoot}/**/*.md",
+        "{workspaceRoot}/scripts/validate-corpus-pairing.py"
+      ]
+    },
+    "validate-bilingual-mirror": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python3 scripts/validate-bilingual-mirror.py --docs-dir docs/docs"
+      },
+      "inputs": [
+        "{workspaceRoot}/docs/docs/**/*.md",
+        "{workspaceRoot}/scripts/validate-bilingual-mirror.py"
+      ]
+    }
+  },
+  "implicitDependencies": ["sft-domain"]
+}
