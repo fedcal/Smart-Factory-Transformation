@@ -60,6 +60,21 @@ def _load_terms_cached(lang: Literal["it", "en"]) -> list[Term]:
     return [Term.model_validate(entry) for entry in raw_data]
 
 
+@lru_cache(maxsize=2)
+def load_terms_dict(lang: Literal["it", "en"]) -> dict[str, Term]:
+    """Restituisce un dizionario {term.lower(): Term} per lookup O(1).
+
+    Args:
+        lang: Codice lingua — "it" (italiano) o "en" (inglese).
+
+    Returns:
+        Dizionario immutabile {term_lowercase: Term} con lookup O(1).
+        La chiave e' term.lower() per normalizzazione case-insensitive.
+    """
+    return {t.term.lower(): t for t in load_terms(lang)}
+
+
 def invalidate_cache() -> None:
     """Invalida la cache del loader (utile nei test per ricaricare YAML modificati)."""
     _load_terms_cached.cache_clear()
+    load_terms_dict.cache_clear()
