@@ -1,9 +1,19 @@
 [project]
 name = "sft-domain"
-version = "0.1.0"
+version = "0.2.0"
 requires-python = ">=3.12,<3.13"
 description = "Textile domain models: defect taxonomy, asset registry, IT/EN glossary"
-dependencies = []
+dependencies = [
+  "pydantic>=2.13.4",
+  "pyyaml>=6.0",
+  "jsonschema>=4.23",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "python-frontmatter>=1.1",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -11,3 +21,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sft_domain"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
