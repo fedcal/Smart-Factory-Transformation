@@ -54,6 +54,37 @@ services:
       - sft-core
     restart: unless-stopped
 
+  # Phase 4 Plan 04-07: FastAPI HITL REST surface. Joins sft-core only —
+  # NEVER reaches sft-ot per Phase 3 D-51 data-diode. NATS lives in sim.yml
+  # on the sft-core network; load both files to wire end-to-end:
+  #     docker compose -f infra/compose/core.yml -f infra/compose/sim.yml up
+  api-gateway:
+    build:
+      context: ../..
+      dockerfile: apps/api-gateway/Dockerfile
+    image: sft-api-gateway:dev
+    container_name: sft-api-gateway
+    environment:
+      TIMESCALE_DSN: "postgresql://${POSTGRES_USER:-sft}:${POSTGRES_PASSWORD:-sft_dev_pass}@postgres:5432/${POSTGRES_DB:-sft}"
+      NATS_URL: "nats://nats:4222"
+      API_GATEWAY_PORT: "8081"
+      POOL_MIN_SIZE: "5"
+      POOL_MAX_SIZE: "20"
+    ports:
+      - "${API_GATEWAY_PORT:-8081}:8081"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request,sys; r=urllib.request.urlopen(\"http://localhost:8081/v1/health\", timeout=3); sys.exit(0 if r.getcode()==200 else 1)'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sft-core
+    restart: unless-stopped
+
 volumes:
   pg-data:
   redis-data:
