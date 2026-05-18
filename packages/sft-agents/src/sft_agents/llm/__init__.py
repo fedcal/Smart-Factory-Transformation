@@ -17,13 +17,21 @@ from __future__ import annotations
 
 from sft_agents.llm.budgeting import BudgetingChatModel
 from sft_agents.llm.factory import LLMBackend, build_chat_model, get_llm
+from sft_agents.llm.langfuse_callback import (
+    build_invocation_config,
+    build_invocation_metadata,
+    get_langfuse_callback,
+)
 from sft_agents.llm.usage import extract_usage_metadata, resolve_model_id
 
 __all__ = [
     "BudgetingChatModel",
     "LLMBackend",
     "build_chat_model",
+    "build_invocation_config",
+    "build_invocation_metadata",
     "extract_usage_metadata",
+    "get_langfuse_callback",
     "get_llm",
     "resolve_model_id",
 ]
