@@ -201,15 +201,22 @@ async def test_get_postgres_checkpointer_round_trip(
         async with get_postgres_checkpointer(langgraph_pg_dsn) as saver:
             session = uuid4()
             thread_id = format_thread_id("ops", "operator-assistant", session)
-            config = {"configurable": {"thread_id": thread_id}}
+            # langgraph-checkpoint-postgres requires both thread_id and checkpoint_ns
+            # (namespace, empty-string for the top-level graph).
+            config = {
+                "configurable": {
+                    "thread_id": thread_id,
+                    "checkpoint_ns": "",
+                }
+            }
 
             ckpt = empty_checkpoint()
             # Mark the checkpoint to assert round-trip identity.
             ckpt["channel_values"] = {"marker": "phase-04-plan-05-checkpointer-roundtrip"}
 
-            await saver.aput(config, ckpt, {}, {})
+            stored_config = await saver.aput(config, ckpt, {}, {})
 
-            loaded = await saver.aget_tuple(config)
+            loaded = await saver.aget_tuple(stored_config)
             assert loaded is not None, "Expected aget_tuple to return the checkpoint we just stored"
             assert loaded.checkpoint["channel_values"]["marker"] == (
                 "phase-04-plan-05-checkpointer-roundtrip"
