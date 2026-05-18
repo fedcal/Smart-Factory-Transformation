@@ -1,0 +1,15 @@
+# Source: CONTEXT.md D-58 (Safety Interlock whitelist — Plan 04-06, T-04-Whitelist-Bypass)
+# Hardcoded whitelist of forbidden NATS subject globs + action types.
+# SafetyInterlockMiddleware.check() rejects any ProposedAction whose target_subject
+# matches any glob OR whose action_type appears in forbidden_action_types.
+# No UI override — code-only changes require PR + audit trail.
+forbidden_subjects:
+  - "cmd.plc.setpoint.>"
+  - "cmd.actuator.>"
+  - "cmd.firmware.deploy"
+  - "cmd.network.acl.>"
+forbidden_action_types:
+  - WRITE_PLC_SETPOINT
+  - ACTUATOR_COMMAND
+  - FIRMWARE_DEPLOY
+  - NETWORK_ACL_CHANGE
