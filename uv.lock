@@ -17,6 +17,7 @@ members = [
     "scm-energy-optimizer",
     "scm-inventory-manager",
     "sft-agents",
+    "sft-assets",
     "sft-contracts",
     "sft-domain",
     "sim-textile",
@@ -518,6 +519,32 @@ source = { editable = "apps/agents/supply/inventory-manager" }
 name = "sft-agents"
 version = "0.1.0"
 source = { editable = "packages/sft-agents" }
+
+[[package]]
+name = "sft-assets"
+version = "0.1.0"
+source = { editable = "packages/sft-assets" }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jsonschema", specifier = ">=4.23" },
+    { name = "pydantic", specifier = ">=2.13.4" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24" },
+    { name = "pyyaml", specifier = ">=6.0" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "sft-contracts"

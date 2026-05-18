@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-all
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -138,11 +138,16 @@ validate-glossary:
 	python3 scripts/validate-glossary-schema.py
 	python3 scripts/validate-glossary-coverage.py
 
+# Valida il registro asset contro asset.schema.json (D-45, IOT-09)
+# Prerequisito: uv sync (pyyaml, jsonschema gia' in workspace devDeps)
+validate-assets:
+	python3 scripts/validate-asset-registry.py
+
 # Esegue tutte le validazioni di contenuto in sequenza
-# Include: schema glossario, copertura, corpus frontmatter, assumption register, specchi bilingue
+# Include: schema glossario, copertura, corpus frontmatter, assumption register, asset registry
 # e check drift pagine generate (--check mode per generate-glossary-pages.py)
 # Usa 'uv run' per i validatori che richiedono dipendenze Python
-validate-all: validate-glossary validate-corpus
+validate-all: validate-glossary validate-corpus validate-assets
 	uv run python3 scripts/validate-assumption-schema.py
 	uv run python3 scripts/validate-assumption-components.py
 	python3 scripts/generate-glossary-pages.py --check

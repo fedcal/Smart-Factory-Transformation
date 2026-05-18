@@ -1,0 +1,833 @@
+# Asset registry — sft-assets (D-45)
+# 30 asset Mantis-realistic: 12 LOOM + 8 SPIN + 4 WARP + 4 DYE + 2 STEN
+# Tag dictionary ~50 occorrenze distribuite per 5 famiglie, 24 tag_id distinti
+# CRITICAL: SEMPRE yaml.safe_load, MAI yaml.load (T-03-01-yaml)
+# Ogni asset_id match pattern ^[A-Z]+-\d{2}$
+# Ogni opcua_namespace inizia con urn:mantis: (T-03-01-pydantic)
+
+# ============================================================
+# LOOM — 12 telai (weaving-line-1: LOOM-01..08, weaving-line-2: LOOM-09..12)
+# Tag per loom: warp_tension, pick_density, creel_speed, broken_pick_count, loom_temperature
+# ============================================================
+
+- asset_id: LOOM-01
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-01"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-02
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-02"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-03
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-03"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-04
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-04"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-05
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-05"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-06
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-06"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-07
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-07"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-08
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-08"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-09
+  asset_family: loom
+  line_id: weaving-line-2
+  opcua_namespace: "urn:mantis:loom:LOOM-09"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-10
+  asset_family: loom
+  line_id: weaving-line-2
+  opcua_namespace: "urn:mantis:loom:LOOM-10"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-11
+  asset_family: loom
+  line_id: weaving-line-2
+  opcua_namespace: "urn:mantis:loom:LOOM-11"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+- asset_id: LOOM-12
+  asset_family: loom
+  line_id: weaving-line-2
+  opcua_namespace: "urn:mantis:loom:LOOM-12"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: creel_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: broken_pick_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: loom_temperature
+      unit: degC
+      sample_rate_hz: 2.0
+      semantic_type: temperature
+  status: active
+
+# ============================================================
+# SPIN — 8 ring frames (spinning-line-1: SPIN-01..08)
+# Tag per spinning: spindle_speed, yarn_tension, roller_temperature, broken_end_count, spindle_vibration
+# ============================================================
+
+- asset_id: SPIN-01
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-01"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-02
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-02"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-03
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-03"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-04
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-04"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-05
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-05"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-06
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-06"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-07
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-07"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+- asset_id: SPIN-08
+  asset_family: spinning
+  line_id: spinning-line-1
+  opcua_namespace: "urn:mantis:spinning:SPIN-08"
+  tags:
+    - tag_id: spindle_speed
+      unit: rpm
+      sample_rate_hz: 5.0
+      semantic_type: speed
+    - tag_id: yarn_tension
+      unit: cN
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: roller_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: broken_end_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: spindle_vibration
+      unit: mm_s
+      sample_rate_hz: 10.0
+      semantic_type: vibration
+  status: active
+
+# ============================================================
+# WARP — 4 warpers (warping-line-1: WARP-01..04)
+# Tag per warping: tension_imbalance, creel_feed_rate, warp_count, winding_speed
+# ============================================================
+
+- asset_id: WARP-01
+  asset_family: warping
+  line_id: warping-line-1
+  opcua_namespace: "urn:mantis:warping:WARP-01"
+  tags:
+    - tag_id: tension_imbalance
+      unit: N
+      sample_rate_hz: 2.0
+      semantic_type: tension
+    - tag_id: creel_feed_rate
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+    - tag_id: warp_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: winding_speed
+      unit: rpm
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active
+
+- asset_id: WARP-02
+  asset_family: warping
+  line_id: warping-line-1
+  opcua_namespace: "urn:mantis:warping:WARP-02"
+  tags:
+    - tag_id: tension_imbalance
+      unit: N
+      sample_rate_hz: 2.0
+      semantic_type: tension
+    - tag_id: creel_feed_rate
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+    - tag_id: warp_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: winding_speed
+      unit: rpm
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active
+
+- asset_id: WARP-03
+  asset_family: warping
+  line_id: warping-line-1
+  opcua_namespace: "urn:mantis:warping:WARP-03"
+  tags:
+    - tag_id: tension_imbalance
+      unit: N
+      sample_rate_hz: 2.0
+      semantic_type: tension
+    - tag_id: creel_feed_rate
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+    - tag_id: warp_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: winding_speed
+      unit: rpm
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active
+
+- asset_id: WARP-04
+  asset_family: warping
+  line_id: warping-line-1
+  opcua_namespace: "urn:mantis:warping:WARP-04"
+  tags:
+    - tag_id: tension_imbalance
+      unit: N
+      sample_rate_hz: 2.0
+      semantic_type: tension
+    - tag_id: creel_feed_rate
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+    - tag_id: warp_count
+      unit: count
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: winding_speed
+      unit: rpm
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active
+
+# ============================================================
+# DYE — 4 dyeing vasche (dyeing-line-1: DYE-01..04)
+# Tag per dyeing: bath_temperature, bath_ph, bath_level, flow_rate, recipe_deviation, bath_pressure
+# ============================================================
+
+- asset_id: DYE-01
+  asset_family: dyeing
+  line_id: dyeing-line-1
+  opcua_namespace: "urn:mantis:dyeing:DYE-01"
+  tags:
+    - tag_id: bath_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: bath_ph
+      unit: pH
+      sample_rate_hz: 1.0
+      semantic_type: ph
+    - tag_id: bath_level
+      unit: mm
+      sample_rate_hz: 1.0
+      semantic_type: level
+    - tag_id: flow_rate
+      unit: l_min
+      sample_rate_hz: 1.0
+      semantic_type: flow
+    - tag_id: recipe_deviation
+      unit: pct
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: bath_pressure
+      unit: bar
+      sample_rate_hz: 1.0
+      semantic_type: pressure
+  status: active
+
+- asset_id: DYE-02
+  asset_family: dyeing
+  line_id: dyeing-line-1
+  opcua_namespace: "urn:mantis:dyeing:DYE-02"
+  tags:
+    - tag_id: bath_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: bath_ph
+      unit: pH
+      sample_rate_hz: 1.0
+      semantic_type: ph
+    - tag_id: bath_level
+      unit: mm
+      sample_rate_hz: 1.0
+      semantic_type: level
+    - tag_id: flow_rate
+      unit: l_min
+      sample_rate_hz: 1.0
+      semantic_type: flow
+    - tag_id: recipe_deviation
+      unit: pct
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: bath_pressure
+      unit: bar
+      sample_rate_hz: 1.0
+      semantic_type: pressure
+  status: active
+
+- asset_id: DYE-03
+  asset_family: dyeing
+  line_id: dyeing-line-1
+  opcua_namespace: "urn:mantis:dyeing:DYE-03"
+  tags:
+    - tag_id: bath_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: bath_ph
+      unit: pH
+      sample_rate_hz: 1.0
+      semantic_type: ph
+    - tag_id: bath_level
+      unit: mm
+      sample_rate_hz: 1.0
+      semantic_type: level
+    - tag_id: flow_rate
+      unit: l_min
+      sample_rate_hz: 1.0
+      semantic_type: flow
+    - tag_id: recipe_deviation
+      unit: pct
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: bath_pressure
+      unit: bar
+      sample_rate_hz: 1.0
+      semantic_type: pressure
+  status: active
+
+- asset_id: DYE-04
+  asset_family: dyeing
+  line_id: dyeing-line-1
+  opcua_namespace: "urn:mantis:dyeing:DYE-04"
+  tags:
+    - tag_id: bath_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: bath_ph
+      unit: pH
+      sample_rate_hz: 1.0
+      semantic_type: ph
+    - tag_id: bath_level
+      unit: mm
+      sample_rate_hz: 1.0
+      semantic_type: level
+    - tag_id: flow_rate
+      unit: l_min
+      sample_rate_hz: 1.0
+      semantic_type: flow
+    - tag_id: recipe_deviation
+      unit: pct
+      sample_rate_hz: 1.0
+      semantic_type: density
+    - tag_id: bath_pressure
+      unit: bar
+      sample_rate_hz: 1.0
+      semantic_type: pressure
+  status: active
+
+# ============================================================
+# STEN — 2 stenter (finishing-line-1: STEN-01..02)
+# Tag per finishing: fabric_tension, chamber_temperature, humidity, fabric_speed
+# ============================================================
+
+- asset_id: STEN-01
+  asset_family: finishing
+  line_id: finishing-line-1
+  opcua_namespace: "urn:mantis:finishing:STEN-01"
+  tags:
+    - tag_id: fabric_tension
+      unit: N
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: chamber_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: humidity
+      unit: pct_rh
+      sample_rate_hz: 1.0
+      semantic_type: humidity
+    - tag_id: fabric_speed
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active
+
+- asset_id: STEN-02
+  asset_family: finishing
+  line_id: finishing-line-1
+  opcua_namespace: "urn:mantis:finishing:STEN-02"
+  tags:
+    - tag_id: fabric_tension
+      unit: N
+      sample_rate_hz: 5.0
+      semantic_type: tension
+    - tag_id: chamber_temperature
+      unit: degC
+      sample_rate_hz: 1.0
+      semantic_type: temperature
+    - tag_id: humidity
+      unit: pct_rh
+      sample_rate_hz: 1.0
+      semantic_type: humidity
+    - tag_id: fabric_speed
+      unit: m_min
+      sample_rate_hz: 2.0
+      semantic_type: speed
+  status: active

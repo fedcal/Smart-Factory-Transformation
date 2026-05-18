@@ -9,6 +9,7 @@ members = [
   "packages/sft-agents",
   "packages/sft-domain",
   "packages/sft-contracts",
+  "packages/sft-assets",
   "apps/orchestrator",
   "apps/api-gateway",
   "apps/agents/ops/operator-assistant",
