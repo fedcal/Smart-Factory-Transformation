@@ -52,10 +52,14 @@ def mock_pool():
     conn = AsyncMock()
     conn.executemany = AsyncMock(return_value=None)
 
+    # Crea un context manager asincrono per pool.acquire()
+    acquire_ctx = MagicMock()
+    acquire_ctx.__aenter__ = AsyncMock(return_value=conn)
+    acquire_ctx.__aexit__ = AsyncMock(return_value=False)
+
     pool = AsyncMock()
-    # pool.acquire() restituisce un context manager asincrono
-    pool.acquire.return_value.__aenter__ = AsyncMock(return_value=conn)
-    pool.acquire.return_value.__aexit__ = AsyncMock(return_value=False)
+    # pool.acquire() deve ritornare il context manager (non una coroutine)
+    pool.acquire = MagicMock(return_value=acquire_ctx)
 
     return pool, conn
 

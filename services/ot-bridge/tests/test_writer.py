@@ -127,9 +127,12 @@ class TestPoolConfig:
         statement_cache_size=0, command_timeout=10.0 (Pitfall 6)."""
         from svc_ot_bridge.timescale_writer import TimescaleWriter
 
-        mock_pool = AsyncMock()
-        # create_task per il flush loop — usiamo patch su asyncio.create_task
-        with patch("asyncpg.create_pool", return_value=mock_pool) as mock_create_pool, \
+        pool_instance = MagicMock()
+
+        # asyncpg.create_pool e' una coroutine — patch con AsyncMock che ritorna pool_instance
+        mock_create_pool = AsyncMock(return_value=pool_instance)
+
+        with patch("svc_ot_bridge.timescale_writer.asyncpg.create_pool", mock_create_pool), \
              patch("asyncio.create_task") as mock_create_task:
 
             writer = TimescaleWriter(dsn="postgresql://test:5432/sft")
