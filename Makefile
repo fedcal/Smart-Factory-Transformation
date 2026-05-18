@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats load-test-full
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry migrate-phase4 migrate-phase4-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats load-test-full
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -180,6 +180,22 @@ migrate-timescale:
 # Mostra quali migration verrebbero applicate senza connettersi al DB
 migrate-timescale-dry:
 	python3 scripts/timescale-migrate.py --dry-run
+
+## Phase 4: Wave 2 substrate (HITL approvals + audit hypertable + budget + LangGraph checkpoints)
+# -----------------------------------------------------------------------
+
+# Applica tutte le migration TimescaleDB (001-005) E inizializza le tabelle
+# checkpoint di LangGraph (public.checkpoints*) via AsyncPostgresSaver.setup().
+# Idempotente: re-eseguibile senza side-effects.
+# DRY_RUN=1 forwards --dry-run to both scripts.
+# Prerequisiti: $TIMESCALE_DSN impostato (oppure docker compose up via make up-core),
+#               langgraph-checkpoint-postgres>=3.1 installato in venv corrente.
+migrate-phase4:
+	python3 scripts/timescale-migrate.py $(if $(DRY_RUN),--dry-run,)
+	python3 scripts/langgraph-init.py $(if $(DRY_RUN),--dry-run,)
+
+migrate-phase4-dry:
+	$(MAKE) migrate-phase4 DRY_RUN=1
 
 ## Phase 3: IT/OT stack lifecycle (D-51 dual-network + IOT-10 smoke gate)
 # -----------------------------------------------------------------------
