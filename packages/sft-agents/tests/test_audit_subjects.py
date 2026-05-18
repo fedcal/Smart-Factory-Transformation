@@ -35,7 +35,6 @@ from sft_agents.audit.subjects import (  # noqa: E402
 )
 from sft_agents.models.enums import Tier  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # Module-level constants
 # ---------------------------------------------------------------------------

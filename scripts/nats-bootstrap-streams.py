@@ -2,11 +2,13 @@
 """
 scripts/nats-bootstrap-streams.py
 
-Idempotent JetStream stream bootstrap per svc-ot-bridge.
+Idempotent JetStream stream bootstrap per svc-ot-bridge + Phase 4 audit substrate.
 
 Crea (o aggiorna se esistente) i JetStream streams:
     SENSOR_EVENTS  — sensor.events.> + sensor.alarms.>  retention=WorkQueue max_age=7d
     AUDIT_OT       — audit.ot.>                         retention=Limits    max_age=30d
+    AUDIT_STREAM   — audit.actions.> + hitl.approvals.> + hitl.governor.>
+                     retention=Limits max_age=90d  (Phase 4 D-56 + HITL-05)
 
 Idempotency (Pitfall 3 mitigation):
     try: add_stream(config) except BadRequestError: update_stream(config)
@@ -90,7 +92,21 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         "storage": "FileStorage",
     }
 
-    all_cfg_specs = [sensor_events_cfg, audit_ot_cfg]
+    # Phase 4 D-56 + HITL-05: dual-write audit replica + HITL push notifications
+    # + governor alerts. 90-day retention enforced at stream level.
+    audit_stream_cfg = {
+        "name": "AUDIT_STREAM",
+        "subjects": ["audit.actions.>", "hitl.approvals.>", "hitl.governor.>"],
+        "retention": "LimitsPolicy",
+        "max_age_days": 90,
+        "storage": "FileStorage",
+        "max_msgs": -1,
+        "max_bytes": -1,
+        "discard": "DiscardPolicy.OLD",
+        "num_replicas": 1,
+    }
+
+    all_cfg_specs = [sensor_events_cfg, audit_ot_cfg, audit_stream_cfg]
 
     if dry_run:
         print("[dry-run] Stream configurations (would create/update):")
@@ -104,6 +120,7 @@ async def bootstrap(server: str, dry_run: bool) -> int:
             print()
         print("SENSOR_EVENTS: would create/update")
         print("AUDIT_OT: would create/update")
+        print("AUDIT_STREAM: would create/update")
         return 0
 
     # Importa nats solo se non dry-run (evita ModuleNotFoundError su ambienti dev)
@@ -115,12 +132,18 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         StreamConfig,
     )
 
-    # Costruisci StreamConfig objects reali
+    # Costruisci StreamConfig objects reali.
+    #
+    # NOTE su `max_age`: nats-py 2.14 espone `max_age` in *secondi* (float)
+    # nella StreamConfig dataclass; viene convertito a nanosecondi solo durante
+    # la serializzazione JSON verso il server. Passare nanosecondi qui produce
+    # un valore fuori range (~1e24) che il server rifiuta con
+    # `BadRequestError code=400 err_code=10025 description='invalid JSON'`.
     cfg_sensor = StreamConfig(
         name="SENSOR_EVENTS",
         subjects=["sensor.events.>", "sensor.alarms.>"],
         retention=RetentionPolicy.WORK_QUEUE,
-        max_age=7 * 24 * 3600 * 1_000_000_000,  # 7 giorni in nanosecondi
+        max_age=7 * 24 * 3600,  # 7 giorni in secondi (Plan 04-04 fix Rule 3)
         storage=StorageType.FILE,
         max_msgs_per_subject=-1,
         discard=DiscardPolicy.OLD,
@@ -130,11 +153,26 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         name="AUDIT_OT",
         subjects=["audit.ot.>"],
         retention=RetentionPolicy.LIMITS,
-        max_age=30 * 24 * 3600 * 1_000_000_000,  # 30 giorni in nanosecondi
+        max_age=30 * 24 * 3600,  # 30 giorni in secondi (Plan 04-04 fix Rule 3)
         storage=StorageType.FILE,
     )
 
-    all_configs = [cfg_sensor, cfg_audit]
+    # Phase 4 D-56 + HITL-05: 90-day retention for audit dual-write replica
+    # Subjects: audit.actions.<cluster>.<agent_id>, hitl.approvals.{new,resolved}.<tier>,
+    # hitl.governor.alert — see packages/sft-agents/src/sft_agents/audit/subjects.py
+    cfg_audit_stream = StreamConfig(
+        name="AUDIT_STREAM",
+        subjects=["audit.actions.>", "hitl.approvals.>", "hitl.governor.>"],
+        retention=RetentionPolicy.LIMITS,
+        max_age=90 * 24 * 3600,  # 90 giorni in secondi (nats-py 2.14 semantic)
+        storage=StorageType.FILE,
+        max_msgs=-1,
+        max_bytes=-1,
+        discard=DiscardPolicy.OLD,
+        num_replicas=1,
+    )
+
+    all_configs = [cfg_sensor, cfg_audit, cfg_audit_stream]
 
     # Connessione reale
     try:

@@ -16,7 +16,7 @@ Covers:
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 from uuid import uuid4
 
@@ -33,8 +33,6 @@ from sft_agents.models.audit import AuditRecord  # noqa: E402
 from sft_agents.models.budget import BudgetSnapshot  # noqa: E402
 from sft_agents.models.enums import ApprovalStatus, Decision, Tier  # noqa: E402
 from sft_agents.models.evidence import EvidencePanel, TokenUsage  # noqa: E402
-
-UTC = timezone.utc
 
 
 def _make_evidence() -> EvidencePanel:

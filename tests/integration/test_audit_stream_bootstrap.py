@@ -24,7 +24,7 @@ import os
 import pathlib
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
@@ -39,8 +39,6 @@ pytest.importorskip("nats", reason="nats-py not installed")
 from testcontainers.core.container import DockerContainer  # noqa: E402
 from testcontainers.core.waiting_utils import wait_for_logs  # noqa: E402
 
-
-UTC = timezone.utc
 _REPO_ROOT = pathlib.Path(__file__).parent.parent.parent
 _BOOTSTRAP_SCRIPT = _REPO_ROOT / "scripts" / "nats-bootstrap-streams.py"
 _NATS_PORT = 4222
@@ -112,8 +110,10 @@ async def test_bootstrap_creates_audit_stream(nats_container: str) -> None:
             "hitl.approvals.>",
             "hitl.governor.>",
         }, f"expected 3 wildcard subjects, got {cfg.subjects}"
-        assert cfg.max_age == 90 * 24 * 3600 * 1_000_000_000, (
-            f"expected 90-day retention in ns, got {cfg.max_age}"
+        # nats-py 2.14 returns max_age in seconds (the wire format is ns;
+        # the client converts back on retrieve). 90 days * 86400 s/day = 7776000 s.
+        assert cfg.max_age == 90 * 24 * 3600, (
+            f"expected 90-day retention in seconds, got {cfg.max_age}"
         )
         assert cfg.storage == StorageType.FILE
 
@@ -150,7 +150,6 @@ async def test_audit_publisher_round_trip(nats_container: str) -> None:
     """AuditNatsPublisher.publish_audit() lands a JSON-encoded record on
     `audit.actions.<cluster>.<agent_id>` and a pull consumer reads it back."""
     import nats
-
     from sft_agents.audit.nats_publisher import AuditNatsPublisher
     from sft_agents.models.audit import AuditRecord
     from sft_agents.models.budget import BudgetSnapshot
