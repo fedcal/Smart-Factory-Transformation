@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-05-18T16:16:21.239Z"
+status: ready_to_plan
+stopped_at: Phase 04 complete (8/8) — ready to discuss Phase 5
+last_updated: 2026-05-18T20:56:16.028Z
 last_activity: 2026-05-18 -- Phase 04 execution started
 progress:
   total_phases: 12
   completed_phases: 3
   total_plans: 30
-  completed_plans: 25
+  completed_plans: 33
   percent: 25
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 04 — core-agentic-runtime-hitl
+**Current focus:** Phase 5 — knowledge layer (rag + graph)
 
 ## Current Position
 
-Phase: 04 (core-agentic-runtime-hitl) — EXECUTING
-Plan: 1 of 8
-Status: Executing Phase 04
-Last activity: 2026-05-18 -- Phase 04 execution started
+Phase: 5
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-05-18
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -44,7 +44,7 @@ Next command: `/gsd-execute-phase 1`
 
 **Velocity:**
 
-- Total plans completed: 0
+- Total plans completed: 8
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -52,7 +52,7 @@ Next command: `/gsd-execute-phase 1`
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 04 | 8 | - | - |
 
 **Recent Trend:**
 
