@@ -43,6 +43,11 @@ dev = [
   "jsonschema>=4.23,<5",
   "python-frontmatter>=1.1,<2",
   "pyyaml>=6.0,<7",
+  # Phase 3 IT/OT integration + load test deps (IOT-02/04/05/10)
+  "testcontainers[postgres]>=4.14",
+  "asyncpg>=0.30",
+  "asyncua>=1.1.8",
+  "nats-py>=2.14.0",
 ]
 
 [tool.ruff]
