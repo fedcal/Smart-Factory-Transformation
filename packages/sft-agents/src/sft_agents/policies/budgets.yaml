@@ -1,0 +1,26 @@
+# Source: CONTEXT.md D-60 (per-cluster budget defaults — Plan 04-06, CORE-09)
+# tokens: cumulative input+output tokens per (thread_id, agent_id) row in budget.executions
+# cost_usd: simulated cost (Phase 11 wires real pricing)
+# duration_s: wall-clock seconds per execution
+ops:
+  tokens: 50000
+  cost_usd: 1.00
+  duration_s: 60
+maintenance:
+  tokens: 100000
+  cost_usd: 2.00
+  duration_s: 300
+knowledge-curation:
+  tokens: 200000
+  cost_usd: 5.00
+  duration_s: 600
+knowledge-training:
+  tokens: 100000
+  cost_usd: 2.00
+  duration_s: 300
+supply:
+  tokens: 100000
+  cost_usd: 2.00
+  duration_s: 300
+agents:
+  # per-agent overrides (empty Phase 4; Phase 6-9 populates)
