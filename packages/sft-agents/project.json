@@ -7,7 +7,14 @@
     "test": {
       "executor": "@nxlv/python:run-commands",
       "options": {
-        "command": "uv run pytest",
+        "command": "uv run --extra dev pytest -m 'not integration and not load'",
+        "cwd": "packages/sft-agents"
+      }
+    },
+    "test:integration": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run --extra dev pytest -m integration",
         "cwd": "packages/sft-agents"
       }
     },
