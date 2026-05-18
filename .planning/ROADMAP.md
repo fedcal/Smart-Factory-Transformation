@@ -7,7 +7,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 ## Phases
 
 - [x] **Phase 1: Foundation & Monorepo** - Nx polyglot workspace, Docker Compose dev stack, GitHub Actions CI, license scanner, shared infra services (completed 2026-05-16)
-- [ ] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN
+- [x] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN (completed 2026-05-18)
 - [ ] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay
 - [ ] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail
 - [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval
@@ -55,9 +55,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 02-02-PLAN.md — Domain analysis IT (5 process + 4 role + index) + pytest structural tests (DOC-05 IT side)
   - [x] 02-03-PLAN.md — Assumption register schema + 30 seed entries + validator + components-check + generator (DOC-12 part 1)
   - [x] 02-04-PLAN.md — synthetic-corpus Nx project + 5 example IT SOPs + 3 corpus validators (KNW-10 foundation)
-  - [ ] 02-05-PLAN.md — Remaining 15 IT SOPs + all 20 EN SOPs + 10 EN domain pages + glossary expansion to ≥150 (KNW-10 + DOC-05 EN + DOC-18 esaustivo)
-  - [ ] 02-06-PLAN.md — Assumption register expansion to 50 + glossary schema/coverage scripts + 6 Nx targets + CI wiring (DOC-12 close + DOC-18 gates live)
-  - [ ] 02-07-PLAN.md — mkdocs nav + tags plugin + SOP indexes + regenerate derived content + D-25 user review checkpoint + mkdocs strict build + Phase 2 sign-off (all 4 requirements close)
+  - [x] 02-05-PLAN.md — Remaining 15 IT SOPs + all 20 EN SOPs + 10 EN domain pages + glossary expansion to ≥150 (KNW-10 + DOC-05 EN + DOC-18 esaustivo)
+  - [x] 02-06-PLAN.md — Assumption register expansion to 50 + glossary schema/coverage scripts + 6 Nx targets + CI wiring (DOC-12 close + DOC-18 gates live)
+  - [x] 02-07-PLAN.md — mkdocs nav + tags plugin + SOP indexes + regenerate derived content + D-25 user review checkpoint + mkdocs strict build + Phase 2 sign-off (all 4 requirements close) (completed 2026-05-18)
 
 ### Phase 3: IT/OT Simulation Layer
 **Goal**: A Python textile factory simulator emits realistic adversarial sensor streams via asyncua OPC-UA, a data-diode OT Bridge publishes events to NATS JetStream, TimescaleDB ingests time-series data, and NASA C-MAPSS plus UCI dataset replay scripts are available as tools.
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
-| 2. Domain Modeling & Synthetic Corpus | 4/7 | In Progress|  |
+| 2. Domain Modeling & Synthetic Corpus | 9/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
