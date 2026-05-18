@@ -1070,32 +1070,32 @@ def test_ot_bridge_has_no_opcua_write_calls():
 - **A5** (network enforcement edge): planner deve aggiungere CI test su CI runner reale (GitHub Actions docker-in-docker) + documentare in `tests/integration/README.md`
 - **A10** (C-MAPSS license redistribution): default = download-on-demand (NO redistribute); planner conferma con utente o mette CHECKSUMS-only in repo
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **NATS JetStream replicas in docker-compose dev**
    - What we know: ARCHITECTURE.md menziona `replicas=1 (dev) / 3 (prod)`; D-52 non lock replicas count
    - What's unclear: Phase 3 dev compose deve usare replicas=1 (sufficient per smoke test) o configurare cluster (3 nats container)?
-   - Recommendation: Phase 3 ships replicas=1 (single nats container già Phase 1 compose); cluster è Phase 11 prod hardening. Documenta in `infra/compose/README.md`.
+   - **RESOLVED:** Phase 3 ships `replicas=1` (single nats container, già nel Phase 1 compose). Cluster (3 nats container) è deferred a Phase 11 prod hardening. Implementato in **Plan 03-06 Task 1** (docker-compose extension); documentato in `infra/compose/README.md`.
 
 2. **TimescaleDB chunk_time_interval per replay data**
    - What we know: D-49 lock chunk=1d per `sensor_events`; replay data può essere injected con timestamp passati (es. C-MAPSS cycle 1 → 2014-01-01)
    - What's unclear: Replay insertion crea N chunk storici per asset → bloat? Strategy: separato hypertable `sensor_events_replay`?
-   - Recommendation: Phase 3 USA UNA hypertable con `source` column (`'live' | 'replay_cmapss' | 'replay_uci'`); chunk creation è automatico, retention 90d copre replay storici (replay data > 90d sarà dropped da retention policy). Se PredictiveMaintenance Phase 7 ha bisogno retention diversa per replay → separate hypertable in Phase 7.
+   - **RESOLVED:** Phase 3 usa UNA hypertable `sensor_events` con colonna `source` (`'live' | 'replay_cmapss' | 'replay_uci'`); chunk creation è automatico, retention 90d copre replay storici. Se PredictiveMaintenance Phase 7 avrà bisogno retention diversa per replay → separate hypertable in Phase 7. Implementato in **Plan 03-05 Task 1** (migration SQL).
 
 3. **NATS subject `audit.ot.<service>` content scope**
    - What we know: D-52 lock subject `audit.ot.<service>` ma scope content non definito
    - What's unclear: ot-bridge logga audit eventi (connection open, publish failure)? Sim-textile logga (fault injected timeline)?
-   - Recommendation: Phase 3 ships ot-bridge `audit.ot.bridge` con eventi `{ts, level, event_type, details}` (struttura libera ma Pydantic-validated). Sim-textile NON pubblica audit (è livello OT, l'audit è IT-side). Detailed governance schema → Phase 11.
+   - **RESOLVED:** Solo ot-bridge pubblica `audit.ot.bridge` con eventi `{ts, level, event_type, details}` (Pydantic-validated). Sim-textile NON pubblica audit (livello OT; audit è IT-side concern). Schema governance dettagliato → Phase 11. Implementato in **Plan 03-04 Task 1** (ot-bridge publisher).
 
 4. **Asset registry CI validation: where to put the validator?**
    - What we know: D-45 dichiara `schemas/asset.schema.json` Draft 2020-12
    - What's unclear: Validation script lives in `packages/sft-assets/tests/test_registry_validation.py` (pytest) o `scripts/validate-asset-registry.py` (standalone CI)?
-   - Recommendation: Entrambi. Pytest in package per local fast feedback + standalone script in scripts/ per CI integration (allinea pattern Phase 2 `validate-glossary-coverage.py`).
+   - **RESOLVED:** Entrambi. Pytest `packages/sft-assets/tests/test_registry_validation.py` per local fast feedback + standalone CLI `scripts/validate-asset-registry.py` per CI integration (allinea pattern Phase 2 `validate-glossary-coverage.py`). Implementato in **Plan 03-01 Task 1** (pytest) + **Plan 03-01 Task 2** (script CLI).
 
 5. **`replay_cmapss` mapping policy per `unit_id` → asset_id**
    - What we know: D-46 dice "M:1 mapping registry-driven"
    - What's unclear: Mapping è statico (esempio: unit_id 1..12 → LOOM-01..12) o dinamico (parametro `target_asset_id` nel Tool args)?
-   - Recommendation: Tool accetta `target_asset_id: str` opzionale (default: deterministic hash `unit_id` → asset list); documentato in tool description. Permette test riproducibile + flessibilità per agents.
+   - **RESOLVED:** Tool accetta `target_asset_id: str` opzionale (default: deterministic hash `unit_id` → asset list filtrata per asset_family compatibile); documentato in tool description. Permette test riproducibile + flessibilità per agents. Implementato in **Plan 03-02 Task 1** (replay_cmapss Tool).
 
 ## Environment Availability
 
@@ -1184,6 +1184,22 @@ def test_ot_bridge_has_no_opcua_write_calls():
 | V7 Error Handling | yes | structlog JSON logs senza secret values; exception handling explicit (no silent swallow per coding-style.md) |
 | V8 Data Protection | yes (limited) | TimescaleDB credentials via env (no hardcoded); replay data gitignored |
 | V14 Configuration | yes | docker-compose `internal: true` semantic + secrets via SealedSecrets (Phase 11) / env (Phase 3 dev) |
+
+### Threat ID Convention (Phase 3 canonical)
+
+The 7 plans in Phase 3 reference threats with short IDs in their `<threat_model>` blocks. These IDs are Phase-3-scoped and map to the threat patterns + ASVS categories below:
+
+| Threat ID | Maps to | Description |
+|-----------|---------|-------------|
+| `T-V5-yaml` | ASVS V5 + Pattern "YAML unsafe deserialization" | `yaml.safe_load` mandatory; `yaml.load` raw forbidden (CWE-502) |
+| `T-V5-pydantic` | ASVS V5 + Pattern "Pydantic boundary validation" | Pydantic v2 frozen + `extra=forbid` on all model boundaries (SensorEvent, Asset, Tag, ReplayRecord, FaultProfile) |
+| `T-V5-sql` | ASVS V5 + Pattern "SQL injection in TimescaleDB writer/reader" | asyncpg `$1, $2` placeholders; no f-string SQL; CI grep gate |
+| `T-DATA-DIODE` | D-51 + Pattern "OPC-UA write command from agent" | 3-layer enforcement: docker network ACL (Layer 1) + pytest write-attempt fails (Layer 2) + grep static analysis no `set_value/write_attribute/write_value` (Layer 3) |
+| `T-NATS-subject` | Pattern "NATS subject explosion (DoS)" | JetStream `max_msgs_per_subject` config; ot-bridge rate limiter `max_ack_pending=1000` |
+| `T-V12-asset` | ASVS V12 + Pattern "Asset registry tampering" | JSON Schema Draft 2020-12 validation in CI; gitleaks gate on registry YAML |
+| `T-PERF` | IOT-10 + Pattern "asyncpg pool exhaustion under burst" | pool `max_size=20` + `command_timeout=10s`; Prometheus alert on `asyncpg_pool_size_used`; load test gate |
+
+Plans reference these IDs in their `<threat_model>` sections; readers map back here for the canonical definition.
 
 ### Known Threat Patterns for {asyncua + nats-py + asyncpg + langchain-core + docker compose stack}
 
