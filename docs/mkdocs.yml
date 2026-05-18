@@ -4,6 +4,7 @@ site_url: https://fedcal.github.io/Smart-Factory-Transformation/
 repo_url: https://github.com/fedcal/Smart-Factory-Transformation
 repo_name: fedcal/Smart-Factory-Transformation
 edit_uri: edit/main/docs/docs/
+
 docs_dir: docs
 site_dir: site
 
@@ -70,6 +71,10 @@ plugins:
             Caposquadra: Shift Supervisor
             Procedure (SOP): Procedures (SOP)
             Glossario: Glossary
+            IT/OT: IT/OT
+            Panoramica: Overview
+            Schema ingest: Ingest Schema
+            Schema OPC-UA: OPC-UA Schema
       reconfigure_material: true
 
 markdown_extensions:
@@ -120,4 +125,8 @@ nav:
   - Procedure (SOP): sop/index.md
   - Assumption Register: assumptions/index.md
   - Glossario: glossary.md
+  - IT/OT:
+    - Panoramica: it-ot/index.md
+    - Schema ingest: it-ot/ingest-schema.md
+    - Schema OPC-UA: it-ot/opcua-schema.md
   - Contributing: contributing/index.md

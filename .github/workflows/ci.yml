@@ -140,6 +140,18 @@ jobs:
           # Cleanup stack
           docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
 
+      - name: Run IT/OT full load test (5k×60s, PR-label gated)
+        if: contains(github.event.pull_request.labels.*.name, 'load-test')
+        run: |
+          docker compose -f infra/compose/core.yml up -d --wait timescaledb nats
+          export TIMESCALE_DSN="postgresql://sft:sft_dev_pass@localhost:5432/sft"
+          python3 scripts/timescale-migrate.py
+          python3 scripts/nats-bootstrap-streams.py --server nats://localhost:4222
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml up -d --wait
+          uv run --with pytest --with pytest-asyncio --with asyncpg --with nats-py \
+            -- python -m pytest tests/load/test_ingestion_throughput.py -v -m load_full --full-load-test
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
+
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --parallel=3
 

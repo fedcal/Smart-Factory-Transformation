@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats load-test-full
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -214,4 +214,15 @@ smoke-load: up-it-ot
 	python3 scripts/timescale-migrate.py
 	python3 scripts/nats-bootstrap-streams.py
 	uv run pytest tests/load/test_ingestion_smoke.py -v -m load_smoke
+	$(MAKE) down-it-ot
+
+# Esegue il full load test (5k msg/s × 60s — IOT-10 full gate, D-48)
+# Stack: up-it-ot → migrate → bootstrap → pytest load/throughput → down-it-ot
+# Marker: @pytest.mark.load_full — richiede flag --full-load-test
+# Runtime stimato: ~75s su hardware nominale (GitHub Actions standard runner 4CPU/16GB)
+# Output: FULL LOAD: total=<N>, p50=<ms>ms, p99=<ms>ms, rate=<N>/s
+load-test-full: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/load/test_ingestion_throughput.py -v -m load_full --full-load-test
 	$(MAKE) down-it-ot
