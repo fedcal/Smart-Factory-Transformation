@@ -8,13 +8,13 @@ Benvenuto nella guida per contribuire a Smart Factory Transformation. Questa sez
 
 ## Workflow e convenzioni
 
-- [Convenzioni dei commit](../../../contributing/commit-conventions.md) — Conventional Commits, scope, tipi (feat, fix, docs, ...)
-- [Pre-commit hooks](../../../contributing/pre-commit.md) — ruff, eslint, prettier, gitleaks, commitlint
+- **Convenzioni dei commit** — Conventional Commits, scope, tipi (feat, fix, docs, ...) (documentazione completa in arrivo)
+- **Pre-commit hooks** — ruff, eslint, prettier, gitleaks, commitlint (documentazione completa in arrivo)
 
 ## CI/CD
 
-- [Pipeline CI](../../../contributing/ci-pipeline.md) — workflow GitHub Actions, `nx affected`, required checks
-- [Branch protection](../../../operations/branch-protection.md) — regole per `main`, required status checks, merge policy
+- **Pipeline CI** — workflow GitHub Actions, `nx affected`, required checks (documentazione completa in arrivo)
+- **Branch protection** — regole per `main`, required status checks, merge policy (documentazione completa in arrivo)
 
 ## Sviluppo locale
 

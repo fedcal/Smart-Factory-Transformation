@@ -8,13 +8,13 @@ Welcome to the Smart Factory Transformation contributing guide. This section gat
 
 ## Workflow and Conventions
 
-- [Commit conventions](../../../contributing/commit-conventions.md) — Conventional Commits, scopes, types (feat, fix, docs, ...)
-- [Pre-commit hooks](../../../contributing/pre-commit.md) — ruff, eslint, prettier, gitleaks, commitlint
+- **Commit conventions** — Conventional Commits, scopes, types (feat, fix, docs, ...) (full documentation coming)
+- **Pre-commit hooks** — ruff, eslint, prettier, gitleaks, commitlint (full documentation coming)
 
 ## CI/CD
 
-- [CI pipeline](../../../contributing/ci-pipeline.md) — GitHub Actions workflows, `nx affected`, required checks
-- [Branch protection](../../../operations/branch-protection.md) — rules for `main`, required status checks, merge policy
+- **CI pipeline** — GitHub Actions workflows, `nx affected`, required checks (full documentation coming)
+- **Branch protection** — rules for `main`, required status checks, merge policy (full documentation coming)
 
 ## Local Development
 
