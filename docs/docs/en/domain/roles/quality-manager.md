@@ -29,6 +29,6 @@ The critical decision is: accept, downgrade or reject a batch in the presence of
 
 ## References
 
-- [Glossary: roll_inspection, delta_e, four_point_system, weft_defect](../glossary.md)
+- [Glossary: roll_inspection, delta_e, four_point_system, weft_defect](../../glossary.md)
 - [Related role: Shift supervisor](shift-supervisor.md)
 - [Related role: Maintenance technician](technician.md)

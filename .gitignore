@@ -78,3 +78,6 @@ test-results/
 playwright-report/
 
 .angular
+
+# Original project brief (brand-tracked source material — do not commit)
+/Smart Factory Transformation.md

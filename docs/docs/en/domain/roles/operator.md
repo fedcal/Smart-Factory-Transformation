@@ -29,6 +29,6 @@ The operator's critical decision is: stop the **loom** or continue production in
 
 ## References
 
-- [Glossary: operator, loom, broken_end, oee](../glossary.md)
+- [Glossary: operator, loom, broken_end, oee](../../glossary.md)
 - [Related role: Maintenance technician](technician.md)
 - [Related role: Shift supervisor](shift-supervisor.md)

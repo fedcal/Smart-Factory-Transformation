@@ -29,6 +29,6 @@ La decisione critica è: accettare, declassare o rifiutare un lotto in presenza 
 
 ## Riferimenti
 
-- [Glossario: ispezione_rotolo, delta_e, sistema_quattro_punti, difetto_trama](../glossary.md)
+- [Glossario: ispezione_rotolo, delta_e, sistema_quattro_punti, difetto_trama](../../glossary.md)
 - [Ruolo correlato: Capoturno](shift-supervisor.md)
 - [Ruolo correlato: Tecnico manutentore](technician.md)

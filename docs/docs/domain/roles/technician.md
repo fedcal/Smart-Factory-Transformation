@@ -29,6 +29,6 @@ La decisione critica del tecnico è: riparare on-the-spot o attendere il fermo p
 
 ## Riferimenti
 
-- [Glossario: telaio, filatoio_anello, mtbf, mttr](../glossary.md)
+- [Glossario: telaio, filatoio_anello, mtbf, mttr](../../glossary.md)
 - [Ruolo correlato: Operatore](operator.md)
 - [Ruolo correlato: Capoturno](shift-supervisor.md)
