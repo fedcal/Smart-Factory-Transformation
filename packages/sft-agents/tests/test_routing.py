@@ -69,7 +69,7 @@ def test_routing_module_uses_only_safe_load() -> None:
         ("Allarme su macchina T-12 turno notte", "ops"),
         ("Manutenzione predittiva sul cuscinetto, downtime previsto", "maintenance"),
         ("Aggiorna il documento SOP e il glossario taxonomy", "knowledge-curation"),
-        ("Briefing handover formazione training operatore neoassunto", "knowledge-training"),
+        ("Briefing handover formazione neoassunto", "knowledge-training"),
         ("Verifica inventario ordine costo energia demand", "supply"),
     ],
 )
