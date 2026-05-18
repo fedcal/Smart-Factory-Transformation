@@ -71,8 +71,8 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   5. The ingest schema (asset registry, tag dictionary, units of measure) is documented with working examples
 **UI hint**: no
 **Plans**: 7 plans
-  - [ ] 03-01-PLAN.md — packages/sft-assets (Pydantic models + loader + JSON Schema + 30 asset seed + validator + Makefile) (IOT-09)
-  - [ ] 03-02-PLAN.md — packages/sft-tools (replay_cmapss + replay_uci + query_timescale LangChain Tools + SHA256 download script) (IOT-07, IOT-08)
+  - [x] 03-01-PLAN.md — packages/sft-assets (Pydantic models + loader + JSON Schema + 30 asset seed + validator + Makefile) (IOT-09)
+  - [x] 03-02-PLAN.md — packages/sft-tools (replay_cmapss + replay_uci + query_timescale LangChain Tools + SHA256 download script) (IOT-07, IOT-08)
   - [ ] 03-03-PLAN.md — sim-textile (asyncua server multi-namespace + 5 YAML fault profiles + pure-function fault state machine + Prometheus metrics + Dockerfile) (IOT-01, IOT-02, IOT-03)
   - [ ] 03-04-PLAN.md — ot-bridge (SensorEvent + normalizer + NATS publisher D-52 + asyncpg writer + data-diode Layer 3 + Dockerfile + nats-bootstrap script) (IOT-04, IOT-05)
   - [ ] 03-05-PLAN.md — TimescaleDB migration (hypertable + compression(7d) + retention(90d) + idempotent runner + [BLOCKING] schema-push) (IOT-06)
@@ -198,7 +198,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
-| 3. IT/OT Simulation Layer | 0/7 | Planned | - |
+| 3. IT/OT Simulation Layer | 2/7 | In Progress|  |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
