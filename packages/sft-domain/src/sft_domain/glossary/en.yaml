@@ -655,3 +655,608 @@
   examples:
     - "AI-based maintenance decision-support systems may fall under the AI Act high-risk category."
   source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EXPANSION WAVE 3 — reaching ≥150 terms threshold (D-31)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# --- TEXTILE-PROCESS (additional) ---
+
+- term: ring_traveller
+  definition: "Small C-shaped metal clip that runs around the ring on a ring frame; its rotation generates the yarn twist. Traveller speed determines twist level and requires regular replacement as it wears."
+  category: textile-asset
+  related_terms: [spindle, ring_frame, spinning, yarn_twist]
+  examples:
+    - "A worn ring traveller causes increased yarn breaks and is replaced every 200-300 kg of yarn produced."
+  source: industry-standard
+
+- term: drafting_cylinder
+  definition: "Pair of counter-rotating rollers in the drafting zone of a ring frame or draw frame; the ratio of exit to entry surface speed defines the draft ratio."
+  category: textile-asset
+  related_terms: [drafting, draft_ratio, yarn_irregularity]
+  examples:
+    - "A drafting cylinder with eccentricity above 0.05 mm produces periodic yarn irregularities."
+  source: industry-standard
+
+- term: draft_ratio
+  definition: "Ratio of the peripheral speed of the output to the input cylinders in a drafting zone; typical values 5-20x in short-staple spinning and up to 50x in open-end spinning."
+  category: textile-process
+  related_terms: [drafting, drafting_cylinder, yarn_irregularity]
+  examples:
+    - "An excessive draft ratio for the material being processed causes slubs and periodic irregularity."
+  source: industry-standard
+
+- term: four_point_system
+  definition: "Standardised defect classification method (ASTM D5430) that assigns 1, 2, 3, or 4 penalty points per defect according to its length; a roll with more than 40 points per 100 m2 is downgraded."
+  category: textile-process
+  related_terms: [roll_inspection, inspection_table, weft_defect, warp_defect]
+  examples:
+    - "The four_point_system assigns 4 points to any single defect longer than 91 cm."
+  source: iso-standard
+
+- term: lot_decision
+  definition: "Formal disposition — accept, conditional accept, or reject — of a fabric or yarn lot based on inspection results compared against agreed acceptance criteria (AQL, four-point system)."
+  category: textile-process
+  related_terms: [roll_inspection, four_point_system, aql, acceptable_quality_level]
+  examples:
+    - "A lot decision of 'accept' is issued when no roll exceeds 40 points/100 m2."
+  source: industry-standard
+
+- term: aql
+  definition: "Acceptable Quality Level — maximum allowable defect rate in a lot for acceptance; typical value 2.5 AQL for major defects in apparel textiles, determined by sampling per ISO 2859."
+  category: textile-process
+  related_terms: [lot_decision, acceptable_quality_level, quality_control]
+  examples:
+    - "AQL 2.5 means that at most 2.5 percent of sampled pieces may have major defects."
+  source: iso-standard
+
+- term: acceptable_quality_level
+  definition: "Maximum acceptable percentage of defective units in a lot according to ISO 2859 sampling plans; the extended form of AQL used in contract documentation."
+  category: textile-process
+  related_terms: [aql, lot_decision, quality_control]
+  examples:
+    - "The acceptable_quality_level agreed with the buyer is 1.5 percent for critical defects."
+  source: iso-standard
+
+- term: calendering
+  definition: "Mechanical finishing treatment that passes fabric between heated high-pressure rollers to obtain gloss, surface smoothness, and thickness reduction."
+  category: textile-process
+  related_terms: [finishing, finishing_range, fabric_handle]
+  examples:
+    - "Calendering at 180 degrees Celsius gives a satin sheen to cotton/polyester fabrics."
+  source: industry-standard
+
+- term: sanforizing
+  definition: "Mechanical pre-shrinking process for cotton fabric using steam pressure and a compressive felt; reduces residual wash shrinkage to less than 1 percent."
+  category: textile-process
+  related_terms: [finishing, finishing_range, grey_fabric]
+  examples:
+    - "Sanforizing is a mandatory requirement for fabrics destined for shirt manufacturing."
+  source: industry-standard
+
+- term: water_repellency
+  definition: "Durable Water Repellency (DWR) finishing treatment that applies fluorocarbon or silicone to fabric to confer water resistance without closing fabric porosity."
+  category: textile-process
+  related_terms: [finishing, finishing_range]
+  examples:
+    - "C6 DWR treatment achieves a water contact angle above 120 degrees."
+  source: iso-standard
+
+- term: twisting
+  definition: "Operation of plying two or more single yarns together to produce plied yarn (two-fold, three-fold) with greater strength and regularity; twist direction is S or Z."
+  category: textile-process
+  related_terms: [yarn_count, yarn_twist, spinning]
+  examples:
+    - "A Nm 40/2 two-ply yarn obtained by S-twisting two Nm 80 singles has double break strength."
+  source: industry-standard
+
+# --- TEXTILE-ASSET (additional) ---
+
+- term: selvedge
+  definition: "Reinforced lateral edge of the woven fabric, woven so as not to fray; selvedge width and structure vary from 0.5-2 cm depending on weave and loom type."
+  category: textile-material
+  related_terms: [loom, selvedge_defect, weaving]
+  examples:
+    - "A torn or loose selvedge over 50 cm causes roll downgrading."
+  source: industry-standard
+
+- term: shuttle_jam
+  definition: "Sudden loom stop caused by mechanical blocking of the shuttle inside the reed or shed; requires manual intervention to remove the shuttle and restart."
+  category: textile-defect
+  related_terms: [loom, reed, yarn_break, heald_frame]
+  examples:
+    - "More than 3 shuttle jams per shift indicates reed wear or abnormal warp tension."
+  source: industry-standard
+
+- term: colour_fastness
+  definition: "Resistance of dyed fabric colour to degrading agents (light, washing, rubbing, perspiration); rated on a grey scale ISO 1-5 for each agent. Minimum standard for apparel: 4-5 for washing."
+  category: textile-kpi
+  related_terms: [dyeing, delta_e, pilling, finishing]
+  examples:
+    - "Colour fastness to washing of ISO 4 is the minimum requirement for outdoor garments."
+  source: iso-standard
+
+- term: air_conditioning
+  definition: "HVAC system for temperature (typically 20-24 degrees Celsius) and relative humidity (55-65 percent RH) control in spinning and weaving departments; reduces yarn breaks and static charge."
+  category: textile-asset
+  related_terms: [hygrometer, yarn_break, spinning]
+  examples:
+    - "Centralised air_conditioning maintains 60 percent relative humidity in the spinning room."
+  source: industry-standard
+
+- term: stenter
+  definition: "Finishing machine that stretches fabric to width on lateral tenter chains with clips while passing through a heated chamber; stabilises dimensions and cures finishing resins."
+  category: textile-asset
+  related_terms: [finishing, finishing_range, sanforizing]
+  examples:
+    - "An 8-chamber gas stenter stabilises fabric width to ±1 mm at 60 m/min."
+  source: industry-standard
+
+- term: lightbox_table
+  definition: "Back-lit inspection table for visual examination of thin fabrics (silk, voile, chiffon); reveals transparency defects, holes, and double picks not visible under reflected light."
+  category: textile-tool-ppe
+  related_terms: [inspection_table, roll_inspection, weft_defect]
+  examples:
+    - "A lightbox table is essential for inspecting 30 g/m2 georgette fabrics."
+  source: industry-standard
+
+- term: thread_counter
+  definition: "Magnifying lens with a graduated reticle (typically 10x, 1 cm2 area) used to count warp and weft threads per centimetre in finished fabric."
+  category: textile-tool-ppe
+  related_terms: [pick density, pick_counter, yarn_count]
+  examples:
+    - "A Peak 2001-25x thread_counter measures weft density up to 60 threads/cm."
+  source: industry-standard
+
+# --- TEXTILE-MATERIAL (additional) ---
+
+- term: roving
+  definition: "Intermediate product in spinning: a partially twisted and elongated sliver of fibres with typical count Nm 0.4-1.5, feeding the ring frame for the final drafting and twisting stage."
+  category: textile-material
+  related_terms: [spinning, ring_frame, drafting, yarn_count]
+  examples:
+    - "Over-twisted roving impedes drafting and causes count irregularity in the spun yarn."
+  source: industry-standard
+
+- term: noils
+  definition: "Short fibres removed during combing; they are less than 25 mm in length and cannot be spun in long-staple processes but are recovered for waste spinning or nonwovens."
+  category: textile-material
+  related_terms: [combing, comber, short_fibres]
+  examples:
+    - "Combing noils from cotton typically represent 15-20 percent of the fed fibre weight."
+  source: industry-standard
+
+- term: card_sliver
+  definition: "Output from the card: a continuous untwisted assembly of opened and parallelised fibres, typically weighing 3-6 g/m, feeding draw frames or directly open-end spinners."
+  category: textile-material
+  related_terms: [card, carding, drafting, roving]
+  examples:
+    - "Card sliver with CVm% below 4 percent guarantees acceptable yarn quality downstream."
+  source: industry-standard
+
+- term: liquor_ratio
+  definition: "Ratio of fabric weight to dye bath volume during dyeing, expressed as 1:N (e.g. 1:8 = 1 kg fabric per 8 litres of liquor); influences dyeing uniformity and water consumption."
+  category: textile-material
+  related_terms: [dye_bath, dyeing, jet_dyeing]
+  examples:
+    - "Modern jet dyeing technology reduces liquor ratio to 1:3, cutting water consumption by 50 percent."
+  source: industry-standard
+
+- term: cotton_fibre
+  definition: "Natural cellulosic fibre extracted from the cotton boll (Gossypium spp.); typical staple length 22-38 mm, fineness 1.3-2.0 dtex; the basis of short-staple spinning."
+  category: textile-material
+  related_terms: [carding, combing, yarn_count, card_sliver]
+  examples:
+    - "Pima cotton with 35 mm staple produces high-quality combed yarns at Nm 80-120."
+  source: industry-standard
+
+- term: reactive_dye
+  definition: "Class of synthetic dyes that form covalent bonds with cotton cellulose in an alkaline hot environment; high fastness but require extensive washing to remove hydrolysed dye."
+  category: textile-material
+  related_terms: [dyeing, dye_bath, colour_fastness, jet_dyeing]
+  examples:
+    - "Bifunctional reactive dyes achieve wash fastness 4-5 on cotton."
+  source: iso-standard
+
+- term: chemical_auxiliary
+  definition: "Chemical product added to a dye bath or finishing process to improve performance; includes levelling agents, softeners, surfactants, sequestrants, and antioxidants."
+  category: textile-material
+  related_terms: [dyeing, dye_bath, finishing]
+  examples:
+    - "An ionic levelling agent added to the bath reduces unlevelness caused by irregular dye adsorption."
+  source: industry-standard
+
+- term: warp_tension
+  definition: "Pulling force exerted by the warp beam brake on warp threads during weaving, expressed in Newtons per thread or total Newtons on the beam; typical 10-30 N for cotton Nm 40."
+  category: textile-kpi
+  related_terms: [warp_beam, loom, warp_tension_sensor, yarn_break]
+  examples:
+    - "Warp tension below 8 N causes missing picks; above 35 N it increases yarn breaks."
+  source: industry-standard
+
+- term: loom_efficiency
+  definition: "Percentage of productive time versus total available time for a loom; calculated as (actual picks / programmed picks) x 100; includes losses from stops, beam changes, and adjustments."
+  category: textile-kpi
+  related_terms: [oee, mtbf, mttr, yarn_break, downtime]
+  examples:
+    - "Loom efficiency of 92 percent on a modern rapier is considered excellent."
+  source: industry-standard
+
+- term: spinning_productivity
+  definition: "Quantity of yarn produced per unit time and machine, expressed in kg/h/machine or g/spindle/hour; depends on count, twist, spindle speed, and break frequency."
+  category: textile-kpi
+  related_terms: [spinning, oee, yarn_break, yarn_count]
+  examples:
+    - "Spinning productivity on a ring frame drops 15 percent when the break rate exceeds 10/h/m."
+  source: industry-standard
+
+- term: downtime
+  definition: "Periods of machine inactivity, classified as planned (beam change, scheduled maintenance) or unplanned (breakdowns, breaks, emergency adjustments); feeds OEE calculation."
+  category: textile-kpi
+  related_terms: [oee, mtbf, mttr, loom_efficiency]
+  examples:
+    - "Unplanned downtime exceeding 5 percent of the shift triggers escalation to the shift supervisor."
+  source: industry-standard
+
+- term: energy_consumption
+  definition: "Electrical energy consumed by a textile machine per unit of production, expressed in kWh/kg or kWh/m2; a key KPI for sustainability and production cost management."
+  category: textile-kpi
+  related_terms: [oee, spinning_productivity, loom_efficiency]
+  examples:
+    - "A modern jet dyeing machine consumes 1.2 kWh/kg of dyed fabric against 2.0 kWh/kg for older systems."
+  source: industry-standard
+
+# --- AGENTIC-PLATFORM (additional) ---
+
+- term: orchestrator
+  definition: "Central platform component that manages agent session lifecycle: starts LangGraph graphs, routes events, manages the HITL queue, and persists state on Postgres."
+  category: agentic-platform
+  related_terms: [supervisor, langgraph, hitl, langfuse]
+  examples:
+    - "The orchestrator receives every OPC-UA event from the NATS broker and decides which agent cluster to activate."
+  source: project-specific
+
+- term: agent_cluster
+  definition: "Group of specialised agents collaborating for a specific domain (e.g. ops-cluster for operational anomalies, mnt-cluster for maintenance); each cluster has a dedicated supervisor."
+  category: agentic-platform
+  related_terms: [supervisor, orchestrator, agent_node]
+  examples:
+    - "The maintenance agent_cluster includes RCA-Specialist, Downtime-Analyzer, and Part-Recommender."
+  source: project-specific
+
+- term: predictive_maintenance
+  definition: "Maintenance approach that uses sensor data and predictive models (time-series, anomaly detection) to estimate the remaining useful life of a component and schedule intervention before failure."
+  category: agentic-platform
+  related_terms: [mtbf, mttr, oee, anomaly_detection]
+  examples:
+    - "Predictive maintenance on spindles reduces unplanned stops by 30 percent compared with calendar-based preventive maintenance."
+  source: industry-standard
+
+- term: anomaly_detection
+  definition: "Automated identification of abnormal patterns in sensor data (vibration, temperature, current) relative to a baseline; foundation of ops-monitoring agents."
+  category: agentic-platform
+  related_terms: [predictive_maintenance, agent_node, opc_ua, time_series]
+  examples:
+    - "Isolation forest-based anomaly_detection detects vibration anomalies with precision 0.92 on simulated data."
+  source: agentic-community
+
+- term: critical_decision
+  definition: "Agent action or recommendation that impacts safety, production, or quality in an irreversible or high-cost way; subject to mandatory HITL before execution."
+  category: agentic-platform
+  related_terms: [hitl, interrupt, audit_trail, supervisor]
+  examples:
+    - "Generating an urgent maintenance work order on a critical asset is a critical_decision."
+  source: project-specific
+
+- term: vector_store
+  definition: "Specialised database for storing and searching high-dimensional vectors (embeddings); supports ANN (approximate nearest neighbour) operations with metadata filtering."
+  category: agentic-platform
+  related_terms: [qdrant, embedding, retrieval, bge_m3]
+  examples:
+    - "The Qdrant vector_store indexes 20,000 SOP chunks with BGE-M3 1024-dimension embeddings."
+  source: agentic-community
+
+- term: state_persistence
+  definition: "Mechanism by which an agent graph state is durably saved to a backend (Postgres, SQLite) through the LangGraph checkpointer, enabling restore and replay."
+  category: agentic-platform
+  related_terms: [langgraph_checkpoint, agent_state, langgraph]
+  examples:
+    - "State persistence on Postgres guarantees agent session recovery after a service restart."
+  source: agentic-community
+
+- term: tracing
+  definition: "Systematic collection of spans and traces of all LLM calls, tool calls, and agent nodes, with latencies, token counts, inputs and outputs; foundation of agentic system quality monitoring."
+  category: agentic-platform
+  related_terms: [langfuse, audit_trail]
+  examples:
+    - "Langfuse tracing records every LLM call with p95 latency, token_usage, and session_id."
+  source: agentic-community
+
+- term: fine_tuning
+  definition: "Adapting a pre-trained LLM on a domain-specific dataset to improve performance on specialised tasks (e.g. answering SOP queries in textiles)."
+  category: agentic-platform
+  related_terms: [rag, qwen, llm, bge_m3]
+  examples:
+    - "Fine-tuning on 500 textile SOPs improves OperatorAssistant response precision by 15 percent."
+  source: agentic-community
+
+- term: llm
+  definition: "Large Language Model — a large-scale language model trained on vast corpora; generates text, follows instructions, performs reasoning, and produces tool calls in agentic contexts."
+  category: agentic-platform
+  related_terms: [qwen, rag, tool_call, embedding]
+  examples:
+    - "The Qwen2.5-14B-Instruct LLM is the primary generative engine for platform agents."
+  source: agentic-community
+
+- term: knowledge_base
+  definition: "Structured repository of documents (SOPs, domain pages, glossary, assumption register) indexed as vectors in a vector store; primary context source for RAG agents."
+  category: agentic-platform
+  related_terms: [rag, vector_store, embedding, retrieval]
+  examples:
+    - "The platform knowledge_base includes 20 SOPs, 20 domain pages, and 50 assumption entries."
+  source: project-specific
+
+- term: chunk
+  definition: "Text fragment of optimised size (typically 256-512 tokens) obtained by segmenting a document; the fundamental unit of embedding and retrieval in the RAG system."
+  category: agentic-platform
+  related_terms: [embedding, retrieval, rag, knowledge_base]
+  examples:
+    - "Each SOP is segmented into 400-token chunks with 50-token overlap for coherent retrieval."
+  source: agentic-community
+
+- term: inference_latency
+  definition: "LLM response time from prompt submission to receiving the first token (time-to-first-token, TTFT) or the full response; a critical KPI for operator interface usability."
+  category: agentic-platform
+  related_terms: [llm, qwen, ollama]
+  examples:
+    - "Qwen2.5-14B TTFT inference latency on an A10G GPU is < 0.8 s for 512-token prompts."
+  source: agentic-community
+
+- term: context_window
+  definition: "Maximum length (in tokens) that an LLM can process in a single call, including prompt, RAG context, and expected response; Qwen2.5 supports up to 128k tokens."
+  category: agentic-platform
+  related_terms: [llm, rag, chunk, tool_call]
+  examples:
+    - "A context_window of 8192 tokens is sufficient to include 5 SOP chunks plus conversation history."
+  source: agentic-community
+
+- term: time_series
+  definition: "Sequence of observations indexed over time (e.g. spindle vibration every 100 ms, bath temperature every 10 s); a fundamental technique for predictive analytics and anomaly detection in industrial contexts."
+  category: agentic-platform
+  related_terms: [anomaly_detection, predictive_maintenance, timescaledb, sensor]
+  examples:
+    - "A 500 Hz vibration time_series across 10 spindles is the basis of the predictive model for bearing replacement."
+  source: agentic-community
+
+# --- AGENTIC-TOOL (additional) ---
+
+- term: ollama
+  definition: "Runtime for local inference of open-weight LLM models on consumer hardware; supports GGUF quantisation and serves models via an OpenAI-compatible API."
+  category: agentic-tool
+  related_terms: [qwen, llm, rag]
+  examples:
+    - "Ollama 0.5+ serves Qwen2.5-14B with a 24 GB VRAM NVIDIA GPU in q4_K_M quantisation."
+  source: agentic-community
+
+- term: timescaledb
+  definition: "PostgreSQL extension for time-series data: hypertables, automatic compression, chunk-based storage, and SQL queries optimised for time ranges; used for OPC-UA event ingestion."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, nats]
+  examples:
+    - "TimescaleDB with chunk_interval=1day ingests 5000 events/second with p99 latency < 200 ms."
+  source: agentic-community
+
+- term: function_calling
+  definition: "Capability of an LLM to generate a structured call (JSON with function name and typed arguments) to an external function defined in a tool schema; synonym of tool_call in the OpenAI API context."
+  category: agentic-tool
+  related_terms: [tool_call, mcp, agent_node, llm]
+  examples:
+    - "The 'search_glossary' function_calling tool allows the agent to retrieve textile term definitions in real time."
+  source: agentic-community
+
+- term: event_stream
+  definition: "Continuous ordered flow of events (messages, signals, state updates) published on a message broker such as NATS JetStream; consumed by agents in push or pull mode."
+  category: agentic-tool
+  related_terms: [nats, ot_bridge, opc_ua, orchestrator]
+  examples:
+    - "The OT-events event_stream transports 5000 events/second from the simulation to the agent layer."
+  source: agentic-community
+
+- term: sensor
+  definition: "Device that converts a physical quantity (vibration, temperature, current, humidity) into an electrical or digital signal; the foundation of the platform OT layer."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, predictive_maintenance, anomaly_detection]
+  examples:
+    - "A MEMS accelerometer on a spindle measures vibrations at 500 Hz with 1 mg resolution."
+  source: industry-standard
+
+- term: plc
+  definition: "Programmable Logic Controller — programmable industrial controller that governs textile machines and processes (loom, ring frame, jet dyeing); primary OT data source via OPC-UA."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, sensor]
+  examples:
+    - "A Siemens S7-1500 PLC on a rapier loom exposes 120 OPC-UA tags with 500 ms update rate."
+  source: industry-standard
+
+- term: data_diode
+  definition: "Architectural pattern that guarantees one-way data transmission (OT to IT) with no return path; implemented by the OT Bridge to prevent lateral attacks on control systems."
+  category: agentic-tool
+  related_terms: [ot_bridge, opc_ua, sensor]
+  examples:
+    - "The data_diode in the OT Bridge prevents IT commands from reaching textile machine PLCs."
+  source: project-specific
+
+- term: sealed_secrets
+  definition: "Kubernetes tool that encrypts Secrets with an asymmetric key managed by a controller in the cluster; encrypted secrets (SealedSecrets) can be safely committed to git."
+  category: agentic-tool
+  related_terms: [gdpr, audit_trail, data_retention]
+  examples:
+    - "Postgres and NATS credentials are managed as SealedSecrets in the platform Helm chart."
+  source: agentic-community
+
+- term: vllm
+  definition: "High-performance LLM inference runtime with PagedAttention and continuous batching; alternative to Ollama for high-throughput scenarios (> 100 requests/minute) on NVIDIA GPUs."
+  category: agentic-tool
+  related_terms: [ollama, qwen, llm, inference_latency]
+  examples:
+    - "vLLM with Qwen2.5-72B on 2x A100 80 GB achieves 120 tokens/s in multi-user mode."
+  source: agentic-community
+
+# --- REGULATORY (additional) ---
+
+- term: data_retention
+  definition: "Mandatory period for retaining company data (audit trails, decision logs, personal data) required by regulations (GDPR, Italian D.lgs 196/2003) or contracts; typically 7 years for accounting data and critical decisions."
+  category: regulatory
+  related_terms: [gdpr, audit_trail, hitl]
+  examples:
+    - "Data retention for HITL audit trails is set to 7 years as per requirement DOC-05."
+  source: iso-standard
+
+- term: iso_9001
+  definition: "International standard for quality management systems; in a textile context defines documentation, traceability, and non-conformance requirements that the information system (including the AI platform) must support."
+  category: regulatory
+  related_terms: [quality_control, lot_decision, audit_trail]
+  examples:
+    - "ISO 9001 certification requires recording all non-conformances with a correction trail."
+  source: iso-standard
+
+- term: non_conformance
+  definition: "Failure to meet a product, process, or system requirement; in textiles includes defects above threshold, lots outside colour tolerance, and procedure deviations; handled with an NC form and corrective action."
+  category: regulatory
+  related_terms: [lot_decision, quality_control, iso_9001]
+  examples:
+    - "Every non_conformance detected in-line generates a high-priority MES ticket."
+  source: iso-standard
+
+- term: occupational_safety
+  definition: "Set of standards, procedures, and practices to prevent accidents and occupational disease; in textiles includes noise management, chemicals handling, and load-handling ergonomics."
+  category: regulatory
+  related_terms: [hearing_protection, ppe]
+  examples:
+    - "The occupational_safety system requires a risk assessment for every textile job role."
+  source: iso-standard
+
+- term: ppe
+  definition: "Personal Protective Equipment — any equipment worn by the operator to protect against residual risks; includes hearing protection, gloves, safety glasses, and safety footwear."
+  category: regulatory
+  related_terms: [hearing_protection, occupational_safety]
+  examples:
+    - "Mandatory PPE in the dyeing department includes an acid-resistant apron and face shield."
+  source: iso-standard
+
+# --- TEXTILE-KPI (additional) ---
+
+- term: yarn_break_rate
+  definition: "Average number of warp or weft thread breaks per 1000 m of yarn produced or per hour per machine; critical KPI for spinning and weaving, feeds the OEE model."
+  category: textile-kpi
+  related_terms: [yarn_break, oee, loom_efficiency, mtbf]
+  examples:
+    - "A yarn break rate above 5 breaks/h/loom triggers a root cause analysis."
+  source: industry-standard
+
+- term: defect_report
+  definition: "Document or digital screen recording the position, type, and size of each defect detected during roll inspection; attached to the lot quality certificate."
+  category: textile-process
+  related_terms: [roll_inspection, four_point_system, non_conformance]
+  examples:
+    - "The digital defect_report is generated automatically by camera-based inspection."
+  source: industry-standard
+
+- term: colour_tolerance
+  definition: "Allowed colour variation (expressed as CMC or CIEDE2000 delta-E) within which a shade is deemed conforming to standard; typically delta-E < 1.0 for production and < 0.5 for sampling."
+  category: textile-kpi
+  related_terms: [delta_e, shade_deviation, colour_fastness, spectrophotometer]
+  examples:
+    - "The agreed CMC 0.8 colour tolerance is verified on every roll before dispatch."
+  source: iso-standard
+
+- term: fabric_handle
+  definition: "Tactile perception and drape of a fabric, determined by stiffness, softness, gloss, and weight; assessed subjectively or with Kawabata/FAST instruments for technical fabrics."
+  category: textile-kpi
+  related_terms: [finishing, calendering, sanforizing]
+  examples:
+    - "A soft fabric_handle is the result of silicone softener applied in the stenter."
+  source: industry-standard
+
+- term: broken_end
+  definition: "Break of a single warp thread during weaving that causes automatic loom stop; equivalent to the Italian term rottura_filo. Detected by a piezoelectric broken-end detector."
+  category: textile-defect
+  related_terms: [yarn_break, loom, warp_tension]
+  examples:
+    - "The broken_end detector on a rapier loom uses a piezoelectric sensor to detect tension drop."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: barring
+  definition: "Repeated horizontal stripe at regular intervals in the fabric, caused by periodic weft tension variation or a mechanical beating defect; the EN term for the Italian 'rigatura' or 'barring effect'."
+  category: textile-defect
+  related_terms: [pick density, reed, loom, weft_defect]
+  examples:
+    - "Barring at a constant 15 cm pitch indicates a balancing problem in the beating mechanism."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: streakiness
+  definition: "Non-uniform colour variation across the dyed fabric surface, visible as streaks or patches of different intensity; the EN term for the Italian 'screziatura'."
+  category: textile-defect
+  related_terms: [dyeing, shade_deviation, delta_e, jet_dyeing]
+  examples:
+    - "Streakiness from uneven dye adsorption typically manifests as vertical stripes."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: beating_mechanism
+  definition: "The combined assembly of reed and sley on a loom responsible for beating each inserted weft pick against the fell of cloth; its oscillation frequency and force determine weft density and fabric compactness."
+  category: textile-asset
+  related_terms: [reed, loom, pick density, barring]
+  examples:
+    - "An anomaly in the beating_mechanism oscillation frequency causes periodic weft density variation."
+  source: industry-standard
+
+- term: heald
+  definition: "Individual wire or flat-steel element with a central eye in the heald frame through which a single warp thread passes; the heald guides the thread and participates in shed formation."
+  category: textile-asset
+  related_terms: [heald_frame, loom, warp, weaving]
+  examples:
+    - "A broken heald causes the warp thread passing through it to lose tension control."
+  source: industry-standard
+
+- term: colour_matching
+  definition: "Process of formulating a dye recipe that reproduces a target shade within tolerance; carried out by a colorist using spectrophotometer measurements and colour-matching software."
+  category: textile-process
+  related_terms: [delta_e, colour_tolerance, spectrophotometer, dyeing]
+  examples:
+    - "Automated colour_matching software reduces first-hit success rate to 3 trials or fewer."
+  source: industry-standard
+
+- term: yarn_twist
+  definition: "Number of twists per unit length inserted in a yarn during spinning, expressed as turns per metre (t/m) or turns per inch (t/i); twist level determines yarn strength, softness, and fabric handle."
+  category: textile-material
+  related_terms: [spinning, ring_frame, yarn_count, twisting]
+  examples:
+    - "A yarn_twist of 800 t/m is typical for a Nm 40 warp cotton yarn."
+  source: industry-standard
+
+- term: short_fibres
+  definition: "Fibres below the minimum useful length for long-staple spinning (typically < 25 mm for cotton); removed during combing as noils; excessive short_fibres content reduces yarn strength and increases breaks."
+  category: textile-material
+  related_terms: [combing, noils, card_sliver, cotton_fibre]
+  examples:
+    - "Short_fibres content above 15 percent in cotton feed causes excessive breaks during ring spinning."
+  source: industry-standard
+
+- term: weave_structure
+  definition: "Pattern of interlacing between warp and weft threads that determines the fabric's appearance and properties; basic structures include plain weave, twill, and satin, each requiring a specific number of heald frames."
+  category: textile-process
+  related_terms: [heald_frame, loom, warp, weft]
+  examples:
+    - "A 2/1 twill weave_structure requires a minimum of 3 heald frames and produces a diagonal surface effect."
+  source: industry-standard
+
+- term: shed
+  definition: "Temporary triangular opening formed between raised and lowered warp thread groups by the heald frames, through which the weft insertion device (rapier, shuttle, air jet) passes to insert the weft pick."
+  category: textile-process
+  related_terms: [heald_frame, heald, warp, loom]
+  examples:
+    - "A clean, uniform shed is critical for trouble-free weft insertion at 800 picks/min."
+  source: industry-standard

@@ -665,3 +665,602 @@
   examples:
     - "I sistemi di supporto decisionale per manutenzione potrebbero rientrare nella categoria ad alto rischio AI Act."
   source: industry-standard
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ESPANSIONE WAVE 3 — raggiungimento soglia ≥150 termini (D-31)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# --- TEXTILE-PROCESS (aggiuntivi) ---
+
+- term: anello_rotante
+  definition: "Elemento circolare fisso del filatoio ad anello su cui scorre il cursore (traveller) durante la filatura; la velocita' del cursore determina la torsione impressa al filo."
+  category: textile-asset
+  related_terms: [fuso, filatoio_anello, filatura, titolo_filato]
+  examples:
+    - "Un anello_rotante usurato causa variazioni di torsione e aumenta la frequenza di rotture."
+  source: industry-standard
+
+- term: cilindro_stiro
+  definition: "Coppia di cilindri contrapposti del banco a fusi o del filatoio che esercitano lo stiro meccanico sul nastro; il rapporto delle velocita' periferiche definisce il rapporto di stiro."
+  category: textile-asset
+  related_terms: [stiro, rapporto_stiro, irregolarita_filato]
+  examples:
+    - "Un cilindro_stiro con eccentricita' superiore a 0.05 mm produce irregolarita' periodiche."
+  source: industry-standard
+
+- term: rapporto_stiro
+  definition: "Rapporto tra la velocita' periferica dei cilindri d'uscita e d'ingresso nello stiro; valore tipico 5-20x nella filatura a corto ciclo e fino a 50x nella filatura open-end."
+  category: textile-process
+  related_terms: [stiro, cilindro_stiro, irregolarita_filato]
+  examples:
+    - "Un rapporto_stiro eccessivo per il materiale lavorato causa slub e irregolarita' periodiche."
+  source: industry-standard
+
+- term: ispezione_4_punti
+  definition: "Sistema standardizzato (ASTM D5430 / 4-Point System) per la classificazione quantitativa dei difetti nei tessuti: assegna 1, 2, 3 o 4 punti a ciascun difetto in base alla sua lunghezza; max 40 punti/100 m2 per tessuti di prima scelta."
+  category: textile-process
+  related_terms: [sistema_quattro_punti, ispezione_rotolo, tavolo_ispezione, difetto_trama]
+  examples:
+    - "Un'ispezione_4_punti rileva 12 punti/100 m2 per un lotto di cotone shirting: accettazione piena."
+  source: iso-standard
+
+- term: sistema_quattro_punti
+  definition: "Metodo di classificazione e punteggio dei difetti tessili (sinonimo di 4-Point Grading System): ogni difetto visivo riceve un punteggio da 1 a 4 punti basato sulle sue dimensioni, con soglia di accettazione a 40 punti per 100 m2."
+  category: textile-process
+  related_terms: [ispezione_4_punti, ispezione_rotolo, difetto_trama, difetto_catena]
+  examples:
+    - "Il sistema_quattro_punti e' il metodo piu' diffuso nei contratti di fornitura tessile globale."
+  source: iso-standard
+
+- term: accettazione_lotto
+  definition: "Decisione formale — accettazione, condizionamento o rifiuto — di un lotto di tessuto o filato basata sui risultati dell'ispezione qualita' confrontati con i criteri di accettazione concordati con il cliente."
+  category: textile-process
+  related_terms: [ispezione_rotolo, sistema_quattro_punti, aql, livello_qualita_accettabile]
+  examples:
+    - "L'accettazione_lotto avviene se il difetto totale non supera 40 punti/100 m2 e nessun rotolo presenta difetti major consecutivi."
+  source: industry-standard
+
+- term: aql
+  definition: "Acceptable Quality Level — livello massimo di difettosita' tollerato in un lotto per accettazione; valore tipico 2.5 AQL per difetti major in tessile abbigliamento, determinato per campionamento secondo ISO 2859."
+  category: textile-process
+  related_terms: [accettazione_lotto, livello_qualita_accettabile, controllo_qualita_tessile]
+  examples:
+    - "Un AQL 2.5 significa che max il 2.5 percento dei pezzi campionati puo' avere difetti major."
+  source: iso-standard
+
+- term: livello_qualita_accettabile
+  definition: "Soglia percentuale massima di unita' difettose tollerata in un lotto per accettazione secondo i piani di campionamento ISO 2859; sinonimo esteso di AQL, usato nella documentazione contrattuale."
+  category: textile-process
+  related_terms: [aql, accettazione_lotto, controllo_qualita_tessile]
+  examples:
+    - "Il livello_qualita_accettabile concordato con il cliente e' 1.5 percento per difetti critici."
+  source: iso-standard
+
+- term: calandratura
+  definition: "Trattamento meccanico di finissaggio che fa passare il tessuto tra cilindri riscaldati ad alta pressione per ottenere lucentezza, lisciatura superficiale e riduzione dello spessore."
+  category: textile-process
+  related_terms: [finissaggio, impianto_finissaggio, handle_tessuto]
+  examples:
+    - "La calandratura a 180 gradi Celsius conferisce lucentezza satin a tessuti cotone/poliestere."
+  source: industry-standard
+
+- term: sanforizzazione
+  definition: "Processo meccanico di pre-restringimento del tessuto di cotone mediante pressione a vapore e feltro compressore; riduce il restringimento residuo al lavaggio a meno dell'1 percento."
+  category: textile-process
+  related_terms: [finissaggio, impianto_finissaggio, tessuto_grezzo]
+  examples:
+    - "La sanforizzazione e' requisito obbligatorio per tessuti destinati a confezionamento camiceria."
+  source: industry-standard
+
+- term: impermeabilizzazione
+  definition: "Trattamento chimico di finissaggio che applica fluorocarbon o silicone al tessuto per conferire repellenza all'acqua (DWR, Durable Water Repellency) senza chiudere le porosita' del tessuto."
+  category: textile-process
+  related_terms: [finissaggio, impianto_finissaggio]
+  examples:
+    - "Il trattamento DWR C6 conferisce angolo di contatto dell'acqua superiore a 120 gradi."
+  source: iso-standard
+
+- term: torcitura
+  definition: "Operazione di ritorcitura di due o piu' fili semplici insieme per produrre fili ritorti (binati, trinati) con maggiore resistenza e regolarita'; la direzione della torsione e' S o Z."
+  category: textile-process
+  related_terms: [titolo_filato, torsione_filato, filatura]
+  examples:
+    - "Un filo Nm 40/2 ottenuto per torcitura in S di due capi Nm 80 ha resistenza doppia rispetto al singolo."
+  source: industry-standard
+
+# --- TEXTILE-ASSET (aggiuntivi) ---
+
+- term: cimosa
+  definition: "Bordo laterale rinforzato del tessuto tessuto in modo da non srfilacciarsi; la cimosa varia in struttura e larghezza (tipico 0.5-2 cm) secondo l'armatura e il tipo di telaio."
+  category: textile-material
+  related_terms: [telaio, difetto_orlatura, tessitura]
+  examples:
+    - "Una cimosa strappata o allentata su piu' di 50 cm causa declassamento del rotolo."
+  source: industry-standard
+
+- term: inceppamento_navetta
+  definition: "Arresto improvviso del telaio a navetta causato dal blocco meccanico della navetta all'interno della cassa battente o del passo; richiede intervento manuale per rimozione e riavvio."
+  category: textile-defect
+  related_terms: [telaio, cassa_battente, rottura_filo, liccio]
+  examples:
+    - "Un inceppamento_navetta superiore a 3 per turno indica usura della cassa battente o tensione ordito anomala."
+  source: industry-standard
+
+- term: solidita_colore
+  definition: "Resistenza del colore del tessuto tinto a agenti degradanti (luce, lavaggio, sfregamento, sudore); classificata su scala grigia ISO 1-5 per ogni agente. Standard minimo per abbigliamento: 4-5 per lavaggio."
+  category: textile-kpi
+  related_terms: [tintura, delta_e, pilling, finissaggio]
+  examples:
+    - "Una solidita_colore al lavaggio di 4 ISO e' il requisito minimo per capi outdoor."
+  source: iso-standard
+
+- term: condizionamento_aria
+  definition: "Sistema HVAC per il controllo di temperatura (tipicamente 20-24 gradi Celsius) e umidita' relativa (55-65 percento RH) nei reparti di filatura e tessitura; riduce rotture filo e carica elettrostatica."
+  category: textile-asset
+  related_terms: [igrometro, rottura_filo, filatura]
+  examples:
+    - "Il condizionamento_aria centralizzato mantiene l'umidita' relativa a 60 percento in reparto filatura."
+  source: industry-standard
+
+- term: stenter
+  definition: "Macchina per il finissaggio che stira il tessuto in larghezza su guide laterali a graffette mentre lo fa passare su un forno a caldo; stabilizza le dimensioni e fissa le resine di finissaggio."
+  category: textile-asset
+  related_terms: [finissaggio, impianto_finissaggio, sanforizzazione]
+  examples:
+    - "Lo stenter Monforts con 8 camere a gas stabilizza la larghezza del tessuto a +/- 1 mm."
+  source: industry-standard
+
+- term: subbio_ordito
+  definition: "Cilindro metallico avvolto con i fili di ordito preparati durante l'orditura; caricato sul telaio come elemento di approvvigionamento fili. Termine completo del vocabolo 'subbio' nel contesto di orditura."
+  category: textile-asset
+  related_terms: [subbio, orditura, telaio, tensione_ordito]
+  examples:
+    - "Un subbio_ordito da 2400 fili in Nm 40 pesa circa 400 kg a pieno carico."
+  source: industry-standard
+
+- term: tavolo_lightbox
+  definition: "Piano luminoso retroilluminato per l'ispezione visiva di tessuti sottili (seta, voile, chiffon); permette di rilevare difetti di trasparenza, fori e trami doppi non visibili a luce riflessa."
+  category: textile-tool-ppe
+  related_terms: [tavolo_ispezione, ispezione_rotolo, difetto_trama]
+  examples:
+    - "Il tavolo_lightbox e' indispensabile per l'ispezione di tessuti in georgette da 30 g/m2."
+  source: industry-standard
+
+- term: conta_fili
+  definition: "Lente di ingrandimento con reticolo graduato (tipicamente 10x, area 1 cm2) usata per contare i fili di ordito e trama per centimetro nel tessuto finito."
+  category: textile-tool-ppe
+  related_terms: [densita_trama, conta_trama, titolo_filato]
+  examples:
+    - "Un conta_fili Peak 2001-25x permette di misurare densita' trama fino a 60 fili/cm."
+  source: industry-standard
+
+- term: porta_provette
+  definition: "Supporto di laboratorio per il posizionamento standardizzato di provette di tessuto campione in bagni di tintura; garantisce uniformita' di immersione e confrontabilita' tra campioni."
+  category: textile-tool-ppe
+  related_terms: [tintura, bagno_colorante, delta_e]
+  examples:
+    - "Il porta_provette rotante in dyeing lab garantisce un rapporto bagno uniforme per ogni provetta."
+  source: industry-standard
+
+# --- TEXTILE-MATERIAL (aggiuntivi) ---
+
+- term: roving
+  definition: "Semilavorato della filatura: nastro di fibre parzialmente torto e allungato, con titolo tipico Nm 0.4-1.5, che alimenta il filatoio ad anello per l'ultimo stiro e la torsione finale."
+  category: textile-material
+  related_terms: [filatura, filatoio_anello, stiro, titolo_filato]
+  examples:
+    - "Un roving eccessivamente torto ostacola lo stiro e causa irregolarita' di titolo nel filo."
+  source: industry-standard
+
+- term: cascami
+  definition: "Fibre corte eliminate durante la pettinatura; hanno titolo Nm < 25 mm e non possono essere filate a lungo ciclo ma vengono recuperate per filatura di scarti o non tessuti."
+  category: textile-material
+  related_terms: [pettinatura, pettinatrice, fibre_corte]
+  examples:
+    - "I cascami di pettinatura cotone rappresentano tipicamente il 15-20 percento del peso alimentato."
+  source: industry-standard
+
+- term: nastro_carda
+  definition: "Semilavorato uscente dalla carda: nastro continuo non torto di fibre aperte e parallelizzate, con peso lineare tipico 3-6 g/m, che alimenta i bancali di stiro o direttamente il filatoio open-end."
+  category: textile-material
+  related_terms: [carda, cardatura, stiro, roving]
+  examples:
+    - "Un nastro_carda con regolarita' CVm% inferiore a 4 percento garantisce qualita' filo accettabile."
+  source: industry-standard
+
+- term: rapporto_bagno
+  definition: "Rapporto tra il peso del tessuto e il volume del bagno colorante durante la tintura, espresso come 1:N (es. 1:8 = 1 kg tessuto per 8 litri di liquido); incide sull'uniformita' della tintura e sul consumo idrico."
+  category: textile-material
+  related_terms: [bagno_colorante, tintura, jet_dyeing]
+  examples:
+    - "La tecnologia jet dyeing moderna abbassa il rapporto_bagno a 1:3, riducendo consumo acqua del 50 percento."
+  source: industry-standard
+
+- term: fibra_cotone
+  definition: "Fibra naturale celulosica estratta dal baccello del cotone (Gossypium spp.); lunghezza tipica 22-38 mm, titolo 1.3-2.0 dtex; base della filatura a breve ciclo."
+  category: textile-material
+  related_terms: [cardatura, pettinatura, titolo_filato, nastro_carda]
+  examples:
+    - "Il cotone Pima con fibra lunga 35 mm produce filati pettinati di alta qualita' Nm 80-120."
+  source: industry-standard
+
+- term: colorante_reattivo
+  definition: "Classe di coloranti sintetici che formano legami covalenti con la cellulosa del cotone in ambiente alcalino e caldo; alta solidita' ma richiedono lavaggio esteso per rimozione idrolizzato."
+  category: textile-material
+  related_terms: [tintura, bagno_colorante, solidita_colore, jet_dyeing]
+  examples:
+    - "I coloranti_reattivi bifunzionali raggiungono solidita' al lavaggio 4-5 su cotone."
+  source: iso-standard
+
+- term: ausiliario_chimica
+  definition: "Prodotto chimico aggiunto al bagno di tintura o finissaggio per migliorare un processo: include equalizzatori, levelling agent, ammorbidenti, tensioattivi, sequestranti e antiossidanti."
+  category: textile-material
+  related_terms: [tintura, bagno_colorante, finissaggio]
+  examples:
+    - "Un equalizzatore ionico aggiunto al bagno riduce la screziatura da adsorzione irregolare del colorante."
+  source: industry-standard
+
+- term: tensione_ordito
+  definition: "Forza di tiro esercitata dal sistema di freno del subbio sui fili di ordito durante la tessitura, espressa in Newton per filo o Newton totali sul subbio; valore tipico 10-30 N per cotone Nm 40."
+  category: textile-kpi
+  related_terms: [subbio, telaio, misuratore_tensione_ordito, rottura_filo]
+  examples:
+    - "Una tensione_ordito inferiore a 8 N causa caduta di trama; superiore a 35 N aumenta le rotture."
+  source: industry-standard
+
+- term: efficienza_telaio
+  definition: "Percentuale di tempo produttivo rispetto al tempo totale disponibile di un telaio; calcolata come (picks prodotti / picks programmati) x 100; include perdite per fermi, cambi subbio e regolazioni."
+  category: textile-kpi
+  related_terms: [oee, mtbf, mttr, rottura_filo, fermi_macchina]
+  examples:
+    - "Un'efficienza_telaio del 92 percento su un rapier moderno e' considerata eccellente."
+  source: industry-standard
+
+- term: produttivita_filatura
+  definition: "Quantita' di filo prodotto per unita' di tempo e macchina, espressa in kg/h/macchina o g/fuso/ora; dipende da titolo, torsione, velocita' fusi e frequenza rotture."
+  category: textile-kpi
+  related_terms: [filatura, oee, rottura_filo, titolo_filato]
+  examples:
+    - "La produttivita' filatura su ring frame scende del 15 percento quando il tasso di rottura supera 10/h/m."
+  source: industry-standard
+
+- term: fermi_macchina
+  definition: "Periodi di inattivita' di una macchina tessile, classificati in pianificati (cambio subbio, manutenzione programmata) e non pianificati (guasti, rotture, regolazioni d'emergenza); alimentano il calcolo OEE."
+  category: textile-kpi
+  related_terms: [oee, mtbf, mttr, efficienza_telaio]
+  examples:
+    - "I fermi_macchina non pianificati superiori al 5 percento del turno attivano escalation al responsabile turno."
+  source: industry-standard
+
+- term: consumo_energetico_macchina
+  definition: "Energia elettrica consumata da una macchina tessile per unita' di produzione, espressa in kWh/kg o kWh/m2; KPI rilevante per sostenibilita' e costo produzione."
+  category: textile-kpi
+  related_terms: [oee, produttivita_filatura, efficienza_telaio]
+  examples:
+    - "Un jet dyeing moderno consuma 1.2 kWh/kg di tessuto tinto contro i 2.0 kWh/kg dei sistemi precedenti."
+  source: industry-standard
+
+# --- AGENTIC-PLATFORM (aggiuntivi) ---
+
+- term: orchestratore
+  definition: "Componente centrale della piattaforma che gestisce il ciclo di vita delle sessioni agente: avvia grafi LangGraph, smista eventi, gestisce la coda HITL e persiste lo stato su Postgres."
+  category: agentic-platform
+  related_terms: [supervisore, langgraph, hitl, langfuse]
+  examples:
+    - "L'orchestratore riceve ogni evento OPC-UA dal broker NATS e decide quale cluster agente attivare."
+  source: project-specific
+
+- term: cluster_agenti
+  definition: "Gruppo di agenti specializzati che collaborano per un dominio specifico (es. cluster-ops per anomalie operative, cluster-mnt per manutenzione); ogni cluster ha un supervisore dedicato."
+  category: agentic-platform
+  related_terms: [supervisore, orchestratore, nodo_agente]
+  examples:
+    - "Il cluster_agenti di manutenzione include RCA-Specialist, Downtime-Analyzer e Part-Recommender."
+  source: project-specific
+
+- term: manutenzione_predittiva
+  definition: "Approccio di manutenzione che utilizza dati di sensori e modelli predittivi (time-series, anomaly detection) per stimare il residual useful life di un componente e pianificare interventi prima del guasto."
+  category: agentic-platform
+  related_terms: [mtbf, mttr, oee, anomaly_detection]
+  examples:
+    - "La manutenzione_predittiva su fusi riduce i fermi non pianificati del 30 percento rispetto alla manutenzione preventiva a calendario."
+  source: industry-standard
+
+- term: anomaly_detection
+  definition: "Processo di identificazione automatica di pattern anomali nei dati di sensori (vibrazione, temperatura, corrente) rispetto a una baseline; base degli agenti di ops-monitoring."
+  category: agentic-platform
+  related_terms: [manutenzione_predittiva, nodo_agente, opc_ua, time_series]
+  examples:
+    - "L'anomaly_detection basata su isolation forest rileva anomalie di vibrazione con precision 0.92 su dati simulati."
+  source: agentic-community
+
+- term: decisione_critica
+  definition: "Azione o raccomandazione di un agente che impatta la sicurezza, la produzione o la qualita' in modo irreversibile o ad alto costo; soggetta a HITL obbligatorio prima dell'esecuzione."
+  category: agentic-platform
+  related_terms: [hitl, interrupt, audit_trail, supervisore]
+  examples:
+    - "La generazione di un ordine di manutenzione urgente su un impianto critico e' una decisione_critica."
+  source: project-specific
+
+- term: vector_store
+  definition: "Database specializzato per la memorizzazione e la ricerca di vettori ad alta dimensionalita' (embedding); supporta operazioni ANN (approximate nearest neighbour) con filtri per metadati."
+  category: agentic-platform
+  related_terms: [qdrant, embedding, retrieval, bge_m3]
+  examples:
+    - "Il vector_store Qdrant indicizza 20.000 chunk SOP con embedding BGE-M3 a 1024 dimensioni."
+  source: agentic-community
+
+- term: persistenza_stato
+  definition: "Meccanismo con cui lo stato di un grafo agente viene salvato in modo durevole su un backend (Postgres, SQLite) attraverso il checkpointer LangGraph, abilitando ripristino e replay."
+  category: agentic-platform
+  related_terms: [checkpoint_langgraph, stato_agente, langgraph]
+  examples:
+    - "La persistenza_stato su Postgres garantisce il recupero della sessione agente dopo un riavvio del servizio."
+  source: agentic-community
+
+- term: tracing
+  definition: "Raccolta sistematica di span e trace di tutte le chiamate LLM, tool e nodi agente, con latenze, token, input/output; base del monitoraggio della qualita' del sistema agentico."
+  category: agentic-platform
+  related_terms: [langfuse, audit_trail, langfuse]
+  examples:
+    - "Il tracing Langfuse registra ogni chiamata LLM con p95 latency, token_usage e session_id."
+  source: agentic-community
+
+- term: fine_tuning
+  definition: "Adattamento di un modello LLM pre-addestrato su un dataset di dominio specifico per migliorarne le prestazioni su compiti specializzati (es. risposta a query su SOP tessili)."
+  category: agentic-platform
+  related_terms: [rag, qwen, llm, bge_m3]
+  examples:
+    - "Il fine_tuning su 500 SOP tessili migliora la precision delle risposte di OperatorAssistant del 15 percento."
+  source: agentic-community
+
+- term: llm
+  definition: "Large Language Model — modello di linguaggio a grandi dimensioni addestrato su corpus vastissimi; genera testo, segue istruzioni, esegue ragionamento e produce tool call in contesti agentici."
+  category: agentic-platform
+  related_terms: [qwen, rag, tool_call, embedding]
+  examples:
+    - "L'LLM Qwen2.5-14B-Instruct e' il motore generativo principale degli agenti della piattaforma."
+  source: agentic-community
+
+- term: ollama
+  definition: "Runtime per l'inferenza locale di modelli LLM open-weight su hardware consumer; supporta quantizzazione GGUF e serve i modelli tramite API compatibile OpenAI."
+  category: agentic-tool
+  related_terms: [qwen, llm, rag]
+  examples:
+    - "Ollama 0.5+ serve Qwen2.5-14B con GPU NVIDIA 24 GB VRAM in modalita' q4_K_M."
+  source: agentic-community
+
+- term: timescaledb
+  definition: "Estensione PostgreSQL per dati time-series: hypertables, compressione automatica, chunk-based storage e query SQL ottimizzate per intervalli temporali; usato per ingest eventi OPC-UA."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, nats]
+  examples:
+    - "TimescaleDB con chunk_interval=1day ingestisce 5000 eventi/secondo con latenza p99 < 200 ms."
+  source: agentic-community
+
+- term: function_calling
+  definition: "Capacita' di un LLM di generare una chiamata strutturata (JSON con nome funzione e argomenti tipizzati) verso una funzione esterna definita nello schema del tool; sinonimo di tool_call nel contesto OpenAI API."
+  category: agentic-tool
+  related_terms: [tool_call, mcp, nodo_agente, llm]
+  examples:
+    - "La funzione_calling 'search_glossary' permette all'agente di recuperare definizioni di termini tessili in tempo reale."
+  source: agentic-community
+
+- term: event_stream
+  definition: "Flusso continuo e ordinato di eventi (messaggi, segnali, aggiornamenti di stato) pubblicati su un message broker come NATS JetStream; consumato dagli agenti in modalita' push o pull."
+  category: agentic-tool
+  related_terms: [nats, ot_bridge, opc_ua, orchestratore]
+  examples:
+    - "L'event_stream OT-events trasporta 5000 eventi/secondo dalla simulazione al layer agenti."
+  source: agentic-community
+
+- term: sensore
+  definition: "Dispositivo che converte una grandezza fisica (vibrazione, temperatura, corrente, umidita') in un segnale elettrico o digitale; base del layer OT della piattaforma."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, manutenzione_predittiva, anomaly_detection]
+  examples:
+    - "Un sensore MEMS accelerometrico su fuso misura vibrazioni a 500 Hz con risoluzione 1 mg."
+  source: industry-standard
+
+- term: plc
+  definition: "Programmable Logic Controller — controllore industriale programmabile che governa macchine e processi tessili (telaio, filatoio, jet dyeing); fonte primaria di dati OT via OPC-UA."
+  category: agentic-tool
+  related_terms: [opc_ua, ot_bridge, sensore]
+  examples:
+    - "Il PLC Siemens S7-1500 sul telaio rapier espone 120 tag OPC-UA con aggiornamento a 500 ms."
+  source: industry-standard
+
+# --- REGULATORY (aggiuntivi) ---
+
+- term: retention_dati
+  definition: "Periodo di conservazione obbligatoria dei dati aziendali (audit trail, log decisioni, dati personali) previsto da normative (GDPR, D.lgs 196/2003) o contratti; tipico 7 anni per dati contabili e decisioni critiche."
+  category: regulatory
+  related_terms: [gdpr, audit_trail, hitl]
+  examples:
+    - "La retention_dati per audit trail HITL e' impostata a 7 anni come da requisito DOC-05."
+  source: iso-standard
+
+- term: d_lgs_81_2008
+  definition: "Decreto Legislativo italiano 81/2008 — Testo Unico sulla Salute e Sicurezza sul Lavoro; disciplina i rischi lavorativi, i DPI obbligatori, la sorveglianza sanitaria e i livelli di rumore ammissibili."
+  category: regulatory
+  related_terms: [otoprotettori, sicurezza_lavoro, dpi]
+  examples:
+    - "Il D.lgs 81/2008 art. 193 impone protezione udito sopra 85 dB(A) di esposizione giornaliera."
+  source: iso-standard
+
+- term: sicurezza_lavoro
+  definition: "Insieme di norme, procedure e pratiche volte a prevenire infortuni e malattie professionali nell'ambiente di lavoro; in tessile include gestione rumore, prodotti chimici e movimentazione carichi."
+  category: regulatory
+  related_terms: [d_lgs_81_2008, otoprotettori, dpi]
+  examples:
+    - "Il sistema di sicurezza_lavoro prevede una valutazione del rischio per ogni mansione tessile."
+  source: iso-standard
+
+- term: dpi
+  definition: "Dispositivo di Protezione Individuale — qualsiasi attrezzatura indossata dall'operatore per proteggersi da rischi residui non eliminabili dalla progettazione del posto di lavoro; include otoprotettori, guanti, occhiali, calzature."
+  category: regulatory
+  related_terms: [otoprotettori, sicurezza_lavoro, d_lgs_81_2008]
+  examples:
+    - "In reparto tintura i DPI obbligatori includono grembiule resistente agli acidi e visiera paraschizzi."
+  source: iso-standard
+
+- term: iso_9001
+  definition: "Standard internazionale per i sistemi di gestione della qualita'; in contesto tessile definisce i requisiti di documentazione, tracciabilita' e non conformita' che il sistema informativo (inclusa la piattaforma IA) deve supportare."
+  category: regulatory
+  related_terms: [controllo_qualita_tessile, accettazione_lotto, audit_trail]
+  examples:
+    - "La certificazione ISO 9001 richiede la registrazione di tutte le non conformita' con traccia della correzione."
+  source: iso-standard
+
+- term: non_conformita
+  definition: "Mancato soddisfacimento di un requisito di prodotto, processo o sistema; in tessile include difetti sopra soglia, lotti fuori tolleranza colore e deviazioni da procedure; gestita con modulo NC e azione correttiva."
+  category: regulatory
+  related_terms: [accettazione_lotto, controllo_qualita_tessile, iso_9001]
+  examples:
+    - "Ogni non_conformita' rilevata in linea genera un ticket nel sistema MES con priorita' alta."
+  source: iso-standard
+
+# --- TEXTILE-KPI (aggiuntivi) ---
+
+- term: tasso_rotture_filo
+  definition: "Numero medio di rotture di filo di ordito o trama per 1000 m di filo prodotto o per ora per macchina; KPI critico per filatura e tessitura, alimenta il modello OEE."
+  category: textile-kpi
+  related_terms: [rottura_filo, oee, efficienza_telaio, mtbf]
+  examples:
+    - "Un tasso_rotture_filo superiore a 5 rotture/h/telaio attiva un'analisi di causa radice."
+  source: industry-standard
+
+- term: rapporto_difetti
+  definition: "Numero totale di punti difetto per 100 m2 di tessuto ispezionato, calcolato secondo il sistema 4-punti; usato come KPI primario della qualita' produzione e per il confronto tra lotti."
+  category: textile-kpi
+  related_terms: [sistema_quattro_punti, ispezione_rotolo, accettazione_lotto]
+  examples:
+    - "Un rapporto_difetti di 15 punti/100 m2 indica qualita' eccellente per jersey tinto."
+  source: industry-standard
+
+- term: tolleranza_colore
+  definition: "Intervallo di variazione del colore (espresso come delta-E CMC o CIEDE2000) entro cui una tinta e' considerata conforme allo standard; tipicamente delta-E < 1.0 per produzione e < 0.5 per campionatura."
+  category: textile-kpi
+  related_terms: [delta_e, deviazione_tono, solidita_colore, spettrofotometro]
+  examples:
+    - "La tolleranza_colore CMC 0.8 concordata con il cliente e' verificata su ogni rotolo prima della spedizione."
+  source: iso-standard
+
+# --- TEXTILE-DEFECT (aggiuntivi) ---
+
+- term: broken_end
+  definition: "Termine anglosassone per rottura_filo, diffuso anche in italiano tessile; indica la rottura di un singolo filo di ordito durante la tessitura che causa l'arresto automatico del telaio."
+  category: textile-defect
+  related_terms: [rottura_filo, telaio, tensione_ordito]
+  examples:
+    - "Il broken_end detector sul telaio rapier usa un sensore piezoelettrico per rilevare la caduta di tensione."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: barring
+  definition: "Termine anglosassone per rigatura; striscia orizzontale ripetuta nel tessuto causata da variazione periodica della tensione di trama o da difetto meccanico del battente."
+  category: textile-defect
+  related_terms: [rigatura, densita_trama, telaio, cassa_battente]
+  examples:
+    - "Il barring a passo costante di 15 cm indica un problema di bilanciamento del battente."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: streakiness
+  definition: "Termine anglosassone per screziatura; variazione non uniforme di colore nella superficie del tessuto tinto, visibile come strisce o macchie di intensita' diversa."
+  category: textile-defect
+  related_terms: [screziatura, tintura, deviazione_tono, jet_dyeing]
+  examples:
+    - "La streakiness da adsorzione non uniforme del colorante si manifesta tipicamente come striature verticali."
+  source: industry-standard
+  no_direct_equivalent: false
+
+# --- AGENTIC-PLATFORM (ulteriori per soglia 150) ---
+
+- term: time_series
+  definition: "Sequenza di osservazioni indicizzate nel tempo (es. vibrazione fuso ogni 100 ms, temperatura bagno ogni 10 s); tecnica fondamentale per analisi predittiva e anomaly detection in contesti industriali."
+  category: agentic-platform
+  related_terms: [anomaly_detection, manutenzione_predittiva, timescaledb, sensore]
+  examples:
+    - "Un time_series di vibrazione a 500 Hz su 10 fusi e' la base del modello predittivo per sostituzione cuscinetti."
+  source: agentic-community
+
+- term: knowledge_base
+  definition: "Repository strutturato di documenti (SOP, domain pages, glossario, assumption register) indicizzati come vettori in un vector store; fonte primaria di contesto per gli agenti RAG."
+  category: agentic-platform
+  related_terms: [rag, vector_store, embedding, retrieval]
+  examples:
+    - "La knowledge_base della piattaforma include 20 SOP, 20 domain pages e 50 assumption entries."
+  source: project-specific
+
+- term: chunk
+  definition: "Frammento di testo di dimensioni ottimizzate (tipicamente 256-512 token) ottenuto dalla segmentazione di un documento; unita' fondamentale di embedding e retrieval nel sistema RAG."
+  category: agentic-platform
+  related_terms: [embedding, retrieval, rag, knowledge_base]
+  examples:
+    - "Ogni SOP e' segmentato in chunk da 400 token con 50 token di sovrapposizione per retrieval coerente."
+  source: agentic-community
+
+- term: generazione_aumentata
+  definition: "Traduzione italiana di Retrieval-Augmented Generation (RAG): pattern che combina retrieval semantico di documenti con generazione LLM per produrre risposte fattuali e contestualizzate."
+  category: agentic-platform
+  related_terms: [rag, retrieval, llm, vector_store]
+  examples:
+    - "La generazione_aumentata da contesto SOP riduce le allucinazioni dell'LLM del 60 percento in fase di test."
+  source: agentic-community
+
+- term: latenza_inferenza
+  definition: "Tempo di risposta di un LLM dall'invio del prompt alla ricezione del primo token (time-to-first-token, TTFT) o dell'intera risposta; KPI critico per l'usabilita' dell'interfaccia operatore."
+  category: agentic-platform
+  related_terms: [llm, qwen, ollama]
+  examples:
+    - "La latenza_inferenza TTFT di Qwen2.5-14B su GPU A10G e' < 0.8 s per prompt da 512 token."
+  source: agentic-community
+
+- term: context_window
+  definition: "Lunghezza massima (in token) che un LLM puo' processare in una singola chiamata, inclusi il prompt, il contesto RAG e la risposta attesa; Qwen2.5 supporta fino a 128k token."
+  category: agentic-platform
+  related_terms: [llm, rag, chunk, tool_call]
+  examples:
+    - "Un context_window di 8192 token e' sufficiente per includere 5 chunk SOP + storico conversazione."
+  source: agentic-community
+
+- term: data_diode
+  definition: "Pattern architetturale che garantisce la trasmissione dei dati in un solo senso (OT verso IT) senza nessun percorso di ritorno; implementato dall'OT Bridge per prevenire attacchi laterali ai sistemi di controllo."
+  category: agentic-tool
+  related_terms: [ot_bridge, opc_ua, sensore, sicurezza_lavoro]
+  examples:
+    - "Il data_diode dell'OT Bridge impedisce che comandi IT possano raggiungere i PLC delle macchine tessili."
+  source: project-specific
+
+- term: sealed_secrets
+  definition: "Strumento Kubernetes che crittografa i Secret con una chiave asimmetrica gestita dal controller nel cluster; i Secret cifrati (SealedSecret) possono essere committati in git in modo sicuro."
+  category: agentic-tool
+  related_terms: [gdpr, audit_trail, retention_dati]
+  examples:
+    - "Le credenziali Postgres e NATS sono gestite come SealedSecret nel chart Helm della piattaforma."
+  source: agentic-community
+
+- term: vllm
+  definition: "Runtime di inferenza LLM ad alta performance con PagedAttention e continuous batching; alternativa a Ollama per scenari con alto throughput (> 100 richieste/minuto) su GPU NVIDIA."
+  category: agentic-tool
+  related_terms: [ollama, qwen, llm, latenza_inferenza]
+  examples:
+    - "vLLM con Qwen2.5-72B su 2x A100 80 GB raggiunge 120 token/s in modalita' multi-user."
+  source: agentic-community
+
+- term: handle_tessuto
+  definition: "Percezione tattile e drappeggio di un tessuto, determinata da rigidita', morbidezza, lucentezza e peso; valutata soggettivamente o con strumenti Kawabata/FAST per tessuti tecnici."
+  category: textile-kpi
+  related_terms: [finissaggio, calandratura, sanforizzazione]
+  examples:
+    - "Un handle_tessuto morbido e' il risultato di ammorbidente siliconico applicato in stenter."
+  source: industry-standard
+
+- term: carta_difetti
+  definition: "Documento o schermata digitale che registra la posizione, il tipo e la dimensione di ogni difetto rilevato durante l'ispezione di un rotolo; allegata al certificato qualita' del lotto."
+  category: textile-process
+  related_terms: [ispezione_rotolo, sistema_quattro_punti, non_conformita]
+  examples:
+    - "La carta_difetti digitale e' generata automaticamente dall'ispezione automatica con telecamera."
+  source: industry-standard
