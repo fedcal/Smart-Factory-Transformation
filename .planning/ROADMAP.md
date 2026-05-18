@@ -8,7 +8,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 
 - [x] **Phase 1: Foundation & Monorepo** - Nx polyglot workspace, Docker Compose dev stack, GitHub Actions CI, license scanner, shared infra services (completed 2026-05-16)
 - [x] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN (completed 2026-05-18)
-- [ ] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay
+- [x] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay (completed 2026-05-18)
 - [ ] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail
 - [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval
 - [ ] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests
@@ -77,7 +77,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 03-04-PLAN.md — ot-bridge (SensorEvent + normalizer + NATS publisher D-52 + asyncpg writer + data-diode Layer 3 + Dockerfile + nats-bootstrap script) (IOT-04, IOT-05)
   - [x] 03-05-PLAN.md — TimescaleDB migration (hypertable + compression(7d) + retention(90d) + idempotent runner + [BLOCKING] schema-push) (IOT-06)
   - [x] 03-06-PLAN.md — docker-compose dual-network (sft-ot/sft-core) + 3-layer data-diode test + OPC-UA browseable + NATS subjects + E2E + smoke load 1k×10s + CI wiring (IOT-02, IOT-04, IOT-05, IOT-10 smoke)
-  - [ ] 03-07-PLAN.md — full load test 5k×60s (PR-label gated) + MkDocs IT/OT docs IT+EN (ingest-schema + opcua-schema) (IOT-09, IOT-10 full)
+  - [x] 03-07-PLAN.md — full load test 5k×60s (PR-label gated) + MkDocs IT/OT docs IT+EN (ingest-schema + opcua-schema) (IOT-09, IOT-10 full)
 
 ### Phase 4: Core Agentic Runtime & HITL
 **Goal**: The LangGraph supervisor graph with four cluster subgraph skeletons, PostgreSQL checkpointer, provider-agnostic LLM adapter, full HITL interrupt-to-resume loop, 4-tier escalation model, and immutable audit trail are operational end-to-end.
@@ -198,7 +198,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
-| 3. IT/OT Simulation Layer | 6/7 | In Progress|  |
+| 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
