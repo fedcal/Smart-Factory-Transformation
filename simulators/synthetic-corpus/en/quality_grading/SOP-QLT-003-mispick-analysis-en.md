@@ -24,7 +24,7 @@ tags:
   - analysis
   - quality-manager
 audience: quality
-status: draft-unreviewed
+status: reviewed
 created_in_phase: 2
 ---
 
