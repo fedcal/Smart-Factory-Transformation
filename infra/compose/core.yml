@@ -63,7 +63,9 @@ services:
       context: ../..
       dockerfile: apps/api-gateway/Dockerfile
     image: sft-api-gateway:dev
-    container_name: sft-api-gateway
+    # No container_name — allows COMPOSE_PROJECT_NAME-based isolation so
+    # multiple compose projects (e.g. parallel E2E test runs) can coexist
+    # without colliding on a fixed container name (OQ8 fix).
     environment:
       TIMESCALE_DSN: "postgresql://${POSTGRES_USER:-sft}:${POSTGRES_PASSWORD:-sft_dev_pass}@postgres:5432/${POSTGRES_DB:-sft}"
       NATS_URL: "nats://nats:4222"

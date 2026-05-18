@@ -9,6 +9,10 @@ dependencies = [
   "langchain-core>=1.0,<2.0",
   "langgraph>=0.4,<0.5",
   "asyncpg>=0.30,<0.31",
+  # langgraph-checkpoint-postgres requires psycopg3 with a libpq backend; the
+  # binary wheel ships the C extension so the slim Docker image works without
+  # an apt-installed libpq-dev. Rule 3 fix during E2E run (Plan 04-07 Task 3).
+  "psycopg[binary]>=3.1,<4",
   "nats-py>=2.14.0,<3.0",
   "pydantic>=2.9,<3",
   "structlog>=24.4",

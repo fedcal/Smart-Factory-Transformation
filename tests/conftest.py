@@ -68,6 +68,10 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "load_full: marks tests as full load tests (5k×60s PR-label gated)",
     )
+    config.addinivalue_line(
+        "markers",
+        "e2e: marks tests as full-stack end-to-end (docker compose required)",
+    )
 
 
 # ---------------------------------------------------------------------------
