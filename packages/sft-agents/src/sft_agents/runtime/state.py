@@ -10,15 +10,16 @@ re-serialisation at every node boundary.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated, Any, Literal, TypedDict
+from typing import Annotated, Any, Literal, TypedDict
 from uuid import UUID
 
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from pydantic import BaseModel, Field
 
-if TYPE_CHECKING:
-    from sft_agents.models import BudgetSnapshot, EvidencePanel, ProposedAction
+# NOTE: these imports MUST be at runtime (not TYPE_CHECKING) — LangGraph's
+# StateGraph(AgentState) calls get_type_hints() which evaluates the forward refs.
+from sft_agents.models import BudgetSnapshot, EvidencePanel, ProposedAction
 
 
 # ---------------------------------------------------------------------------
@@ -118,9 +119,9 @@ class AgentState(TypedDict, total=False):
     messages: Annotated[list[BaseMessage], add_messages]
     thread_id: str
     cluster: str
-    proposed_actions: list[ProposedAction]  # type: ignore[valid-type]
-    budget: BudgetSnapshot  # type: ignore[valid-type]
-    evidence: EvidencePanel | None  # type: ignore[valid-type]
+    proposed_actions: list[ProposedAction]
+    budget: BudgetSnapshot
+    evidence: EvidencePanel | None
     pending_approval_id: UUID | None
     routing_decision: RoutingDecision | None
 
