@@ -1,0 +1,11 @@
+timestamp,sensor_id,value,unit
+2026-01-01T00:00:00+00:00,throughput_rate,142.5,units_per_hour
+2026-01-01T00:01:00+00:00,throughput_rate,143.2,units_per_hour
+2026-01-01T00:02:00+00:00,throughput_rate,141.8,units_per_hour
+2026-01-01T00:03:00+00:00,machine_temperature,72.3,celsius
+2026-01-01T00:04:00+00:00,machine_temperature,73.1,celsius
+2026-01-01T00:05:00+00:00,vibration_level,0.42,mm_per_s
+2026-01-01T00:06:00+00:00,vibration_level,0.38,mm_per_s
+2026-01-01T00:07:00+00:00,energy_consumption,15.2,kw
+2026-01-01T00:08:00+00:00,energy_consumption,14.9,kw
+2026-01-01T00:09:00+00:00,cycle_time,2.15,seconds

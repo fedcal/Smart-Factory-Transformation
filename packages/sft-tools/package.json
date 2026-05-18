@@ -1,0 +1,12 @@
+{
+  "name": "@sft/sft-tools",
+  "version": "0.1.0",
+  "description": "LangChain Tools: replay_cmapss, replay_uci, query_timescale (Phase 3 D-46, D-47)",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fedcal/Smart-Factory-Transformation.git",
+    "directory": "packages/sft-tools"
+  }
+}
