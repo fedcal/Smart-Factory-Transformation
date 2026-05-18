@@ -5,11 +5,11 @@ Sanity checks per il registro delle assunzioni di progetto (D-33, D-35).
 
 Verifica:
   - Il file register.yaml è un YAML valido e contiene una lista
-  - Il numero corrente di entries corrisponde all'invariante del piano 02-03 (30 entries)
-  - Gli id formano un intervallo contiguo A-001..A-030 senza buchi
+  - Il numero corrente di entries corrisponde all'invariante di Piano 02-06 (50 entries)
+  - Gli id formano un intervallo contiguo A-001..A-050 senza buchi
   - Gli id sono tutti univoci (nessun duplicato)
 
-Queste invarianti vengono aggiornate in Piano 06 quando il registro viene espanso a ~50 entries.
+Piano 02-03 ha seedato A-001..A-030; Piano 02-06 ha completato a A-001..A-050.
 """
 
 from __future__ import annotations
@@ -42,20 +42,20 @@ def test_register_yaml_loads(register_data: list[dict]) -> None:
     )
 
 
-def test_register_has_30_entries(register_data: list[dict]) -> None:
-    """Il registro contiene esattamente 30 entries (invariante di Piano 02-03).
+def test_register_has_50_entries(register_data: list[dict]) -> None:
+    """Il registro contiene esattamente 50 entries (invariante di Piano 02-06).
 
-    Piano 06 (Wave 3) espanderà il registro a ~50 entries; aggiornare questo test
-    contestualmente.
+    Piano 02-03 ha seedato le prime 30 (A-001..A-030); Piano 02-06 ha espanso
+    a 50 (A-031..A-050) coprendo la distribuzione D-36 completa.
     """
-    assert len(register_data) == 30, (
-        f"Attese 30 entries nel registro (Piano 02-03), trovate {len(register_data)}. "
-        "Se hai aggiunto nuove entries, aggiorna questo test a Piano 06."
+    assert len(register_data) == 50, (
+        f"Attese 50 entries nel registro (Piano 02-06), trovate {len(register_data)}. "
+        "Se hai aggiunto nuove entries, aggiorna questo test."
     )
 
 
 def test_register_ids_contiguous(register_data: list[dict]) -> None:
-    """Gli id delle entries formano un intervallo contiguo A-001..A-030 senza buchi."""
+    """Gli id delle entries formano un intervallo contiguo A-001..A-050 senza buchi."""
     import re
 
     id_pattern = re.compile(r"^A-([0-9]{3})$")
@@ -129,7 +129,7 @@ def test_register_required_fields_present(register_data: list[dict]) -> None:
 
 
 def test_register_all_active_status(register_data: list[dict]) -> None:
-    """Tutte le 30 entries di questo piano hanno status: active (invariante Piano 02-03)."""
+    """Tutte le 50 entries del registro hanno status: active (invariante Piano 02-06)."""
     non_active: list[str] = [
         f"  [{entry.get('id', '<unknown>')}] status='{entry.get('status')}'"
         for entry in register_data
