@@ -1,0 +1,22 @@
+[project]
+name = "timescale-migrations"
+version = "0.1.0"
+description = "Idempotent TimescaleDB migration runner for Smart Factory Transformation"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "asyncpg>=0.30",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.24",
+  "testcontainers[postgres]>=4.14",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+  "testcontainers: marks tests that require Docker (deselect with -m 'not testcontainers')",
+]

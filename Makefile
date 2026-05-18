@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs migrate-timescale migrate-timescale-dry
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -124,3 +124,16 @@ helm-test:
 	for chart in infra/helm/charts/*; do helm lint "$$chart"; done
 	helm lint infra/helm/sft-stack/
 	helm install sft-test infra/helm/sft-stack/ --values infra/helm/sft-stack/values-ci.yaml --dry-run
+
+## Phase 3: TimescaleDB migration
+# -----------------------------------------------------------------------
+
+# Applica le migration TimescaleDB all'istanza configurata in $TIMESCALE_DSN
+# Idempotente: ri-eseguibile senza side-effects (CREATE TABLE IF NOT EXISTS + DO blocks)
+# Prerequisito: $TIMESCALE_DSN impostato o docker compose up (make up-core)
+migrate-timescale:
+	python3 scripts/timescale-migrate.py
+
+# Mostra quali migration verrebbero applicate senza connettersi al DB
+migrate-timescale-dry:
+	python3 scripts/timescale-migrate.py --dry-run
