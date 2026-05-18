@@ -1,11 +1,21 @@
 ---
 phase: 4
 slug: core-agentic-runtime-hitl
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: ready
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-18
+nyquist_signed_off_at: 2026-05-18
 ---
+
+> **Nyquist sign-off rationale:** Plan 04-01 Task 3 creates all 12 Wave 0 stub files
+> enumerated below (with `pytest.mark.skip(reason="W0 — implemented in Wave N")` until
+> the corresponding implementation wave lands). `conftest.py` fixtures (`mock_pool`,
+> `mock_nats_js`, `mock_llm`, `mock_checkpointer`, `frozen_dt`) are created in Plan 04-01
+> Task 1. Every task in plans 04-01..04-08 has an `<automated>` verify command (or is a
+> manual checkpoint), no 3-consecutive-task gap exists, and feedback latency targets are
+> met (≤ 30s quick / ≤ 6 min full). Validation contract is materialized; flags flipped
+> from `false` after plan-checker iteration 1.
 
 # Phase 4 — Validation Strategy
 
@@ -51,6 +61,7 @@ created: 2026-05-18
 | 04-06-02 | 06 | 3 | HITL-03, HITL-04, HITL-05 | T-04-H3 | 4-tier escalation (Operator→Supervisor→Manager→Safety Interlock) with auto-escalation 2min/15min/1h; Safety Interlock manual-only + whitelist YAML | unit + integration | `nx test sft-agents --testNamePattern=escalation_chain` | ❌ W0 | ⬜ pending |
 | 04-06-03 | 06 | 3 | HITL-07, HITL-08 | T-04-H7 | Approval rate governor: sliding-window detection > 80% auto-approve → Manager NATS alert | unit | `nx test sft-agents --testNamePattern=governor_threshold` | ❌ W0 | ⬜ pending |
 | 04-06-04 | 06 | 3 | HITL-09, HITL-10, CORE-09 | T-04-B1 | Budget/quota middleware: per-thread + per-agent atomic increment; hard-stop on exhaustion | integration | `nx test sft-agents --testNamePattern=budget_middleware` | ❌ W0 | ⬜ pending |
+| 04-06-LT | 06 | 3 | CORE-08 (long-term stub, D-59) | — | `StubLongTermMemory(Memory)` shipped at `packages/sft-agents/src/sft_agents/memory/long_term_stub.py`; `query()` returns `[]` for any input; `store()` raises `NotImplementedError` with Phase 5 message; Phase 4 → Phase 5 import-path contract frozen | unit | `nx test sft-agents --testNamePattern=test_long_term_stub` | ❌ W0 | ⬜ pending |
 | 04-07-01 | 07 | 4 | (E2E) | T-04-E1 | api-gateway FastAPI scaffold up; `/v1/threads/{id}/resume` accepts `Command(resume=)` payload | integration | `nx test api-gateway --testNamePattern=resume_endpoint` | ❌ W0 | ⬜ pending |
 | 04-07-02 | 07 | 4 | success_criterion #1 #4 | T-04-E1 | E2E HITL cycle survives full `docker compose restart` (cross-restart resume) | e2e | `pytest tests/e2e/test_hitl_cycle.py::test_restart_resume` | ❌ W0 | ⬜ pending |
 | 04-08-01 | 08 | 4 | CORE-10 | T-04-10 | Replay tool deterministic re-execution from checkpoint + audit log (mocked tool-call replay) | integration | `nx test sft-agents --testNamePattern=replay_determinism` | ❌ W0 | ⬜ pending |

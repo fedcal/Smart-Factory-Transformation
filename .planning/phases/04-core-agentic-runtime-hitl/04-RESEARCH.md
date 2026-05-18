@@ -918,37 +918,47 @@ Wave 4 (integration, sequential):
 
 **Conventional commits:** scope `feat(04-NN-slug):` per atomic commit (replicate Phase 1-3).
 
-## Open Questions for Planner
+## Open Questions for Planner (RESOLVED)
 
 1. **`agent_role` PG role creation — Phase 4 or Phase 11?**  
-   *CONTEXT.md silent.* Recommendation: Phase 4 creates role `NOLOGIN` in migration 003 (idempotent DO block). Phase 11 binds real users to role. Rationale: REVOKE on audit.actions needs the role to exist *now*.
+   *CONTEXT.md silent.* Recommendation: Phase 4 creates role `NOLOGIN` in migration 003 (idempotent DO block). Phase 11 binds real users to role. Rationale: REVOKE on audit.actions needs the role to exist *now*.  
+   **RESOLVED:** Phase 4 — `agent_role NOLOGIN` created idempotently in Plan 04-02 migration `003_create_audit_actions.sql` (DO $$ IF NOT EXISTS block).
 
 2. **EvidencePanel.input_summary: ≤500 char truncation strategy?**  
-   *CONTEXT.md silent (says "≤500 char dell'intent originale").* Options: (a) right-truncate with `...`, (b) summarize via LLM call (cost), (c) raise on >500. Recommendation: (a) truncate with explicit `_truncated: bool` field; LLM summarization Phase 11.
+   *CONTEXT.md silent (says "≤500 char dell'intent originale").* Options: (a) right-truncate with `...`, (b) summarize via LLM call (cost), (c) raise on >500. Recommendation: (a) truncate with explicit `_truncated: bool` field; LLM summarization Phase 11.  
+   **RESOLVED:** Option (a) right-truncation — `EvidencePanel` carries `input_summary: Annotated[str, Field(max_length=500)]` + `input_truncated: bool = False` field (Plan 04-01, `packages/sft-agents/src/sft_agents/models/evidence.py`).
 
 3. **HITL-10 (12 alarms/h per persona) — Phase 4 or Phase 10/11?**  
-   *CONTEXT.md doesn't explicitly map.* Recommendation: Phase 4 ships only the DB query primitive (`SELECT count(*) FROM audit.actions WHERE decision_actor=$1 AND ts > NOW()-INTERVAL '1 hour'`). UI rate-limiting (per-persona display) lives Phase 10/11. Update REQUIREMENTS.md traceability if planner agrees.
+   *CONTEXT.md doesn't explicitly map.* Recommendation: Phase 4 ships only the DB query primitive (`SELECT count(*) FROM audit.actions WHERE decision_actor=$1 AND ts > NOW()-INTERVAL '1 hour'`). UI rate-limiting (per-persona display) lives Phase 10/11. Update REQUIREMENTS.md traceability if planner agrees.  
+   **RESOLVED:** Phase 4 ships data primitive only (DB query in Plan 04-06 audit writer / governor). UI rate-limit alarm rendering deferred to Phase 10. VALIDATION.md `Manual-Only Verifications` row covers the Phase 4 deliverable boundary.
 
 4. **`AUDIT_STREAM` subject pattern — `audit.actions.<cluster>.<agent_id>` vs `audit.actions.<cluster>.<agent_id>.<thread_id>`?**  
-   *CONTEXT.md Claude's discretion locks 3-level.* Recommendation: 3-level (per agent) suffices; cluster/agent_id are bounded cardinality (~16 agents), thread_id high cardinality → would explode subject count. Confirmed: keep 3-level.
+   *CONTEXT.md Claude's discretion locks 3-level.* Recommendation: 3-level (per agent) suffices; cluster/agent_id are bounded cardinality (~16 agents), thread_id high cardinality → would explode subject count. Confirmed: keep 3-level.  
+   **RESOLVED:** 3-level subject hierarchy `audit.actions.<cluster>.<agent_id>` — confirmed in Plan 04-04 (`AUDIT_STREAM` declaration + `AuditNatsPublisher`).
 
 5. **Outbox table — `audit.actions_outbox` or `hitl.outbox`?**  
-   Recommendation: `audit.outbox` (single outbox table for ALL audit-related NATS publishes including governor.alert + approvals.new + approvals.resolved). Reduces table count and unifies retry logic. Schema: `(id UUID PK, subject TEXT, payload_json JSONB, attempts INT, last_attempt_at TIMESTAMPTZ, next_attempt_at TIMESTAMPTZ)`.
+   Recommendation: `audit.outbox` (single outbox table for ALL audit-related NATS publishes including governor.alert + approvals.new + approvals.resolved). Reduces table count and unifies retry logic. Schema: `(id UUID PK, subject TEXT, payload_json JSONB, attempts INT, last_attempt_at TIMESTAMPTZ, next_attempt_at TIMESTAMPTZ)`.  
+   **RESOLVED:** Single unified `audit.outbox` — created in Plan 04-02 migration `003_create_audit_actions.sql`; retry loop owned by Plan 04-06 (`OutboxRetry` background task).
 
 6. **Langfuse v3 — cloud (langfuse.com) or self-hosted instance?**  
-   *CONTEXT.md "ships only client config + cloud-or-stub".* Recommendation: Phase 4 supports both via env `LANGFUSE_HOST` (defaults to none → stub mode = no tracing). Dev sviluppatori possono optare per Langfuse Cloud free tier (10k events/month) o stub. Phase 11 deploys self-hosted.
+   *CONTEXT.md "ships only client config + cloud-or-stub".* Recommendation: Phase 4 supports both via env `LANGFUSE_HOST` (defaults to none → stub mode = no tracing). Dev sviluppatori possono optare per Langfuse Cloud free tier (10k events/month) o stub. Phase 11 deploys self-hosted.  
+   **RESOLVED:** Env-driven dual mode — `LANGFUSE_HOST` unset = stub (no tracing); set = cloud or self-hosted endpoint. Wired in Plan 04-03 LLM adapter via callback registration. Self-hosted deployment in Phase 11.
 
 7. **`apps/api-gateway/` Nx project scaffold — exists or new?**  
-   *CONTEXT.md `<scope_boundaries>` says "apps/api-gateway/ FastAPI endpoint" but Phase 1 only scaffolded `apps/agents/{ops,maintenance,knowledge,supply}/`.* Recommendation: Plan 04-07 generates `apps/api-gateway/` Nx project via `nx generate @nxlv/python:uv-project --name=api-gateway --projectType=application`.
+   *CONTEXT.md `<scope_boundaries>` says "apps/api-gateway/ FastAPI endpoint" but Phase 1 only scaffolded `apps/agents/{ops,maintenance,knowledge,supply}/`.* Recommendation: Plan 04-07 generates `apps/api-gateway/` Nx project via `nx generate @nxlv/python:uv-project --name=api-gateway --projectType=application`.  
+   **RESOLVED:** Plan 04-07 generates `apps/api-gateway/` ex-novo via `@nxlv/python:uv-project` generator (Task 1).
 
 8. **`testcontainers-python` adoption — Phase 4 or Phase 11?**  
-   *CONTEXT.md "deferred Phase 11 as bonus".* Recommendation: Phase 4 adopts in Plan 04-07 (HITL E2E test only) — fixes Phase 3 port-5432 issue as bonus. Other integration tests can keep `compose_stack` for now.
+   *CONTEXT.md "deferred Phase 11 as bonus".* Recommendation: Phase 4 adopts in Plan 04-07 (HITL E2E test only) — fixes Phase 3 port-5432 issue as bonus. Other integration tests can keep `compose_stack` for now.  
+   **RESOLVED:** Phase 4 adopts `testcontainers-python` scoped to Plan 04-07 E2E only — fixes Phase 3 `conftest.py` port-5432 known issue as bonus. Plans 04-02/05/06 unit + integration keep `compose_stack` fixture.
 
 9. **Replay determinism scope — what is "passing"?**  
-   *CONTEXT.md "best-effort".* Recommendation: Plan 04-08 defines acceptance: (a) tool outputs MATCH exactly (deterministic from audit log), (b) LLM responses may differ but final state structural shape MUST match (e.g. same `decision`, same number of `tool_calls`, same `pending_approval_id` resolution). Document explicitly in docs/docs/agents/replay.md.
+   *CONTEXT.md "best-effort".* Recommendation: Plan 04-08 defines acceptance: (a) tool outputs MATCH exactly (deterministic from audit log), (b) LLM responses may differ but final state structural shape MUST match (e.g. same `decision`, same number of `tool_calls`, same `pending_approval_id` resolution). Document explicitly in docs/docs/agents/replay.md.  
+   **RESOLVED:** Best-effort with structural-match acceptance — tool outputs replayed verbatim from audit log; LLM responses may differ but structural shape (decision, tool_call count, pending_approval resolution) MUST match. Documented in Plan 04-08 `docs/architecture/agents/replay.md`.
 
 10. **ROADMAP edit (4 → 5 clusters) — Phase 4 sign-off blocker?**  
-    *CONTEXT.md D-53 mandates edit task.* Recommendation: yes — Plan 04-08 includes ROADMAP.md edit + `.planning/PROJECT.md` sync (if it mentions 4 clusters). Treat as success criterion #1 evidence.
+    *CONTEXT.md D-53 mandates edit task.* Recommendation: yes — Plan 04-08 includes ROADMAP.md edit + `.planning/PROJECT.md` sync (if it mentions 4 clusters). Treat as success criterion #1 evidence.  
+    **RESOLVED:** Yes — Plan 04-08 Task 3 is `type="checkpoint:human-action"` BLOCKING: edits `.planning/ROADMAP.md` Phase 4 goal text from "four cluster" to "five cluster (Operations, Maintenance, Knowledge-Curation, Knowledge-Training, Supply)" per D-53; treated as success criterion #1 evidence.
 
 ## Code Examples
 

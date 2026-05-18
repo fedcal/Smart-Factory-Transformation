@@ -80,7 +80,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 03-07-PLAN.md — full load test 5k×60s (PR-label gated) + MkDocs IT/OT docs IT+EN (ingest-schema + opcua-schema) (IOT-09, IOT-10 full)
 
 ### Phase 4: Core Agentic Runtime & HITL
-**Goal**: The LangGraph supervisor graph with four cluster subgraph skeletons, PostgreSQL checkpointer, provider-agnostic LLM adapter, full HITL interrupt-to-resume loop, 4-tier escalation model, and immutable audit trail are operational end-to-end.
+**Goal**: The LangGraph supervisor graph with five cluster subgraph skeletons (Operations, Maintenance, Knowledge-Curation, Knowledge-Training, Supply per D-53), PostgreSQL checkpointer, provider-agnostic LLM adapter, full HITL interrupt-to-resume loop, 4-tier escalation model, and immutable audit trail are operational end-to-end.
 **Depends on**: Phase 1, Phase 3
 **Requirements**: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06, CORE-07, CORE-08, CORE-09, CORE-10, HITL-01, HITL-02, HITL-03, HITL-04, HITL-05, HITL-06, HITL-07, HITL-08, HITL-09, HITL-10
 **Success Criteria** (what must be TRUE):
@@ -89,7 +89,15 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. The LLM adapter switches between Ollama (Qwen2.5-7B Q4_K_M) and vLLM (Qwen2.5-14B AWQ) by changing one environment variable with no code changes in agents
   4. A paused HITL approval thread survives a full service restart and resumes correctly from the PostgreSQL checkpoint
   5. The approval rate governor fires an alert to the Manager role when more than 80% of consecutive actions are auto-approved
-**Plans**: TBD
+**Plans**: 8 plans
+  - [ ] 04-01-sdk-foundation-PLAN.md — Pydantic models + ABC interfaces + Wave 0 stub set (CORE-01, CORE-02, HITL-06, HITL-07)
+  - [ ] 04-02-pg-migrations-PLAN.md — 4 idempotent SQL migrations (002 hitl.approvals, 003 audit.actions+outbox+REVOKE, 004 budget.executions, 005 langgraph schema) + scripts/langgraph-init.py + [BLOCKING] migration push (CORE-04, CORE-08, CORE-09, HITL-05)
+  - [ ] 04-03-llm-adapter-PLAN.md — LLM_BACKEND={ollama,vllm} factory + BudgetingChatModel + Langfuse v3 callback + tool registry + vLLM Hermes serving docs (CORE-05, CORE-06, CORE-07)
+  - [ ] 04-04-nats-audit-stream-PLAN.md — AUDIT_STREAM bootstrap (90d) + AuditNatsPublisher + injection-safe subject derivation (CORE-08, HITL-05)
+  - [ ] 04-05-supervisor-clusters-checkpointer-PLAN.md — supervisor StateGraph + 5 cluster subgraphs + 16 placeholder children + HybridRouter + AsyncPostgresSaver wiring + safe_invoke recursion_limit→HITL (CORE-02, CORE-03, CORE-04, CORE-07)
+  - [ ] 04-06-hitl-middleware-PLAN.md — interrupt/resume node + AuditWriter dual-write + outbox retry + SafetyInterlockMiddleware + EscalationSupervisor + Governor + BudgetTracker + GDPRRedactor + EpisodicReplay (HITL-01..10, CORE-08, CORE-09)
+  - [ ] 04-07-api-gateway-e2e-PLAN.md — FastAPI scaffold + lifespan + /v1/approvals + /v1/threads/{id}/resume + Idempotency-Key + E2E HITL cycle surviving docker compose restart (HITL-01, HITL-04, CORE-04)
+  - [ ] 04-08-replay-roadmap-docs-PLAN.md — replay_thread tool + mkdocs agentic-runtime + hitl-cycle pages + [BLOCKING] ROADMAP edit (CORE-10, HITL-08)
 
 ### Phase 5: Knowledge Layer (RAG + Graph)
 **Goal**: Qdrant collections with BGE-M3 hybrid retrieval, a document ingest pipeline with provenance and access control, incremental re-indexing, and a Neo4j/Memgraph entity graph are operational and validated for bilingual Italian-English retrieval quality.
@@ -199,7 +207,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
-| 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
+| 4. Core Agentic Runtime & HITL | 0/8 | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
