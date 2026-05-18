@@ -1,0 +1,18 @@
+# Asset registry — sft-assets (D-45)
+# Seed PLACEHOLDER: 1 asset per bootstrap (Task 2 espande a 30 asset Mantis-realistic)
+# CRITICAL: SEMPRE yaml.safe_load, MAI yaml.load (T-03-01-yaml)
+
+- asset_id: LOOM-01
+  asset_family: loom
+  line_id: weaving-line-1
+  opcua_namespace: "urn:mantis:loom:LOOM-01"
+  tags:
+    - tag_id: warp_tension
+      unit: N
+      sample_rate_hz: 10.0
+      semantic_type: tension
+    - tag_id: pick_density
+      unit: picks_per_cm
+      sample_rate_hz: 1.0
+      semantic_type: density
+  status: active
