@@ -1,0 +1,98 @@
+# HybridRouter Stage-1 rule sets per cluster (D-54).
+#
+# Keywords are matched substring-wise against the lowercased last user message.
+# Patterns are regex (Python `re.search`) — anchored loosely.
+#
+# IMPORTANT — IT/EN bilingual coverage:
+#   Phase 4 PoC operates in Italian; we include English synonyms because
+#   downstream LLM prompts may be templated bilingually and rule routing must
+#   succeed regardless of the surface language (RESEARCH §3.4).
+#
+# When zero clusters match → Stage 2 LLM classifier (if `llm=` passed to
+# HybridRouter) runs; on missing LLM → fallback_default_ops with confidence=0.
+# When ≥2 clusters match → same fallback path (ambiguity defers to LLM).
+#
+# Keep this file in sync with CONTEXT.md D-54 (lines 101-110).
+
+ops:
+  keywords:
+    - operator
+    - operatore
+    - turno
+    - shift
+    - allarme
+    - alert
+    - produzione
+    - production
+    - qualita
+    - quality
+    - defetto
+    - defect
+    - anomaly
+  patterns:
+    - "macchina (\\d+|[a-z]+-\\d+)"
+    - "anomalia"
+
+maintenance:
+  keywords:
+    - manutenzione
+    - maintenance
+    - riparazione
+    - repair
+    - guasto
+    - broken
+    - downtime
+    - rca
+    - predittiv
+    - predictive
+    - cuscinetto
+    - bearing
+  patterns:
+    - "root cause"
+    - "ricambi"
+
+knowledge-curation:
+  keywords:
+    - documento
+    - document
+    - sop
+    - glossario
+    - glossary
+    - aggiorna
+    - update
+    - taxonomy
+    - tassonomia
+    - curator
+  patterns:
+    - "knowledge base"
+
+knowledge-training:
+  keywords:
+    - formazione
+    - training
+    - handover
+    - briefing
+    - coach
+    - tutor
+    - onboarding
+  patterns:
+    - "shift handover"
+
+supply:
+  keywords:
+    - inventario
+    - inventory
+    - ordine
+    - order
+    - costo
+    - cost
+    - energia
+    - energy
+    - demand
+    - forecast
+    - previsione
+    - magazzino
+    - warehouse
+  patterns:
+    - "lead time"
+    - "purchase order"
