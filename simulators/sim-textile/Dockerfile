@@ -22,7 +22,12 @@ WORKDIR /build
 COPY packages/sft-assets /build/packages/sft-assets
 COPY simulators/sim-textile /build/simulators/sim-textile
 
-# Installa sim-textile con tutte le dipendenze (include sft-assets via workspace)
+# Installa sft-assets prima (workspace dep). Senza il root pyproject.toml workspace
+# nel container uv non risolve `{ workspace = true }`, quindi patch in-place del
+# pyproject.toml per usare path source (preserva workspace mode per dev locale).
+RUN sed -i 's|sft-assets = { workspace = true }|sft-assets = { path = "../../packages/sft-assets" }|' \
+    /build/simulators/sim-textile/pyproject.toml
+RUN uv pip install --system --no-cache-dir /build/packages/sft-assets
 WORKDIR /build/simulators/sim-textile
 RUN uv pip install --system --no-cache-dir .
 

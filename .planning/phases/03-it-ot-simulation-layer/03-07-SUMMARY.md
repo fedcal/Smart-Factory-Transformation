@@ -167,3 +167,35 @@ Nessuna nuova superficie di sicurezza introdotta. I file docs non contengono DSN
 - `Makefile` has load-test-full target
 - `mkdocs build --strict`: 0 warnings, 0 errors
 - Commits e969122 (Task 1) and a478506 (Task 2): verified in git log
+
+---
+
+## Task 3 — Resolution
+
+**Decision (2026-05-18 orchestrator):** `approved-docs-only + load-deferred-to-CI`
+
+### Docs validation (automated, GREEN)
+
+- `cd docs && mkdocs build --strict` → exit 0 (zero warnings)
+- `python3 scripts/validate-bilingual-mirror.py` → 70 IT pages, all with matching EN mirror
+
+### Full load test 5k×60s — deferred to CI (PR-label `load-test`)
+
+Tentativo di esecuzione locale ha rivelato 3 issue infrastrutturali Phase 3 che vanno fixate ma NON bloccano il completamento dei deliverable Phase 3:
+
+1. **Dockerfile workspace dep resolution** (FIXED inline durante tentativo): `[tool.uv.sources] sft-assets = { workspace = true }` non risolve in Docker build context (no root pyproject.toml). Fix applicato: `RUN sed -i` patch in-place dei Dockerfile (ot-bridge + sim-textile) prima di `uv pip install`. Pyproject.toml mantengono `workspace = true` per dev locale.
+2. **infra/compose/sim.yml network declaration** (FIXED inline): `sft-core` era declared come `external: true` ma quando compose merge `-f core.yml -f sim.yml` la network deve essere project-internal. Fix: rimosso `external: true`.
+3. **tests/conftest.py compose lifecycle fixture** (NON FIXED — deferred): hardcoded port 5432 in `TIMESCALE_DSN` + `up --wait` su tutto stack incluso redis (collide con altri container redis sul host dev). Da Phase 11 (deployment hardening) o follow-up phase: parametrizzare endpoint via env + opt-out servizi non strettamente necessari nel load test fixture.
+4. **scripts/nats-bootstrap-streams.py JetStream config** (NON FIXED — deferred): `add_stream` con `retention=WORK_QUEUE` + `discard=OLD` ritorna `BadRequestError code=400 err_code=10025` (config incompatibile). Da Phase 11: verificare combinazione semantica corretta + add idempotency su BadRequestError specifico.
+
+### CI workflow `.github/workflows/ci.yml` 
+
+Step `Run IT/OT full load test (5k×60s, PR-label gated)` (Task 03-06-T3) coprirà il full load quando il PR riceve label `load-test`. Tutta l'infrastruttura test richiesta (custom asyncio harness, asset mix D-48, p99 measurement, Prometheus collector) è già scritta e committata.
+
+### Dockerfile + compose fixes committed
+
+Due fix infrastrutturali applicati e committati come parte del Task 3 cleanup:
+- `services/ot-bridge/Dockerfile` + `simulators/sim-textile/Dockerfile`: sed patch workspace→path
+- `infra/compose/sim.yml`: sft-core network non-external
+
+Phase 3 può chiudere. Phase 11 (security/perf hardening) farà follow-up sui 2 issue residui.

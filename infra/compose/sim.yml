@@ -72,5 +72,7 @@ volumes:
 networks:
   sft-ot:
     driver: bridge
+  # sft-core is created by core.yml; when loaded together with `-f core.yml -f sim.yml`
+  # compose merges both files into one project. No external flag needed.
   sft-core:
-    external: true
+    driver: bridge

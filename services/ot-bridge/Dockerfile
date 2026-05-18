@@ -22,7 +22,12 @@ WORKDIR /build
 COPY packages/sft-assets /build/packages/sft-assets
 COPY services/ot-bridge /build/services/ot-bridge
 
-# Installa deps nel sistema (no venv — container isolato)
+# Installa sft-assets prima (workspace dep). Senza il root pyproject.toml workspace
+# nel container uv non risolve `{ workspace = true }`, quindi patch in-place del
+# pyproject.toml per usare path source (preserva workspace mode per dev locale).
+RUN sed -i 's|sft-assets = { workspace = true }|sft-assets = { path = "../../packages/sft-assets" }|' \
+    /build/services/ot-bridge/pyproject.toml
+RUN uv pip install --system --no-cache-dir /build/packages/sft-assets
 WORKDIR /build/services/ot-bridge
 RUN uv pip install --system --no-cache-dir .
 
