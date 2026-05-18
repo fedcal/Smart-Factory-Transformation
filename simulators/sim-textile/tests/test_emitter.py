@@ -77,7 +77,9 @@ class TestCliDryRun:
     def test_main_dry_run_resolves_5_families(self) -> None:
         """CLI --dry-run con tutti i profili mostra 5 family names (Test smoke CLI)."""
         import pathlib
-        worktree_root = pathlib.Path("/media/federicocalo/D1/prj/Smart Factory Transformation/.claude/worktrees/agent-ac9a517ea1a59bad4")
+        # Resolve workspace root from this test file location:
+        # simulators/sim-textile/tests/test_emitter.py → 3 parents → workspace root
+        workspace_root = pathlib.Path(__file__).resolve().parents[3]
         cmd = [
             "uv", "run", "--project", "simulators/sim-textile",
             "sim-textile",
@@ -92,7 +94,7 @@ class TestCliDryRun:
             cmd,
             capture_output=True,
             text=True,
-            cwd=str(worktree_root),
+            cwd=str(workspace_root),
             timeout=30,
         )
         assert result.returncode == 0, (
