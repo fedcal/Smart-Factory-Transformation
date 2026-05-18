@@ -1,0 +1,46 @@
+# Fault injection profile: dyeing (D-44)
+# Focus: NaN bath_ph (sensor disconnect), drift bath_temperature, alarm storm recipe_deviation
+# CRITICAL: SEMPRE yaml.safe_load (T-03-03-yaml)
+
+asset_family: dyeing
+sample_rate_hz: 1
+fault_injection:
+  nan_probability: 0.005
+  drift:
+    enabled: true
+    rate_per_hour: 0.02
+    affected_tags:
+      - bath_temperature
+  jitter:
+    enabled: false
+    band_pct: 0.0
+  burst_noise:
+    enabled: false
+    magnitude_pct: 0.0
+    duration_s: 0.0
+    period_s: 0.0
+  alarm_storm:
+    enabled: true
+    threshold_events: 10
+    window_s: 30.0
+    affected_tags:
+      - recipe_deviation
+default_baseline:
+  bath_temperature:
+    value: 85.0
+    unit: degC
+  bath_ph:
+    value: 6.5
+    unit: pH
+  bath_level:
+    value: 1500.0
+    unit: mm
+  flow_rate:
+    value: 120.0
+    unit: l_min
+  recipe_deviation:
+    value: 0.0
+    unit: pct
+  bath_pressure:
+    value: 2.5
+    unit: bar

@@ -1,0 +1,40 @@
+# Fault injection profile: warping (D-44)
+# Focus: drift tension_imbalance, burst_noise creel_feed_rate
+# CRITICAL: SEMPRE yaml.safe_load (T-03-03-yaml)
+
+asset_family: warping
+sample_rate_hz: 2
+fault_injection:
+  nan_probability: 0.001
+  drift:
+    enabled: true
+    rate_per_hour: 0.02
+    affected_tags:
+      - tension_imbalance
+  jitter:
+    enabled: false
+    band_pct: 0.0
+  burst_noise:
+    enabled: true
+    magnitude_pct: 30.0
+    duration_s: 5.0
+    period_s: 600.0
+    affected_tags:
+      - creel_feed_rate
+  alarm_storm:
+    enabled: false
+    threshold_events: 50
+    window_s: 30.0
+default_baseline:
+  tension_imbalance:
+    value: 8.0
+    unit: N
+  creel_feed_rate:
+    value: 120.0
+    unit: m_min
+  warp_count:
+    value: 0.0
+    unit: count
+  winding_speed:
+    value: 400.0
+    unit: rpm

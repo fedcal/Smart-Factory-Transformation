@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sim-textile/schemas/fault-profile.schema.json",
+  "title": "SFT Fault Profile",
+  "description": "Schema Draft 2020-12 per un fault injection profile YAML di sim-textile (D-44, T-03-03-pydantic)",
+  "type": "object",
+  "required": ["asset_family", "sample_rate_hz", "fault_injection", "default_baseline"],
+  "additionalProperties": false,
+  "properties": {
+    "asset_family": {
+      "type": "string",
+      "enum": ["loom", "spinning", "warping", "dyeing", "finishing"],
+      "description": "Famiglia asset tessile (D-21 + D-44) — 5 valori ammessi"
+    },
+    "sample_rate_hz": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1000,
+      "description": "Frequenza di campionamento in Hz (0 < rate <= 1000) — T-03-03-dos-emit"
+    },
+    "fault_injection": {
+      "type": "object",
+      "required": ["nan_probability", "drift", "jitter", "burst_noise", "alarm_storm"],
+      "additionalProperties": false,
+      "properties": {
+        "nan_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Probabilita' NaN per disconnessione sensore (0..1) — T-03-03-pydantic"
+        },
+        "drift": {
+          "type": "object",
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "rate_per_hour": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Tasso di deriva per ora (>= 0)"
+            },
+            "affected_tags": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Lista tag_id influenzati dal drift"
+            }
+          }
+        },
+        "jitter": {
+          "type": "object",
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "band_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Ampiezza banda jitter in % (0..100)"
+            },
+            "affected_tags": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Lista tag_id influenzati dal jitter"
+            }
+          }
+        },
+        "burst_noise": {
+          "type": "object",
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "magnitude_pct": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Ampiezza massima burst in % del valore base"
+            },
+            "duration_s": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Durata del burst in secondi"
+            },
+            "period_s": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Periodo tra burst in secondi"
+            },
+            "affected_tags": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Lista tag_id influenzati dal burst"
+            }
+          }
+        },
+        "alarm_storm": {
+          "type": "object",
+          "required": ["enabled"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "threshold_events": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Numero minimo eventi per scatenare alarm storm (>= 1)"
+            },
+            "window_s": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Finestra temporale alarm storm in secondi"
+            },
+            "affected_tags": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Lista tag_id influenzati dall'alarm storm"
+            }
+          }
+        }
+      }
+    },
+    "default_baseline": {
+      "type": "object",
+      "description": "Valori baseline per condizioni nominali — chiavi sono tag_id",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "value": { "type": "number" },
+          "unit": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+# Fault injection profile: spinning (D-44)
+# Focus: jitter spindle_vibration, drift roller_temperature, alarm storm broken_end_count
+# CRITICAL: SEMPRE yaml.safe_load (T-03-03-yaml)
+
+asset_family: spinning
+sample_rate_hz: 5
+fault_injection:
+  nan_probability: 0.001
+  drift:
+    enabled: true
+    rate_per_hour: 0.01
+    affected_tags:
+      - roller_temperature
+  jitter:
+    enabled: true
+    band_pct: 8
+    affected_tags:
+      - spindle_vibration
+  burst_noise:
+    enabled: false
+    magnitude_pct: 0.0
+    duration_s: 0.0
+    period_s: 0.0
+  alarm_storm:
+    enabled: true
+    threshold_events: 30
+    window_s: 30.0
+    affected_tags:
+      - broken_end_count
+default_baseline:
+  spindle_speed:
+    value: 14000.0
+    unit: rpm
+  yarn_tension:
+    value: 15.0
+    unit: cN
+  roller_temperature:
+    value: 45.0
+    unit: degC
+  broken_end_count:
+    value: 0.0
+    unit: count
+  spindle_vibration:
+    value: 2.5
+    unit: mm_s
