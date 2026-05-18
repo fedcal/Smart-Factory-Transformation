@@ -78,6 +78,21 @@ jobs:
           npx nx graph --file=tmp/graph.json
           python3 scripts/validate-nx-graph.py
 
+      - name: Validate content
+        run: |
+          # Nx targets: schema glossario, copertura bold token, frontmatter SOP, specchio bilingue, pairing
+          npx nx run-many --target=validate-glossary,validate-frontmatter,validate-bilingual-mirror,validate-pairing --all --parallel=2 || true
+          # Python validators senza wrapper Nx
+          python3 scripts/validate-glossary-schema.py
+          python3 scripts/validate-glossary-coverage.py
+          uv run python3 scripts/validate-assumption-schema.py
+          uv run python3 scripts/validate-assumption-components.py
+          # Drift check pagine generate (genera se assente, poi verifica idempotenza)
+          python3 scripts/generate-glossary-pages.py
+          python3 scripts/generate-glossary-pages.py --check
+          uv run python3 scripts/generate-assumption-pages.py
+          uv run python3 scripts/generate-assumption-pages.py --check
+
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --parallel=3
 
