@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats load-test-full
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -110,6 +110,49 @@ license-scan:
 	@[ -f sbom.json ] || (echo "sbom.json non trovato: eseguire prima 'make sbom'" && exit 1)
 	trivy sbom sbom.json --scanners license --config infra/license/trivy.yaml --format table
 
+## Content Validation (Phase 2 — glossario, corpus, assumption register)
+# -----------------------------------------------------------------------
+
+# Valida il frontmatter YAML di tutti i SOP nel corpus sintetico (D-26)
+# Requisito: uv sync --all-packages (python-frontmatter, jsonschema)
+# Usa 'uv run' per garantire che le dipendenze Python siano disponibili
+validate-corpus:
+	uv run python3 scripts/validate-corpus-frontmatter.py
+	uv run python3 scripts/validate-corpus-pairing.py
+	uv run python3 scripts/validate-bilingual-mirror.py
+
+# Rigenera le pagine glossario MkDocs da YAML sorgente (D-29)
+# Idempotente: eseguire due volte produce output identico
+generate-glossary:
+	python3 scripts/generate-glossary-pages.py
+
+# Rigenera le pagine assumption register MkDocs da YAML sorgente (D-33)
+# Idempotente: eseguire due volte produce output identico
+generate-assumptions:
+	python3 scripts/generate-assumption-pages.py
+
+# Valida schema e copertura del glossario (D-29, D-32)
+# Schema: validate-glossary-schema.py (jsonschema Draft 2020-12)
+# Copertura: validate-glossary-coverage.py (bold token lookup, lang-matched)
+validate-glossary:
+	python3 scripts/validate-glossary-schema.py
+	python3 scripts/validate-glossary-coverage.py
+
+# Valida il registro asset contro asset.schema.json (D-45, IOT-09)
+# Prerequisito: uv sync (pyyaml, jsonschema gia' in workspace devDeps)
+validate-assets:
+	python3 scripts/validate-asset-registry.py
+
+# Esegue tutte le validazioni di contenuto in sequenza
+# Include: schema glossario, copertura, corpus frontmatter, assumption register, asset registry
+# e check drift pagine generate (--check mode per generate-glossary-pages.py)
+# Usa 'uv run' per i validatori che richiedono dipendenze Python
+validate-all: validate-glossary validate-corpus validate-assets
+	uv run python3 scripts/validate-assumption-schema.py
+	uv run python3 scripts/validate-assumption-components.py
+	python3 scripts/generate-glossary-pages.py --check
+	uv run python3 scripts/generate-assumption-pages.py --check
+
 ## Helm
 # -----------------------------------------------------------------------
 
@@ -124,3 +167,62 @@ helm-test:
 	for chart in infra/helm/charts/*; do helm lint "$$chart"; done
 	helm lint infra/helm/sft-stack/
 	helm install sft-test infra/helm/sft-stack/ --values infra/helm/sft-stack/values-ci.yaml --dry-run
+
+## Phase 3: TimescaleDB migration
+# -----------------------------------------------------------------------
+
+# Applica le migration TimescaleDB all'istanza configurata in $TIMESCALE_DSN
+# Idempotente: ri-eseguibile senza side-effects (CREATE TABLE IF NOT EXISTS + DO blocks)
+# Prerequisito: $TIMESCALE_DSN impostato o docker compose up (make up-core)
+migrate-timescale:
+	python3 scripts/timescale-migrate.py
+
+# Mostra quali migration verrebbero applicate senza connettersi al DB
+migrate-timescale-dry:
+	python3 scripts/timescale-migrate.py --dry-run
+
+## Phase 3: IT/OT stack lifecycle (D-51 dual-network + IOT-10 smoke gate)
+# -----------------------------------------------------------------------
+
+# Avvia il full stack IT/OT (core + sim: timescaledb + redis + qdrant + nats + sim-textile + ot-bridge)
+# Prerequisito: docker disponibile; prima esecuzione richiede build immagini sim-textile + ot-bridge
+up-it-ot:
+	docker compose -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) up -d --wait
+
+# Ferma e rimuove volumi dello stack IT/OT
+down-it-ot:
+	docker compose -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) down -v
+
+# Bootstrap NATS JetStream streams (SENSOR_EVENTS + AUDIT_OT) — idempotente
+# Prerequisito: make up-it-ot (nats deve essere healthy)
+bootstrap-nats:
+	python3 scripts/nats-bootstrap-streams.py
+
+# Esegue i test di integrazione IT/OT end-to-end
+# Stack: up-it-ot → migrate → bootstrap → pytest integration → down-it-ot
+# Marker: @pytest.mark.integration
+integration-test: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/integration/ -v -m integration
+	$(MAKE) down-it-ot
+
+# Esegue lo smoke load test (1k msg/s × 10s — IOT-10 smoke gate)
+# Stack: up-it-ot → migrate → bootstrap → pytest load/smoke → down-it-ot
+# Marker: @pytest.mark.load_smoke
+smoke-load: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/load/test_ingestion_smoke.py -v -m load_smoke
+	$(MAKE) down-it-ot
+
+# Esegue il full load test (5k msg/s × 60s — IOT-10 full gate, D-48)
+# Stack: up-it-ot → migrate → bootstrap → pytest load/throughput → down-it-ot
+# Marker: @pytest.mark.load_full — richiede flag --full-load-test
+# Runtime stimato: ~75s su hardware nominale (GitHub Actions standard runner 4CPU/16GB)
+# Output: FULL LOAD: total=<N>, p50=<ms>ms, p99=<ms>ms, rate=<N>/s
+load-test-full: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/load/test_ingestion_throughput.py -v -m load_full --full-load-test
+	$(MAKE) down-it-ot

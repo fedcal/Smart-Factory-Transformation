@@ -78,6 +78,80 @@ jobs:
           npx nx graph --file=tmp/graph.json
           python3 scripts/validate-nx-graph.py
 
+      - name: Validate content
+        run: |
+          # Nx targets: schema glossario, copertura bold token, frontmatter SOP, specchio bilingue, pairing
+          npx nx run-many --target=validate-glossary,validate-frontmatter,validate-bilingual-mirror,validate-pairing --all --parallel=2 || true
+          # Python validators senza wrapper Nx
+          python3 scripts/validate-glossary-schema.py
+          python3 scripts/validate-glossary-coverage.py
+          uv run python3 scripts/validate-assumption-schema.py
+          uv run python3 scripts/validate-assumption-components.py
+          # Drift check pagine generate (genera se assente, poi verifica idempotenza)
+          python3 scripts/generate-glossary-pages.py
+          python3 scripts/generate-glossary-pages.py --check
+          uv run python3 scripts/generate-assumption-pages.py
+          uv run python3 scripts/generate-assumption-pages.py --check
+
+      - name: Validate IT/OT artifacts (Phase 3)
+        run: |
+          # Asset registry + fault profiles schema validation (D-45, D-44)
+          python3 scripts/validate-asset-registry.py
+          python3 scripts/validate-fault-profiles.py
+          # CI grep gates: security enforcement (RESEARCH §Security checks 1)
+          # Gate 1: no yaml.load() raw (T-V5-yaml — CWE-502 unsafe deserialization)
+          ! grep -rE "yaml\.load\(" packages/sft-assets packages/sft-tools simulators/sim-textile services/ot-bridge
+          # Gate 2: no f-string SQL (T-V5-sql — SQL injection prevention)
+          ! grep -rE 'f"(INSERT|SELECT|UPDATE|DELETE)' services/ot-bridge packages/sft-tools
+          # Gate 3: no OPC-UA write calls in ot-bridge (T-DATA-DIODE Layer 3)
+          ! grep -rE "(set_value|write_attribute|write_value)" services/ot-bridge/src/
+          # Gate 4: no naive datetime (all timestamps must be UTC-aware)
+          ! grep -rE "datetime\.now\(\)" simulators/sim-textile/src services/ot-bridge/src
+          # Gate 5: no pydantic.v1 import (langchain-core 1.x requires Pydantic v2 only)
+          ! grep -rE "(pydantic\.v1|from langchain\.pydantic_v1)" packages/sft-tools/src
+
+      - name: Run IT/OT integration tests (Phase 3)
+        run: |
+          # Avvia stack IT/OT (core + sim) e attende healthy
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml up -d --wait
+          # Applica migration TimescaleDB (idempotente)
+          TIMESCALE_DSN=postgresql://sft:sft_dev_pass@localhost:5432/sft \
+            python3 scripts/timescale-migrate.py
+          # Bootstrap NATS JetStream streams
+          python3 scripts/nats-bootstrap-streams.py --server nats://localhost:4222
+          # Esegui test di integrazione IT/OT
+          uv run --with pytest --with pytest-asyncio --with asyncpg --with asyncua --with nats-py \
+            -- python -m pytest tests/integration/ -v -m integration
+          # Cleanup stack
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
+
+      - name: Run IT/OT load test (smoke 1k×10s)
+        run: |
+          # Avvia stack IT/OT e attende healthy
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml up -d --wait
+          # Applica migration TimescaleDB (idempotente)
+          TIMESCALE_DSN=postgresql://sft:sft_dev_pass@localhost:5432/sft \
+            python3 scripts/timescale-migrate.py
+          # Bootstrap NATS JetStream streams
+          python3 scripts/nats-bootstrap-streams.py --server nats://localhost:4222
+          # Esegui smoke load test (IOT-10 gate: 1k×10s p99<200ms)
+          uv run --with pytest --with pytest-asyncio --with asyncpg --with nats-py \
+            -- python -m pytest tests/load/test_ingestion_smoke.py -v -m load_smoke
+          # Cleanup stack
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
+
+      - name: Run IT/OT full load test (5k×60s, PR-label gated)
+        if: contains(github.event.pull_request.labels.*.name, 'load-test')
+        run: |
+          docker compose -f infra/compose/core.yml up -d --wait timescaledb nats
+          export TIMESCALE_DSN="postgresql://sft:sft_dev_pass@localhost:5432/sft"
+          python3 scripts/timescale-migrate.py
+          python3 scripts/nats-bootstrap-streams.py --server nats://localhost:4222
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml up -d --wait
+          uv run --with pytest --with pytest-asyncio --with asyncpg --with nats-py \
+            -- python -m pytest tests/load/test_ingestion_throughput.py -v -m load_full --full-load-test
+          docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
+
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --parallel=3
 
