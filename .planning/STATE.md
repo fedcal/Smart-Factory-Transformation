@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 2 context gathered
-last_updated: "2026-05-18T15:44:51.840Z"
-last_activity: 2026-05-18 -- Phase 04 planning complete
+last_updated: "2026-05-18T16:16:21.239Z"
+last_activity: 2026-05-18 -- Phase 04 execution started
 progress:
   total_phases: 12
   completed_phases: 3
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 1 — foundation-monorepo
+**Current focus:** Phase 04 — core-agentic-runtime-hitl
 
 ## Current Position
 
-Phase: 03 — COMPLETE
-Plan: 8 of 8
-Status: Ready to execute
-Last activity: 2026-05-18 -- Phase 04 planning complete
+Phase: 04 (core-agentic-runtime-hitl) — EXECUTING
+Plan: 1 of 8
+Status: Executing Phase 04
+Last activity: 2026-05-18 -- Phase 04 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
