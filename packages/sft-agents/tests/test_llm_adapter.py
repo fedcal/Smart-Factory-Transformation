@@ -62,6 +62,23 @@ class TestBudgetingChatModelAsync:
         assert wrapper.last_token_usage.total == 0
 
 
+class _BindableFakeChatModel(FakeListChatModel):
+    """FakeListChatModel that supports bind_tools / with_structured_output for tests.
+
+    FakeListChatModel.bind_tools raises NotImplementedError; we override to return
+    a new fake (same response list) so chain preservation can be unit-tested
+    without spinning up a real provider.
+    """
+
+    def bind_tools(self, tools, **kw):  # type: ignore[override]
+        # Return a fresh fake (same responses) — sufficient to verify wrapper
+        # rewraps the delegated result.
+        return _BindableFakeChatModel(responses=self.responses)
+
+    def with_structured_output(self, schema, **kw):  # type: ignore[override]
+        return _BindableFakeChatModel(responses=self.responses)
+
+
 class TestBudgetingChatModelDelegation:
     """bind_tools / with_structured_output return BudgetingChatModel (chain preservation)."""
 
@@ -73,12 +90,23 @@ class TestBudgetingChatModelDelegation:
             """Sum two integers."""
             return a + b
 
-        fake = FakeListChatModel(responses=["x"])
+        fake = _BindableFakeChatModel(responses=["x"])
         wrapper = BudgetingChatModel(fake)
         bound = wrapper.bind_tools([add])
         assert isinstance(bound, BudgetingChatModel), (
             "bind_tools must return a BudgetingChatModel to preserve usage capture"
         )
+
+    def test_with_structured_output_returns_budgeting_chat_model(self) -> None:
+        from pydantic import BaseModel
+
+        class Out(BaseModel):
+            x: int
+
+        fake = _BindableFakeChatModel(responses=["x"])
+        wrapper = BudgetingChatModel(fake)
+        structured = wrapper.with_structured_output(Out)
+        assert isinstance(structured, BudgetingChatModel)
 
     def test_wrapped_attribute_exposed(self) -> None:
         fake = FakeListChatModel(responses=["x"])
