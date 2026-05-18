@@ -75,6 +75,8 @@ plugins:
             Panoramica: Overview
             Schema ingest: Ingest Schema
             Schema OPC-UA: OPC-UA Schema
+            Agentic Runtime: Agentic Runtime
+            HITL Cycle: HITL Cycle
       reconfigure_material: true
 
 markdown_extensions:
@@ -110,6 +112,8 @@ nav:
   - Architettura:
     - Overview: architecture/overview.md
     - LLM Serving: architecture/llm-serving.md
+    - Agentic Runtime: architecture/agentic-runtime.md
+    - HITL Cycle: architecture/hitl-cycle.md
   - Dominio:
     - Indice: domain/index.md
     - Processi:
