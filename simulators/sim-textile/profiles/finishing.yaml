@@ -1,0 +1,40 @@
+# Fault injection profile: finishing (D-44)
+# Focus: drift humidity, burst_noise fabric_tension
+# CRITICAL: SEMPRE yaml.safe_load (T-03-03-yaml)
+
+asset_family: finishing
+sample_rate_hz: 5
+fault_injection:
+  nan_probability: 0.001
+  drift:
+    enabled: true
+    rate_per_hour: 0.03
+    affected_tags:
+      - humidity
+  jitter:
+    enabled: false
+    band_pct: 0.0
+  burst_noise:
+    enabled: true
+    magnitude_pct: 20.0
+    duration_s: 3.0
+    period_s: 300.0
+    affected_tags:
+      - fabric_tension
+  alarm_storm:
+    enabled: false
+    threshold_events: 50
+    window_s: 30.0
+default_baseline:
+  fabric_tension:
+    value: 180.0
+    unit: N
+  chamber_temperature:
+    value: 170.0
+    unit: degC
+  humidity:
+    value: 45.0
+    unit: pct_rh
+  fabric_speed:
+    value: 35.0
+    unit: m_min

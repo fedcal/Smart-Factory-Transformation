@@ -1,0 +1,45 @@
+# Fault injection profile: loom (D-44)
+# Focus: jitter warp_tension, drift creel_speed, alarm storm broken_pick_count
+# CRITICAL: SEMPRE yaml.safe_load (T-03-03-yaml)
+
+asset_family: loom
+sample_rate_hz: 10
+fault_injection:
+  nan_probability: 0.001
+  drift:
+    enabled: true
+    rate_per_hour: 0.005
+    affected_tags:
+      - creel_speed
+  jitter:
+    enabled: true
+    band_pct: 5
+    affected_tags:
+      - warp_tension
+  burst_noise:
+    enabled: false
+    magnitude_pct: 0.0
+    duration_s: 0.0
+    period_s: 0.0
+  alarm_storm:
+    enabled: true
+    threshold_events: 50
+    window_s: 30.0
+    affected_tags:
+      - broken_pick_count
+default_baseline:
+  warp_tension:
+    value: 25.0
+    unit: N
+  pick_density:
+    value: 24.0
+    unit: picks_per_cm
+  creel_speed:
+    value: 850.0
+    unit: rpm
+  broken_pick_count:
+    value: 0.0
+    unit: count
+  loom_temperature:
+    value: 32.0
+    unit: degC

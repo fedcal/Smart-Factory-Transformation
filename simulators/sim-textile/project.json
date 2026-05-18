@@ -17,9 +17,17 @@
         "command": "uv run ruff check src",
         "cwd": "simulators/sim-textile"
       }
+    },
+    "validate-profiles": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "python3 ../../scripts/validate-fault-profiles.py",
+        "cwd": "."
+      }
     }
   },
   "implicitDependencies": [
-    "sft-contracts"
+    "sft-contracts",
+    "sft-assets"
   ]
 }
