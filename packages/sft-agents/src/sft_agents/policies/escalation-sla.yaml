@@ -1,0 +1,16 @@
+# Source: CONTEXT.md D-57 (escalation SLA — Plan 04-06)
+# 4-tier escalation chain with per-tier SLA in minutes.
+# next_tier: null means "no further escalation" (manager-terminal or safety_interlock).
+# sla_minutes: null means "never auto-escalate" (safety_interlock only).
+operator:
+  sla_minutes: 2
+  next_tier: supervisor
+supervisor:
+  sla_minutes: 15
+  next_tier: manager
+manager:
+  sla_minutes: 60
+  next_tier: null
+safety_interlock:
+  sla_minutes: null
+  next_tier: null
