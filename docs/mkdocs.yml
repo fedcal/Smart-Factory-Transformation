@@ -15,7 +15,6 @@ theme:
     - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
-    - navigation.instant
     - navigation.top
     - search.suggest
     - search.highlight
@@ -40,6 +39,7 @@ theme:
 
 plugins:
   - search
+  - tags
   - i18n:
       docs_structure: folder
       languages:
@@ -56,6 +56,20 @@ plugins:
             Architettura: Architecture
             Iniziare: Getting Started
             Contributing: Contributing
+            Dominio: Domain
+            Indice: Index
+            Processi: Processes
+            Ruoli: Roles
+            Tessitura: Weaving
+            Filatura: Spinning
+            Orditura: Warping
+            Tintoria: Dyeing
+            Finissaggio: Finishing
+            Operatore: Operator
+            Tecnico: Technician
+            Caposquadra: Shift Supervisor
+            Procedure (SOP): Procedures (SOP)
+            Glossario: Glossary
       reconfigure_material: true
 
 markdown_extensions:
@@ -90,4 +104,20 @@ nav:
   - Iniziare: getting-started.md
   - Architettura:
     - Overview: architecture/overview.md
+  - Dominio:
+    - Indice: domain/index.md
+    - Processi:
+      - Tessitura: domain/processes/weaving.md
+      - Filatura: domain/processes/spinning.md
+      - Orditura: domain/processes/warping.md
+      - Tintoria: domain/processes/dyeing.md
+      - Finissaggio: domain/processes/finishing.md
+    - Ruoli:
+      - Operatore: domain/roles/operator.md
+      - Tecnico: domain/roles/technician.md
+      - Quality Manager: domain/roles/quality-manager.md
+      - Caposquadra: domain/roles/shift-supervisor.md
+  - Procedure (SOP): sop/index.md
+  - Assumption Register: assumptions/index.md
+  - Glossario: glossary.md
   - Contributing: contributing/index.md

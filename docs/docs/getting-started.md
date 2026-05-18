@@ -8,7 +8,7 @@
 
 Prima di clonare il repo e avviare i servizi, assicurati di avere l'ambiente correttamente configurato:
 
-- [Toolchain prerequisites](../contributing/toolchain.md) — Node.js, Python 3.12, uv, Docker, Nx CLI e tutti gli strumenti richiesti
+- **Toolchain prerequisites** — Node.js, Python 3.12, uv, Docker, Nx CLI e tutti gli strumenti richiesti (documentazione completa in arrivo con le fasi successive)
 
 ## Avviare lo stack di sviluppo
 
@@ -19,21 +19,21 @@ make up          # avvia tutto lo stack (CPU mode)
 make up-gpu      # avvia con Ollama su GPU NVIDIA
 ```
 
-Per la documentazione completa sullo stack:
+Per la documentazione completa sullo stack (in arrivo con le fasi successive):
 
-- [Docker Compose dev stack](../contributing/compose-dev-stack.md) — servizi, volumi, healthcheck e profili
+- **Docker Compose dev stack** — servizi, volumi, healthcheck e profili
 
 ## Pipeline CI
 
 Il monorepo usa GitHub Actions con `nx affected` per eseguire solo i job rilevanti per ogni PR:
 
-- [CI pipeline](../contributing/ci-pipeline.md) — workflow, required checks, branch protection
+- **CI pipeline** — workflow, required checks, branch protection (documentazione completa in arrivo)
 
 ## Deploy Helm (produzione)
 
 Per il deploy su Kubernetes con gli Helm chart inclusi:
 
-- [Helm deploy](../operations/helm-deploy.md) — helm install, values, smoke test
+- **Helm deploy** — helm install, values, smoke test (documentazione completa in arrivo con le fasi operative)
 
 ## Preview locale della documentazione
 

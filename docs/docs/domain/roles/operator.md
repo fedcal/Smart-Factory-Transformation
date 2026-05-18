@@ -29,6 +29,6 @@ La decisione critica dell'operatore è: fermare il **telaio** o continuare la pr
 
 ## Riferimenti
 
-- [Glossario: operatore, telaio, rottura_filo, oee](../glossary.md)
+- [Glossario: operatore, telaio, rottura_filo, oee](../../glossary.md)
 - [Ruolo correlato: Tecnico manutentore](technician.md)
 - [Ruolo correlato: Capoturno](shift-supervisor.md)

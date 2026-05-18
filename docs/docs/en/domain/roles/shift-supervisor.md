@@ -29,7 +29,7 @@ The critical decision is: stop a **loom** or a **dyeing** plant in case of an an
 
 ## References
 
-- [Glossary: hitl, oee, audit_trail](../glossary.md)
+- [Glossary: hitl, oee, audit_trail](../../glossary.md)
 - [Related role: Operator](operator.md)
 - [Related role: Maintenance technician](technician.md)
 - [Related role: Quality manager](quality-manager.md)

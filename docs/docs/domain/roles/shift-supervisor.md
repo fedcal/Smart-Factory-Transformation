@@ -29,7 +29,7 @@ La decisione critica è: fermare un **telaio** o un impianto di **tintura** in c
 
 ## Riferimenti
 
-- [Glossario: hitl, oee, audit_trail](../glossary.md)
+- [Glossario: hitl, oee, audit_trail](../../glossary.md)
 - [Ruolo correlato: Operatore](operator.md)
 - [Ruolo correlato: Tecnico manutentore](technician.md)
 - [Ruolo correlato: Responsabile qualità](quality-manager.md)

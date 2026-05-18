@@ -29,6 +29,6 @@ The technician's critical decision is: repair on-the-spot or wait for the schedu
 
 ## References
 
-- [Glossary: loom, ring_frame, mtbf, mttr](../glossary.md)
+- [Glossary: loom, ring_frame, mtbf, mttr](../../glossary.md)
 - [Related role: Operator](operator.md)
 - [Related role: Shift supervisor](shift-supervisor.md)
