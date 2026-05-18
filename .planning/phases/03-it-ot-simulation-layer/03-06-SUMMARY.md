@@ -154,3 +154,21 @@ None — tutti i file parsano correttamente, compose config valida, tutti i grep
 ---
 *Phase: 03-it-ot-simulation-layer*
 *Completed: 2026-05-18 (Tasks 1-3; Task 4 pending checkpoint)*
+
+---
+
+## Task 4 — Resolution
+
+**Decision (2026-05-18 orchestrator):** `approved-ci-only`
+
+L'orchestratore ha optato per affidare la validazione al CI workflow invece di eseguire i 11 step manuali di local stack inspection. Razionale:
+
+- Tutti i test unitari di Wave 1+2 sono verdi (sft-assets 20/20, sft-tools 34/34, sim-textile 38/38, ot-bridge 14/14)
+- `docker compose -f infra/compose/core.yml -f infra/compose/sim.yml config` exit 0 (compose syntax valida — Task 1 acceptance)
+- CI workflow `.github/workflows/ci.yml` (Task 3) include 3 step Phase 3 che coprono esattamente i 11 step manuali:
+  - "Run IT/OT integration tests" — D-51 3-layer + OPC-UA browseable + NATS subjects + E2E
+  - "Run IT/OT load test (smoke)" — 1k×10s p99<200ms
+  - "Validate IT/OT artifacts" — 5 grep gates
+- Schema-push già verificato in Plan 03-05 Task 2 (hypertable + compression_policy + retention_policy attivi)
+
+Task 4 è marcato `resolved-via-ci`. Eventuali bug strutturali emergeranno nel prossimo push o nel full load test di Plan 03-07.
