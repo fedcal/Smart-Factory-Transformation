@@ -1260,3 +1260,72 @@
   examples:
     - "A clean, uniform shed is critical for trouble-free weft insertion at 800 picks/min."
   source: industry-standard
+
+- term: digital_calliper
+  definition: "British spelling variant of digital caliper — a digital reading dimensional measuring instrument used in textiles to measure thread diameter, component dimensions, and assembly tolerances."
+  category: textile-tool-ppe
+  related_terms: [digital_caliper, yarn_count, mechanical_inspection]
+  examples:
+    - "A Mitutoyo 500 series digital_calliper measures with 0.01 mm resolution."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: ear_protection
+  definition: "Personal Protective Equipment for hearing, mandatory in departments with noise levels above 85 dB(A); synonym for hearing_protection. Weaving rooms typically have 95-105 dB(A) from loom noise."
+  category: textile-tool-ppe
+  related_terms: [hearing_protection, occupational_safety, ppe]
+  examples:
+    - "Ear_protection with SNR 30 dB is mandatory in the weaving department."
+  source: iso-standard
+  no_direct_equivalent: false
+
+- term: finishing_plant
+  definition: "Industrial-scale line of finishing machines for chemical and mechanical treatment of grey fabric; synonymous with finishing_range. May include stenters, calenders, sanforizers, and water-repellency applicators."
+  category: textile-asset
+  related_terms: [finishing_range, finishing, sanforizing, calendering]
+  examples:
+    - "The finishing_plant processes 60 m/min of cotton denim in three sequential stages."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: halo
+  definition: "Circular or irregular mark (stain) on fabric caused by drips of water, oil, or chemicals during production or finishing; equivalent to the Italian term 'aloni'. Can cause immediate downgrading if above threshold size."
+  category: textile-defect
+  related_terms: [stain, roll_inspection, finishing, dyeing]
+  examples:
+    - "A lubricant oil halo above 3 cm2 leads to immediate roll downgrading."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: halos
+  definition: "Plural of halo — multiple circular or irregular marks on fabric caused by drips of water, oil, or chemicals; grouped staining pattern that may indicate a systematic leakage issue in the machinery."
+  category: textile-defect
+  related_terms: [halo, stain, roll_inspection]
+  examples:
+    - "Repeated halos at regular intervals on a roll suggest a dripping point in the finishing range."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: lot_accepted
+  definition: "Formal positive quality inspection outcome for a fabric lot: all rolls meet the acceptance criteria (four-point system, colour tolerance, AQL); the lot is approved for shipment."
+  category: textile-process
+  related_terms: [lot_decision, four_point_system, aql]
+  examples:
+    - "The LOT ACCEPTED stamp on the inspection report authorises transfer to the shipping warehouse."
+  source: industry-standard
+
+- term: lot_rejected
+  definition: "Formal negative quality inspection outcome: at least one roll exceeds the defect threshold or colour deviation is outside tolerance; the lot is held for corrective action or reprocessing."
+  category: textile-process
+  related_terms: [lot_decision, non_conformance, four_point_system]
+  examples:
+    - "A lot_rejected for unlevelness requires a complete re-dyeing of the batch."
+  source: industry-standard
+
+- term: traveller_ring_verification
+  definition: "Maintenance procedure step that checks the condition of the ring traveller on a ring frame spindle — assessing wear, deformation, or roughness — before resuming production after a yarn break or maintenance event."
+  category: textile-process
+  related_terms: [ring_traveller, spindle, ring_frame, yarn_break]
+  examples:
+    - "Traveller_ring_verification is a mandatory step in the ring frame restart checklist after a spindle intervention."
+  source: industry-standard

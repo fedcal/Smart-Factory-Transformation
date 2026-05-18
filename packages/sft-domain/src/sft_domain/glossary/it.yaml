@@ -1264,3 +1264,28 @@
   examples:
     - "La carta_difetti digitale e' generata automaticamente dall'ispezione automatica con telecamera."
   source: industry-standard
+
+- term: color_matching
+  definition: "Termine anglosassone (color matching) usato anche in italiano tessile per il processo di formulazione di una ricetta colorante che riproduce una tinta campione entro la tolleranza concordata."
+  category: textile-process
+  related_terms: [delta_e, tolleranza_colore, spettrofotometro, tintura]
+  examples:
+    - "Il color_matching computerizzato riduce il numero di prove di tintoria a 3 o meno per campione."
+  source: industry-standard
+  no_direct_equivalent: false
+
+- term: lotto_accettato
+  definition: "Esito formale positivo dell'ispezione qualita' di un lotto di tessuto: tutti i rotoli rispettano i criteri di accettazione (sistema 4-punti, tolleranza colore, AQL); il lotto e' approvato per spedizione."
+  category: textile-process
+  related_terms: [accettazione_lotto, sistema_quattro_punti, aql]
+  examples:
+    - "La scritta LOTTO ACCETTATO sul rapporto di ispezione autorizza il trasferimento al magazzino spedizioni."
+  source: industry-standard
+
+- term: lotto_rifiutato
+  definition: "Esito formale negativo dell'ispezione qualita': almeno un rotolo supera la soglia di difetto o la deviazione colore e' fuori tolleranza; il lotto e' trattenuto per azione correttiva o riciclo."
+  category: textile-process
+  related_terms: [accettazione_lotto, non_conformita, sistema_quattro_punti]
+  examples:
+    - "Un lotto_rifiutato per screziatura richiede una ri-tintura completa del batch."
+  source: industry-standard
