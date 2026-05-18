@@ -78,3 +78,10 @@ test-results/
 playwright-report/
 
 .angular
+
+# Phase 3: replay-data files (NASA C-MAPSS / UCI download-on-demand)
+# License compliance A4/A10: dataset files are NOT redistributed in this repo.
+# Download via: python3 scripts/download-replay-datasets.py --dataset all
+simulators/sim-textile/replay-data/*
+!simulators/sim-textile/replay-data/.gitkeep
+!simulators/sim-textile/replay-data/CHECKSUMS.txt

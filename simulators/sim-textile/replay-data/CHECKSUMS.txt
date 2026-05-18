@@ -1,0 +1,18 @@
+# SHA256 checksums per replay dataset files.
+# Format: <sha256>  <filename>
+#
+# Eseguire `python3 scripts/download-replay-datasets.py --dataset all` per scaricare
+# i dataset automaticamente con verifica SHA256.
+#
+# ISTRUZIONI AGGIORNAMENTO CHECKSUMS:
+# 1. Scaricare il file con: python3 scripts/download-replay-datasets.py --dataset <name>
+# 2. Il checksum viene calcolato e registrato automaticamente al primo download riuscito.
+# 3. NEVER committare i file CSV/TXT dei dataset (gitignored per license compliance A4/A10).
+#
+# I valori SHA256 reali sono validati al download contro gli hash upstream (NASA / UCI).
+# Aggiornare questa sezione dopo il primo download manuale di produzione:
+#
+# <sha256_cmapss_fd001>  train_FD001.txt
+# <sha256_uci_air_quality>  uci_air_quality.zip
+# <sha256_uci_energy>  uci_energy.zip
+# <sha256_uci_production>  uci_production.zip
