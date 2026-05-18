@@ -109,6 +109,7 @@ nav:
   - Iniziare: getting-started.md
   - Architettura:
     - Overview: architecture/overview.md
+    - LLM Serving: architecture/llm-serving.md
   - Dominio:
     - Indice: domain/index.md
     - Processi:
