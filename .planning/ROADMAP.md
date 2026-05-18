@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
-| 2. Domain Modeling & Synthetic Corpus | 9/7 | Complete   | 2026-05-18 |
+| 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 0/TBD | Not started | - |
 | 4. Core Agentic Runtime & HITL | 0/TBD | Not started | - |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
