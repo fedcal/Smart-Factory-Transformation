@@ -17,6 +17,13 @@
         "command": "uv run ruff check src",
         "cwd": "packages/sft-domain"
       }
+    },
+    "validate-glossary": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "python3 ../../scripts/validate-glossary-schema.py && python3 ../../scripts/validate-glossary-coverage.py",
+        "cwd": "."
+      }
     }
   },
   "implicitDependencies": []
