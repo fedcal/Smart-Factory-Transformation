@@ -127,6 +127,32 @@ class AuditNatsPublisher:
             status=approval.status.value,
         )
 
+    async def publish_raw(self, subject: str, payload: bytes) -> None:
+        """Publish a raw ``(subject, payload)`` pair — used by the outbox retry path.
+
+        The OutboxRetry loop (Plan 04-06) re-plays rows that originally failed at
+        the typed publish helpers (``publish_audit`` etc.). It already has the
+        validated subject and payload bytes in hand, so it bypasses the typed
+        helpers and calls this method directly.
+
+        Args:
+            subject: Pre-validated NATS subject (already passed through the
+                ``subject_for_*`` helpers at original publish time; the outbox
+                column ``audit.outbox.subject`` is text-only and only the
+                AuditWriter is permitted to enqueue rows).
+            payload: Raw bytes payload (typically UTF-8 JSON).
+
+        Raises:
+            Re-raises any underlying NATS error so the OutboxRetry loop can
+            bump ``attempts`` and apply exponential backoff.
+        """
+        await self._js.publish(subject, payload)
+        logger.debug(
+            "audit_raw_published",
+            subject=subject,
+            payload_bytes=len(payload),
+        )
+
     async def publish_governor_alert(self, payload: dict[str, Any]) -> None:
         """Publish a governor-rate alert to `hitl.governor.alert` (D-58).
 
