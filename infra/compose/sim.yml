@@ -1,7 +1,9 @@
 # Smart Factory Transformation — Simulation Dev Stack
-# Servizi sim: NATS JetStream (message broker OT)
-# Decisioni: D-07 (split per area), D-18 (anticipa data-diode NetworkPolicy OT)
-# Network sft-sim separato da sft-core per principio data-diode (D-18)
+# Servizi sim: NATS JetStream (message broker IT-side), sim-textile (OT), ot-bridge (dual-network)
+# Decisioni: D-07 (split per area), D-18 (anticipa data-diode NetworkPolicy OT), D-51 (3-layer enforcement)
+# D-51 Layer 1: sim-textile su sft-ot SOLO; ot-bridge su [sft-ot, sft-core]; nats su sft-core SOLO
+# PATTERNS line 726: NATS spostato da sft-sim (Phase 1) a sft-core (Phase 3 realignment — NATS e' IT-side)
+# OQ1 RESOLVED: nats replicas=1 dev (cluster deferred Phase 11)
 
 services:
   nats:
@@ -18,20 +20,57 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - sft-sim
+      - sft-core
     restart: unless-stopped
 
-  # sim-textile placeholder - popolato in Fase 3
-  # sim-textile:
-  #   build: ../../simulators/sim-textile
-  #   networks:
-  #     - sft-sim
-  #   depends_on:
-  #     nats: { condition: service_healthy }
+  sim-textile:
+    build:
+      context: ../..
+      dockerfile: simulators/sim-textile/Dockerfile
+    image: sft-sim-textile:dev
+    container_name: sft-sim-textile
+    environment:
+      SIM_PROFILES: "${SIM_PROFILES:-loom,spinning,warping,dyeing,finishing}"
+      SIM_TIME_SCALE: "${SIM_TIME_SCALE:-1.0}"
+      OPCUA_BIND: "0.0.0.0:4840"
+      METRICS_PORT: "8080"
+    ports:
+      - "${OPCUA_PORT:-4840}:4840"
+      - "${SIM_METRICS_PORT:-8081}:8080"
+    networks:
+      - sft-ot
+    restart: unless-stopped
+
+  ot-bridge:
+    build:
+      context: ../..
+      dockerfile: services/ot-bridge/Dockerfile
+    image: sft-ot-bridge:dev
+    container_name: sft-ot-bridge
+    environment:
+      OPCUA_URL: "opc.tcp://sim-textile:4840"
+      NATS_URL: "nats://nats:4222"
+      TIMESCALE_DSN: "postgresql://${POSTGRES_USER:-sft}:${POSTGRES_PASSWORD:-sft_dev_pass}@postgres:5432/${POSTGRES_DB:-sft}"
+      METRICS_PORT: "8080"
+    ports:
+      - "${BRIDGE_METRICS_PORT:-8082}:8080"
+    networks:
+      - sft-ot
+      - sft-core
+    depends_on:
+      sim-textile:
+        condition: service_started
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   nats-data:
 
 networks:
-  sft-sim:
+  sft-ot:
     driver: bridge
+  sft-core:
+    external: true

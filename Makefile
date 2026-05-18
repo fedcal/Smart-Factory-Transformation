@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-assets validate-all migrate-timescale migrate-timescale-dry up-it-ot down-it-ot integration-test smoke-load bootstrap-nats
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -180,3 +180,38 @@ migrate-timescale:
 # Mostra quali migration verrebbero applicate senza connettersi al DB
 migrate-timescale-dry:
 	python3 scripts/timescale-migrate.py --dry-run
+
+## Phase 3: IT/OT stack lifecycle (D-51 dual-network + IOT-10 smoke gate)
+# -----------------------------------------------------------------------
+
+# Avvia il full stack IT/OT (core + sim: timescaledb + redis + qdrant + nats + sim-textile + ot-bridge)
+# Prerequisito: docker disponibile; prima esecuzione richiede build immagini sim-textile + ot-bridge
+up-it-ot:
+	docker compose -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) up -d --wait
+
+# Ferma e rimuove volumi dello stack IT/OT
+down-it-ot:
+	docker compose -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) down -v
+
+# Bootstrap NATS JetStream streams (SENSOR_EVENTS + AUDIT_OT) — idempotente
+# Prerequisito: make up-it-ot (nats deve essere healthy)
+bootstrap-nats:
+	python3 scripts/nats-bootstrap-streams.py
+
+# Esegue i test di integrazione IT/OT end-to-end
+# Stack: up-it-ot → migrate → bootstrap → pytest integration → down-it-ot
+# Marker: @pytest.mark.integration
+integration-test: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/integration/ -v -m integration
+	$(MAKE) down-it-ot
+
+# Esegue lo smoke load test (1k msg/s × 10s — IOT-10 smoke gate)
+# Stack: up-it-ot → migrate → bootstrap → pytest load/smoke → down-it-ot
+# Marker: @pytest.mark.load_smoke
+smoke-load: up-it-ot
+	python3 scripts/timescale-migrate.py
+	python3 scripts/nats-bootstrap-streams.py
+	uv run pytest tests/load/test_ingestion_smoke.py -v -m load_smoke
+	$(MAKE) down-it-ot
