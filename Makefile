@@ -13,7 +13,7 @@ COMPOSE_LLM_GPU  := infra/compose/llm-gpu.yml
 # Stack base (core + sim + obs) usato da tutti i target tranne up-gpu
 BASE_STACK := -f $(COMPOSE_CORE) -f $(COMPOSE_SIM) -f $(COMPOSE_OBS)
 
-.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs
+.PHONY: up up-gpu up-core down reset test lint format docs docs-serve demo sbom license-scan helm-test ps logs validate-corpus generate-glossary generate-assumptions validate-glossary validate-all
 
 ## Stack lifecycle
 # -----------------------------------------------------------------------
@@ -109,6 +109,44 @@ license-scan:
 	@command -v trivy >/dev/null || (echo "trivy non trovato: installa via https://aquasecurity.github.io/trivy/" && exit 1)
 	@[ -f sbom.json ] || (echo "sbom.json non trovato: eseguire prima 'make sbom'" && exit 1)
 	trivy sbom sbom.json --scanners license --config infra/license/trivy.yaml --format table
+
+## Content Validation (Phase 2 — glossario, corpus, assumption register)
+# -----------------------------------------------------------------------
+
+# Valida il frontmatter YAML di tutti i SOP nel corpus sintetico (D-26)
+# Requisito: uv sync --all-packages (python-frontmatter, jsonschema)
+# Usa 'uv run' per garantire che le dipendenze Python siano disponibili
+validate-corpus:
+	uv run python3 scripts/validate-corpus-frontmatter.py
+	uv run python3 scripts/validate-corpus-pairing.py
+	uv run python3 scripts/validate-bilingual-mirror.py
+
+# Rigenera le pagine glossario MkDocs da YAML sorgente (D-29)
+# Idempotente: eseguire due volte produce output identico
+generate-glossary:
+	python3 scripts/generate-glossary-pages.py
+
+# Rigenera le pagine assumption register MkDocs da YAML sorgente (D-33)
+# Idempotente: eseguire due volte produce output identico
+generate-assumptions:
+	python3 scripts/generate-assumption-pages.py
+
+# Valida schema e copertura del glossario (D-29, D-32)
+# Schema: validate-glossary-schema.py (jsonschema Draft 2020-12)
+# Copertura: validate-glossary-coverage.py (bold token lookup, lang-matched)
+validate-glossary:
+	python3 scripts/validate-glossary-schema.py
+	python3 scripts/validate-glossary-coverage.py
+
+# Esegue tutte le validazioni di contenuto in sequenza
+# Include: schema glossario, copertura, corpus frontmatter, assumption register, specchi bilingue
+# e check drift pagine generate (--check mode per generate-glossary-pages.py)
+# Usa 'uv run' per i validatori che richiedono dipendenze Python
+validate-all: validate-glossary validate-corpus
+	uv run python3 scripts/validate-assumption-schema.py
+	uv run python3 scripts/validate-assumption-components.py
+	python3 scripts/generate-glossary-pages.py --check
+	uv run python3 scripts/generate-assumption-pages.py --check
 
 ## Helm
 # -----------------------------------------------------------------------

@@ -37,3 +37,23 @@ This register tracks explicit project assumptions of the Smart Factory Transform
 | [A-028](A-028.md) | security | I secret applicativi (credenziali DB, API key LLM, token Langfuse) sono gestiti... | k8s, sealed-secrets, postgresql, langfuse, ollama | active |
 | [A-029](A-029.md) | security | Langfuse è deployato in modalità self-hosted (Docker/K8s) nell'MVP; non sono tra... | langfuse, postgresql, clickhouse, k8s | active |
 | [A-030](A-030.md) | security | I pesi del modello Qwen2.5 scaricati tramite Ollama provengono da un registro ve... | ollama, vllm, orchestrator | active |
+| [A-031](A-031.md) | simulation | Il simulatore sim-textile produce traiettorie di telemetria che rispecchiano la... | sim-textile, anomaly-detector, predictive-maintenance | active |
+| [A-032](A-032.md) | simulation | Il dataset NASA C-MAPSS (Turbofan Engine Degradation Simulation) è utilizzabile... | predictive-maintenance, sim-textile, anomaly-detector | active |
+| [A-033](A-033.md) | simulation | Il dataset UCI Manufacturing Dataset (macchine CNC e tool wear) è utilizzabile c... | anomaly-detector, sim-textile, predictive-maintenance | active |
+| [A-034](A-034.md) | simulation | Il modello di rumore ambientale implementato in sim-textile (distribuzione gauss... | sim-textile, ot-bridge, anomaly-detector | active |
+| [A-035](A-035.md) | simulation | La copertura dei fault mode iniettati da sim-textile (rottura trama, deriva tens... | sim-textile, anomaly-detector, predictive-maintenance | active |
+| [A-036](A-036.md) | simulation | Il mock OPC-UA di sim-textile è compatibile con la specifica OPC-UA 1.04 in moda... | sim-textile, ot-bridge, k8s | active |
+| [A-037](A-037.md) | simulation | La latenza di rete simulata tra i container di sim-textile e ot-bridge (Docker n... | sim-textile, ot-bridge, timescaledb, nats | active |
+| [A-038](A-038.md) | simulation | Il simulatore sim-textile scala fino a 50 asset virtuali (telai e macchine di fi... | sim-textile, ot-bridge, timescaledb, nats | active |
+| [A-039](A-039.md) | external-dependency | Ollama (deployment self-hosted) garantisce disponibilità del servizio di inferen... | ollama, orchestrator, hitl-queue | active |
+| [A-040](A-040.md) | external-dependency | I pesi del modello Qwen2.5-72B (e varianti 7B, 14B) rimangono stabili nel reposi... | ollama, vllm, orchestrator | active |
+| [A-041](A-041.md) | external-dependency | Qdrant (versione 1.x) non presenta cliff di scaling che impediscono la gestione... | qdrant, orchestrator, predictive-maintenance, anomaly-detector | active |
+| [A-042](A-042.md) | external-dependency | Langfuse v3 deployato self-hosted con ClickHouse come backend non supera i costi... | langfuse, clickhouse, postgresql, k8s | active |
+| [A-043](A-043.md) | external-dependency | Le estensioni PostgreSQL richieste dal progetto (TimescaleDB, pgvector, pg_stat_... | postgresql, timescaledb, qdrant, langfuse | active |
+| [A-044](A-044.md) | external-dependency | I Helm chart upstream dei componenti di terze parti (Qdrant, Langfuse, NATS, Pro... | helm, k8s, qdrant, langfuse, nats | active |
+| [A-045](A-045.md) | external-dependency | GitHub Actions (piano gratuito su repository pubblico) fornisce un throughput di... | k8s, helm, orchestrator | active |
+| [A-046](A-046.md) | external-dependency | Per il deployment vLLM come backend di inferenza LLM alternativo a Ollama (fallb... | vllm, ollama, orchestrator | active |
+| [A-047](A-047.md) | performance | Il checkpointer PostgreSQL di LangGraph (usato per la persistenza dello stato de... | postgresql, orchestrator, hitl-queue, audit-stream | active |
+| [A-048](A-048.md) | performance | Il costo computazionale di embedding del corpus (20 SOP e 10 domain pages e glos... | qdrant, orchestrator, predictive-maintenance, anomaly-detector | active |
+| [A-049](A-049.md) | performance | La decisione di sharding del vector store Qdrant (single-node vs multi-node clus... | qdrant, orchestrator, k8s, helm | active |
+| [A-050](A-050.md) | cost | Il punto di crossover economico tra inferenza GPU-cloud (vLLM su A10G) e inferen... | ollama, vllm, orchestrator | active |

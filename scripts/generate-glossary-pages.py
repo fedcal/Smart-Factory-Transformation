@@ -1,0 +1,379 @@
+#!/usr/bin/env python3
+"""
+scripts/generate-glossary-pages.py
+
+D-29 dual-channel glossary generator.
+
+Reads:
+  - packages/sft-domain/src/sft_domain/glossary/it.yaml
+  - packages/sft-domain/src/sft_domain/glossary/en.yaml
+
+Generates (idempotent — deterministic output, NO timestamps):
+  - docs/docs/glossary.md          (IT)
+  - docs/docs/en/glossary.md       (EN)
+
+Supports:
+  --dry-run    Print what would be written without writing files.
+  --check      Exit 2 if the generated content differs from what is already on disk
+               (use in CI to detect glossary page drift).
+
+Idempotency guarantee:
+  - Terms sorted alphabetically within each category, then categories sorted.
+  - No timestamps, random elements, or machine-specific content.
+  - Running twice produces identical byte-for-byte output.
+
+Security: uses yaml.safe_load exclusively (CWE-502 prevention, T-02-27).
+
+Usage:
+    python3 scripts/generate-glossary-pages.py [--dry-run] [--check]
+
+Exit codes:
+    0 - Pages generated (or --dry-run completed, or --check passed)
+    1 - Error reading YAML or writing files
+    2 - --check mode: generated content differs from disk (drift detected)
+"""
+import argparse
+import sys
+from pathlib import Path
+
+import yaml
+
+WORKSPACE_ROOT = Path(__file__).parent.parent
+
+_GLOSSARY_DIR = WORKSPACE_ROOT / "packages/sft-domain/src/sft_domain/glossary"
+_IT_YAML = _GLOSSARY_DIR / "it.yaml"
+_EN_YAML = _GLOSSARY_DIR / "en.yaml"
+_IT_OUTPUT = WORKSPACE_ROOT / "docs/docs/glossary.md"
+_EN_OUTPUT = WORKSPACE_ROOT / "docs/docs/en/glossary.md"
+
+# Category display names for the MkDocs pages (IT labels)
+_CATEGORY_LABELS_IT: dict[str, str] = {
+    "textile-process": "Processi Tessili",
+    "textile-asset": "Asset / Macchine",
+    "textile-defect": "Difetti Tessili",
+    "textile-kpi": "KPI e Metriche",
+    "textile-tool-ppe": "Strumenti e DPI",
+    "textile-material": "Materiali",
+    "agentic-platform": "Piattaforma Agentica",
+    "agentic-tool": "Tool Agentici",
+    "regulatory": "Normativo / Regolatorio",
+}
+
+# Category display names for the MkDocs pages (EN labels)
+_CATEGORY_LABELS_EN: dict[str, str] = {
+    "textile-process": "Textile Processes",
+    "textile-asset": "Assets / Machines",
+    "textile-defect": "Textile Defects",
+    "textile-kpi": "KPIs and Metrics",
+    "textile-tool-ppe": "Tools and PPE",
+    "textile-material": "Materials",
+    "agentic-platform": "Agentic Platform",
+    "agentic-tool": "Agentic Tools",
+    "regulatory": "Regulatory / Compliance",
+}
+
+# Canonical category order for deterministic output
+_CATEGORY_ORDER: list[str] = [
+    "textile-process",
+    "textile-asset",
+    "textile-defect",
+    "textile-kpi",
+    "textile-tool-ppe",
+    "textile-material",
+    "agentic-platform",
+    "agentic-tool",
+    "regulatory",
+]
+
+_IT_PAGE_HEADER = """\
+---
+title: Glossario
+description: Glossario bilingue del dominio tessile e della piattaforma agentica (≥150 termini IT)
+tags:
+  - glossario
+  - dominio-tessile
+  - piattaforma-agentica
+---
+
+# Glossario
+
+Fonte canonica: [`packages/sft-domain/src/sft_domain/glossary/it.yaml`](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/packages/sft-domain/src/sft_domain/glossary/it.yaml)
+(D-29 dual-channel: YAML strutturato + render MkDocs).
+
+> **Nota:** Questa pagina è generata automaticamente da `scripts/generate-glossary-pages.py`.
+> Non modificarla manualmente — modificare il file YAML sorgente e rigenerare.
+
+"""
+
+_EN_PAGE_HEADER = """\
+---
+title: Glossary
+description: Bilingual glossary of the textile domain and agentic platform (≥150 EN terms)
+tags:
+  - glossary
+  - textile-domain
+  - agentic-platform
+---
+
+# Glossary
+
+Canonical source: [`packages/sft-domain/src/sft_domain/glossary/en.yaml`](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/packages/sft-domain/src/sft_domain/glossary/en.yaml)
+(D-29 dual-channel: structured YAML + MkDocs render).
+
+> **Note:** This page is generated automatically by `scripts/generate-glossary-pages.py`.
+> Do not edit manually — modify the source YAML file and regenerate.
+
+"""
+
+
+def load_glossary(yaml_path: Path) -> list[dict]:
+    """Load and return the glossary as a list of term dicts.
+
+    Uses yaml.safe_load exclusively (CWE-502 prevention).
+    """
+    if not yaml_path.exists():
+        print(
+            f"ERROR: glossary file not found: {yaml_path.relative_to(WORKSPACE_ROOT)}",
+            file=sys.stderr,
+        )
+        return []
+    try:
+        with yaml_path.open(encoding="utf-8") as fh:
+            data = yaml.safe_load(fh)  # SEMPRE safe_load, mai yaml.load
+    except yaml.YAMLError as exc:
+        print(
+            f"ERROR: cannot parse {yaml_path.relative_to(WORKSPACE_ROOT)}: {exc}",
+            file=sys.stderr,
+        )
+        return []
+    if not isinstance(data, list):
+        print(
+            f"ERROR: {yaml_path.relative_to(WORKSPACE_ROOT)} must be a YAML list.",
+            file=sys.stderr,
+        )
+        return []
+    return [entry for entry in data if isinstance(entry, dict)]
+
+
+def group_by_category(terms: list[dict]) -> dict[str, list[dict]]:
+    """Group terms by category, sorted alphabetically within each group."""
+    groups: dict[str, list[dict]] = {}
+    for term in terms:
+        cat = term.get("category", "")
+        if cat not in groups:
+            groups[cat] = []
+        groups[cat].append(term)
+    # Sort within each category alphabetically by term
+    for cat in groups:
+        groups[cat].sort(key=lambda t: str(t.get("term", "")).lower())
+    return groups
+
+
+def render_term_block(term_dict: dict, lang: str) -> str:
+    """Render a single term as a Markdown definition block."""
+    term = str(term_dict.get("term", ""))
+    definition = str(term_dict.get("definition", ""))
+    related = term_dict.get("related_terms", []) or []
+    examples = term_dict.get("examples", []) or []
+    source = term_dict.get("source", "")
+    no_equiv = term_dict.get("no_direct_equivalent", False)
+
+    lines: list[str] = []
+
+    # Term heading (anchor-friendly)
+    anchor = term.lower().replace(" ", "_").replace("-", "_")
+    lines.append(f'### <a name="{anchor}"></a>`{term}`')
+    lines.append("")
+    lines.append(definition)
+    lines.append("")
+
+    if related:
+        related_links = ", ".join(
+            f"`{r}`" for r in sorted(str(r) for r in related)
+        )
+        if lang == "it":
+            lines.append(f"**Termini correlati:** {related_links}")
+        else:
+            lines.append(f"**Related terms:** {related_links}")
+        lines.append("")
+
+    if examples:
+        if lang == "it":
+            lines.append("**Esempi:**")
+        else:
+            lines.append("**Examples:**")
+        for example in examples:
+            lines.append(f"- _{example}_")
+        lines.append("")
+
+    if source:
+        if lang == "it":
+            lines.append(f"*Fonte: {source}*")
+        else:
+            lines.append(f"*Source: {source}*")
+        lines.append("")
+
+    if no_equiv:
+        if lang == "it":
+            lines.append(
+                "> ⚠️ Questo termine non ha un equivalente diretto nell'altra lingua."
+            )
+        else:
+            lines.append(
+                "> ⚠️ This term has no direct equivalent in the other language."
+            )
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def generate_page(
+    terms: list[dict],
+    header: str,
+    category_labels: dict[str, str],
+    lang: str,
+) -> str:
+    """Generate the full Markdown content for a glossary page."""
+    groups = group_by_category(terms)
+    lines: list[str] = [header.rstrip()]
+    lines.append("")
+
+    # Ordered categories first, then any unexpected categories alphabetically
+    ordered_cats = [c for c in _CATEGORY_ORDER if c in groups]
+    extra_cats = sorted(c for c in groups if c not in _CATEGORY_ORDER)
+
+    for cat in ordered_cats + extra_cats:
+        cat_terms = groups[cat]
+        label = category_labels.get(cat, cat)
+        lines.append(f"## {label}")
+        lines.append("")
+        lines.append(
+            f"_{len(cat_terms)} {'termine' if lang == 'it' else 'term'}{'i' if lang == 'it' and len(cat_terms) != 1 else 's' if lang != 'it' and len(cat_terms) != 1 else ''}_"
+        )
+        lines.append("")
+        for term_dict in cat_terms:
+            lines.append(render_term_block(term_dict, lang))
+
+    return "\n".join(lines) + "\n"
+
+
+def write_page(output_path: Path, content: str, dry_run: bool, check: bool) -> int:
+    """Write the generated content to disk.
+
+    Returns:
+      0 — success (or dry-run)
+      1 — write error
+      2 — check mode: content differs from disk
+    """
+    rel = output_path.relative_to(WORKSPACE_ROOT)
+
+    if dry_run:
+        if output_path.exists():
+            current = output_path.read_text(encoding="utf-8")
+            if current == content:
+                print(f"[dry-run] {rel}: up to date (no changes needed)")
+            else:
+                # Show summary of diff
+                current_lines = len(current.splitlines())
+                new_lines = len(content.splitlines())
+                print(
+                    f"[dry-run] WOULD update {rel}: "
+                    f"{current_lines} → {new_lines} lines"
+                )
+        else:
+            print(f"[dry-run] WOULD create {rel}: {len(content.splitlines())} lines")
+        return 0
+
+    if check:
+        if not output_path.exists():
+            print(
+                f"DRIFT [{rel}]: file does not exist on disk — "
+                f"run generate-glossary-pages.py to create it.",
+                file=sys.stderr,
+            )
+            return 2
+        current = output_path.read_text(encoding="utf-8")
+        if current != content:
+            print(
+                f"DRIFT [{rel}]: generated content differs from disk — "
+                f"run generate-glossary-pages.py to update.",
+                file=sys.stderr,
+            )
+            return 2
+        print(f"OK [{rel}]: up to date")
+        return 0
+
+    # Actual write
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(content, encoding="utf-8")
+        print(f"Written: {rel} ({len(content.splitlines())} lines)")
+        return 0
+    except OSError as exc:
+        print(f"ERROR: cannot write {rel}: {exc}", file=sys.stderr)
+        return 1
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate IT and EN MkDocs glossary pages from YAML source files (D-29).\n"
+            "Output: docs/docs/glossary.md and docs/docs/en/glossary.md.\n"
+            "Idempotent — running twice produces identical output."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be written without writing files.",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "Exit 2 if generated content differs from what is already on disk "
+            "(CI drift detection). Implies no file writes."
+        ),
+    )
+    args = parser.parse_args()
+
+    if args.dry_run and args.check:
+        print("ERROR: --dry-run and --check are mutually exclusive.", file=sys.stderr)
+        sys.exit(1)
+
+    # Load glossaries
+    it_terms = load_glossary(_IT_YAML)
+    en_terms = load_glossary(_EN_YAML)
+
+    if not it_terms:
+        print("ERROR: IT glossary is empty or missing.", file=sys.stderr)
+        sys.exit(1)
+    if not en_terms:
+        print("ERROR: EN glossary is empty or missing.", file=sys.stderr)
+        sys.exit(1)
+
+    # Generate content
+    it_content = generate_page(it_terms, _IT_PAGE_HEADER, _CATEGORY_LABELS_IT, "it")
+    en_content = generate_page(en_terms, _EN_PAGE_HEADER, _CATEGORY_LABELS_EN, "en")
+
+    # Write / check / dry-run
+    exit_codes: list[int] = []
+    exit_codes.append(
+        write_page(_IT_OUTPUT, it_content, dry_run=args.dry_run, check=args.check)
+    )
+    exit_codes.append(
+        write_page(_EN_OUTPUT, en_content, dry_run=args.dry_run, check=args.check)
+    )
+
+    max_exit = max(exit_codes)
+    if max_exit == 0:
+        if not args.dry_run and not args.check:
+            print(
+                f"Done. Generated {len(it_terms)} IT terms + {len(en_terms)} EN terms."
+            )
+    sys.exit(max_exit)
+
+
+if __name__ == "__main__":
+    main()
