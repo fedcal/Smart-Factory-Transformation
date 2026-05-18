@@ -778,3 +778,612 @@
   created_in_phase: 2
   last_reviewed_in_phase: 2
   superseded_by: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SIMULATION (8 entries — A-031..A-038)
+# Piano 06: copertura D-36 bucket mancante da Piano 03
+# ─────────────────────────────────────────────────────────────────────────────
+
+- id: A-031
+  statement: >-
+    Il simulatore sim-textile produce traiettorie di telemetria che rispecchiano
+    la distribuzione statistica di guasti reali dei telai tessili (rottura trama,
+    deriva tensione ordito, blocco navetta) in modo sufficientemente fedele da
+    permettere la validazione degli algoritmi di rilevamento anomalie in Phase 3
+    senza test su impianti reali.
+  category: simulation
+  affected_components: [sim-textile, anomaly-detector, predictive-maintenance]
+  rationale: >-
+    Il simulatore è calibrato su dataset pubblici (NASA C-MAPSS, UCI Manufacturing
+    KDD) e su pattern di guasto documentati in letteratura tessile (es. IEC 62443
+    profiles per sistemi di controllo manifatturiero). La fedeltà statistica è
+    necessaria perché i modelli di Phase 3-5 sono addestrati e validati su dati
+    simulati prima del go-live su impianti reali Mantis.
+  validation_method: >-
+    Phase 3: confronto delle distribuzioni KL-divergence tra traiettorie sim-textile
+    e dataset storici di riferimento (NASA C-MAPSS). Se KL-divergence > 0.3 su 3
+    feature principali, il simulatore richiede ricalibrazione. Domain expert review
+    delle traiettorie di guasto generate.
+  risk_if_wrong: >-
+    Modelli addestrati su traiettorie non realistiche producono performance elevate
+    in simulazione ma degradano in produzione (sim-to-real gap). L'AnomalyDetector
+    fallisce i test di accettazione Mantis. Ri-addestramento post-go-live con costi
+    aggiuntivi non previsti nel bid OEPV.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-032
+  statement: >-
+    Il dataset NASA C-MAPSS (Turbofan Engine Degradation Simulation) è utilizzabile
+    come proxy per validare algoritmi di predictive maintenance su macchinari tessili;
+    i pattern di degradazione delle turbine (FD001-FD004) presentano somiglianze
+    strutturali sufficienti con la degradazione dei fusi e degli anelli di filatura
+    per il testing dei modelli RUL (Remaining Useful Life).
+  category: simulation
+  affected_components: [predictive-maintenance, sim-textile, anomaly-detector]
+  rationale: >-
+    NASA C-MAPSS è il benchmark standard per la ricerca di predictive maintenance.
+    I pattern di degradazione (run-to-failure con feature time-series multivariate)
+    sono strutturalmente analoghi ai cicli di usura dei componenti tessili, anche se
+    i domini fisici differiscono. L'assunzione è stata adottata in letteratura
+    (es. Saxena e Goebel 2008; Zheng et al. 2017) per transfer learning cross-domain.
+  validation_method: >-
+    Phase 5: A/B test dei modelli RUL addestrati su C-MAPSS proxy vs modelli addestrati
+    su traiettorie sim-textile specifiche. Misurare RMSE e score su validation set
+    tessile. Se il modello C-MAPSS ha RMSE maggiore del 20 percento, il proxy non è adeguato
+    e serve ri-training domain-specific.
+  risk_if_wrong: >-
+    Algoritmi di PredictiveMaintenance con bassa accuratezza su guasti reali dei
+    macchinari tessili; stima RUL non affidabile. Costo di manutenzione preventiva
+    subottimale (troppo frequente o troppo rara). Necessità di raccolta dataset
+    proprietario con domain expert tessile, allungando i tempi di Phase 5.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-033
+  statement: >-
+    Il dataset UCI Manufacturing Dataset (macchine CNC e tool wear) è utilizzabile
+    come proxy supplementare al NASA C-MAPSS per la validazione di modelli di
+    rilevamento anomalie su macchinari tessili; i pattern di tool wear e vibrazione
+    sono trasferibili a contesti di filatura e tessitura con adattamento minore.
+  category: simulation
+  affected_components: [anomaly-detector, sim-textile, predictive-maintenance]
+  rationale: >-
+    UCI Manufacturing Dataset copre fenomeni di tool wear in macchinari di precisione
+    con feature vibrazionali e termiche. Le firme vibrazionali dei mandrini di filatura
+    (ring spinning frames) hanno somiglianze con le vibrazioni di utensili CNC a
+    bassa velocità. L'uso come proxy è una semplificazione accettabile per validare
+    il pipeline di anomaly detection prima dell'accesso a dati tessili reali.
+  validation_method: >-
+    Phase 5: valutazione cross-dataset del modello addestrato su UCI vs performance
+    su traiettorie sim-textile. Metriche: F1-score anomaly detection >= 0.75 su test
+    set sim-textile. Review da domain expert tessile per confermare trasferibilità
+    dei pattern.
+  risk_if_wrong: >-
+    Modelli di anomaly detection non generalizzano ai macchinari tessili reali;
+    elevato numero di falsi positivi/negativi nel deployment Mantis. Necessità di
+    raccolta dataset tessile dedicato pre-Phase 5 con costi e tempi aggiuntivi.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-034
+  statement: >-
+    Il modello di rumore ambientale implementato in sim-textile (distribuzione gaussiana
+    con SNR configurabile) è sufficiente a rappresentare le condizioni di rumore
+    elettromagnetico tipiche di un impianto tessile industriale; non sono modellati
+    rumore impulsivo da motori ad alta potenza, cross-talk tra sensori adiacenti,
+    o interferenze da sistemi di riscaldamento industriale.
+  category: simulation
+  affected_components: [sim-textile, ot-bridge, anomaly-detector]
+  rationale: >-
+    Il rumore gaussiano è il modello di default per telemetria IoT in assenza di
+    misurazioni specifiche dell'impianto. Gli ambienti tessili presentano sorgenti
+    di rumore non-gaussiane (motori brushless, inverter di potenza, saldature) che
+    possono generare spike impulsivi. Il modello semplificato è accettabile per la
+    validazione degli algoritmi ma non per la calibrazione fine dell'AnomalyDetector.
+  validation_method: >-
+    Pre-go-live Mantis: campagna di misura del rumore reale su linea produttiva
+    (accelerometri e analizzatore di spettro, minimo 8h su 2 turni). Confronto con
+    modello gaussiano simulato. Aggiornare sim-textile se la differenza è statisticamente
+    significativa (Kolmogorov-Smirnov test, alpha=0.05).
+  risk_if_wrong: >-
+    AnomalyDetector calibrato su rumore gaussiano perde sensibilità agli spike reali
+    dell'impianto (falsi negativi su guasti impulsivi) o genera alert su interferenze
+    EM normali dell'ambiente (falsi positivi). Ricalibrazione on-site necessaria
+    post-deployment con fermo macchina per test.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-035
+  statement: >-
+    La copertura dei fault mode iniettati da sim-textile (rottura trama, deriva tensione
+    ordito, blocco navetta, slittamento anello, slub impulsivo) copre almeno il 70%
+    dei fault mode più frequenti nei telai e nelle macchine di filatura; i fault mode
+    rari (es. rottura subbio, malfunzionamento di inverter) non sono simulati nell'MVP.
+  category: simulation
+  affected_components: [sim-textile, anomaly-detector, predictive-maintenance]
+  rationale: >-
+    La copertura del 70% dei fault mode più frequenti è il target minimo per validare
+    gli agenti di Phase 3-5. I fault mode rari richiedono domain expert knowledge e
+    dati storici reali non disponibili in Phase 2. Il gap di copertura è documentato
+    esplicitamente per guidare l'espansione del simulatore in Phase 7+ (es. failure
+    mode library da FMEA del macchinario Mantis).
+  validation_method: >-
+    Phase 3: FMEA semplificata con domain expert tessile su lista dei fault mode
+    implementati vs lista dei fault mode documentati in manuali di manutenzione Mantis.
+    Calcolare percentuale di copertura. Se inferiore al 70%, aggiungere fault mode
+    prioritari prima del completamento di Phase 3.
+  risk_if_wrong: >-
+    Agenti di Phase 5-7 non riconoscono fault mode non coperti dal training; falsi
+    negativi sistematici su specifiche categorie di guasto. Regressione delle performance
+    dell'AnomalyDetector dal laboratorio di test all'impianto reale Mantis.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-036
+  statement: >-
+    Il mock OPC-UA di sim-textile è compatibile con la specifica OPC-UA 1.04 in
+    modalità publish-subscribe; le differenze rispetto a un server OPC-UA PLC reale
+    (Siemens S7-1500, Allen-Bradley ControlLogix) si limitano a: latenza artificialmente
+    uniforme, assenza di namespace dinamico, assenza di certificati X.509 per
+    autenticazione server-to-server.
+  category: simulation
+  affected_components: [sim-textile, ot-bridge, k8s]
+  rationale: >-
+    La specifica OPC-UA 1.04 è lo standard industriale adottato dai principali
+    vendor PLC (Siemens, Rockwell, Beckhoff). Il mock copre il subset publish-subscribe
+    necessario per la validazione dell'ot-bridge. Le differenze elencate sono
+    documentate esplicitamente per guidare il test di compatibilità reale in
+    Phase 11 (pre-go-live Mantis).
+  validation_method: >-
+    Phase 11: test di compatibilità ot-bridge con server OPC-UA reale Siemens S7-1500
+    su rete OT isolata. Verificare handshake, namespace browsing, subscription setup,
+    e data flow continuo per 4h senza interruzione. Documentare differenze rispetto
+    al comportamento simulato.
+  risk_if_wrong: >-
+    L'ot-bridge non riesce a connettersi al PLC reale o perde dati per incompatibilità
+    di namespace o timing. Necessità di refactoring del connector OPC-UA con tempi
+    aggiuntivi. Ritardo del go-live Mantis di 4-8 settimane per adattamento.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-037
+  statement: >-
+    La latenza di rete simulata tra i container di sim-textile e ot-bridge (Docker
+    network bridge, tipicamente inferiore a 1ms) rappresenta un lower bound ottimistico
+    rispetto alla latenza reale su rete OT industriale (tipicamente 5-50ms su Ethernet
+    industriale, fino a 200ms su reti OT legacy con switch non gestiti).
+  category: simulation
+  affected_components: [sim-textile, ot-bridge, timescaledb, nats]
+  rationale: >-
+    Docker bridge network ha latenza inferiore a 1ms per comunicazione inter-container
+    sullo stesso host. Le reti OT industriali hanno latenza variabile (5-200ms) a causa
+    di switch industriali, cabling, QoS non configurato, e traffico condiviso con SCADA.
+    L'ot-bridge è progettato con buffer NATS JetStream per gestire latenze variabili,
+    ma il test su rete simulata non stressante nasconde potenziali problemi di buffer
+    underflow/overflow.
+  validation_method: >-
+    Phase 11: simulazione di latenza realistica con tc-netem (Linux traffic control)
+    sul link Docker ot-bridge e sim-textile: iniezione di latenza 50ms con variabilità
+    20ms e 2% di packet loss. Verificare che il buffer NATS JetStream assorba la
+    variabilità senza perdita di dati o incremento di latenza end-to-end > 500ms.
+  risk_if_wrong: >-
+    Su rete OT reale, la variabilità di latenza supera le capacità di buffer dell'ot-bridge;
+    perdita di telemetria in picchi di traffico; degradazione della qualità dei dati
+    per AnomalyDetector. Necessità di ridimensionamento buffer NATS con hot-fix
+    post-deployment.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-038
+  statement: >-
+    Il simulatore sim-textile scala fino a 50 asset virtuali (telai e macchine di
+    filatura) in esecuzione simultanea su un singolo host con 8 vCPU e 16 GB RAM;
+    oltre questo limite, la frequenza di campionamento simulata degrada e i test di
+    Phase 3 non sono più rappresentativi del carico di produzione Mantis (stimato:
+    30-40 asset reali).
+  category: simulation
+  affected_components: [sim-textile, ot-bridge, timescaledb, nats]
+  rationale: >-
+    Il sizing di 8 vCPU e 16 GB RAM corrisponde a una VM cloud standard adatta per
+    lo sviluppo e i test di CI. Mantis Textile Group ha stimato 30-40 asset produttivi.
+    Il limite di 50 asset offre un margine rispetto al caso d'uso reale. Oltre 50 asset,
+    il simulatore entra in regione di overload (CPU bound) e i test non sono più
+    rappresentativi.
+  validation_method: >-
+    Phase 3: stress test con 10, 25, 50, 75, 100 asset virtuali in simultanea.
+    Misurare CPU, RAM, frequenza di campionamento effettiva vs nominale, e latenza
+    end-to-end. Definire il punto di saturazione e documentare il limite operativo
+    nel README di sim-textile.
+  risk_if_wrong: >-
+    CI con 50 asset in test di Phase 3 satura l'host, rallenta il pipeline CI
+    (timeout GH Actions 30 minuti), produce dati non rappresentativi. I test di carico
+    non validano il comportamento reale su impianto Mantis. Necessità di infrastruttura
+    CI dedicata per test di simulazione pesanti (self-hosted runner).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EXTERNAL-DEPENDENCY (8 entries — A-039..A-046)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- id: A-039
+  statement: >-
+    Ollama (deployment self-hosted) garantisce disponibilità del servizio di inferenza
+    LLM pari ad almeno il 99% del tempo durante le sessioni di demo e test (uptime
+    dell'agente dipende dall'uptime del servizio LLM locale); non esiste un SLA
+    formale da parte di Ollama OSS per deployment self-hosted.
+  category: external-dependency
+  affected_components: [ollama, orchestrator, hitl-queue]
+  rationale: >-
+    Ollama è software open-source senza SLA commerciale. Il deployment self-hosted su
+    hardware locale (o cloud VM) è soggetto a uptime della VM, disponibilità della
+    GPU, e aggiornamenti del processo Ollama stesso. L'assenza di SLA formale significa
+    che i guasti dell'inferenza LLM impattano direttamente la disponibilità degli agenti
+    senza garanzia di ripristino in tempi predefiniti.
+  validation_method: >-
+    Phase 4: implementare health check dell'endpoint Ollama e circuit breaker nel
+    codice dell'orchestratore. Documentare il comportamento degli agenti in assenza
+    dell'LLM (graceful degradation vs fail-fast). Misurare uptime in un periodo di
+    test di 72h continuo.
+  risk_if_wrong: >-
+    Downtime non pianificato dell'LLM durante demo Mantis o sessione di valutazione
+    OEPV; impossibilità di dimostrare le capabilities agente. Reputazione del progetto
+    impattata. Fallback: vLLM su cloud come backup (costo aggiuntivo non preventivato).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-040
+  statement: >-
+    I pesi del modello Qwen2.5-72B (e varianti 7B, 14B) rimangono stabili nel repository
+    Hugging Face e Ollama Registry per tutta la durata del progetto (Phase 2-12);
+    non sono previste rimozioni, ri-licenziamenti, o breaking change nei formati
+    dei pesi che richiederebbero ri-training o sostituzione del modello senza preavviso.
+  category: external-dependency
+  affected_components: [ollama, vllm, orchestrator]
+  rationale: >-
+    Alibaba DAMO Academy ha rilasciato Qwen2.5 con licenza Apache 2.0 e Qwen License.
+    La stabilità dei pesi su Hugging Face è normalmente garantita dalla community
+    practice di non modificare versioni già pubblicate. Tuttavia, il repository
+    upstream potrebbe essere aggiornato (rimozione di varianti deprecate, cambio
+    formato GGUF/safetensors) senza comunicazione formale di breaking change.
+  validation_method: >-
+    Phase 9: implementare pin esplicito della versione del modello nel Dockerfile
+    di Ollama (sha256 del layer) e alert automatico se la versione remota diverge
+    dal pin. Monitoraggio del changelog Qwen su Hugging Face (feed RSS o webhook).
+  risk_if_wrong: >-
+    Versione pinned del modello non più scaricabile dopo rimozione da registry;
+    impossibilità di rebuild del container in CI. Necessità di mirror interno dei
+    pesi (costo storage e banda). Cambio formato GGUF richiede ri-quantizzazione
+    e re-test delle performance.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-041
+  statement: >-
+    Qdrant (versione 1.x) non presenta cliff di scaling che impediscono la gestione
+    di 500.000-1.000.000 vettori di embedding per la knowledge base del progetto
+    (corpus SOP e domain analysis e assunzioni) su un singolo nodo con 8 GB RAM;
+    le performance di query (p99 inferiore a 50ms per top-10 ANN) si mantengono in
+    questo range di volumi.
+  category: external-dependency
+  affected_components: [qdrant, orchestrator, predictive-maintenance, anomaly-detector]
+  rationale: >-
+    Il corpus Phase 2 (20 SOP + 10 domain pages + glossario + assunzioni, circa 50-80
+    documenti) con chunk size 256 token e overlap 32 produce circa 5.000-15.000 vettori.
+    Il target di 1M vettori è il limite proiettato a Phase 8+ (corpus espanso e audit
+    trail vettorizzato). Qdrant su single-node con HNSW index supporta 1M vettori
+    in RAM per dimensione 768-1024 (BGE-M3 output) secondo benchmark ufficiali Qdrant.
+  validation_method: >-
+    Phase 5: benchmark load test con 100K, 500K, 1M vettori su hardware CI (8 vCPU,
+    16 GB RAM). Misurare latenza p50/p95/p99 per query top-10 ANN. Se p99 supera 50ms
+    a 1M vettori, valutare sharding o upgrade hardware per il deployment Mantis.
+  risk_if_wrong: >-
+    Latenza di retrieval elevata con corpus espanso; degradazione della qualità
+    di risposta degli agenti RAG. Necessità di sharding Qdrant multi-nodo (complessità
+    operativa aggiuntiva) o riduzione del corpus (trade-off qualità retrieval).
+    Impatto su Phase 5 e 6 (KnowledgeCurator, QualityInspector).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-042
+  statement: >-
+    Langfuse v3 deployato self-hosted con ClickHouse come backend non supera i costi
+    operativi di 50 EUR/mese su infrastruttura cloud (VM e storage) per il volume
+    di trace generato dall'MVP (stima: 10.000-50.000 trace/mese con payload medio
+    2-5 KB per trace); i costi di ClickHouse on-cloud sono comparabili a un'istanza
+    PostgreSQL equivalente.
+  category: external-dependency
+  affected_components: [langfuse, clickhouse, postgresql, k8s]
+  rationale: >-
+    Langfuse v3 usa ClickHouse per lo storage delle trace LLM (alta cardinalità,
+    query analitiche). ClickHouse self-hosted richiede una VM dedicata (minimo 4 vCPU,
+    8 GB RAM per volumi inferiori a 1M rows/die). Il costo stimato di 50 EUR/mese è
+    basato su prezzi AWS e Hetzner per VM corrispondente. Il volume di 50K trace/mese
+    è una stima conservativa per il deployment MVP.
+  validation_method: >-
+    Phase 4: monitoraggio del costo reale di ClickHouse per 30 giorni di testing.
+    Se il costo supera 50 EUR/mese, valutare migrazione a PostgreSQL-only (Langfuse
+    supporta PostgreSQL come backend, ma con limitazioni nelle query analitiche)
+    o riduzione della retention delle trace.
+  risk_if_wrong: >-
+    Costi infrastrutturali Langfuse non previsti nel budget MVP; necessità di ridurre
+    la retention delle trace (impatto sulla qualità dell'audit trail per Phase 11)
+    o migrare a Langfuse Cloud (data residency risk per dati di produzione Mantis).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-043
+  statement: >-
+    Le estensioni PostgreSQL richieste dal progetto (TimescaleDB, pgvector, pg_stat_statements)
+    sono disponibili su managed PostgreSQL cloud (AWS RDS, Azure Database for PostgreSQL,
+    Supabase) nelle versioni stabilite nel progetto (PostgreSQL 16.x) senza necessità
+    di deployment bare-metal o VM dedicata per il go-live Mantis.
+  category: external-dependency
+  affected_components: [postgresql, timescaledb, qdrant, langfuse]
+  rationale: >-
+    TimescaleDB è disponibile come estensione su RDS (via Timescale Cloud o immagine
+    custom) e su Azure Database for PostgreSQL Flexible Server. pgvector è disponibile
+    su RDS PostgreSQL 15+ e Azure PostgreSQL 14+. pg_stat_statements è built-in.
+    L'assunzione è che il managed service preferito da Mantis supporti le versioni
+    richieste; se il cliente usa managed service con versioni più vecchie, potrebbe
+    richiedere upgrade o deployment bare-metal.
+  validation_method: >-
+    Pre-go-live Mantis (Phase 11): verificare la disponibilità di TimescaleDB e
+    pgvector sul managed PostgreSQL scelto dal cliente. Test di installazione in
+    ambiente staging. Documentare la procedura di upgrade se necessario.
+  risk_if_wrong: >-
+    Il managed PostgreSQL del cliente non supporta TimescaleDB o pgvector; necessità
+    di deployment bare-metal con overhead operativo aggiuntivo o migrazione del
+    componente a servizio separato (es. Timescale Cloud, Supabase). Costi e tempi
+    non previsti nel bid OEPV.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-044
+  statement: >-
+    I Helm chart upstream dei componenti di terze parti (Qdrant, Langfuse, NATS,
+    Prometheus, Grafana) usati in infra/helm/charts/ rimangono compatibili con la
+    versione Kubernetes pinned nel progetto (K8s 1.29+) per tutta la durata della
+    fase di sviluppo e test (Phase 2-12); gli aggiornamenti di versione dei chart
+    non introducono breaking change non gestibili con un upgrade patch.
+  category: external-dependency
+  affected_components: [helm, k8s, qdrant, langfuse, nats]
+  rationale: >-
+    I chart Helm di terze parti seguono il loro ciclo di release indipendente e possono
+    introdurre breaking change (CRD aggiornati, API deprecate) in major version bumps.
+    Il pin esplicito delle versioni dei chart in Chart.lock mitiga il rischio ma richiede
+    aggiornamento periodico per ricevere patch di sicurezza. La compatibilità con K8s 1.29+
+    è garantita dai vendor per i chart nelle loro versioni stabili correnti.
+  validation_method: >-
+    Phase 11: helm dependency update e test di upgrade in ambiente staging prima
+    di ogni aggiornamento di chart major version. Automated scan di trivy helm
+    per vulnerabilità nei chart correnti. Alert su CVE critiche nei chart in uso.
+  risk_if_wrong: >-
+    Breaking change in chart upstream blocca il deployment; downtime non pianificato
+    durante aggiornamento infrastruttura. CRD incompatibili richiedono migrazione
+    manuale dei dati. Accumulo di technical debt nei chart outdated (vulnerabilità
+    non patchate).
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-045
+  statement: >-
+    GitHub Actions (piano gratuito su repository pubblico) fornisce un throughput di
+    minuti di esecuzione illimitato per il pipeline CI del progetto durante la fase
+    di sviluppo (Phase 2-11); questo limite non impatta la frequenza di commit attesa
+    (stima: 3-5 PR/giorno per 10-15 minuti di CI = 1.500-2.250 minuti/mese).
+  category: external-dependency
+  affected_components: [k8s, helm, orchestrator]
+  rationale: >-
+    Il repository è pubblico su GitHub (open-source per il bid OEPV), quindi i minuti
+    GH Actions per runner ubuntu-latest sono illimitati per workflow su eventi push/PR.
+    La stima di 1.500-2.250 minuti/mese si basa su durata media CI osservata in Phase 1
+    (10-15 minuti per run). Il limite è rilevante solo se il repo diventa privato.
+  validation_method: >-
+    Monitoraggio continuo del consumo GH Actions dalla UI GitHub Actions Usage.
+    Alert manuale se il consumo mensile supera 1.800 minuti (threshold pre-limite).
+    Se il repo diventa privato per requisiti Mantis, valutare GitHub Pro o self-hosted
+    runner (Hetzner VPS circa 5 EUR/mese).
+  risk_if_wrong: >-
+    Pipeline CI bloccato per esaurimento minuti GH Actions in un mese intenso di
+    sviluppo; impossibilità di fare merge di PR durante il blocco. Impatto sulla
+    velocità di sviluppo e sulle scadenze del bid OEPV. Necessità di switch urgente
+    a self-hosted runner.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-046
+  statement: >-
+    Per il deployment vLLM come backend di inferenza LLM alternativo a Ollama (fallback
+    su cloud), è disponibile una GPU NVIDIA (minimo A10G o T4) a costo accessibile
+    (inferiore a 1 EUR/h) su almeno un provider cloud (AWS, GCP, Azure, Lambda Labs,
+    Vast.ai) per le sessioni di benchmark e testing di Phase 9; la disponibilità GPU
+    non è garantita on-demand in periodi di alta domanda.
+  category: external-dependency
+  affected_components: [vllm, ollama, orchestrator]
+  rationale: >-
+    vLLM richiede GPU per inferenza efficiente di modelli 7B+ in production. La
+    disponibilità di GPU cloud on-demand è soggetta a mercato (shortage GPU documentato
+    nel 2023-2024; Vast.ai e Lambda Labs offrono GPU spot a costi variabili). Per le
+    sessioni di benchmark di Phase 9 (stima 10-20h totali), il costo GPU è previsto
+    in 10-20 EUR, ma non è garantita la disponibilità immediata nel momento esatto
+    dello scheduling del test.
+  validation_method: >-
+    Phase 9: pianificare i benchmark GPU con 2-3 settimane di anticipo. Verificare
+    la disponibilità su almeno 3 provider (AWS, Lambda Labs, Vast.ai) prima dello
+    scheduling. Definire un piano B con CPU-only inference (ollama con quantizzazione
+    Q4) se la GPU non è disponibile nel timeframe previsto.
+  risk_if_wrong: >-
+    Benchmark vLLM ritardati per mancanza di GPU disponibile; impatto sulle scadenze
+    di Phase 9. Se il piano B CPU-only è inadeguato per qualità di inferenza, il
+    confronto CPU vs GPU non è possibile nel timeline del progetto. Costo aggiuntivo
+    per GPU spot a prezzo premium in periodo di alta domanda.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PERFORMANCE (3 entries — A-047..A-049)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- id: A-047
+  statement: >-
+    Il checkpointer PostgreSQL di LangGraph (usato per la persistenza dello stato degli
+    agenti tra i passaggi del grafo) scala fino a 1.000 checkpoint/minuto senza
+    diventare il collo di bottiglia del pipeline agente; la latenza p99 di write/read
+    del checkpointer è inferiore a 10ms su PostgreSQL con indice sul campo thread_id
+    e checkpoint_id.
+  category: performance
+  affected_components: [postgresql, orchestrator, hitl-queue, audit-stream]
+  rationale: >-
+    LangGraph usa PostgreSQL come checkpointer di default (langgraph.checkpoint.postgres).
+    Ogni nodo del grafo agente esegue un write del checkpoint parziale; per workflow
+    multi-step (15-20 nodi) e 50 sessioni concorrenti, il throughput richiesto è
+    circa 750-1.000 checkpoint/minuto. Il test di carico è deferred a Phase 4 quando
+    il grafo è definito, ma l'assunzione deve essere documentata ora per guidare il
+    sizing PostgreSQL.
+  validation_method: >-
+    Phase 4: load test con pgbench custom che simula il pattern write/read del checkpointer
+    LangGraph su 50 thread concorrenti. Misurare throughput e latenza p50/p95/p99.
+    Se il checkpointer è un bottleneck, valutare: indice composto thread_id e checkpoint_id,
+    connection pooling con PgBouncer, o PostgreSQL table partitioning per thread_id.
+  risk_if_wrong: >-
+    Il checkpointer PostgreSQL diventa bottleneck su 50 sessioni agente concorrenti;
+    latenza end-to-end degli agenti aumenta di 100-500ms per step (inaccettabile per
+    workflow HITL real-time). Necessità di refactoring del persistence layer con
+    soluzione alternativa (Redis, DynamoDB) con impatto sull'architettura.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-048
+  statement: >-
+    Il costo computazionale di embedding del corpus (20 SOP e 10 domain pages e glossario
+    e assunzioni, circa 50-80 documenti e 500-1.500 chunk a 256 token) con il modello
+    BGE-M3 (1024 dimensioni, 571M parametri) è inferiore a 30 minuti su CPU (Apple M1
+    o equivalente x86 con 8 vCPU) e inferiore a 5 minuti su GPU (NVIDIA T4 o superiore);
+    il re-embedding non avviene ad ogni PR ma solo quando il corpus cambia.
+  category: performance
+  affected_components: [qdrant, orchestrator, predictive-maintenance, anomaly-detector]
+  rationale: >-
+    BGE-M3 (FlagEmbedding) è un modello multilingue di 571M parametri. Il throughput
+    di embedding su CPU è circa 5-15 token/ms per batch size 32 (stima da benchmark
+    FlagEmbedding community). 1.500 chunk per 256 token = 384K token totali, stima
+    25-75 minuti su CPU e 3-8 minuti su GPU. Il target di 30 min CPU e 5 min GPU è
+    un'assunzione di fattibilità; il test reale avverrà in Phase 5.
+  validation_method: >-
+    Phase 5: benchmark di embedding completo del corpus su hardware CI (CPU) e su
+    GPU cloud (T4). Misurare tempo totale, throughput (chunk/s), consumo memoria.
+    Se il tempo CPU supera 30 minuti, aumentare il batch size o considerare un embedding
+    model più leggero (BGE-small-en-v1.5, 33M parametri) come fallback.
+  risk_if_wrong: >-
+    Re-embedding del corpus in CI richiede oltre 30 minuti su CPU, rallentando il
+    pipeline di aggiornamento della knowledge base (Phase 5+). Se il corpus cresce a
+    200 documenti e oltre (Phase 8+), il tempo di re-embedding scala linearmente.
+    Necessità di embedding incrementale (solo documenti modificati) con infrastruttura
+    di change detection aggiuntiva.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+- id: A-049
+  statement: >-
+    La decisione di sharding del vector store Qdrant (single-node vs multi-node cluster)
+    è deferred a Phase 7 quando il volume di vettori è misurabile su corpus reale
+    espanso; nell'MVP (Phase 2-6), Qdrant è deployato single-node senza replica e
+    senza sharding esplicito, con la consapevolezza che la configurazione non è
+    production-grade per dataset superiori a 5M vettori.
+  category: performance
+  affected_components: [qdrant, orchestrator, k8s, helm]
+  rationale: >-
+    Lo sharding di Qdrant richiede la conoscenza del volume di vettori e del pattern
+    di query (bilanciamento del carico tra shard) che non sono disponibili in Phase 2.
+    Single-node supporta fino a circa 10M vettori in RAM con HNSW (stima basata su
+    benchmark Qdrant ufficiali). Il corpus MVP produce meno di 50K vettori, ampiamente
+    dentro il limite single-node. La decisione di sharding è un'ottimizzazione
+    differita documentata per Phase 7+ (KnowledgeCurator build-out).
+  validation_method: >-
+    Phase 7: analisi del volume di vettori generato dal corpus espanso (corpus SOP
+    completo e audit trail e domain knowledge dinamico). Se il volume proiettato a 12
+    mesi supera 2M vettori, pianificare sharding Qdrant prima del go-live Mantis
+    (Phase 11). Utilizzare qdrant-client per monitoring del volume corrente in produzione.
+  risk_if_wrong: >-
+    Single-node Qdrant raggiunge il limite di RAM prima del previsto (corpus cresciuto
+    più del proiettato); degradazione delle performance di query senza possibilità di
+    scale-up immediato. Necessità di migrazione live a cluster multi-nodo con downtime
+    pianificato del servizio di retrieval.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COST (1 entry — A-050)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- id: A-050
+  statement: >-
+    Il punto di crossover economico tra inferenza GPU-cloud (vLLM su A10G) e inferenza
+    CPU-locale (Ollama su 8 vCPU) per Qwen2.5-72B si colloca a circa 500.000-1.000.000
+    di token/giorno: sotto questa soglia, Ollama CPU è economicamente preferibile
+    (costo marginale zero su hardware locale esistente); sopra questa soglia, vLLM GPU
+    conviene in termini di costo per token a parità di latenza accettabile.
+  category: cost
+  affected_components: [ollama, vllm, orchestrator]
+  rationale: >-
+    Stima basata su: costo GPU A10G circa 0.5-0.8 USD/h su spot cloud con throughput
+    circa 4.000 token/s e costo circa 0.05-0.08 USD per 1M token; costo CPU inference
+    Ollama Q4 circa 30-60 token/s su 8 vCPU, adatto per MVP (meno di 100 richieste/h).
+    Il crossover si colloca quando la latenza aggiuntiva del CPU mode (10-30s per
+    risposta 500 token) diventa inaccettabile per gli operatori (threshold soggettivo:
+    oltre 5s per risposta è percepito come lag dalla letteratura UX industriale).
+    La stima è indicativa e dipende dal volume reale di interazioni agente in produzione.
+  validation_method: >-
+    Phase 9: raccogliere metriche di volume di token/giorno durante il test pilota
+    (4 settimane) con Langfuse. Calcolare il costo reale per token su CPU vs stima
+    GPU cloud. Se il volume supera 500K token/giorno con latenza CPU inaccettabile,
+    avviare il provisioning vLLM su GPU cloud prima del go-live Mantis. Documentare
+    il modello di costo nel reporting OEPV.
+  risk_if_wrong: >-
+    Costo operativo dell'inferenza LLM superiore al previsto nel bid OEPV; impatto
+    sulla marginalità del progetto. Se Ollama CPU è troppo lento per il volume reale
+    degli operatori Mantis (latenza percepita superiore a 5s), necessità di migrazione
+    urgente a GPU con costi non preventivati nel contratto OEPV.
+  status: active
+  created_in_phase: 2
+  last_reviewed_in_phase: 2
+  superseded_by: null
