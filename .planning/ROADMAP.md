@@ -91,7 +91,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   5. The approval rate governor fires an alert to the Manager role when more than 80% of consecutive actions are auto-approved
 **Plans**: 8 plans
   - [x] 04-01-sdk-foundation-PLAN.md — Pydantic models + ABC interfaces + Wave 0 stub set (CORE-01, CORE-02, HITL-06, HITL-07)
-  - [ ] 04-02-pg-migrations-PLAN.md — 4 idempotent SQL migrations (002 hitl.approvals, 003 audit.actions+outbox+REVOKE, 004 budget.executions, 005 langgraph schema) + scripts/langgraph-init.py + [BLOCKING] migration push (CORE-04, CORE-08, CORE-09, HITL-05)
+  - [x] 04-02-pg-migrations-PLAN.md — 4 idempotent SQL migrations (002 hitl.approvals, 003 audit.actions+outbox+REVOKE, 004 budget.executions, 005 langgraph schema) + scripts/langgraph-init.py + [BLOCKING] migration push (CORE-04, CORE-08, CORE-09, HITL-05)
   - [x] 04-03-llm-adapter-PLAN.md — LLM_BACKEND={ollama,vllm} factory + BudgetingChatModel + Langfuse v3 callback + tool registry + vLLM Hermes serving docs (CORE-05, CORE-06, CORE-07)
   - [x] 04-04-nats-audit-stream-PLAN.md — AUDIT_STREAM bootstrap (90d) + AuditNatsPublisher + injection-safe subject derivation (CORE-08, HITL-05)
   - [ ] 04-05-supervisor-clusters-checkpointer-PLAN.md — supervisor StateGraph + 5 cluster subgraphs + 16 placeholder children + HybridRouter + AsyncPostgresSaver wiring + safe_invoke recursion_limit→HITL (CORE-02, CORE-03, CORE-04, CORE-07)
@@ -207,7 +207,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 1. Foundation & Monorepo | 8/8 | Complete   | 2026-05-16 |
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
-| 4. Core Agentic Runtime & HITL | 3/8 | In Progress|  |
+| 4. Core Agentic Runtime & HITL | 4/8 | In Progress|  |
 | 5. Knowledge Layer (RAG + Graph) | 0/TBD | Not started | - |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
