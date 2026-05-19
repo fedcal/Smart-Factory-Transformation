@@ -14,8 +14,10 @@ Strategy:
 
 from __future__ import annotations
 
+import asyncio
 import sys
 import types
+from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -254,5 +256,67 @@ def test_chunk_idx_sequential(monkeypatch: pytest.MonkeyPatch) -> None:
     assert [c.chunk_idx for c in chunks] == [0, 1, 2, 3]
 
 
-# NOTE: Task 3 integration test (test_real_sop_end_to_end_chunk_and_embed) is added in a
-# separate commit (Plan 05-07 Task 3) to keep this commit focused on unit-test coverage.
+# ===========================================================================
+# Task 3 — Integration test on real SOP (gpu-gated)
+# ===========================================================================
+
+
+# Path al SOP più piccolo "reviewed" del corpus sintetico (~6.3 KB).
+# Risolto dinamicamente dalla root del workspace tramite `parents[3]`:
+#   tests/test_semantic_chunker.py
+#   parents[0]=tests, [1]=sft-knowledge, [2]=packages, [3]=workspace root
+_SOP_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "simulators"
+    / "synthetic-corpus"
+    / "it"
+    / "loom"
+    / "SOP-LOOM-001-troubleshoot-broken-end-it.md"
+)
+
+
+@pytest.mark.integration
+@pytest.mark.gpu
+def test_real_sop_end_to_end_chunk_and_embed() -> None:
+    """End-to-end: parse SOP → SemanticChunker → BgeM3Embedder su SOP reale.
+
+    GPU-gated perché BGE-M3 (~2GB) su CPU è troppo lento per CI standard. Per eseguirlo
+    localmente:
+        nx run sft-knowledge:test --args="-m 'integration and gpu' -k test_real_sop -v"
+
+    Steps verificati (PLAN.md Task 3 <behavior>):
+        1. `MarkdownParser().parse(SOP_PATH)` → `ParsedDoc`
+        2. `SemanticChunker().chunk(parsed)` → `list[Chunk]` (>=1)
+        3. Ogni chunk ha `metadata['source_uri'] == parsed.source_uri`
+        4. Ogni chunk ha `metadata['acl_level']` ∈ {public, internal, restricted}
+        5. `BgeM3Embedder().encode([chunks[0].text])` → `dense_vecs[0].shape == (1024,)`
+        6. `sparse_weights[0]` è un dict non vuoto (BGE-M3 lexical weights)
+    """
+    if not _SOP_PATH.exists():
+        pytest.skip(f"SOP file not found: {_SOP_PATH}")
+
+    # Imports gated alla funzione: evitano di caricare il singleton BGE-M3 quando il
+    # test è raccolto ma non eseguito (e.g. CPU CI con marker filter).
+    from sft_knowledge.chunking.semantic import SemanticChunker
+    from sft_knowledge.embedding.bge_m3 import BgeM3Embedder
+    from sft_knowledge.parsers.markdown import MarkdownParser
+
+    parsed = asyncio.run(MarkdownParser().parse(_SOP_PATH))
+    assert parsed is not None, "SOP reviewed deve essere parsato (status=reviewed)"
+
+    chunker = SemanticChunker()
+    chunks = chunker.chunk(parsed)
+
+    assert len(chunks) >= 1, "SemanticChunker DEVE emettere almeno un chunk"
+    for chunk in chunks:
+        assert chunk.metadata["source_uri"] == parsed.source_uri
+        assert chunk.metadata["acl_level"] in {"public", "internal", "restricted"}
+
+    embedder = BgeM3Embedder()
+    out = embedder.encode([chunks[0].text])
+
+    assert out.dense_vecs[0].shape == (1024,), (
+        f"Atteso dense BGE-M3 1024D (D-61), trovato {out.dense_vecs[0].shape}"
+    )
+    assert isinstance(out.sparse_weights[0], dict)
+    assert len(out.sparse_weights[0]) > 0, "BGE-M3 sparse weights MAI vuoti su backend FlagEmbedding"
