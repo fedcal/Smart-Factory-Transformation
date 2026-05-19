@@ -1,13 +1,16 @@
-"""sft_agents.memory — Phase 4 memory implementations (Plan 04-06 Task 02).
+"""sft_agents.memory — Memory ABC implementations.
 
 Ships:
     EpisodicReplay        — read-only projection of audit.actions (CORE-08, D-59)
-    StubLongTermMemory    — placeholder for Phase 5 QdrantLongTermMemory (D-59)
-    StubLongTermMemoryConfig — frozen Pydantic config (Phase 5 fills fields)
-    LongTermMemory        — alias of StubLongTermMemory (swap target for Phase 5)
+    StubLongTermMemory    — Phase 4 placeholder (D-59)
+    StubLongTermMemoryConfig — frozen Pydantic config
+    LongTermMemory        — alias (swapped to QdrantLongTermMemory in Phase 5)
 
-All three implement the ``sft_agents.sdk.memory.Memory`` ABC so downstream
-agents code against a single interface.
+Phase 5 swap (Plan 05-09 Task 4):
+    Try to import ``QdrantLongTermMemory`` from ``sft_knowledge.memory`` and bind
+    it to ``LongTermMemory``. If sft-knowledge is not installed (or fails to
+    import for env reasons), gracefully fall back to ``StubLongTermMemory`` so
+    Phase 4 agent imports continue to resolve.
 """
 
 from __future__ import annotations
@@ -18,9 +21,14 @@ from sft_agents.memory.long_term_stub import (
     StubLongTermMemoryConfig,
 )
 
-# Phase 5 will rebind this alias to ``QdrantLongTermMemory`` without touching
-# downstream imports (`from sft_agents.memory import LongTermMemory`).
-LongTermMemory = StubLongTermMemory
+# Phase 5 swap (D-70). Graceful fallback preserves Phase 4 test fixtures that
+# may not have sft-knowledge installed.
+try:
+    from sft_knowledge.memory import QdrantLongTermMemory
+
+    LongTermMemory: type = QdrantLongTermMemory
+except ImportError:
+    LongTermMemory = StubLongTermMemory
 
 __all__ = [
     "EpisodicReplay",
