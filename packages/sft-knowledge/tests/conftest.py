@@ -19,6 +19,7 @@ from collections.abc import AsyncIterator
 from typing import Any
 
 import pytest
+import pytest_asyncio
 
 
 def pytest_configure(config: pytest.Config) -> None:
@@ -79,11 +80,22 @@ async def qdrant_client(request: pytest.FixtureRequest) -> AsyncIterator[Any]:
 # ---------------------------------------------------------------------------
 
 
-@pytest.fixture(scope="session")
-async def neo4j_driver() -> AsyncIterator[Any]:
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
+async def neo4j_driver(request: pytest.FixtureRequest) -> AsyncIterator[Any]:
     """Async Neo4j driver backed by a session-scoped testcontainer (5.24-community).
 
     Lazy import (see `qdrant_client` rationale).
+
+    Pubblica su ``request.config`` (Pattern 05-04 _qdrant_url):
+        _neo4j_uri      — Bolt URI esposto dal container
+        _neo4j_user     — username (di norma "neo4j")
+        _neo4j_password — password sincronizzata col container env NEO4J_AUTH
+    Le integration test che lanciano subprocess CLI (es. neo4j-bootstrap.py)
+    leggono questi attributi per ricostruire le credenziali senza ispezionare
+    membri privati del driver.
+
+    Il container abilita APOC via env NEO4J_PLUGINS=["apoc"] (RESEARCH §5 OQ-3
+    mitigation) — richiesto da Plan 05-05 test_apoc_available.
     """
     try:
         from neo4j import AsyncGraphDatabase
@@ -91,12 +103,20 @@ async def neo4j_driver() -> AsyncIterator[Any]:
     except ImportError as exc:  # pragma: no cover
         pytest.skip(f"neo4j testcontainer deps unavailable: {exc}")
 
-    with Neo4jContainer("neo4j:5.24-community") as container:
-        admin_password = getattr(container, "NEO4J_ADMIN_PASSWORD", "neo4j")
-        driver = AsyncGraphDatabase.driver(
-            container.get_connection_url(),
-            auth=("neo4j", admin_password),
-        )
+    container = Neo4jContainer("neo4j:5.24-community").with_env(
+        "NEO4J_PLUGINS", '["apoc"]'
+    )
+    with container as running:
+        uri = running.get_connection_url()
+        user = running.username
+        password = running.password
+
+        # Stash su request.config per il subprocess delle integration test.
+        request.config._neo4j_uri = uri  # type: ignore[attr-defined]
+        request.config._neo4j_user = user  # type: ignore[attr-defined]
+        request.config._neo4j_password = password  # type: ignore[attr-defined]
+
+        driver = AsyncGraphDatabase.driver(uri, auth=(user, password))
         try:
             yield driver
         finally:

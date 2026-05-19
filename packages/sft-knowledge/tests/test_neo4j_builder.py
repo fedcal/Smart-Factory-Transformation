@@ -31,23 +31,24 @@ EXPECTED_CONSTRAINTS = {
 EXPECTED_INDEX = "sop_version"
 
 
-def _driver_uri_and_auth(neo4j_driver) -> tuple[str, tuple[str, str]]:
-    """Estrae URI + auth dal driver fixture per costruire la CLI subprocess.
+def _connection_params(
+    request: pytest.FixtureRequest,
+) -> tuple[str, tuple[str, str]]:
+    """Recupera URI + auth dal testcontainer Neo4j (stashed da conftest fixture).
 
-    Il driver neo4j-python espone l'URI sotto `_pool.address` o tramite metadata.
-    Per robustezza usiamo il container URL pubblicato dalla fixture session
-    (vedi conftest); preferiamo però una via diretta:
-    leggiamo dall'env esposto dal testcontainer (NEO4J_ADMIN_PASSWORD costante)
-    e dall'URI risolto dal driver stesso.
+    La fixture `neo4j_driver` pubblica `_neo4j_uri / _neo4j_user / _neo4j_password`
+    su `request.config`. Falliamo esplicitamente se assenti per evitare di
+    silently agganciarci a un default sbagliato.
     """
-    # neo4j.AsyncDriver expose `.uri` su versioni recenti; fallback su address pool.
-    uri = getattr(neo4j_driver, "uri", None) or f"bolt://{neo4j_driver._pool.address.host}:{neo4j_driver._pool.address.port}"  # type: ignore[attr-defined]
-    # Recupera password dal driver auth provider (statico in testcontainer).
-    # Testcontainers Neo4jContainer espone NEO4J_ADMIN_PASSWORD; lo riusiamo qui.
-    from testcontainers.neo4j import Neo4jContainer
-
-    password = getattr(Neo4jContainer, "NEO4J_ADMIN_PASSWORD", "neo4j")
-    return uri, ("neo4j", password)
+    uri = getattr(request.config, "_neo4j_uri", None)
+    user = getattr(request.config, "_neo4j_user", None)
+    password = getattr(request.config, "_neo4j_password", None)
+    if not uri or not user or not password:
+        pytest.fail(
+            "neo4j_driver fixture did not publish _neo4j_uri/_user/_password "
+            "on request.config — conftest fixture broken"
+        )
+    return uri, (user, password)
 
 
 def _run_bootstrap(uri: str, auth: tuple[str, str]) -> subprocess.CompletedProcess[str]:
@@ -69,9 +70,12 @@ def _run_bootstrap(uri: str, auth: tuple[str, str]) -> subprocess.CompletedProce
 
 
 @pytest.mark.integration
-async def test_constraints_idempotent(neo4j_driver) -> None:
+@pytest.mark.asyncio(loop_scope="session")
+async def test_constraints_idempotent(
+    neo4j_driver, request: pytest.FixtureRequest
+) -> None:
     """KNW-08: bootstrap crea 4 unique constraints + 1 index, idempotente."""
-    uri, auth = _driver_uri_and_auth(neo4j_driver)
+    uri, auth = _connection_params(request)
 
     # Primo run — crea tutto.
     first = _run_bootstrap(uri, auth)
@@ -125,6 +129,7 @@ async def test_constraints_idempotent(neo4j_driver) -> None:
 
 
 @pytest.mark.integration
+@pytest.mark.asyncio(loop_scope="session")
 async def test_apoc_available(neo4j_driver) -> None:
     """KNW-08: APOC plugin callable on the testcontainer Neo4j 5.24."""
     async with neo4j_driver.session(database="neo4j") as session:
