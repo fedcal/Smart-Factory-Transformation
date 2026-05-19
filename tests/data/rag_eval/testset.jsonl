@@ -1,0 +1,120 @@
+{"id": "q-001", "query": "dye bath preparation for jet dyeing", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-002", "query": "come gestire dye bath preparation for jet dyeing?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-003", "query": "procedure for dye bath preparation for jet dyeing", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-004", "query": "colour matching procedure for sample dyeing", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-005", "query": "come gestire colour matching procedure for sample dyeing?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-006", "query": "procedure for colour matching procedure for sample dyeing", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-007", "query": "shade verification and dye lot approval", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-008", "query": "come gestire shade verification and dye lot approval?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-009", "query": "procedure for shade verification and dye lot approval", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-010", "query": "colour fastness to washing and rubbing verificatio", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-011", "query": "come gestire colour fastness to washing and rubbing verification?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-012", "query": "procedure for colour fastness to washing and rubbing verification", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-013", "query": "post-dyeing wash procedure and exhausted bath disc", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-014", "query": "come gestire post-dyeing wash procedure and exhausted bath discharge?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-015", "query": "procedure for post-dyeing wash procedure and exhausted bath discharge", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-016", "query": "warp end break troubleshooting on rapier loom", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-017", "query": "come gestire warp end break troubleshooting on rapier loom?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-018", "query": "procedure for warp end break troubleshooting on rapier loom", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-019", "query": "warp tension drift diagnosis and correction", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-020", "query": "come gestire warp tension drift diagnosis and correction?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-021", "query": "procedure for warp tension drift diagnosis and correction", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-022", "query": "projectile jam removal and resolution on projectil", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-023", "query": "come gestire projectile jam removal and resolution on projectile loom?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-024", "query": "procedure for projectile jam removal and resolution on projectile loom", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-025", "query": "selvage fault diagnosis and recovery on rapier loo", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-026", "query": "come gestire selvage fault diagnosis and recovery on rapier loom?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-027", "query": "procedure for selvage fault diagnosis and recovery on rapier loom", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-028", "query": "loom cleaning and recovery after serial defect eve", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-029", "query": "come gestire loom cleaning and recovery after serial defect event?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-030", "query": "procedure for loom cleaning and recovery after serial defect event", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-031", "query": "fabric inspection using the four-point grading sys", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-032", "query": "come gestire fabric inspection using the four-point grading system?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-033", "query": "procedure for fabric inspection using the four-point grading system", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-034", "query": "warp end break detection and recording during fabr", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-035", "query": "come gestire warp end break detection and recording during fabric inspection?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-036", "query": "procedure for warp end break detection and recording during fabric inspection", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-037", "query": "mispick defect analysis and classification in fabr", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-038", "query": "come gestire mispick defect analysis and classification in fabric?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-039", "query": "procedure for mispick defect analysis and classification in fabric", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-040", "query": "shade deviation report for dye lot", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-041", "query": "come gestire shade deviation report for dye lot?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-042", "query": "procedure for shade deviation report for dye lot", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-043", "query": "lot acceptance procedure", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-044", "query": "come gestire lot acceptance procedure?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-045", "query": "procedure for lot acceptance procedure", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-046", "query": "spindle calibration and verification on ring spinn", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-047", "query": "come gestire spindle calibration and verification on ring spinning frame?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-048", "query": "procedure for spindle calibration and verification on ring spinning frame", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-049", "query": "drafting cylinder cleanup on ring spinning frame", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-050", "query": "come gestire drafting cylinder cleanup on ring spinning frame?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-051", "query": "procedure for drafting cylinder cleanup on ring spinning frame", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-052", "query": "ring rail adjustment on ring spinning frame", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-053", "query": "come gestire ring rail adjustment on ring spinning frame?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-054", "query": "procedure for ring rail adjustment on ring spinning frame", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-055", "query": "slub monitoring and control on ring spinning frame", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-056", "query": "come gestire slub monitoring and control on ring spinning frame?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-057", "query": "procedure for slub monitoring and control on ring spinning frame", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-058", "query": "preventive lubrication of ring spinning frame", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
+{"id": "q-059", "query": "come gestire preventive lubrication of ring spinning frame?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
+{"id": "q-060", "query": "procedure for preventive lubrication of ring spinning frame", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
+{"id": "q-061", "query": "preparazione bagno colorante per tintura jet dyein", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-062", "query": "come gestire preparazione bagno colorante per tintura jet dyeing?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-063", "query": "procedure for preparazione bagno colorante per tintura jet dyeing", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-001", "gold_chunk_idx": 0}
+{"id": "q-064", "query": "procedura di abbinamento colore per tintura campio", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-065", "query": "come gestire procedura di abbinamento colore per tintura campionario?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-066", "query": "procedure for procedura di abbinamento colore per tintura campionario", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-002", "gold_chunk_idx": 0}
+{"id": "q-067", "query": "verifica tono e approvazione lotto tintoriale", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-068", "query": "come gestire verifica tono e approvazione lotto tintoriale?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-069", "query": "procedure for verifica tono e approvazione lotto tintoriale", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-003", "gold_chunk_idx": 0}
+{"id": "q-070", "query": "verifica solidita' colore a lavaggio e sfregamento", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-071", "query": "come gestire verifica solidita' colore a lavaggio e sfregamento?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-072", "query": "procedure for verifica solidita' colore a lavaggio e sfregamento", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-004", "gold_chunk_idx": 0}
+{"id": "q-073", "query": "procedura di lavaggio post-tintura e scarico bagno", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-074", "query": "come gestire procedura di lavaggio post-tintura e scarico bagno esausto?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-075", "query": "procedure for procedura di lavaggio post-tintura e scarico bagno esausto", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-DYE-005", "gold_chunk_idx": 0}
+{"id": "q-076", "query": "risoluzione guasto rottura filo di ordito", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-077", "query": "come gestire risoluzione guasto rottura filo di ordito?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-078", "query": "procedure for risoluzione guasto rottura filo di ordito", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-001", "gold_chunk_idx": 0}
+{"id": "q-079", "query": "diagnosi e correzione deriva tensione ordito", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-080", "query": "come gestire diagnosi e correzione deriva tensione ordito?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-081", "query": "procedure for diagnosi e correzione deriva tensione ordito", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-002", "gold_chunk_idx": 0}
+{"id": "q-082", "query": "rimozione e risoluzione inceppamento navetta su te", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-083", "query": "come gestire rimozione e risoluzione inceppamento navetta su telaio a proiettile?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-084", "query": "procedure for rimozione e risoluzione inceppamento navetta su telaio a proiettile", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-003", "gold_chunk_idx": 0}
+{"id": "q-085", "query": "diagnosi e ripristino difetto di cimosa su telaio", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-086", "query": "come gestire diagnosi e ripristino difetto di cimosa su telaio rapier?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-087", "query": "procedure for diagnosi e ripristino difetto di cimosa su telaio rapier", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-004", "gold_chunk_idx": 0}
+{"id": "q-088", "query": "pulizia e ripristino telaio post-evento di difetto", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-089", "query": "come gestire pulizia e ripristino telaio post-evento di difettosità seriale?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-090", "query": "procedure for pulizia e ripristino telaio post-evento di difettosità seriale", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-LOOM-005", "gold_chunk_idx": 0}
+{"id": "q-091", "query": "ispezione tessuto con sistema di classificazione a", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-092", "query": "come gestire ispezione tessuto con sistema di classificazione a quattro punti?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-093", "query": "procedure for ispezione tessuto con sistema di classificazione a quattro punti", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-001", "gold_chunk_idx": 0}
+{"id": "q-094", "query": "rilevamento e registrazione rotture filo durante i", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-095", "query": "come gestire rilevamento e registrazione rotture filo durante ispezione tessuto?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-096", "query": "procedure for rilevamento e registrazione rotture filo durante ispezione tessuto", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-002", "gold_chunk_idx": 0}
+{"id": "q-097", "query": "analisi e classificazione difetti mispick nel tess", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-098", "query": "come gestire analisi e classificazione difetti mispick nel tessuto?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-099", "query": "procedure for analisi e classificazione difetti mispick nel tessuto", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-003", "gold_chunk_idx": 0}
+{"id": "q-100", "query": "redazione rapporto deviazione tonale su lotto tint", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-101", "query": "come gestire redazione rapporto deviazione tonale su lotto tintoriale?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-102", "query": "procedure for redazione rapporto deviazione tonale su lotto tintoriale", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-004", "gold_chunk_idx": 0}
+{"id": "q-103", "query": "procedura di accettazione lotto", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-104", "query": "come gestire procedura di accettazione lotto?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-105", "query": "procedure for procedura di accettazione lotto", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-QLT-005", "gold_chunk_idx": 0}
+{"id": "q-106", "query": "calibrazione e verifica fusi filatoio ad anello", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-107", "query": "come gestire calibrazione e verifica fusi filatoio ad anello?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-108", "query": "procedure for calibrazione e verifica fusi filatoio ad anello", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-001", "gold_chunk_idx": 0}
+{"id": "q-109", "query": "pulizia cilindri di stiro del filatoio ad anello", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-110", "query": "come gestire pulizia cilindri di stiro del filatoio ad anello?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-111", "query": "procedure for pulizia cilindri di stiro del filatoio ad anello", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-002", "gold_chunk_idx": 0}
+{"id": "q-112", "query": "regolazione rotaia anelli del filatoio ad anello", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-113", "query": "come gestire regolazione rotaia anelli del filatoio ad anello?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-114", "query": "procedure for regolazione rotaia anelli del filatoio ad anello", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-003", "gold_chunk_idx": 0}
+{"id": "q-115", "query": "monitoraggio e controllo slub nel filatoio ad anel", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-116", "query": "come gestire monitoraggio e controllo slub nel filatoio ad anello?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-117", "query": "procedure for monitoraggio e controllo slub nel filatoio ad anello", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-004", "gold_chunk_idx": 0}
+{"id": "q-118", "query": "lubrificazione preventiva del filatoio ad anello", "lang": "it", "type": "keyword_it", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
+{"id": "q-119", "query": "come gestire lubrificazione preventiva del filatoio ad anello?", "lang": "it", "type": "natural_it", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
+{"id": "q-120", "query": "procedure for lubrificazione preventiva del filatoio ad anello", "lang": "en", "type": "cross_lingual_en", "gold_sop_id": "SOP-SPN-005", "gold_chunk_idx": 0}
