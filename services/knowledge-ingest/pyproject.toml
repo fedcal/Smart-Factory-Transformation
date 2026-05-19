@@ -6,9 +6,18 @@ description = "CLI ingest pipeline: parse → chunk → embed → upsert Qdrant 
 dependencies = [
   "asyncpg>=0.29",
   "typer>=0.12",
+  "click>=8.1",
   "structlog>=24.4",
   "pydantic>=2.7",
+  "sft-knowledge",
+  "sft-domain",
+  "sft-assets",
 ]
+
+[tool.uv.sources]
+sft-knowledge = { workspace = true }
+sft-domain = { workspace = true }
+sft-assets = { workspace = true }
 
 [project.optional-dependencies]
 dev = [
