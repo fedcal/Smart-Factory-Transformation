@@ -37,6 +37,12 @@ from sft_knowledge.retrieval import (
     build_acl_filter,
 )
 from sft_knowledge.stores import Neo4jGraphBuilder, QdrantIndexer, point_id
+from sft_knowledge.tools import (
+    RagSearchInput,
+    RagSearchTool,
+    TraverseGraphInput,
+    TraverseGraphTool,
+)
 
 __all__ = [
     "DocumentParser",
@@ -56,4 +62,8 @@ __all__ = [
     "RetrievalPipeline",
     "ROLE_TO_ACL",
     "build_acl_filter",
+    "RagSearchTool",
+    "RagSearchInput",
+    "TraverseGraphTool",
+    "TraverseGraphInput",
 ]
