@@ -77,6 +77,11 @@ plugins:
             Schema OPC-UA: OPC-UA Schema
             Agentic Runtime: Agentic Runtime
             HITL Cycle: HITL Cycle
+            Knowledge Layer: Knowledge Layer
+            Architettura: Architecture
+            Pipeline di retrieval ibrida: Hybrid retrieval pipeline
+            Modello ACL: ACL model
+            Risultati A/B BGE-M3 vs multilingual-e5-large: A/B results — BGE-M3 vs multilingual-e5-large
       reconfigure_material: true
 
 markdown_extensions:
@@ -134,4 +139,9 @@ nav:
     - Panoramica: it-ot/index.md
     - Schema ingest: it-ot/ingest-schema.md
     - Schema OPC-UA: it-ot/opcua-schema.md
+  - Knowledge Layer:
+    - Architettura: knowledge-layer/architecture.md
+    - Pipeline di retrieval ibrida: knowledge-layer/retrieval-pipeline.md
+    - Modello ACL: knowledge-layer/acl-model.md
+    - Risultati A/B BGE-M3 vs multilingual-e5-large: knowledge-layer/eval-results.md
   - Contributing: contributing/index.md
