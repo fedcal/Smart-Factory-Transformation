@@ -7,7 +7,7 @@
     "test": {
       "executor": "@nxlv/python:run-commands",
       "options": {
-        "command": "uv run pytest packages/sft-knowledge/tests -x -v",
+        "command": "uv run pytest",
         "cwd": "packages/sft-knowledge"
       }
     },
