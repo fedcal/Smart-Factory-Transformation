@@ -1,0 +1,146 @@
+name: Reindex Knowledge Layer
+
+# D-68 LOCKED: incremental reindex on push to main, scoped via path filter to
+# the SOP corpus and failure_modes registry. Manual dispatch supported for
+# rebuilds.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'simulators/synthetic-corpus/**'
+      - 'docs/sops/**'
+      - 'packages/sft-domain/src/sft_domain/failure_modes.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: reindex-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  reindex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      QDRANT_URL: http://localhost:6333
+      NEO4J_URI: bolt://localhost:7687
+      NEO4J_AUTH: neo4j/cipassword
+      TIMESCALE_DSN: postgresql://sft:sft_dev_pass@localhost:5432/sft
+      NX_DAEMON: 'true'
+
+    services:
+      qdrant:
+        image: qdrant/qdrant:v1.16.1
+        ports:
+          - 6333:6333
+          - 6334:6334
+      neo4j:
+        image: neo4j:5.24-community
+        env:
+          NEO4J_AUTH: neo4j/cipassword
+          NEO4J_PLUGINS: '["apoc"]'
+          NEO4J_dbms_security_procedures_unrestricted: 'apoc.*'
+        ports:
+          - 7474:7474
+          - 7687:7687
+      postgres:
+        image: timescale/timescaledb:2.18.0-pg16
+        env:
+          POSTGRES_USER: sft
+          POSTGRES_PASSWORD: sft_dev_pass
+          POSTGRES_DB: sft
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout (full history for git diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6"
+          enable-cache: true
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Python dependencies
+        run: uv sync --all-packages
+
+      - name: Wait for service health (Qdrant + Neo4j + PG)
+        run: |
+          # Qdrant /healthz
+          for i in {1..30}; do
+            if curl -sf http://localhost:6333/healthz > /dev/null; then
+              echo "qdrant healthy"; break
+            fi
+            echo "waiting qdrant ($i)..."; sleep 2
+          done
+          # Neo4j HTTP 7474
+          for i in {1..30}; do
+            if curl -sf http://localhost:7474 > /dev/null; then
+              echo "neo4j healthy"; break
+            fi
+            echo "waiting neo4j ($i)..."; sleep 2
+          done
+          # PG (TimescaleDB)
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U sft > /dev/null 2>&1; then
+              echo "postgres healthy"; break
+            fi
+            echo "waiting postgres ($i)..."; sleep 2
+          done
+
+      - name: Bootstrap schemas (idempotent)
+        run: |
+          uv run python scripts/timescale-migrate.py --dsn "$TIMESCALE_DSN"
+          uv run python scripts/qdrant-bootstrap.py --qdrant-url "$QDRANT_URL"
+          uv run python scripts/neo4j-bootstrap.py \
+            --neo4j-uri "$NEO4J_URI" --neo4j-auth "$NEO4J_AUTH"
+
+      - name: Compute changed files (path-filtered)
+        id: diff
+        run: |
+          # D-68 git diff --name-only restricted to corpus + failure_modes registry.
+          # Falls back to HEAD~1 on the first push (no event.before).
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BEFORE="HEAD~1"
+          fi
+          git diff --name-only "$BEFORE" "${{ github.sha }}" -- \
+            'simulators/synthetic-corpus/**' \
+            'docs/sops/**' \
+            'packages/sft-domain/src/sft_domain/failure_modes.yaml' \
+            > changed.txt || true
+          echo "Changed files ($(wc -l < changed.txt)):"
+          cat changed.txt || true
+
+      - name: Run knowledge ingest pipeline
+        run: |
+          if [ ! -s changed.txt ]; then
+            echo "no changed files in scope; skipping ingest"
+            exit 0
+          fi
+          FILES=$(paste -sd, changed.txt)
+          echo "ingesting: $FILES"
+          npx nx run knowledge-ingest:run --args="--files=$FILES --mode=incremental --collection=sop"
