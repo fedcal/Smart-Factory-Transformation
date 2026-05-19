@@ -1,0 +1,41 @@
+{
+  "name": "knowledge-ingest",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "services/knowledge-ingest/src",
+  "targets": {
+    "run": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run python -m svc_knowledge_ingest",
+        "cwd": "services/knowledge-ingest"
+      }
+    },
+    "bootstrap": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run python -m svc_knowledge_ingest --mode=bootstrap",
+        "cwd": "services/knowledge-ingest"
+      }
+    },
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "services/knowledge-ingest"
+      }
+    },
+    "validate": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run python -m svc_knowledge_ingest --mode=validate",
+        "cwd": "services/knowledge-ingest"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "sft-knowledge",
+    "sft-domain",
+    "sft-assets"
+  ]
+}
