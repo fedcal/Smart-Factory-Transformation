@@ -1,0 +1,252 @@
+# Failure Modes Registry (D-65)
+#
+# Modalita' di guasto/difetto del processo tessile derivate dalla defect taxonomy
+# di Fase 2 (vedi .planning/phases/02-domain-modeling-synthetic-corpus/02-CONTEXT.md).
+#
+# Ogni FailureMode DEVE avere almeno una SOP di riferimento nel corpus
+# (simulators/synthetic-corpus/) — il validator scripts/validate-failure-modes.py
+# blocca PR con failure mode orfane.
+#
+# Schema: vedi packages/sft-domain/src/sft_domain/failure_modes/models.py
+# Loader:  packages/sft-domain/src/sft_domain/failure_modes/_loader.py
+# Severity: low | medium | high (high riservato a safety-critical / contaminazioni)
+
+failure_modes:
+  # ============================================================================
+  # WEAVING (telai — SOP-LOOM-001..005)
+  # ============================================================================
+  - id: broken_end
+    name_it: rottura filo ordito
+    name_en: broken end
+    asset_families: [weaving]
+    parts: [warp, heddle]
+    severity: medium
+
+  - id: rottura_filo
+    name_it: rottura filo
+    name_en: yarn break in loom
+    asset_families: [weaving]
+    parts: [warp, weft]
+    severity: medium
+
+  - id: mispick
+    name_it: trama mancata
+    name_en: mispick
+    asset_families: [weaving, quality_grading]
+    parts: [weft, reed]
+    severity: medium
+
+  - id: shuttle_jam
+    name_it: inceppamento navetta
+    name_en: shuttle jam
+    asset_families: [weaving]
+    parts: [shuttle, reed]
+    severity: high
+
+  - id: warp_tension_drift
+    name_it: deriva tensione ordito
+    name_en: warp tension drift
+    asset_families: [weaving]
+    parts: [warp, beam, tensioner]
+    severity: medium
+
+  - id: selvage_fault
+    name_it: difetto cimosa
+    name_en: selvage fault
+    asset_families: [weaving]
+    parts: [selvage, heddle]
+    severity: low
+
+  - id: difetto_orlatura
+    name_it: difetto orlatura
+    name_en: selvage edge defect
+    asset_families: [weaving]
+    parts: [selvage]
+    severity: low
+
+  - id: difetto_catena
+    name_it: difetto catena ordito
+    name_en: warp chain defect
+    asset_families: [weaving, quality_grading]
+    parts: [warp]
+    severity: medium
+
+  - id: difetto_trama
+    name_it: difetto trama
+    name_en: weft defect
+    asset_families: [weaving, quality_grading]
+    parts: [weft]
+    severity: medium
+
+  - id: double_pick
+    name_it: doppia trama
+    name_en: double pick mispick
+    asset_families: [weaving, quality_grading]
+    parts: [weft, reed]
+    severity: low
+
+  # ============================================================================
+  # SPINNING (filatoi — SOP-SPN-001..005)
+  # ============================================================================
+  - id: slub
+    name_it: ingrossamento filato
+    name_en: slub
+    asset_families: [spinning, quality_grading]
+    parts: [drafting_cylinder, roving]
+    severity: medium
+
+  - id: irregolarita_filato
+    name_it: irregolarita filato
+    name_en: yarn unevenness
+    asset_families: [spinning]
+    parts: [drafting_cylinder, spindle]
+    severity: medium
+
+  - id: neps
+    name_it: neps fibre
+    name_en: neps in yarn slub
+    asset_families: [spinning, quality_grading]
+    parts: [fiber, drafting_cylinder]
+    severity: low
+
+  - id: spindle_misalignment
+    name_it: disallineamento fuso
+    name_en: spindle calibration drift
+    asset_families: [spinning]
+    parts: [spindle, ring_rail]
+    severity: medium
+
+  - id: drafting_cylinder_dirt
+    name_it: contaminazione cilindro stiro
+    name_en: drafting cylinder cleanup required
+    asset_families: [spinning]
+    parts: [drafting_cylinder]
+    severity: low
+
+  - id: ring_rail_misalignment
+    name_it: disallineamento anello rotante
+    name_en: ring rail adjustment fault
+    asset_families: [spinning]
+    parts: [ring_rail, spindle]
+    severity: medium
+
+  - id: lubrication_overdue
+    name_it: lubrificazione scaduta
+    name_en: preventive lubrication overdue
+    asset_families: [spinning]
+    parts: [bearings, spindle]
+    severity: low
+
+  # ============================================================================
+  # DYEING (tintura — SOP-DYE-001..005)
+  # ============================================================================
+  - id: deviazione_tono
+    name_it: deviazione di tono
+    name_en: shade deviation
+    asset_families: [dyeing, quality_grading]
+    parts: [dye_bath, fabric_lot]
+    severity: medium
+
+  - id: shade_deviation
+    name_it: deviazione cromatica
+    name_en: shade deviation report
+    asset_families: [dyeing, quality_grading]
+    parts: [dye_bath, fabric_lot]
+    severity: medium
+
+  - id: delta_e_excess
+    name_it: delta e fuori specifica
+    name_en: delta e excess
+    asset_families: [dyeing, quality_grading]
+    parts: [dye_bath, sample]
+    severity: medium
+
+  - id: screziatura
+    name_it: screziatura
+    name_en: unlevel dyeing screziatura
+    asset_families: [dyeing]
+    parts: [dye_bath, fabric_lot]
+    severity: medium
+
+  - id: bagno_colorante_squilibrio
+    name_it: squilibrio bagno colorante
+    name_en: bath preparation imbalance
+    asset_families: [dyeing]
+    parts: [dye_bath]
+    severity: medium
+
+  - id: solidita_colore_bassa
+    name_it: bassa solidita colore
+    name_en: low colour fastness
+    asset_families: [dyeing, quality_grading]
+    parts: [fabric_lot]
+    severity: medium
+
+  - id: post_dyeing_wash_residue
+    name_it: residuo lavaggio post tintura
+    name_en: post-dyeing wash residue
+    asset_families: [dyeing]
+    parts: [fabric_lot, dye_bath]
+    severity: low
+
+  - id: color_matching_fail
+    name_it: errore color matching
+    name_en: color matching procedure failure
+    asset_families: [dyeing]
+    parts: [sample, dye_bath]
+    severity: medium
+
+  # ============================================================================
+  # QUALITY GRADING (ispezione — SOP-QLT-001..005)
+  # ============================================================================
+  - id: ispezione_rotolo_fail
+    name_it: ispezione rotolo fallita
+    name_en: roll inspection failure four-point grading
+    asset_families: [quality_grading]
+    parts: [fabric_roll, inspection_table]
+    severity: medium
+
+  - id: four_point_penalty_excess
+    name_it: penalita four-point eccessiva
+    name_en: four-point grading penalty excess
+    asset_families: [quality_grading]
+    parts: [fabric_roll]
+    severity: medium
+
+  - id: lotto_rifiutato
+    name_it: lotto rifiutato
+    name_en: lot acceptance rejection
+    asset_families: [quality_grading]
+    parts: [fabric_lot]
+    severity: high
+
+  - id: foreign_yarn
+    name_it: filato estraneo
+    name_en: foreign yarn contamination quality
+    asset_families: [quality_grading, spinning]
+    parts: [fabric_roll, fiber]
+    severity: high
+
+  - id: fiber_contamination
+    name_it: contaminazione fibre
+    name_en: fiber contamination spinning
+    asset_families: [spinning, quality_grading]
+    parts: [fiber, roving]
+    severity: high
+
+  # ============================================================================
+  # CROSS-FAMILY (manutenzione + post-event recovery)
+  # ============================================================================
+  - id: defect_cleanup_required
+    name_it: pulizia post evento difettoso
+    name_en: defect cleanup post-event maintenance
+    asset_families: [weaving]
+    parts: [loom, reed, heddle]
+    severity: low
+
+  - id: broken_end_detection_miss
+    name_it: mancata rilevazione rottura filo
+    name_en: broken-end detection miss inspection
+    asset_families: [quality_grading, weaving]
+    parts: [inspection_table, fabric_roll]
+    severity: medium

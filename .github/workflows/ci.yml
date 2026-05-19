@@ -93,6 +93,11 @@ jobs:
           uv run python3 scripts/generate-assumption-pages.py
           uv run python3 scripts/generate-assumption-pages.py --check
 
+      - name: Validate failure modes coverage (Phase 5 / KNW-08)
+        run: |
+          # D-65: every FailureMode must be referenced by >=1 SOP in the corpus
+          npx nx run sft-domain:validate-failure-modes
+
       - name: Validate IT/OT artifacts (Phase 3)
         run: |
           # Asset registry + fault profiles schema validation (D-45, D-44)
