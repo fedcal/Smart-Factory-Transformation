@@ -30,6 +30,7 @@ from sft_knowledge.chunking import Chunk, SemanticChunker
 from sft_knowledge.embedding import BgeM3Embedder, EncodeOutput
 from sft_knowledge.models import GraphNode
 from sft_knowledge.parsers import DocumentParser, MarkdownParser, ParsedDoc, ParsedSection
+from sft_knowledge.stores import Neo4jGraphBuilder, QdrantIndexer, point_id
 
 __all__ = [
     "DocumentParser",
@@ -41,4 +42,7 @@ __all__ = [
     "EncodeOutput",
     "SemanticChunker",
     "Chunk",
+    "QdrantIndexer",
+    "point_id",
+    "Neo4jGraphBuilder",
 ]
