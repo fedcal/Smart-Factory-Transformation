@@ -511,9 +511,13 @@ async def test_end_to_end_provenance_completeness(
     sparse = [SparseVector(indices=[1], values=[0.0]) for _ in range(n)]
 
     # Reset collection sop per garantire che il primo hit sia il nostro.
+    # Cancella tutti i punti via filter vuoto (delete-all idiomatico Qdrant 1.16).
+    from qdrant_client.http.models import Filter as _Filter
+    from qdrant_client.http.models import FilterSelector as _FilterSelector
+
     await qdrant_client.delete(
         collection_name="sop",
-        points_selector={"filter": {"must": []}},  # delete all
+        points_selector=_FilterSelector(filter=_Filter(must=[])),
         wait=True,
     )
 

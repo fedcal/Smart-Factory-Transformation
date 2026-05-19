@@ -479,10 +479,13 @@ async def test_dual_write_neo4j_first_atomicity(
     neo4j_sop_id = rec["sid"]
 
     # === FASE 2: Qdrant upsert ===
-    # Reset collection sop.
+    # Reset collection sop via filter vuoto (delete-all idiomatico Qdrant 1.16).
+    from qdrant_client.http.models import Filter as _Filter
+    from qdrant_client.http.models import FilterSelector as _FilterSelector
+
     await qdrant_client.delete(
         collection_name="sop",
-        points_selector={"filter": {"must": []}},
+        points_selector=_FilterSelector(filter=_Filter(must=[])),
         wait=True,
     )
 
