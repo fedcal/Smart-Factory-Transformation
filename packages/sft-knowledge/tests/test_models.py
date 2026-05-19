@@ -12,10 +12,8 @@ from inspect import isabstract
 
 import pytest
 from pydantic import ValidationError
-
 from sft_knowledge.models import GraphNode, RagCitation
 from sft_knowledge.parsers.base import DocumentParser, ParsedDoc, ParsedSection
-
 
 # ---------------------------------------------------------------------------
 # ParsedSection

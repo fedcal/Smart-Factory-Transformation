@@ -18,7 +18,6 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
-
 from sft_knowledge.parsers.base import ParsedDoc
 from sft_knowledge.parsers.markdown import MarkdownParser
 
