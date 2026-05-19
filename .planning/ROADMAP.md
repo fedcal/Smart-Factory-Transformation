@@ -10,7 +10,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN (completed 2026-05-18)
 - [x] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay (completed 2026-05-18)
 - [x] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail (completed 2026-05-18)
-- [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval
+- [x] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (completed 2026-05-19)
 - [ ] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests
 - [ ] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests
 - [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
@@ -109,7 +109,20 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. A document update triggers incremental re-indexing of only the changed chunks within the configured staleness threshold; full reindex is not triggered
   4. The entity graph contains machine → part → failure-mode → SOP relationships for all asset classes in the simulator; a traversal query returns a valid SOP for a given failure mode
   5. The BGE-M3 vs multilingual-e5-large A/B evaluation results are documented in `docs/` with a justified model selection decision
-**Plans**: TBD
+
+**KNW-04 scope note:** Phase 5 ships MarkdownParser only. The DocumentParser ABC enables PDF/DOCX/HTML parsers in Phase 8 KnowledgeCurator (scoping deviation from literal KNW-04; documented in CONTEXT.md D-67).
+
+**Plans**: 10 plans
+  - [x] 05-01-sft-knowledge-sdk-PLAN.md — sft-knowledge SDK scaffold + Pydantic models + MarkdownParser (KNW-04, KNW-05)
+  - [x] 05-02-acl-migration-PLAN.md — acl_level migration script + 41 SOP frontmatter update + validator extension (KNW-06)
+  - [x] 05-03-failure-modes-yaml-PLAN.md — failure_modes.yaml + loader + 30+ entries + CI validator (KNW-08)
+  - [x] 05-04-qdrant-bootstrap-PLAN.md — 4-collection bootstrap script + integration test (KNW-01)
+  - [x] 05-05-neo4j-compose-bootstrap-PLAN.md — Neo4j 5.24 compose + bootstrap + Helm + APOC (KNW-08 infra)
+  - [x] 05-06-pg-migration-ingest-state-PLAN.md — migration 006 + state.py + knowledge-ingest scaffold (KNW-07, TRN-01)
+  - [x] 05-07-embedding-chunking-PLAN.md — BgeM3Embedder + SemanticChunker (KNW-02)
+  - [x] 05-08-indexer-graph-builder-PLAN.md — QdrantIndexer + Neo4jGraphBuilder (KNW-05, KNW-08)
+  - [x] 05-09-retrieval-pipeline-tools-memory-PLAN.md — RetrievalPipeline + RagSearchTool + TraverseGraphTool + QdrantLongTermMemory (KNW-06, KNW-09)
+  - [x] 05-10-ingest-service-cli-ci-eval-docs-PLAN.md — Typer CLI + pipeline + reindex.yml + A/B eval + MkDocs (KNW-03, KNW-04, KNW-07, TRN-01)
 
 ### Phase 6: Agents — Operations & Production
 **Goal**: All four Operations cluster agents (OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector) are implemented with full HITL integration, textile-specific domain knowledge, and passing end-to-end tests on simulated scenarios.
@@ -208,7 +221,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
-| 5. Knowledge Layer (RAG + Graph) | 9/10 | In Progress|  |
+| 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |

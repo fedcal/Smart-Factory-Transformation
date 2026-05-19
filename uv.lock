@@ -3160,7 +3160,11 @@ version = "0.1.0"
 source = { editable = "services/knowledge-ingest" }
 dependencies = [
     { name = "asyncpg" },
+    { name = "click" },
     { name = "pydantic" },
+    { name = "sft-assets" },
+    { name = "sft-domain" },
+    { name = "sft-knowledge" },
     { name = "structlog" },
     { name = "typer" },
 ]
@@ -3181,9 +3185,13 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "asyncpg", specifier = ">=0.29" },
+    { name = "click", specifier = ">=8.1" },
     { name = "pydantic", specifier = ">=2.7" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24" },
+    { name = "sft-assets", editable = "packages/sft-assets" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-knowledge", editable = "packages/sft-knowledge" },
     { name = "structlog", specifier = ">=24.4" },
     { name = "testcontainers", extras = ["postgres"], marker = "extra == 'dev'", specifier = ">=4.14" },
     { name = "typer", specifier = ">=0.12" },
