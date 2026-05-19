@@ -50,6 +50,12 @@ REQUIRED_H2_SECTIONS = [
 
 H2_PATTERN = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 
+# Plan 05-02: acl_level required field + value constraint (D-72 mapping).
+# Treated as ADDITIVE rules on top of the Phase 2 JSON Schema — the schema
+# itself is intentionally left untouched (Phase 2 artifact, lower risk).
+REQUIRED_EXTRA_FIELDS = ("acl_level",)
+VALID_ACL_LEVELS = frozenset({"public", "internal", "restricted"})
+
 # Filename must match SOP-<ALPHA>-<NNN>-<slug>-<lang>.md
 FILENAME_PATTERN = re.compile(r"^SOP-[A-Z]+-[0-9]{3}-[a-z0-9-]+-(it|en)\.md$")
 
@@ -70,7 +76,16 @@ def validate_file(md_path: Path, validator: Draft202012Validator, corpus_root: P
     Returns a list of error strings (empty list means file is valid).
     """
     errors: list[str] = []
-    rel = md_path.relative_to(WORKSPACE_ROOT)
+    # Use corpus_root as the relative-path anchor so the validator works
+    # against arbitrary corpus directories (including pytest tmp_path),
+    # not just the workspace root.
+    try:
+        rel = md_path.relative_to(WORKSPACE_ROOT)
+    except ValueError:
+        try:
+            rel = md_path.relative_to(corpus_root)
+        except ValueError:
+            rel = md_path
 
     # 1. Parse frontmatter
     try:
@@ -86,6 +101,24 @@ def validate_file(md_path: Path, validator: Draft202012Validator, corpus_root: P
         errors.append(
             f"{rel}: SCHEMA ERROR — {err.message} (field: {field})\n"
             f"    Fix: correct the frontmatter field to match sop.schema.json"
+        )
+
+    # 2b. Plan 05-02: required extra fields (acl_level) — additive to schema.
+    for required in REQUIRED_EXTRA_FIELDS:
+        if required not in post.metadata:
+            errors.append(
+                f"{rel}: MISSING REQUIRED FIELD — '{required}' is required in frontmatter\n"
+                f"    Fix: run `uv run python scripts/migrate-sop-acl.py` to add it, "
+                f"or add manually with one of {sorted(VALID_ACL_LEVELS)}"
+            )
+
+    # 2c. Plan 05-02: acl_level value constraint — must be public|internal|restricted.
+    acl_value = post.metadata.get("acl_level")
+    if acl_value is not None and acl_value not in VALID_ACL_LEVELS:
+        errors.append(
+            f"{rel}: invalid acl_level: {acl_value!r} "
+            f"(must be one of {sorted(VALID_ACL_LEVELS)})\n"
+            f"    Fix: set acl_level to public, internal, or restricted per D-72"
         )
 
     # 3. H2 section check
