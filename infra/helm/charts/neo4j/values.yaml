@@ -1,0 +1,69 @@
+# Smart Factory Transformation — neo4j chart values (Phase 5 KNW-08)
+# Default values. Override in environment-specific files for production.
+#
+# NOTE (Phase 5 D-65 + STATE.md blocker): Neo4j Community Edition è limitato a 4GB heap.
+# Per dataset Phase 5 (≤2M nodes, ≤10M relationships) è sufficiente; Phase 11
+# rivaluterà passaggio a Enterprise / cluster.
+
+image:
+  repository: neo4j
+  tag: "5.24-community"
+  pullPolicy: IfNotPresent
+
+# Auth dev-only: in produzione usa SealedSecrets (Phase 1 pattern, Phase 11 hardening).
+auth:
+  username: "neo4j"
+  # Riferimento a Secret esterno (vuoto = skeleton, sostituire con SealedSecret in prod)
+  existingSecret: ""
+  # Skeleton-only: dev fallback. PROD: rimuovere e referenziare existingSecret.
+  password: "devpassword"
+
+# APOC plugin abilitato (D-65). Procedure unrestricted limitate al namespace apoc.*
+# (T-05-05-03 mitigation).
+plugins:
+  - apoc
+
+apocConfig:
+  exportFileEnabled: true
+  importFileEnabled: true
+  proceduresUnrestricted: "apoc.*"
+
+service:
+  type: ClusterIP
+  boltPort: 7687
+  httpPort: 7474
+
+# Persistent volume (KNW-08 durability).
+persistence:
+  enabled: true
+  size: 10Gi
+  # Vuoto = usa default storage class del cluster
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "500m"
+  limits:
+    # Community 4GB heap max — non sforare per evitare OOMKill (STATE.md blocker).
+    memory: "4Gi"
+    cpu: "1000m"
+
+# PodSecurityContext (Phase 1 D-17 pattern)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 7474
+  runAsGroup: 7474
+  fsGroup: 7474
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: false  # Neo4j scrive nei dir /data /logs
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
