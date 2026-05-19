@@ -11,6 +11,7 @@ members = [
   "packages/sft-contracts",
   "packages/sft-assets",
   "packages/sft-tools",
+  "packages/sft-knowledge",
   "apps/orchestrator",
   "apps/api-gateway",
   "apps/agents/ops/operator-assistant",

@@ -1,0 +1,108 @@
+"""Shared pytest fixtures + marker registration for sft-knowledge (Plan 05-01 Task 4).
+
+Provides:
+    pytest markers      — `integration` (testcontainers Qdrant/Neo4j) + `gpu` (CUDA-only)
+    qdrant_client       — async testcontainer Qdrant 1.16.1 (Plan 05-04 + 05-08 consumer)
+    neo4j_driver        — async testcontainer Neo4j 5.24-community (Plan 05-05 + 05-08)
+    bge_m3_embedder     — lazy singleton BGE-M3 (Plan 05-07 consumer); skips if module
+                          not yet present.
+
+All testcontainer fixtures are session-scoped to amortize container startup; they are
+imported lazily inside the fixture body so this conftest can be collected even when
+testcontainers / qdrant-client / neo4j drivers are not yet installed (some Wave-0 tests
+are skipped — we should not hard-fail collection).
+"""
+
+from __future__ import annotations
+
+from collections.abc import AsyncIterator
+from typing import Any
+
+import pytest
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """Register sft-knowledge custom pytest markers per Shared Pattern 10."""
+    config.addinivalue_line(
+        "markers",
+        "integration: requires docker / testcontainers (Qdrant, Neo4j, Postgres)",
+    )
+    config.addinivalue_line(
+        "markers",
+        "gpu: requires CUDA GPU — skipped on CI CPU runner",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Qdrant testcontainer (consumed by Plans 05-04 + 05-08 integration tests)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+async def qdrant_client() -> AsyncIterator[Any]:
+    """Async Qdrant client backed by a session-scoped testcontainer.
+
+    Lazy import: testcontainers + qdrant-client may not be installed in every
+    dev environment; only `@pytest.mark.integration` tests should depend on
+    this fixture.
+    """
+    try:
+        from qdrant_client import AsyncQdrantClient
+        from testcontainers.qdrant import QdrantContainer
+    except ImportError as exc:  # pragma: no cover - exercised when deps missing
+        pytest.skip(f"qdrant testcontainer deps unavailable: {exc}")
+
+    with QdrantContainer("qdrant/qdrant:v1.16.1") as container:
+        client = AsyncQdrantClient(url=container.get_client_url())
+        try:
+            yield client
+        finally:
+            await client.close()
+
+
+# ---------------------------------------------------------------------------
+# Neo4j testcontainer (consumed by Plans 05-05 + 05-08 integration tests)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+async def neo4j_driver() -> AsyncIterator[Any]:
+    """Async Neo4j driver backed by a session-scoped testcontainer (5.24-community).
+
+    Lazy import (see `qdrant_client` rationale).
+    """
+    try:
+        from neo4j import AsyncGraphDatabase
+        from testcontainers.neo4j import Neo4jContainer
+    except ImportError as exc:  # pragma: no cover
+        pytest.skip(f"neo4j testcontainer deps unavailable: {exc}")
+
+    with Neo4jContainer("neo4j:5.24-community") as container:
+        admin_password = getattr(container, "NEO4J_ADMIN_PASSWORD", "neo4j")
+        driver = AsyncGraphDatabase.driver(
+            container.get_connection_url(),
+            auth=("neo4j", admin_password),
+        )
+        try:
+            yield driver
+        finally:
+            await driver.close()
+
+
+# ---------------------------------------------------------------------------
+# BGE-M3 embedder (consumed by Plan 05-07)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+def bge_m3_embedder() -> Any:
+    """Lazy singleton BGE-M3 embedder.
+
+    Skips automatically when `sft_knowledge.embedding.bge_m3` is not yet created
+    (Plan 05-07 introduces it).
+    """
+    try:
+        from sft_knowledge.embedding.bge_m3 import BgeM3Embedder  # type: ignore[import-not-found]
+    except ImportError:
+        pytest.skip("BgeM3Embedder not yet implemented (Plan 05-07)")
+    return BgeM3Embedder()
