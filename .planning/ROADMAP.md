@@ -208,7 +208,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 2. Domain Modeling & Synthetic Corpus | 10/7 | Complete   | 2026-05-18 |
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
-| 5. Knowledge Layer (RAG + Graph) | 7/10 | In Progress|  |
+| 5. Knowledge Layer (RAG + Graph) | 8/10 | In Progress|  |
 | 6. Agents — Operations & Production | 0/TBD | Not started | - |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
