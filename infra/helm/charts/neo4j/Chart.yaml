@@ -1,0 +1,17 @@
+apiVersion: v2
+name: neo4j
+description: Neo4j 5.24 Community single-node for sft knowledge graph (Phase 5 — k3d/k8s)
+type: application
+version: 0.1.0
+appVersion: "5.24.0"
+keywords:
+  - smart-factory
+  - neo4j
+  - graph
+  - knowledge
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com
