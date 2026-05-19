@@ -73,8 +73,20 @@ def test_stub_subclasses_memory_abc() -> None:
     assert isinstance(StubLongTermMemory(), Memory)
 
 
-def test_long_term_memory_alias_points_to_stub() -> None:
-    assert LongTermMemory is StubLongTermMemory
+def test_long_term_memory_alias_resolves_to_swap_target() -> None:
+    """Phase 4 expected ``LongTermMemory is StubLongTermMemory``.
+
+    Phase 5 (Plan 05-09 Task 4) swaps the alias to ``QdrantLongTermMemory`` when
+    sft-knowledge is installed (D-70). The fallback to ``StubLongTermMemory``
+    remains for environments where sft-knowledge is unavailable.
+    """
+    assert LongTermMemory.__name__ in {
+        "StubLongTermMemory",
+        "QdrantLongTermMemory",
+    }, (
+        f"LongTermMemory must be either the Phase 4 stub or the Phase 5 "
+        f"Qdrant impl; got {LongTermMemory.__name__}"
+    )
 
 
 def test_stub_config_frozen_extra_forbid() -> None:

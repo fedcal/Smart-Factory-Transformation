@@ -37,6 +37,7 @@ from sft_knowledge.retrieval import (
     build_acl_filter,
 )
 from sft_knowledge.stores import Neo4jGraphBuilder, QdrantIndexer, point_id
+from sft_knowledge.memory import QdrantLongTermMemory, QdrantLongTermMemoryConfig
 from sft_knowledge.tools import (
     RagSearchInput,
     RagSearchTool,
@@ -66,4 +67,6 @@ __all__ = [
     "RagSearchInput",
     "TraverseGraphTool",
     "TraverseGraphInput",
+    "QdrantLongTermMemory",
+    "QdrantLongTermMemoryConfig",
 ]
