@@ -28,8 +28,14 @@ Convenzioni (per 05-PATTERNS.md Shared Patterns 1-10):
 
 from sft_knowledge.chunking import Chunk, SemanticChunker
 from sft_knowledge.embedding import BgeM3Embedder, EncodeOutput
-from sft_knowledge.models import GraphNode
+from sft_knowledge.models import GraphNode, RagCitation
 from sft_knowledge.parsers import DocumentParser, MarkdownParser, ParsedDoc, ParsedSection
+from sft_knowledge.retrieval import (
+    ROLE_TO_ACL,
+    BgeReranker,
+    RetrievalPipeline,
+    build_acl_filter,
+)
 from sft_knowledge.stores import Neo4jGraphBuilder, QdrantIndexer, point_id
 
 __all__ = [
@@ -38,6 +44,7 @@ __all__ = [
     "ParsedDoc",
     "ParsedSection",
     "GraphNode",
+    "RagCitation",
     "BgeM3Embedder",
     "EncodeOutput",
     "SemanticChunker",
@@ -45,4 +52,8 @@ __all__ = [
     "QdrantIndexer",
     "point_id",
     "Neo4jGraphBuilder",
+    "BgeReranker",
+    "RetrievalPipeline",
+    "ROLE_TO_ACL",
+    "build_acl_filter",
 ]
