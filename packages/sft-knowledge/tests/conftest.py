@@ -39,12 +39,17 @@ def pytest_configure(config: pytest.Config) -> None:
 
 
 @pytest.fixture(scope="session")
-async def qdrant_client() -> AsyncIterator[Any]:
+async def qdrant_client(request: pytest.FixtureRequest) -> AsyncIterator[Any]:
     """Async Qdrant client backed by a session-scoped testcontainer.
 
     Lazy import: testcontainers + qdrant-client may not be installed in every
     dev environment; only `@pytest.mark.integration` tests should depend on
     this fixture.
+
+    Esposes the underlying container URL (rest scheme) via ``request.config.stash``
+    under key ``qdrant_url`` so integration tests that need to spawn external
+    processes (e.g. Plan 05-04 bootstrap subprocess) can recover it without
+    poking at private client internals.
     """
     try:
         from qdrant_client import AsyncQdrantClient
@@ -52,8 +57,17 @@ async def qdrant_client() -> AsyncIterator[Any]:
     except ImportError as exc:  # pragma: no cover - exercised when deps missing
         pytest.skip(f"qdrant testcontainer deps unavailable: {exc}")
 
+    # testcontainers 4.x does not expose `get_client_url()`; build the URL from
+    # the exposed REST port + host IP. `_rest_port` is the documented default
+    # (6333) used by `QdrantContainer.__init__`.
     with QdrantContainer("qdrant/qdrant:v1.16.1") as container:
-        client = AsyncQdrantClient(url=container.get_client_url())
+        host = container.get_container_host_ip()
+        port = container.get_exposed_port(container._rest_port)  # noqa: SLF001
+        url = f"http://{host}:{port}"
+
+        client = AsyncQdrantClient(url=url)
+        # Make the URL discoverable by tests (see docstring).
+        request.config._qdrant_url = url  # type: ignore[attr-defined]
         try:
             yield client
         finally:
