@@ -10,7 +10,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 2: Domain Modeling & Synthetic Corpus** - Textile domain analysis, defect taxonomy, asset registry schema, synthetic SOP corpus IT+EN (completed 2026-05-18)
 - [x] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay (completed 2026-05-18)
 - [x] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail (completed 2026-05-18)
-- [x] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (completed 2026-05-19)
+- [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (functional 2026-05-19; 3 gap-closure plans in progress 2026-05-19)
 - [ ] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests
 - [ ] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests
 - [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
@@ -112,7 +112,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 
 **KNW-04 scope note:** Phase 5 ships MarkdownParser only. The DocumentParser ABC enables PDF/DOCX/HTML parsers in Phase 8 KnowledgeCurator (scoping deviation from literal KNW-04; documented in CONTEXT.md D-67).
 
-**Plans**: 10 plans
+**Plans**: 13 plans (10 original + 3 gap closure)
   - [x] 05-01-sft-knowledge-sdk-PLAN.md — sft-knowledge SDK scaffold + Pydantic models + MarkdownParser (KNW-04, KNW-05)
   - [x] 05-02-acl-migration-PLAN.md — acl_level migration script + 41 SOP frontmatter update + validator extension (KNW-06)
   - [x] 05-03-failure-modes-yaml-PLAN.md — failure_modes.yaml + loader + 30+ entries + CI validator (KNW-08)
@@ -123,6 +123,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 05-08-indexer-graph-builder-PLAN.md — QdrantIndexer + Neo4jGraphBuilder (KNW-05, KNW-08)
   - [x] 05-09-retrieval-pipeline-tools-memory-PLAN.md — RetrievalPipeline + RagSearchTool + TraverseGraphTool + QdrantLongTermMemory (KNW-06, KNW-09)
   - [x] 05-10-ingest-service-cli-ci-eval-docs-PLAN.md — Typer CLI + pipeline + reindex.yml + A/B eval + MkDocs (KNW-03, KNW-04, KNW-07, TRN-01)
+  - [ ] 05-11-PLAN.md — gap-closure: TraverseGraphTool._arun defense-in-depth Pydantic re-validation (KNW-09 / CR-01 BLOCKER)
+  - [ ] 05-12-PLAN.md — gap-closure: shared sft_knowledge.path_utils.derive_source_uri helper for parser+orchestrator (KNW-07 / CR-02 BLOCKER)
+  - [ ] 05-13-PLAN.md — gap-closure: --skip-eval→--stub rename + Preliminary stub metrics admonition on MkDocs IT/EN eval pages (KNW-03 / IN-05)
 
 ### Phase 6: Agents — Operations & Production
 **Goal**: All four Operations cluster agents (OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector) are implemented with full HITL integration, textile-specific domain knowledge, and passing end-to-end tests on simulated scenarios.
