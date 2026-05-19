@@ -26,6 +26,7 @@ Convenzioni (per 05-PATTERNS.md Shared Patterns 1-10):
     - markers pytest: integration, gpu
 """
 
+from sft_knowledge.embedding import BgeM3Embedder, EncodeOutput
 from sft_knowledge.models import GraphNode
 from sft_knowledge.parsers import DocumentParser, MarkdownParser, ParsedDoc, ParsedSection
 
@@ -35,4 +36,6 @@ __all__ = [
     "ParsedDoc",
     "ParsedSection",
     "GraphNode",
+    "BgeM3Embedder",
+    "EncodeOutput",
 ]
