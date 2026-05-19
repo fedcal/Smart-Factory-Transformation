@@ -1,32 +1,33 @@
 ---
-id: SOP-QLT-001
-title: Ispezione tessuto con sistema di classificazione a quattro punti
-version: "1.0"
-lang: it
+acl_level: internal
 asset: inspection table
 asset_family: quality_grading
-role: quality-manager
-hazard_level: low
+audience: quality
+created_in_phase: 2
 estimated_duration_min: 20
+hazard_level: low
+id: SOP-QLT-001
+lang: it
 prerequisites: []
 related_glossary:
-  - ispezione_rotolo
-  - controllo_qualita_tessile
-  - tavolo_ispezione
-  - difetto_trama
-  - slub
-  - mispick
-  - difetto_catena
-  - rottura_filo
-tags:
-  - quality
-  - inspection
-  - four-point
-  - grading
-  - quality-manager
-audience: quality
+- ispezione_rotolo
+- controllo_qualita_tessile
+- tavolo_ispezione
+- difetto_trama
+- slub
+- mispick
+- difetto_catena
+- rottura_filo
+role: quality-manager
 status: reviewed
-created_in_phase: 2
+tags:
+- quality
+- inspection
+- four-point
+- grading
+- quality-manager
+title: Ispezione tessuto con sistema di classificazione a quattro punti
+version: '1.0'
 ---
 
 # Ispezione tessuto con sistema di classificazione a quattro punti

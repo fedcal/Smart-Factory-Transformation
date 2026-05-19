@@ -1,30 +1,31 @@
 ---
-id: SOP-DYE-002
-title: Procedura di abbinamento colore per tintura campionario
-version: "1.0"
-lang: it
+acl_level: public
 asset: jet dyeing machine
 asset_family: dyeing
-role: technician
-hazard_level: low
-estimated_duration_min: 60
-prerequisites:
-  - SOP-DYE-001
-related_glossary:
-  - tintura
-  - delta_e
-  - spettrofotometro
-  - bagno_colorante
-  - deviazione_tono
-  - solidita_colore
-tags:
-  - dyeing
-  - color-matching
-  - procedure
-  - technician
 audience: operations
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 60
+hazard_level: low
+id: SOP-DYE-002
+lang: it
+prerequisites:
+- SOP-DYE-001
+related_glossary:
+- tintura
+- delta_e
+- spettrofotometro
+- bagno_colorante
+- deviazione_tono
+- solidita_colore
+role: technician
+status: reviewed
+tags:
+- dyeing
+- color-matching
+- procedure
+- technician
+title: Procedura di abbinamento colore per tintura campionario
+version: '1.0'
 ---
 
 # Procedura di abbinamento colore per tintura campionario

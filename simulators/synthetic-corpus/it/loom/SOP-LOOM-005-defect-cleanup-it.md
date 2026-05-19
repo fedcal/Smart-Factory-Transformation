@@ -1,34 +1,35 @@
 ---
-id: SOP-LOOM-005
-title: Pulizia e ripristino telaio post-evento di difettosità seriale
-version: "1.0"
-lang: it
+acl_level: internal
 asset: telaio
 asset_family: weaving
-role: technician
-hazard_level: medium
-estimated_duration_min: 45
-prerequisites:
-  - SOP-LOOM-001
-  - SOP-LOOM-002
-related_glossary:
-  - telaio
-  - tessitura
-  - rottura_filo
-  - difetto_catena
-  - mispick
-  - densita_trama
-  - liccio
-  - subbio
-tags:
-  - maintenance
-  - weaving
-  - cleanup
-  - post-event
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 45
+hazard_level: medium
+id: SOP-LOOM-005
+lang: it
+prerequisites:
+- SOP-LOOM-001
+- SOP-LOOM-002
+related_glossary:
+- telaio
+- tessitura
+- rottura_filo
+- difetto_catena
+- mispick
+- densita_trama
+- liccio
+- subbio
+role: technician
+status: reviewed
+tags:
+- maintenance
+- weaving
+- cleanup
+- post-event
+- technician
+title: Pulizia e ripristino telaio post-evento di difettosità seriale
+version: '1.0'
 ---
 
 # Pulizia e ripristino telaio post-evento di difettosità seriale

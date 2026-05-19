@@ -1,31 +1,32 @@
 ---
-id: SOP-SPN-003
-title: Ring rail adjustment on ring spinning frame
-version: "1.0"
-lang: en
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: low
-estimated_duration_min: 35
-prerequisites:
-  - SOP-SPN-001
-related_glossary:
-  - filatura
-  - filatoio_anello
-  - fuso
-  - anello_rotante
-  - irregolarita_filato
-  - titolo_filato
-tags:
-  - maintenance
-  - spinning
-  - ring-rail
-  - adjustment
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 35
+hazard_level: low
+id: SOP-SPN-003
+lang: en
+prerequisites:
+- SOP-SPN-001
+related_glossary:
+- filatura
+- filatoio_anello
+- fuso
+- anello_rotante
+- irregolarita_filato
+- titolo_filato
+role: technician
+status: reviewed
+tags:
+- maintenance
+- spinning
+- ring-rail
+- adjustment
+- technician
+title: Ring rail adjustment on ring spinning frame
+version: '1.0'
 ---
 
 # Ring rail adjustment on ring spinning frame

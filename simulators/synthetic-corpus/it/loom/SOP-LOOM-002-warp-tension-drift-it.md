@@ -1,33 +1,34 @@
 ---
-id: SOP-LOOM-002
-title: Diagnosi e correzione deriva tensione ordito
-version: "1.0"
-lang: it
+acl_level: internal
 asset: telaio
 asset_family: weaving
-role: technician
-hazard_level: medium
-estimated_duration_min: 30
-prerequisites:
-  - SOP-LOOM-001
-related_glossary:
-  - telaio
-  - ordito
-  - subbio
-  - liccio
-  - misuratore_tensione_ordito
-  - rottura_filo
-  - densita_trama
-  - tessitura
-tags:
-  - troubleshooting
-  - weaving
-  - tension
-  - preventive
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 30
+hazard_level: medium
+id: SOP-LOOM-002
+lang: it
+prerequisites:
+- SOP-LOOM-001
+related_glossary:
+- telaio
+- ordito
+- subbio
+- liccio
+- misuratore_tensione_ordito
+- rottura_filo
+- densita_trama
+- tessitura
+role: technician
+status: reviewed
+tags:
+- troubleshooting
+- weaving
+- tension
+- preventive
+- technician
+title: Diagnosi e correzione deriva tensione ordito
+version: '1.0'
 ---
 
 # Diagnosi e correzione deriva tensione ordito

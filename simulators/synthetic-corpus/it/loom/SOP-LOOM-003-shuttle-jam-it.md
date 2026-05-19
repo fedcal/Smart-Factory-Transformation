@@ -1,30 +1,31 @@
 ---
-id: SOP-LOOM-003
-title: Rimozione e risoluzione inceppamento navetta su telaio a proiettile
-version: "1.0"
-lang: it
+acl_level: public
 asset: telaio
 asset_family: weaving
-role: operator
-hazard_level: medium
-estimated_duration_min: 20
-prerequisites:
-  - SOP-LOOM-001
-related_glossary:
-  - telaio
-  - tessitura
-  - inceppamento_navetta
-  - cassa_battente
-  - trama
-  - mispick
-tags:
-  - troubleshooting
-  - weaving
-  - shuttle-jam
-  - operator
 audience: operations
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 20
+hazard_level: medium
+id: SOP-LOOM-003
+lang: it
+prerequisites:
+- SOP-LOOM-001
+related_glossary:
+- telaio
+- tessitura
+- inceppamento_navetta
+- cassa_battente
+- trama
+- mispick
+role: operator
+status: reviewed
+tags:
+- troubleshooting
+- weaving
+- shuttle-jam
+- operator
+title: Rimozione e risoluzione inceppamento navetta su telaio a proiettile
+version: '1.0'
 ---
 
 # Rimozione e risoluzione inceppamento navetta su telaio a proiettile

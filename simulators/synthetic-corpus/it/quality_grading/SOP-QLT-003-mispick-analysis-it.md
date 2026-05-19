@@ -1,31 +1,32 @@
 ---
-id: SOP-QLT-003
-title: Analisi e classificazione difetti mispick nel tessuto
-version: "1.0"
-lang: it
+acl_level: internal
 asset: inspection table
 asset_family: quality_grading
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 20
-prerequisites:
-  - SOP-QLT-001
-related_glossary:
-  - mispick
-  - difetto_trama
-  - ispezione_rotolo
-  - tavolo_ispezione
-  - densita_trama
-  - controllo_qualita_tessile
-tags:
-  - quality
-  - inspection
-  - mispick
-  - analysis
-  - quality-manager
 audience: quality
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 20
+hazard_level: low
+id: SOP-QLT-003
+lang: it
+prerequisites:
+- SOP-QLT-001
+related_glossary:
+- mispick
+- difetto_trama
+- ispezione_rotolo
+- tavolo_ispezione
+- densita_trama
+- controllo_qualita_tessile
+role: quality-manager
+status: reviewed
+tags:
+- quality
+- inspection
+- mispick
+- analysis
+- quality-manager
+title: Analisi e classificazione difetti mispick nel tessuto
+version: '1.0'
 ---
 
 # Analisi e classificazione difetti mispick nel tessuto

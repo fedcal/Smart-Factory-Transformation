@@ -1,30 +1,31 @@
 ---
-id: SOP-DYE-003
-title: Shade verification and dye lot approval
-version: "1.0"
-lang: en
+acl_level: internal
 asset: jet dyeing machine
 asset_family: dyeing
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 30
-prerequisites:
-  - SOP-DYE-001
-related_glossary:
-  - delta_e
-  - spettrofotometro
-  - deviazione_tono
-  - solidita_colore
-  - tintura
-  - ispezione_rotolo
-tags:
-  - dyeing
-  - shade-verification
-  - quality
-  - quality-manager
 audience: quality
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 30
+hazard_level: low
+id: SOP-DYE-003
+lang: en
+prerequisites:
+- SOP-DYE-001
+related_glossary:
+- delta_e
+- spettrofotometro
+- deviazione_tono
+- solidita_colore
+- tintura
+- ispezione_rotolo
+role: quality-manager
+status: reviewed
+tags:
+- dyeing
+- shade-verification
+- quality
+- quality-manager
+title: Shade verification and dye lot approval
+version: '1.0'
 ---
 
 # Shade verification and dye lot approval

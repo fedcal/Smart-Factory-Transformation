@@ -1,31 +1,32 @@
 ---
-id: SOP-SPN-005
-title: Lubrificazione preventiva del filatoio ad anello
-version: "1.0"
-lang: it
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: medium
-estimated_duration_min: 50
-prerequisites:
-  - SOP-SPN-001
-related_glossary:
-  - filatura
-  - filatoio_anello
-  - fuso
-  - anello_rotante
-  - irregolarita_filato
-  - manutenzione_predittiva
-tags:
-  - maintenance
-  - spinning
-  - lubrication
-  - preventive
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 50
+hazard_level: medium
+id: SOP-SPN-005
+lang: it
+prerequisites:
+- SOP-SPN-001
+related_glossary:
+- filatura
+- filatoio_anello
+- fuso
+- anello_rotante
+- irregolarita_filato
+- manutenzione_predittiva
+role: technician
+status: reviewed
+tags:
+- maintenance
+- spinning
+- lubrication
+- preventive
+- technician
+title: Lubrificazione preventiva del filatoio ad anello
+version: '1.0'
 ---
 
 # Lubrificazione preventiva del filatoio ad anello

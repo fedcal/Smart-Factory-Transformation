@@ -1,31 +1,32 @@
 ---
-id: SOP-QLT-002
-title: Rilevamento e registrazione rotture filo durante ispezione tessuto
-version: "1.0"
-lang: it
+acl_level: internal
 asset: inspection table
 asset_family: quality_grading
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 25
-prerequisites:
-  - SOP-QLT-001
-related_glossary:
-  - rottura_filo
-  - ispezione_rotolo
-  - difetto_catena
-  - tavolo_ispezione
-  - controllo_qualita_tessile
-  - sistema_quattro_punti
-tags:
-  - quality
-  - inspection
-  - broken-end
-  - detection
-  - quality-manager
 audience: quality
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 25
+hazard_level: low
+id: SOP-QLT-002
+lang: it
+prerequisites:
+- SOP-QLT-001
+related_glossary:
+- rottura_filo
+- ispezione_rotolo
+- difetto_catena
+- tavolo_ispezione
+- controllo_qualita_tessile
+- sistema_quattro_punti
+role: quality-manager
+status: reviewed
+tags:
+- quality
+- inspection
+- broken-end
+- detection
+- quality-manager
+title: Rilevamento e registrazione rotture filo durante ispezione tessuto
+version: '1.0'
 ---
 
 # Rilevamento e registrazione rotture filo durante ispezione tessuto

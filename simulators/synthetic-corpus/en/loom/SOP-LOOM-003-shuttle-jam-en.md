@@ -1,30 +1,31 @@
 ---
-id: SOP-LOOM-003
-title: Projectile jam removal and resolution on projectile loom
-version: "1.0"
-lang: en
+acl_level: public
 asset: telaio
 asset_family: weaving
-role: operator
-hazard_level: medium
-estimated_duration_min: 20
-prerequisites:
-  - SOP-LOOM-001
-related_glossary:
-  - telaio
-  - tessitura
-  - inceppamento_navetta
-  - cassa_battente
-  - trama
-  - mispick
-tags:
-  - troubleshooting
-  - weaving
-  - shuttle-jam
-  - operator
 audience: operations
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 20
+hazard_level: medium
+id: SOP-LOOM-003
+lang: en
+prerequisites:
+- SOP-LOOM-001
+related_glossary:
+- telaio
+- tessitura
+- inceppamento_navetta
+- cassa_battente
+- trama
+- mispick
+role: operator
+status: reviewed
+tags:
+- troubleshooting
+- weaving
+- shuttle-jam
+- operator
+title: Projectile jam removal and resolution on projectile loom
+version: '1.0'
 ---
 
 # Projectile jam removal and resolution on projectile loom
