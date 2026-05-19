@@ -1,29 +1,30 @@
 ---
-id: SOP-LOOM-001
-title: Warp end break troubleshooting on rapier loom
-version: "1.0"
-lang: en
+acl_level: public
 asset: telaio
 asset_family: weaving
-role: operator
-hazard_level: low
+audience: operations
+created_in_phase: 2
 estimated_duration_min: 15
+hazard_level: low
+id: SOP-LOOM-001
+lang: en
 prerequisites: []
 related_glossary:
-  - rottura_filo
-  - telaio
-  - ordito
-  - trama
-  - liccio
-  - tessitura
-tags:
-  - troubleshooting
-  - weaving
-  - broken-end
-  - operator
-audience: operations
+- rottura_filo
+- telaio
+- ordito
+- trama
+- liccio
+- tessitura
+role: operator
 status: reviewed
-created_in_phase: 2
+tags:
+- troubleshooting
+- weaving
+- broken-end
+- operator
+title: Warp end break troubleshooting on rapier loom
+version: '1.0'
 ---
 
 # Warp end break troubleshooting on rapier loom

@@ -1,32 +1,33 @@
 ---
-id: SOP-LOOM-004
-title: Diagnosi e ripristino difetto di cimosa su telaio rapier
-version: "1.0"
-lang: it
+acl_level: internal
 asset: telaio
 asset_family: weaving
-role: technician
-hazard_level: low
-estimated_duration_min: 35
-prerequisites:
-  - SOP-LOOM-001
-  - SOP-LOOM-002
-related_glossary:
-  - telaio
-  - tessitura
-  - cimosa
-  - difetto_orlatura
-  - liccio
-  - ordito
-  - densita_trama
-tags:
-  - troubleshooting
-  - weaving
-  - selvage
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 35
+hazard_level: low
+id: SOP-LOOM-004
+lang: it
+prerequisites:
+- SOP-LOOM-001
+- SOP-LOOM-002
+related_glossary:
+- telaio
+- tessitura
+- cimosa
+- difetto_orlatura
+- liccio
+- ordito
+- densita_trama
+role: technician
+status: reviewed
+tags:
+- troubleshooting
+- weaving
+- selvage
+- technician
+title: Diagnosi e ripristino difetto di cimosa su telaio rapier
+version: '1.0'
 ---
 
 # Diagnosi e ripristino difetto di cimosa su telaio rapier

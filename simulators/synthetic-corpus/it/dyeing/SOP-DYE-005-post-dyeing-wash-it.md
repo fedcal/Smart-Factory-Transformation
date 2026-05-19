@@ -1,29 +1,30 @@
 ---
-id: SOP-DYE-005
-title: Procedura di lavaggio post-tintura e scarico bagno esausto
-version: "1.0"
-lang: it
+acl_level: public
 asset: jet dyeing machine
 asset_family: dyeing
-role: technician
-hazard_level: medium
-estimated_duration_min: 40
-prerequisites:
-  - SOP-DYE-001
-related_glossary:
-  - tintura
-  - bagno_colorante
-  - jet_dyeing
-  - solidita_colore
-  - screziatura
-tags:
-  - dyeing
-  - wash
-  - post-process
-  - technician
 audience: operations
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 40
+hazard_level: medium
+id: SOP-DYE-005
+lang: it
+prerequisites:
+- SOP-DYE-001
+related_glossary:
+- tintura
+- bagno_colorante
+- jet_dyeing
+- solidita_colore
+- screziatura
+role: technician
+status: reviewed
+tags:
+- dyeing
+- wash
+- post-process
+- technician
+title: Procedura di lavaggio post-tintura e scarico bagno esausto
+version: '1.0'
 ---
 
 # Procedura di lavaggio post-tintura e scarico bagno esausto

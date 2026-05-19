@@ -1,30 +1,31 @@
 ---
-id: SOP-DYE-004
-title: Verifica solidita' colore a lavaggio e sfregamento
-version: "1.0"
-lang: it
+acl_level: internal
 asset: jet dyeing machine
 asset_family: dyeing
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 90
-prerequisites:
-  - SOP-DYE-001
-  - SOP-DYE-003
-related_glossary:
-  - solidita_colore
-  - delta_e
-  - spettrofotometro
-  - tintura
-  - deviazione_tono
-tags:
-  - dyeing
-  - fastness
-  - quality
-  - quality-manager
 audience: quality
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 90
+hazard_level: low
+id: SOP-DYE-004
+lang: it
+prerequisites:
+- SOP-DYE-001
+- SOP-DYE-003
+related_glossary:
+- solidita_colore
+- delta_e
+- spettrofotometro
+- tintura
+- deviazione_tono
+role: quality-manager
+status: reviewed
+tags:
+- dyeing
+- fastness
+- quality
+- quality-manager
+title: Verifica solidita' colore a lavaggio e sfregamento
+version: '1.0'
 ---
 
 # Verifica solidita' colore a lavaggio e sfregamento

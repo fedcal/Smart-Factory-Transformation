@@ -1,32 +1,33 @@
 ---
-id: SOP-QLT-004
-title: Shade deviation report for dye lot
-version: "1.0"
-lang: en
+acl_level: internal
 asset: inspection table
 asset_family: quality_grading
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 30
-prerequisites:
-  - SOP-QLT-001
-  - SOP-DYE-003
-related_glossary:
-  - deviazione_tono
-  - delta_e
-  - spettrofotometro
-  - solidita_colore
-  - ispezione_rotolo
-  - controllo_qualita_tessile
-tags:
-  - quality
-  - inspection
-  - shade-deviation
-  - reporting
-  - quality-manager
 audience: quality
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 30
+hazard_level: low
+id: SOP-QLT-004
+lang: en
+prerequisites:
+- SOP-QLT-001
+- SOP-DYE-003
+related_glossary:
+- deviazione_tono
+- delta_e
+- spettrofotometro
+- solidita_colore
+- ispezione_rotolo
+- controllo_qualita_tessile
+role: quality-manager
+status: reviewed
+tags:
+- quality
+- inspection
+- shade-deviation
+- reporting
+- quality-manager
+title: Shade deviation report for dye lot
+version: '1.0'
 ---
 
 # Shade deviation report for dye lot

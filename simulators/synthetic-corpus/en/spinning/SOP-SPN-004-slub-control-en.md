@@ -1,33 +1,34 @@
 ---
-id: SOP-SPN-004
-title: Slub monitoring and control on ring spinning frame
-version: "1.0"
-lang: en
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: low
-estimated_duration_min: 25
-prerequisites:
-  - SOP-SPN-001
-  - SOP-SPN-002
-related_glossary:
-  - filatura
-  - slub
-  - irregolarita_filato
-  - neps
-  - titolo_filato
-  - filatoio_anello
-  - stiro
-tags:
-  - quality
-  - spinning
-  - slub-control
-  - monitoring
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 25
+hazard_level: low
+id: SOP-SPN-004
+lang: en
+prerequisites:
+- SOP-SPN-001
+- SOP-SPN-002
+related_glossary:
+- filatura
+- slub
+- irregolarita_filato
+- neps
+- titolo_filato
+- filatoio_anello
+- stiro
+role: technician
+status: reviewed
+tags:
+- quality
+- spinning
+- slub-control
+- monitoring
+- technician
+title: Slub monitoring and control on ring spinning frame
+version: '1.0'
 ---
 
 # Slub monitoring and control on ring spinning frame

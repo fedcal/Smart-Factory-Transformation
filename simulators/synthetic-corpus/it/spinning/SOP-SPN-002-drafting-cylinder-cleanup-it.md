@@ -1,31 +1,32 @@
 ---
-id: SOP-SPN-002
-title: Pulizia cilindri di stiro del filatoio ad anello
-version: "1.0"
-lang: it
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: low
-estimated_duration_min: 40
-prerequisites:
-  - SOP-SPN-001
-related_glossary:
-  - filatura
-  - filatoio_anello
-  - stiro
-  - cilindro_stiro
-  - irregolarita_filato
-  - titolo_filato
-tags:
-  - maintenance
-  - spinning
-  - cleanup
-  - cylinder
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 40
+hazard_level: low
+id: SOP-SPN-002
+lang: it
+prerequisites:
+- SOP-SPN-001
+related_glossary:
+- filatura
+- filatoio_anello
+- stiro
+- cilindro_stiro
+- irregolarita_filato
+- titolo_filato
+role: technician
+status: reviewed
+tags:
+- maintenance
+- spinning
+- cleanup
+- cylinder
+- technician
+title: Pulizia cilindri di stiro del filatoio ad anello
+version: '1.0'
 ---
 
 # Pulizia cilindri di stiro del filatoio ad anello

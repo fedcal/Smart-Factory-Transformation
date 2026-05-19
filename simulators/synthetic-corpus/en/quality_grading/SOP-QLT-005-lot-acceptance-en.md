@@ -1,29 +1,30 @@
 ---
-id: SOP-QLT-005
-title: Lot acceptance procedure
-version: "1.0"
-lang: en
+acl_level: public
 asset: inspection table
 asset_family: quality_grading
-role: quality-manager
-hazard_level: low
-estimated_duration_min: 60
-prerequisites:
-  - SOP-QLT-001
-  - SOP-QLT-004
-related_glossary:
-  - accettazione_lotto
-  - aql
-  - livello_qualita_accettabile
-  - ispezione_4_punti
-  - lotto_tintoriale
-tags:
-  - quality
-  - acceptance
-  - inspection
 audience: operations
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 60
+hazard_level: low
+id: SOP-QLT-005
+lang: en
+prerequisites:
+- SOP-QLT-001
+- SOP-QLT-004
+related_glossary:
+- accettazione_lotto
+- aql
+- livello_qualita_accettabile
+- ispezione_4_punti
+- lotto_tintoriale
+role: quality-manager
+status: reviewed
+tags:
+- quality
+- acceptance
+- inspection
+title: Lot acceptance procedure
+version: '1.0'
 ---
 
 # Lot acceptance procedure

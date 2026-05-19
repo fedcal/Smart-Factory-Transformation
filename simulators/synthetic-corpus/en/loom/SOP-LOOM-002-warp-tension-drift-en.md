@@ -1,33 +1,34 @@
 ---
-id: SOP-LOOM-002
-title: Warp tension drift diagnosis and correction
-version: "1.0"
-lang: en
+acl_level: internal
 asset: telaio
 asset_family: weaving
-role: technician
-hazard_level: medium
-estimated_duration_min: 30
-prerequisites:
-  - SOP-LOOM-001
-related_glossary:
-  - telaio
-  - ordito
-  - subbio
-  - liccio
-  - misuratore_tensione_ordito
-  - rottura_filo
-  - densita_trama
-  - tessitura
-tags:
-  - troubleshooting
-  - weaving
-  - tension
-  - preventive
-  - technician
 audience: maintenance
-status: reviewed
 created_in_phase: 2
+estimated_duration_min: 30
+hazard_level: medium
+id: SOP-LOOM-002
+lang: en
+prerequisites:
+- SOP-LOOM-001
+related_glossary:
+- telaio
+- ordito
+- subbio
+- liccio
+- misuratore_tensione_ordito
+- rottura_filo
+- densita_trama
+- tessitura
+role: technician
+status: reviewed
+tags:
+- troubleshooting
+- weaving
+- tension
+- preventive
+- technician
+title: Warp tension drift diagnosis and correction
+version: '1.0'
 ---
 
 # Warp tension drift diagnosis and correction

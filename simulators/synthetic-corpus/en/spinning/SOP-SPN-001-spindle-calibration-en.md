@@ -1,32 +1,33 @@
 ---
-id: SOP-SPN-001
-title: Spindle calibration and verification on ring spinning frame
-version: "1.0"
-lang: en
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: low
+audience: maintenance
+created_in_phase: 2
 estimated_duration_min: 25
+hazard_level: low
+id: SOP-SPN-001
+lang: en
 prerequisites: []
 related_glossary:
-  - filatura
-  - filatoio_anello
-  - fuso
-  - irregolarita_filato
-  - titolo_filato
-  - stiro
-  - igrometro
-  - calibro_digitale
-tags:
-  - maintenance
-  - spinning
-  - calibration
-  - preventive
-  - technician
-audience: maintenance
+- filatura
+- filatoio_anello
+- fuso
+- irregolarita_filato
+- titolo_filato
+- stiro
+- igrometro
+- calibro_digitale
+role: technician
 status: reviewed
-created_in_phase: 2
+tags:
+- maintenance
+- spinning
+- calibration
+- preventive
+- technician
+title: Spindle calibration and verification on ring spinning frame
+version: '1.0'
 ---
 
 # Spindle calibration and verification on ring spinning frame

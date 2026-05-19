@@ -1,30 +1,31 @@
 ---
-id: SOP-DYE-001
-title: Preparazione bagno colorante per tintura jet dyeing
-version: "1.0"
-lang: it
+acl_level: public
 asset: jet dyeing machine
 asset_family: dyeing
-role: technician
-hazard_level: medium
+audience: operations
+created_in_phase: 2
 estimated_duration_min: 45
+hazard_level: medium
+id: SOP-DYE-001
+lang: it
 prerequisites: []
 related_glossary:
-  - tintura
-  - jet_dyeing
-  - bagno_colorante
-  - delta_e
-  - deviazione_tono
-  - spettrofotometro
-tags:
-  - dyeing
-  - bath-preparation
-  - color
-  - procedure
-  - technician
-audience: operations
+- tintura
+- jet_dyeing
+- bagno_colorante
+- delta_e
+- deviazione_tono
+- spettrofotometro
+role: technician
 status: reviewed
-created_in_phase: 2
+tags:
+- dyeing
+- bath-preparation
+- color
+- procedure
+- technician
+title: Preparazione bagno colorante per tintura jet dyeing
+version: '1.0'
 ---
 
 # Preparazione bagno colorante per tintura jet dyeing

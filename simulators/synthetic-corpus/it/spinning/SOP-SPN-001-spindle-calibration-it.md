@@ -1,32 +1,33 @@
 ---
-id: SOP-SPN-001
-title: Calibrazione e verifica fusi filatoio ad anello
-version: "1.0"
-lang: it
+acl_level: internal
 asset: ring spinning frame
 asset_family: spinning
-role: technician
-hazard_level: low
+audience: maintenance
+created_in_phase: 2
 estimated_duration_min: 25
+hazard_level: low
+id: SOP-SPN-001
+lang: it
 prerequisites: []
 related_glossary:
-  - filatura
-  - filatoio_anello
-  - fuso
-  - irregolarita_filato
-  - titolo_filato
-  - stiro
-  - igrometro
-  - calibro_digitale
-tags:
-  - maintenance
-  - spinning
-  - calibration
-  - preventive
-  - technician
-audience: maintenance
+- filatura
+- filatoio_anello
+- fuso
+- irregolarita_filato
+- titolo_filato
+- stiro
+- igrometro
+- calibro_digitale
+role: technician
 status: reviewed
-created_in_phase: 2
+tags:
+- maintenance
+- spinning
+- calibration
+- preventive
+- technician
+title: Calibrazione e verifica fusi filatoio ad anello
+version: '1.0'
 ---
 
 # Calibrazione e verifica fusi filatoio ad anello
