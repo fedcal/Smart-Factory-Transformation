@@ -82,9 +82,9 @@ def test_rul_estimate_frozen_extra_forbid() -> None:
         model_version="ridge-fd001-fd003-v1.0",
         created_at=now,
     )
-    # Frozen: mutation raises
-    with pytest.raises(Exception):
-        object.__setattr__(estimate, "rul_cycles", 90)
+    # Frozen: mutation raises (Pydantic v2 frozen models raise ValidationError on setattr)
+    with pytest.raises((TypeError, Exception)):
+        estimate.rul_cycles = 90  # type: ignore[misc]
 
     # Extra field: validation error
     with pytest.raises(ValidationError):
