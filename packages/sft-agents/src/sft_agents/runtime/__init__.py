@@ -38,6 +38,7 @@ __all__ = [
     "RoutingDecision",
     "VALID_CLUSTERS",
     "build_cluster_subgraph",
+    "build_ops_subgraph",
     "build_supervisor_graph",
     "format_thread_id",
     "get_postgres_checkpointer",
@@ -53,10 +54,14 @@ def __getattr__(name: str):  # type: ignore[no-untyped-def]
     in langgraph.graph and pyyaml unconditionally. Lazy attribute access keeps
     ``from sft_agents.runtime import format_thread_id`` cheap.
     """
-    if name in {"build_cluster_subgraph"}:
+    if name == "build_cluster_subgraph":
         from sft_agents.runtime.clusters import build_cluster_subgraph  # noqa: PLC0415
 
         return build_cluster_subgraph
+    if name == "build_ops_subgraph":
+        from sft_agents.runtime.clusters import build_ops_subgraph  # noqa: PLC0415
+
+        return build_ops_subgraph
     if name in {"build_supervisor_graph", "safe_invoke"}:
         from sft_agents.runtime import supervisor as _sup  # noqa: PLC0415
 

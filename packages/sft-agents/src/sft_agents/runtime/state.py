@@ -109,6 +109,11 @@ class AgentState(TypedDict, total=False):
         messages           — Chat history (reducer: add_messages)
         thread_id          — `{cluster}.{agent_id}.{session_uuid}` (D-59)
         cluster            — Routing target; one of VALID_CLUSTERS
+        target_agent       — Intra-cluster routing target (kebab-case slug);
+                             read by Phase 6 ``build_ops_subgraph`` (D-X
+                             OPS-routing) to branch from START to the chosen
+                             child. Falls back to ``operator-assistant`` when
+                             missing / unknown.
         proposed_actions   — Agent-proposed actions awaiting HITL/Safety review
         budget             — Token/cost/duration snapshot (D-60)
         evidence           — EvidencePanel attached to the latest decision (HITL-06)
@@ -119,6 +124,7 @@ class AgentState(TypedDict, total=False):
     messages: Annotated[list[BaseMessage], add_messages]
     thread_id: str
     cluster: str
+    target_agent: str | None
     proposed_actions: list[ProposedAction]
     budget: BudgetSnapshot
     evidence: EvidencePanel | None
