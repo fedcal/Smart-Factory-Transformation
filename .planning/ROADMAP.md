@@ -137,7 +137,22 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. AnomalyDetector scores a real-time sensor anomaly with per-machine calibration, does not fire false positives on normal high-frequency loom vibration, and enforces the 12-alert/hour rate limit
   4. ProductionPlanner generates a schedule draft and routes it to supervisor-level HITL before release
   5. Each agent's end-to-end test covers three scenarios: happy path, degraded sensor input, and failure/escalation path
-**Plans**: TBD
+**Plans**: 15 plans
+  - [ ] 06-00-PLAN.md — Wave 0 test scaffolds + 12 scenario YAML/JSONL stubs + conftest extensions (OPS-05, OPS-06)
+  - [ ] 06-01-PLAN.md — Migration 007 extend audit.actions decision+action_type CHECK; sync Decision/ActionType enums (OPS-04, OPS-05)
+  - [ ] 06-02-PLAN.md — RateLimiter PG-backed sliding window 12/h (OPS-04)
+  - [ ] 06-03-PLAN.md — MockReplayChatModel + LLM_BACKEND=mock factory branch (OPS-05, OPS-06)
+  - [ ] 06-04-PLAN.md — sft-domain ops models + scheduling heuristic SPT/EDD + orders/capacity/baselines YAML + failure_modes.yaml hitl_tier extension (OPS-01..04)
+  - [ ] 06-05-PLAN.md — EscalateToSupervisorTool + LogEventTool + build_ops_subgraph router (OPS-01, OPS-05)
+  - [ ] 06-06-PLAN.md — AnomalyDetector agent + baseline + rate-limit + audit (OPS-04)
+  - [ ] 06-07-PLAN.md — QualityInspector agent + NATS qi-consumer + LLM 4-point grader + HITL tier routing + QUALITY_STREAM bootstrap (OPS-03, OPS-05)
+  - [ ] 06-08-PLAN.md — ProductionPlanner agent + LLM rationale + supervisor HITL (OPS-02)
+  - [ ] 06-09-PLAN.md — sim-textile QualityEvent generator + ProductionState dye_lot rotation (OPS-03)
+  - [ ] 06-10-PLAN.md — OperatorAssistant agent: create_react_agent + 5-tool toolbelt + langdetect + citation validator (OPS-01, OPS-05)
+  - [ ] 06-11-PLAN.md — agents-scheduler APScheduler 5-min cron container + Docker + Helm (OPS-04)
+  - [ ] 06-12-PLAN.md — api-gateway endpoints: /v1/quality/events + /v1/agents/{slug}/{action} (OPS-01..04)
+  - [ ] 06-13-PLAN.md — 12 E2E scenarios (4 agents × happy/degraded/failure) with testcontainers + mock LLM (OPS-06)
+  - [ ] 06-14-PLAN.md — Agent docs IT+EN (8 pages) + evidence_panel unit tests + mkdocs nav (OPS-05)
 
 ### Phase 7: Agents — Maintenance & Reliability
 **Goal**: All four Maintenance cluster agents (PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer) are implemented with C-MAPSS-adapted RUL estimation, 5-Why RCA, humidity-aware modeling, and integration with the asset registry and event store.

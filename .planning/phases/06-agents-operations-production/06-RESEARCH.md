@@ -1151,22 +1151,22 @@ async def grade_quality_event(event, rag_pipeline, audit_writer):
 
 **Decisions assumed and needing user confirmation before plan execution:** A8 (audit Decision enum extensibility) — planner runs `grep -n "CHECK.*decision" infra/migrations/` to verify; A11 (factory must be extended) — plan task explicit; A12 (fixture authoring) — plan ships skeleton + sample.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Audit Decision enum extension — DB migration or just YAML/Pydantic?**
    - What we know: Phase 4 introduced `Decision` enum with values `auto|hitl_operator|...|governor_alert|escalated`.
-   - What's unclear: Whether the PG `audit.actions.decision` column is `TEXT + CHECK ('a','b','c')` or `pg_enum`. The Phase 4 SQL fragment in CONTEXT shows `CHECK (decision IN (...))` — text+check.
-   - Recommendation: Phase 6 plan task **explicitly verifies** then adds `'suppressed'` + `'escalation_request'` (if needed) values via migration `007_extend_audit_decisions.sql` (idempotent ADD VALUE pattern).
+   - What was unclear: Whether the PG `audit.actions.decision` column is `TEXT + CHECK ('a','b','c')` or `pg_enum`. The Phase 4 SQL fragment in CONTEXT shows `CHECK (decision IN (...))` — text+check.
+   - **RESOLVED:** Plan 06-01 includes Task 1 (grep verification of current CHECK constraint shape in `infra/migrations/timescale/`) followed by Task 2 (idempotent migration `007_extend_audit_decisions.sql` adding `'suppressed'` + `'escalation_request'` values via `ALTER TABLE ... DROP CONSTRAINT ... ADD CONSTRAINT ...` text+check pattern) and Task 3 (BLOCKING migration push). DB-level enforcement is the locked decision; Pydantic enum updates accompany.
 
 2. **Where does `target_agent` come from in the supervisor → ops handoff?**
    - What we know: HybridRouter Phase 4 D-54 routes to cluster but not to intra-cluster agent.
-   - What's unclear: Does the LLM stage 2 router also emit the agent slug, or does the request handler (api-gateway endpoint) pre-populate `state["target_agent"]`?
-   - Recommendation: Plan ships **two paths** — (a) explicit API endpoint `POST /v1/agents/<slug>/...` pre-populates `target_agent`; (b) supervisor LLM routing for natural-language intents extends Stage-2 prompt to emit `cluster_and_agent` tuple. Fallback to `operator-assistant` (CONTEXT D-X explicit).
+   - What was unclear: Does the LLM stage 2 router also emit the agent slug, or does the request handler (api-gateway endpoint) pre-populate `state["target_agent"]`?
+   - **RESOLVED:** Plan 06-05 (cluster routing) + 06-12 (api-gateway endpoints) implement **two paths** simultaneously: (a) explicit API endpoints `POST /v1/agents/<slug>/...` pre-populate `state["target_agent"]` directly (deterministic path used by E2E tests and most operator UX); (b) supervisor LLM routing for natural-language intents extends Stage-2 prompt to emit `cluster_and_agent` tuple (used by OperatorAssistant chat path). Fallback to `operator-assistant` when ambiguous (CONTEXT D-X "Claude's Discretion" locked). 06-05 conditional_edges router on `state.target_agent` is the single decision point.
 
 3. **Citation validator interaction with `interrupt()` mid-ReAct.**
    - What we know: D-OA-04 validator runs **after** LLM final response.
-   - What's unclear: If the LLM calls `escalate_to_supervisor` mid-loop (which itself calls `interrupt()`), does the validator run? Probably not — `interrupt()` returns a `ToolMessage` and the loop continues with a new LLM turn.
-   - Recommendation: Validator only runs at final emission; intermediate tool calls (`escalate_to_supervisor`) don't trigger validation; this is the desired behavior (escalation is itself a decision; the actual response generation happens after resume).
+   - What was unclear: If the LLM calls `escalate_to_supervisor` mid-loop (which itself calls `interrupt()`), does the validator run? Probably not — `interrupt()` returns a `ToolMessage` and the loop continues with a new LLM turn.
+   - **RESOLVED:** Validator runs only on the final emitted response (out-of-graph, after `create_react_agent` returns its terminal `AIMessage`). Intermediate tool calls (`escalate_to_supervisor`, `rag_search`, `traverse_graph`, `query_timescale`, `log_event`) do NOT trigger validation — they produce `ToolMessage` outputs consumed by the ReAct loop. Implementation in 06-10 places the validator in the OperatorAssistant agent module's `__call__` post-processing block, NOT as a LangGraph node. On missing citation: max 1 replan via prompt augmentation; on second failure, response emits with `citations_missing: true` audit flag (CONTEXT D-OA-04 explicit). Escalation is itself a decision recorded in audit; response generation continues after `resume()` with full evidence context.
 
 ## Environment Availability
 
