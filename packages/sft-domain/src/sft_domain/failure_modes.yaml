@@ -27,6 +27,11 @@ failure_modes:
       minor: {max_frequency_per_meter: 5}
       major: {max_frequency_per_meter: 20}
       critical: {safety_risk: true}
+    maintenance:
+      reason_code: WEAVING-BE-001
+      mttr_target_minutes: 30
+      intervention_steps_sop_id: SOP-LOOM-001
+      preventive_check_interval_hours: 168
 
   - id: rottura_filo
     name_it: rottura filo
@@ -47,6 +52,10 @@ failure_modes:
       minor: {max_frequency_per_meter: 8}
       major: {max_frequency_per_meter: 30}
       critical: {full_width: true}
+    maintenance:
+      reason_code: WEAVING-MP-002
+      mttr_target_minutes: 15
+      intervention_steps_sop_id: SOP-LOOM-002
 
   - id: shuttle_jam
     name_it: inceppamento navetta
@@ -74,6 +83,11 @@ failure_modes:
       minor: {max_frequency_per_meter: 10}
       major: {max_frequency_per_meter: 25}
       critical: {full_edge: true}
+    maintenance:
+      reason_code: WEAVING-SF-003
+      mttr_target_minutes: 45
+      intervention_steps_sop_id: SOP-LOOM-004
+      preventive_check_interval_hours: 336
 
   - id: difetto_orlatura
     name_it: difetto orlatura
@@ -118,6 +132,10 @@ failure_modes:
       minor: {max_frequency_per_meter: 5}
       major: {max_frequency_per_meter: 15}
       critical: {customer_visible: true}
+    maintenance:
+      reason_code: SPINNING-SL-001
+      mttr_target_minutes: 20
+      intervention_steps_sop_id: SOP-SPN-004
 
   - id: neppy
     name_it: filato neppy
@@ -131,6 +149,10 @@ failure_modes:
       minor: {max_frequency_per_meter: 10}
       major: {max_frequency_per_meter: 30}
       critical: {customer_visible: true}
+    maintenance:
+      reason_code: SPINNING-NP-002
+      mttr_target_minutes: 25
+      intervention_steps_sop_id: SOP-SPN-002
 
   - id: irregolarita_filato
     name_it: irregolarita filato
@@ -196,6 +218,10 @@ failure_modes:
       minor: {delta_e_max: 1.0}
       major: {delta_e_max: 3.0}
       critical: {delta_e_max: 5.0}
+    maintenance:
+      reason_code: DYEING-SD-001
+      mttr_target_minutes: 60
+      intervention_steps_sop_id: SOP-DYE-003
 
   - id: unlevel_dyeing
     name_it: tintura non uniforme
@@ -209,6 +235,11 @@ failure_modes:
       minor: {patch_coverage_pct: 5}
       major: {patch_coverage_pct: 15}
       critical: {patch_coverage_pct: 30}
+    maintenance:
+      reason_code: DYEING-UD-002
+      mttr_target_minutes: 90
+      intervention_steps_sop_id: SOP-DYE-001
+      preventive_check_interval_hours: 720
 
   - id: delta_e_excess
     name_it: delta e fuori specifica
