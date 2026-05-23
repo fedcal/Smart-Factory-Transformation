@@ -3,7 +3,24 @@ name = "ops-operator-assistant"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 description = "Operations agent: real-time operator decision support on the factory floor"
-dependencies = []
+dependencies = [
+  "sft-agents",
+  "sft-domain",
+  "sft-knowledge",
+  "sft-tools",
+  "asyncpg>=0.29",
+  "structlog>=24.4",
+  "langchain-core>=0.3",
+  "langgraph>=0.4,<0.5",
+  "pydantic>=2.7",
+  "langdetect>=1.0.9",
+]
+
+[tool.uv.sources]
+sft-agents = { workspace = true }
+sft-domain = { workspace = true }
+sft-knowledge = { workspace = true }
+sft-tools = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

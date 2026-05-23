@@ -1137,6 +1137,15 @@ wheels = [
 ]
 
 [[package]]
+name = "langdetect"
+version = "1.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/72/a3add0e4eec4eb9e2569554f7c70f4a3c27712f40e3284d483e88094cc0e/langdetect-1.0.9.tar.gz", hash = "sha256:cbc1fef89f8d062739774bd51eda3da3274006b3661d199c2655f6b3f6d605a0", size = 981474, upload-time = "2021-05-07T07:54:13.562Z" }
+
+[[package]]
 name = "langfuse"
 version = "3.14.6"
 source = { registry = "https://pypi.org/simple" }
@@ -1990,11 +1999,66 @@ provides-extras = ["dev"]
 name = "ops-operator-assistant"
 version = "0.1.0"
 source = { editable = "apps/agents/ops/operator-assistant" }
+dependencies = [
+    { name = "asyncpg" },
+    { name = "langchain-core" },
+    { name = "langdetect" },
+    { name = "langgraph" },
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "sft-domain" },
+    { name = "sft-knowledge" },
+    { name = "sft-tools" },
+    { name = "structlog" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asyncpg", specifier = ">=0.29" },
+    { name = "langchain-core", specifier = ">=0.3" },
+    { name = "langdetect", specifier = ">=1.0.9" },
+    { name = "langgraph", specifier = ">=0.4,<0.5" },
+    { name = "pydantic", specifier = ">=2.7" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-knowledge", editable = "packages/sft-knowledge" },
+    { name = "sft-tools", editable = "packages/sft-tools" },
+    { name = "structlog", specifier = ">=24.4" },
+]
 
 [[package]]
 name = "ops-production-planner"
 version = "0.1.0"
 source = { editable = "apps/agents/ops/production-planner" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "sft-domain" },
+    { name = "sft-knowledge" },
+    { name = "structlog" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-mock" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "langchain-core", specifier = ">=1.0,<2.0" },
+    { name = "pydantic", specifier = ">=2.9,<3" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24" },
+    { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=3.14" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-knowledge", editable = "packages/sft-knowledge" },
+    { name = "structlog", specifier = ">=24.4" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "ops-quality-inspector"
