@@ -19,6 +19,9 @@ dependencies = [
   "httpx>=0.28",
   "pyyaml>=6",
   "sft-agents",
+  "mnt-predictive-maintenance",
+  "mnt-maintenance-coach",
+  "mnt-downtime-analyzer",
 ]
 
 [project.optional-dependencies]
@@ -41,6 +44,9 @@ packages = ["src/svc_api_gateway"]
 
 [tool.uv.sources]
 sft-agents = { workspace = true }
+mnt-predictive-maintenance = { workspace = true }
+mnt-maintenance-coach = { workspace = true }
+mnt-downtime-analyzer = { workspace = true }
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
