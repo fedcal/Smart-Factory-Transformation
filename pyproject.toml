@@ -73,3 +73,8 @@ files = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+  "integration: requires docker compose / testcontainers (Phase 4+ convention)",
+  "testcontainers: requires Docker (Phase 3 convention; alias of integration)",
+  "load: long-running load test",
+]

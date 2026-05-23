@@ -19,4 +19,5 @@ asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
   "testcontainers: marks tests that require Docker (deselect with -m 'not testcontainers')",
+  "integration: alias for testcontainers; selected by Phase 6 workspace-wide selectors",
 ]

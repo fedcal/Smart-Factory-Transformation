@@ -26,6 +26,18 @@ class Decision(str, Enum):
 
     hitl_* variants REQUIRE motivation + approval_id (HITL-07).
     auto REQUIRES approval_id IS NULL.
+
+    Phase 6 extensions:
+        SUPPRESSED — D-AD-03: anomaly-detector / RateLimiter dropped the
+            proposed action before tier evaluation. No HITL involvement,
+            no PLC actuation; audit row written for observability only.
+        LOGGED — D-OA-02: ops-asst observability-only audit row (no
+            actuation, no HITL). Used by Operator Assistant when
+            surfacing facts to the operator without proposing actions.
+
+    Migration `infra/migrations/timescale/007_extend_audit_decisions.sql`
+    syncs the SQL CHECK constraint with the values below. Drift between
+    enum.value strings and CHECK values causes runtime PG check violations.
     """
 
     AUTO = "auto"
@@ -37,6 +49,9 @@ class Decision(str, Enum):
     TIMED_OUT = "timed_out"
     GOVERNOR_ALERT = "governor_alert"
     ESCALATED = "escalated"
+    # Phase 6 additions — keep in lockstep with migration 007.
+    SUPPRESSED = "suppressed"
+    LOGGED = "logged"
 
 
 class ApprovalStatus(str, Enum):
@@ -54,6 +69,20 @@ class ActionType(str, Enum):
 
     Extensible — cluster-specific subclasses can extend via string values without
     breaking the enum membership check (str-based).
+
+    Phase 6 extensions:
+        ESCALATION_REQUEST — D-OA-02 / Pitfall §9: emitted by
+            EscalateToSupervisorTool when ops-asst escalates to a higher
+            tier rather than proposing a direct actuation.
+        QUALITY_VERDICT — D-QI-02: quality-inspector verdict audit row
+            (pass/fail decision against a quality threshold).
+        SCHEDULE_DRAFT — D-PP-03: production-planner draft schedule
+            audit row (proposed schedule pending operator review).
+        ANOMALY_ALERT — D-AD-01: anomaly-detector alert audit row
+            (anomaly score crossed threshold).
+
+    Migration `infra/migrations/timescale/007_extend_audit_decisions.sql`
+    syncs the SQL CHECK constraint with the values below.
     """
 
     WRITE_PLC_SETPOINT = "WRITE_PLC_SETPOINT"
@@ -62,3 +91,8 @@ class ActionType(str, Enum):
     NETWORK_ACL_CHANGE = "NETWORK_ACL_CHANGE"
     GRAPH_RECURSION_REVIEW = "GRAPH_RECURSION_REVIEW"
     GOVERNOR_ALERT = "GOVERNOR_ALERT"
+    # Phase 6 additions — keep in lockstep with migration 007.
+    ESCALATION_REQUEST = "ESCALATION_REQUEST"
+    QUALITY_VERDICT = "QUALITY_VERDICT"
+    SCHEDULE_DRAFT = "SCHEDULE_DRAFT"
+    ANOMALY_ALERT = "ANOMALY_ALERT"
