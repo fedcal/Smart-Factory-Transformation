@@ -1,0 +1,213 @@
+# Orders seed (D-PP-03) — Mantis Textile representative orders
+#
+# 20 ordini sintetici distribuiti su 4 SKU textile family (cotton shirting,
+# polyester-cotton blend, denim, technical fabric). Mix di:
+#   - urgenza: due_at spanning 12h..7d nel futuro
+#   - dye_lot_id: alcuni nulli, altri condivisi per esercitare changeover logic
+#   - compatible_families: subset di {loom, spinning, dyeing, warping, finishing}
+#     (must match registry asset_family values)
+#
+# Schema: vedi packages/sft-domain/src/sft_domain/ops/schedule.py (OrderSpec)
+# Loader: packages/sft-domain/src/sft_domain/ops/schedule.py (load_orders)
+
+orders:
+  # ============================================================
+  # COTTON SHIRTING — cotton/lino weave per camicie (LOOM family)
+  # ============================================================
+  - order_id: ORD-2026-0001
+    sku: COTTON-SHIRTING-160
+    quantity_meters: 1500.0
+    due_at: "2026-05-25T14:00:00+00:00"
+    processing_minutes: 240
+    priority: 1
+    compatible_families: [loom]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0002
+    sku: COTTON-SHIRTING-160
+    quantity_meters: 800.0
+    due_at: "2026-05-24T09:00:00+00:00"
+    processing_minutes: 150
+    priority: 2
+    compatible_families: [loom]
+    dye_lot_id: DL-LOOM-01-20260523-c001
+
+  - order_id: ORD-2026-0003
+    sku: COTTON-SHIRTING-200
+    quantity_meters: 2200.0
+    due_at: "2026-05-27T18:00:00+00:00"
+    processing_minutes: 360
+    priority: 0
+    compatible_families: [loom]
+    dye_lot_id: DL-LOOM-01-20260523-c001
+
+  - order_id: ORD-2026-0004
+    sku: COTTON-SHIRTING-200
+    quantity_meters: 600.0
+    due_at: "2026-05-24T20:00:00+00:00"
+    processing_minutes: 120
+    priority: 3
+    compatible_families: [loom]
+    dye_lot_id: null
+
+  # ============================================================
+  # POLY-COTTON BLEND — drapery/curtain (LOOM + SPINNING upstream)
+  # ============================================================
+  - order_id: ORD-2026-0005
+    sku: POLY-COTTON-BLEND-180
+    quantity_meters: 1200.0
+    due_at: "2026-05-25T10:00:00+00:00"
+    processing_minutes: 200
+    priority: 1
+    compatible_families: [loom]
+    dye_lot_id: DL-LOOM-04-20260523-c002
+
+  - order_id: ORD-2026-0006
+    sku: POLY-COTTON-YARN-30
+    quantity_meters: 5000.0
+    due_at: "2026-05-26T08:00:00+00:00"
+    processing_minutes: 300
+    priority: 1
+    compatible_families: [spinning]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0007
+    sku: POLY-COTTON-YARN-50
+    quantity_meters: 3500.0
+    due_at: "2026-05-26T14:00:00+00:00"
+    processing_minutes: 240
+    priority: 0
+    compatible_families: [spinning]
+    dye_lot_id: null
+
+  # ============================================================
+  # DENIM — heavyweight (LOOM specialized)
+  # ============================================================
+  - order_id: ORD-2026-0008
+    sku: DENIM-INDIGO-340
+    quantity_meters: 900.0
+    due_at: "2026-05-26T16:00:00+00:00"
+    processing_minutes: 180
+    priority: 2
+    compatible_families: [loom]
+    dye_lot_id: DL-LOOM-09-20260523-d001
+
+  - order_id: ORD-2026-0009
+    sku: DENIM-INDIGO-340
+    quantity_meters: 1100.0
+    due_at: "2026-05-27T10:00:00+00:00"
+    processing_minutes: 220
+    priority: 1
+    compatible_families: [loom]
+    dye_lot_id: DL-LOOM-09-20260523-d001
+
+  - order_id: ORD-2026-0010
+    sku: DENIM-STRETCH-320
+    quantity_meters: 700.0
+    due_at: "2026-05-28T12:00:00+00:00"
+    processing_minutes: 160
+    priority: 0
+    compatible_families: [loom]
+    dye_lot_id: null
+
+  # ============================================================
+  # TECHNICAL FABRIC — protective/automotive (LOOM + finishing)
+  # ============================================================
+  - order_id: ORD-2026-0011
+    sku: TECH-FABRIC-FR-220
+    quantity_meters: 400.0
+    due_at: "2026-05-24T15:00:00+00:00"
+    processing_minutes: 90
+    priority: 3
+    compatible_families: [loom]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0012
+    sku: TECH-FABRIC-FR-220
+    quantity_meters: 850.0
+    due_at: "2026-05-26T11:00:00+00:00"
+    processing_minutes: 180
+    priority: 1
+    compatible_families: [loom]
+    dye_lot_id: null
+
+  # ============================================================
+  # WARPING — pre-weaving beam prep
+  # ============================================================
+  - order_id: ORD-2026-0013
+    sku: WARP-BEAM-COTTON-160
+    quantity_meters: 8000.0
+    due_at: "2026-05-24T06:00:00+00:00"
+    processing_minutes: 180
+    priority: 2
+    compatible_families: [warping]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0014
+    sku: WARP-BEAM-POLY-180
+    quantity_meters: 6500.0
+    due_at: "2026-05-25T06:00:00+00:00"
+    processing_minutes: 150
+    priority: 1
+    compatible_families: [warping]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0015
+    sku: WARP-BEAM-DENIM-340
+    quantity_meters: 5000.0
+    due_at: "2026-05-26T06:00:00+00:00"
+    processing_minutes: 200
+    priority: 1
+    compatible_families: [warping]
+    dye_lot_id: null
+
+  # ============================================================
+  # DYEING — finished fabric coloring
+  # ============================================================
+  - order_id: ORD-2026-0016
+    sku: DYEING-INDIGO-LOT-A
+    quantity_meters: 1500.0
+    due_at: "2026-05-25T20:00:00+00:00"
+    processing_minutes: 240
+    priority: 1
+    compatible_families: [dyeing]
+    dye_lot_id: DL-DYE-01-20260523-e001
+
+  - order_id: ORD-2026-0017
+    sku: DYEING-NAVY-LOT-B
+    quantity_meters: 1200.0
+    due_at: "2026-05-26T20:00:00+00:00"
+    processing_minutes: 200
+    priority: 1
+    compatible_families: [dyeing]
+    dye_lot_id: DL-DYE-01-20260523-e002
+
+  - order_id: ORD-2026-0018
+    sku: DYEING-RED-LOT-C
+    quantity_meters: 900.0
+    due_at: "2026-05-27T16:00:00+00:00"
+    processing_minutes: 180
+    priority: 0
+    compatible_families: [dyeing]
+    dye_lot_id: DL-DYE-02-20260523-e003
+
+  # ============================================================
+  # FINISHING — stentering / thermofixation
+  # ============================================================
+  - order_id: ORD-2026-0019
+    sku: FINISH-STENTER-COTTON
+    quantity_meters: 2000.0
+    due_at: "2026-05-27T08:00:00+00:00"
+    processing_minutes: 120
+    priority: 1
+    compatible_families: [finishing]
+    dye_lot_id: null
+
+  - order_id: ORD-2026-0020
+    sku: FINISH-STENTER-POLY
+    quantity_meters: 1800.0
+    due_at: "2026-05-28T08:00:00+00:00"
+    processing_minutes: 150
+    priority: 0
+    compatible_families: [finishing]
+    dye_lot_id: null
