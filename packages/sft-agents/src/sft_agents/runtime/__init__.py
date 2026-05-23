@@ -22,6 +22,7 @@ from sft_agents.runtime.checkpointer import (
     get_postgres_checkpointer,
     parse_thread_id,
 )
+from sft_agents.runtime.rate_limit import RateLimiter
 from sft_agents.runtime.state import (
     ALL_CLUSTERS,
     VALID_CLUSTERS,
@@ -33,6 +34,7 @@ __all__ = [
     "ALL_CLUSTERS",
     "AgentState",
     "HybridRouter",
+    "RateLimiter",
     "RoutingDecision",
     "VALID_CLUSTERS",
     "build_cluster_subgraph",
