@@ -2,8 +2,32 @@
 name = "mnt-rca-specialist"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
-description = "Maintenance agent: root cause analysis specialist for equipment failures"
-dependencies = []
+description = "Maintenance agent: root cause analysis specialist using 5-Why methodology with citation grounding"
+dependencies = [
+  "sft-agents",
+  "sft-domain",
+  "sft-knowledge",
+  "sft-tools",
+  "asyncpg>=0.29",
+  "structlog>=24.4",
+  "langchain-core>=0.3,<0.4",
+  "langgraph>=0.4,<0.6",
+  # Pin langgraph-prebuilt to the 0.x line: prebuilt 1.x requires langgraph>=1.0
+  "langgraph-prebuilt>=0.2,<1.0",
+  "pydantic>=2.7.0,<3.0.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+]
+
+[tool.uv.sources]
+sft-agents = { workspace = true }
+sft-domain = { workspace = true }
+sft-knowledge = { workspace = true }
+sft-tools = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
@@ -11,3 +35,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mnt_rca_specialist"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
