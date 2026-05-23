@@ -2,12 +2,42 @@
 name = "mnt-downtime-analyzer"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
-description = "Maintenance agent: downtime analysis and MTTR reduction advisor"
-dependencies = []
+description = "Maintenance agent: OEE computation, downtime analysis, and Pareto reporting"
+dependencies = [
+  "sft-agents",
+  "sft-tools",
+  "sft-assets",
+  "sft-domain",
+  "sim-textile",
+  "nats-py>=2.10.0,<3.0.0",
+  "asyncpg>=0.29",
+  "pydantic>=2.7.0,<3.0.0",
+  "structlog>=24.4",
+]
+
+[tool.uv.sources]
+sft-agents = { workspace = true }
+sft-tools = { workspace = true }
+sft-assets = { workspace = true }
+sft-domain = { workspace = true }
+sim-textile = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/mnt_downtime_analyzer"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+  "integration: integration tests (requires testcontainers / live services)",
+  "testcontainers: tests using Docker via testcontainers-python",
+]
