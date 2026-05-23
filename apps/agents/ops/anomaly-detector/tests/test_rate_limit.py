@@ -16,18 +16,14 @@ we control its return value to simulate "N rows in audit.actions".
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import AsyncMock
 
 import pandas as pd
 import pytest
-
 from sft_assets.models import Asset, AssetFamily, SemanticType, Tag
 from sft_domain.ops.anomaly import AnomalyBaseline
-
-UTC = timezone.utc
-
 
 # ---------------------------------------------------------------------------
 # Helpers (duplicated from test_anomaly_detector for test-file independence)

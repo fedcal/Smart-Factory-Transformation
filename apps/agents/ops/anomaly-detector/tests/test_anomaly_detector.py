@@ -11,18 +11,14 @@ from local conftest.py) — no Docker / testcontainers required.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from unittest.mock import AsyncMock
 
 import pandas as pd
 import pytest
-
 from sft_assets.models import Asset, AssetFamily, SemanticType, Tag
 from sft_domain.ops.anomaly import AnomalyBaseline
-
-UTC = timezone.utc
-
 
 # ---------------------------------------------------------------------------
 # Helpers — build deterministic baseline + asset fixtures inline so each test

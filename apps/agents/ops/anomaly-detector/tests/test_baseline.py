@@ -14,11 +14,16 @@ No DB / no async — pure dict / Pydantic model construction.
 from __future__ import annotations
 
 import pytest
-
 from sft_domain.ops.anomaly import AnomalyBaseline
 
 
-def _baseline(low: float, high: float, *, asset_family: str = "loom", sensor_id: str = "warp_tension") -> AnomalyBaseline:
+def _baseline(
+    low: float,
+    high: float,
+    *,
+    asset_family: str = "loom",
+    sensor_id: str = "warp_tension",
+) -> AnomalyBaseline:
     return AnomalyBaseline(
         asset_family=asset_family,
         sensor_id=sensor_id,
