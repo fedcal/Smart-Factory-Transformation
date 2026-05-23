@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agents-scheduler.fullname" . }}
+  labels:
+    {{- include "agents-scheduler.labels" . | nindent 4 }}
+spec:
+  # CRITICAL: replicas MUST stay at 1. APScheduler has no shared jobstore
+  # in this image; N>1 replicas would fire the cron N times.
+  # T-V6-multi-instance (Pitfall §5) — do NOT enable autoscaling here.
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "agents-scheduler.selectorLabels" . | nindent 6 }}
+  # Recreate avoids two pods running briefly during a rolling update.
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "agents-scheduler.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "agents-scheduler.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # No HTTP server, no probes. The cron loop logs heartbeat events
+          # to stderr; a liveness probe based on log freshness would belong
+          # in a future plan if false-positive restarts become an issue.
+          env:
+            - name: API_GATEWAY_URL
+              value: {{ .Values.env.apiGatewayUrl | quote }}
+            - name: ANOMALY_WINDOW_MINUTES
+              value: {{ .Values.env.anomalyWindowMinutes | quote }}
+            - name: ANOMALY_CRON
+              value: {{ .Values.env.anomalyCron | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.env.logLevel | quote }}
+            # Defence-in-depth: agent-side data-diode (D-18). Scheduler
+            # only POSTs to api-gateway and never reaches OT directly,
+            # but the flag is set so future helpers can short-circuit
+            # any accidental write attempt.
+            - name: OT_BRIDGE_WRITE_DISABLED
+              value: "true"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

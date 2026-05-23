@@ -1,0 +1,72 @@
+# Smart Factory Transformation — agents-scheduler chart values
+#
+# CRITICAL CONSTRAINT (Pitfall §5 / T-V6-multi-instance):
+#   `replicas: 1` is a contract — APScheduler in this image does not use
+#   a shared jobstore, so N>1 replicas would fire the cron N times. The
+#   `replicas` key below is read directly by templates/deployment.yaml
+#   (no HPA, no autoscaling) and MUST stay pinned at 1 unless the image
+#   is migrated to a persistent jobstore (e.g. PG-backed).
+
+replicas: 1
+
+image:
+  repository: ghcr.io/fedcal/sft-agents-scheduler
+  pullPolicy: IfNotPresent
+  # Empty tag = Chart.yaml appVersion. In production set an explicit tag (no latest).
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+# PodSecurityContext (T-1-04 EoP prevention, D-17)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+# Scheduler has no inbound HTTP — no Service / Ingress required.
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 128Mi
+  requests:
+    cpu: 25m
+    memory: 32Mi
+
+# Autoscaling is INTENTIONALLY disabled — see "CRITICAL CONSTRAINT" above.
+autoscaling:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Application env — override per-environment via Helm --set or values overlay.
+env:
+  apiGatewayUrl: "http://api-gateway:8081"
+  anomalyWindowMinutes: "15"
+  anomalyCron: "*/5 * * * *"
+  logLevel: "INFO"
