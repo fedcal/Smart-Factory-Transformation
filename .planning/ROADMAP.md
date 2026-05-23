@@ -139,10 +139,10 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   5. Each agent's end-to-end test covers three scenarios: happy path, degraded sensor input, and failure/escalation path
 **Plans**: 15 plans
   - [x] 06-00-PLAN.md — Wave 0 test scaffolds + 12 scenario YAML/JSONL stubs + conftest extensions (OPS-05, OPS-06)
-  - [ ] 06-01-PLAN.md — Migration 007 extend audit.actions decision+action_type CHECK; sync Decision/ActionType enums (OPS-04, OPS-05)
+  - [x] 06-01-PLAN.md — Migration 007 extend audit.actions decision+action_type CHECK; sync Decision/ActionType enums (OPS-04, OPS-05)
   - [ ] 06-02-PLAN.md — RateLimiter PG-backed sliding window 12/h (OPS-04)
-  - [ ] 06-03-PLAN.md — MockReplayChatModel + LLM_BACKEND=mock factory branch (OPS-05, OPS-06)
-  - [ ] 06-04-PLAN.md — sft-domain ops models + scheduling heuristic SPT/EDD + orders/capacity/baselines YAML + failure_modes.yaml hitl_tier extension (OPS-01..04)
+  - [x] 06-03-PLAN.md — MockReplayChatModel + LLM_BACKEND=mock factory branch (OPS-05, OPS-06)
+  - [x] 06-04-PLAN.md — sft-domain ops models + scheduling heuristic SPT/EDD + orders/capacity/baselines YAML + failure_modes.yaml hitl_tier extension (OPS-01..04)
   - [ ] 06-05-PLAN.md — EscalateToSupervisorTool + LogEventTool + build_ops_subgraph router (OPS-01, OPS-05)
   - [ ] 06-06-PLAN.md — AnomalyDetector agent + baseline + rate-limit + audit (OPS-04)
   - [ ] 06-07-PLAN.md — QualityInspector agent + NATS qi-consumer + LLM 4-point grader + HITL tier routing + QUALITY_STREAM bootstrap (OPS-03, OPS-05)
@@ -240,7 +240,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
-| 6. Agents — Operations & Production | 1/15 | In Progress|  |
+| 6. Agents — Operations & Production | 4/15 | In Progress|  |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
