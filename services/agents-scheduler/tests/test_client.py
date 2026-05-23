@@ -54,18 +54,22 @@ async def test_post_body_contains_window_minutes_and_triggered_by() -> None:
 
 def test_build_http_client_uses_retries_3_transport() -> None:
     """The default AsyncClient is built with AsyncHTTPTransport(retries=3)."""
-    import httpx
-
     from svc_agents_scheduler.client import build_http_client
 
+    # MagicMock return value satisfies httpx.AsyncClient(transport=...) duck-typing
+    # without invoking the real AsyncHTTPTransport constructor here.
     with patch(
         "svc_agents_scheduler.client.httpx.AsyncHTTPTransport"
     ) as transport_cls:
-        transport_cls.return_value = httpx.AsyncHTTPTransport()
-        build_http_client()
-        transport_cls.assert_called_once()
-        _, kwargs = transport_cls.call_args
-        assert kwargs.get("retries") == 3
+        client = build_http_client()
+        # Close the client to avoid resource warnings (httpx accepts the MagicMock).
+        try:
+            transport_cls.assert_called_once()
+            _, kwargs = transport_cls.call_args
+            assert kwargs.get("retries") == 3
+        finally:
+            # AsyncClient.__del__ may run later; nothing to await here.
+            del client
 
 
 @pytest.mark.asyncio

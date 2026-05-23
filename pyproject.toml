@@ -32,6 +32,7 @@ members = [
   "apps/agents/supply/demand-forecaster",
   "services/ot-bridge",
   "services/knowledge-ingest",
+  "services/agents-scheduler",
   "simulators/sim-textile",
 ]
 
