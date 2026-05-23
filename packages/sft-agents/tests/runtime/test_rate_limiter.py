@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import AsyncGenerator
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -145,7 +145,7 @@ async def _seed_rows(
     via the caller of the limiter).
     """
     if ts is None:
-        ts = datetime.now(timezone.utc)
+        ts = datetime.now(UTC)
     async with pool.acquire() as conn:
         for _ in range(count):
             await conn.execute(
@@ -198,7 +198,7 @@ async def test_sliding_window_excludes_old_rows(pg_pool: Any) -> None:
     """Test 4: rows older than ``window_minutes`` are excluded from the count."""
     from sft_agents.runtime.rate_limit import RateLimiter  # noqa: PLC0415
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     # 12 rows 2h ago — outside the 60min window.
     await _seed_rows(pg_pool, count=12, ts=now - timedelta(hours=2))
     # 3 rows just now — inside the window.
