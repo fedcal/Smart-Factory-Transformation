@@ -84,6 +84,8 @@ plugins:
             Risultati A/B BGE-M3 vs multilingual-e5-large: A/B results — BGE-M3 vs multilingual-e5-large
             Agenti: Agents
             Operations: Operations
+            Maintenance: Maintenance
+            Tassonomia Eventi: Event Taxonomy
       reconfigure_material: true
 
 markdown_extensions:
@@ -152,4 +154,10 @@ nav:
       - ProductionPlanner: agents/operations/production-planner.md
       - QualityInspector: agents/operations/quality-inspector.md
       - AnomalyDetector: agents/operations/anomaly-detector.md
+    - Maintenance:
+      - PredictiveMaintenance: agents/maintenance/predictive-maintenance.md
+      - RCASpecialist: agents/maintenance/rca-specialist.md
+      - MaintenanceCoach: agents/maintenance/maintenance-coach.md
+      - DowntimeAnalyzer: agents/maintenance/downtime-analyzer.md
+      - Tassonomia Eventi: agents/maintenance/event-taxonomy.md
   - Contributing: contributing/index.md
