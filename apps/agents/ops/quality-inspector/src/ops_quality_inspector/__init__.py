@@ -5,7 +5,9 @@ Exports the public API of the QualityInspector agent:
     - ``QualityInspector``: orchestrator class (NATS consumer + grader + HITL).
 """
 
+from ops_quality_inspector import metadata
 from ops_quality_inspector.grader import grade_quality_event
+from ops_quality_inspector.metadata import build_ops05_evidence_panel
 
 __version__ = "0.1.0"
 
@@ -19,4 +21,9 @@ def __getattr__(name: str) -> object:
     raise AttributeError(f"module 'ops_quality_inspector' has no attribute {name!r}")
 
 
-__all__ = ["QualityInspector", "grade_quality_event"]
+__all__ = [
+    "QualityInspector",
+    "build_ops05_evidence_panel",
+    "grade_quality_event",
+    "metadata",
+]

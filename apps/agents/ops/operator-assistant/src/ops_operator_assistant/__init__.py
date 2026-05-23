@@ -7,7 +7,9 @@ Public API:
     - ``validate_or_replan``: post-LLM citation validator (D-OA-04).
 """
 
+from ops_operator_assistant import metadata
 from ops_operator_assistant.lang_detect import detect_language
+from ops_operator_assistant.metadata import build_ops05_evidence_panel
 from ops_operator_assistant.models import OperatorChatRequest, OperatorChatResponse
 from ops_operator_assistant.validators import validate_or_replan
 
@@ -29,6 +31,8 @@ __all__ = [
     "OperatorAssistantAgent",
     "OperatorChatRequest",
     "OperatorChatResponse",
+    "build_ops05_evidence_panel",
     "detect_language",
+    "metadata",
     "validate_or_replan",
 ]

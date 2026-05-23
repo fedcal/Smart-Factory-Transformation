@@ -82,6 +82,8 @@ plugins:
             Pipeline di retrieval ibrida: Hybrid retrieval pipeline
             Modello ACL: ACL model
             Risultati A/B BGE-M3 vs multilingual-e5-large: A/B results — BGE-M3 vs multilingual-e5-large
+            Agenti: Agents
+            Operations: Operations
       reconfigure_material: true
 
 markdown_extensions:
@@ -144,4 +146,10 @@ nav:
     - Pipeline di retrieval ibrida: knowledge-layer/retrieval-pipeline.md
     - Modello ACL: knowledge-layer/acl-model.md
     - Risultati A/B BGE-M3 vs multilingual-e5-large: knowledge-layer/eval-results.md
+  - Agenti:
+    - Operations:
+      - OperatorAssistant: agents/operations/operator-assistant.md
+      - ProductionPlanner: agents/operations/production-planner.md
+      - QualityInspector: agents/operations/quality-inspector.md
+      - AnomalyDetector: agents/operations/anomaly-detector.md
   - Contributing: contributing/index.md
