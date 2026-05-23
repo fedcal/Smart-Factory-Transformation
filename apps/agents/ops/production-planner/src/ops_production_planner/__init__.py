@@ -6,9 +6,17 @@ collaborators (rag_pipeline, audit_writer, queue_writer, nats); invoked as
 containing ``strategy``, ``horizon_days``, ``user_roles``, ``thread_id``.
 """
 
+from ops_production_planner import metadata
 from ops_production_planner.agent import ProductionPlanner
+from ops_production_planner.metadata import build_ops05_evidence_panel
 from ops_production_planner.models import PlanRequest, PlanResponse
 
 __version__ = "0.1.0"
 
-__all__ = ["ProductionPlanner", "PlanRequest", "PlanResponse"]
+__all__ = [
+    "PlanRequest",
+    "PlanResponse",
+    "ProductionPlanner",
+    "build_ops05_evidence_panel",
+    "metadata",
+]
