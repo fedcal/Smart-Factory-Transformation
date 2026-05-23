@@ -164,7 +164,12 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. MaintenanceCoach retrieves the correct step-by-step procedure from the RAG store for the current repair, tracks MTTR contribution, and escalates when the technician requests it
   4. DowntimeAnalyzer calculates OEE decomposition (Availability, Performance, Quality) and produces a Pareto of downtime causes from the event store
   5. A textile maintenance event taxonomy is documented and used consistently across all four agents
-**Plans**: TBD
+**Plans**: 17 plans (13 original + 4 gap closure)
+  - [x] 07-00 through 07-12 — original maintenance cluster build (4 agents + taxonomy + gateway + E2E) (MNT-01..06)
+  - [ ] 07-13-PLAN.md — gap-closure: MaintenanceCoach saver lifecycle (CR-01) + single audit row on resume (WR-02) (MNT-03 / SC-3)
+  - [ ] 07-14-PLAN.md — gap-closure: RCASpecialist direct-interrupt audit ordering (CR-02) + populated tool_calls_log (WR-05) (MNT-02 / SC-2)
+  - [ ] 07-15-PLAN.md — gap-closure: PredictiveMaintenance null approval_id (CR-03) + safe missing-asset_id ValueError (CR-04) (MNT-01 / SC-1)
+  - [ ] 07-16-PLAN.md — gap-closure: DowntimeAnalyzer gateway datetime (WR-03) + Pareto grand_total (WR-04) + bounded by_asset (CR-05) (MNT-04 / SC-4)
 
 ### Phase 8: Agents — Knowledge & Training
 **Goal**: All four Knowledge cluster agents (KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer) are implemented with citation provenance, adaptive training delivery, automated shift handover compilation, and bilingual document synthesis under HITL approval.
@@ -241,7 +246,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
-| 7. Agents — Maintenance & Reliability | 13/13 | Complete   | 2026-05-23 |
+| 7. Agents — Maintenance & Reliability | 13/17 | Gap closure planned | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
