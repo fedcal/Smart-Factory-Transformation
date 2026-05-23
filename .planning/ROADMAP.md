@@ -12,7 +12,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail (completed 2026-05-18)
 - [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (functional 2026-05-19; 3 gap-closure plans in progress 2026-05-19)
 - [x] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests (completed 2026-05-23)
-- [ ] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests
+- [x] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests (completed 2026-05-23)
 - [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
 - [ ] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests
@@ -241,7 +241,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
-| 7. Agents — Maintenance & Reliability | 12/13 | In Progress|  |
+| 7. Agents — Maintenance & Reliability | 13/13 | Complete   | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
