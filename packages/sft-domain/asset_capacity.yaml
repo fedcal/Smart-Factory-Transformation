@@ -1,0 +1,234 @@
+# Asset capacity sheet (D-PP-03) — derived from sft-assets registry (D-45)
+#
+# 30 entries, one per asset_id in packages/sft-assets/src/sft_assets/registry.yaml.
+# Capacita' calibrate per famiglia tessile (loom ~300 m/h, dyer ~50 m/h, ...).
+#
+# Schema: vedi packages/sft-domain/src/sft_domain/ops/schedule.py (AssetCapacity)
+# Cross-ref: CI test_yaml_validators.py garantisce asset_id ⊆ registry.asset_id
+# Loader:    packages/sft-domain/src/sft_domain/ops/schedule.py (load_asset_capacity)
+
+asset_capacity:
+  # ============================================================
+  # LOOM (12) — weaving lines, max_meters_per_hour calibrated
+  # ============================================================
+  - asset_id: LOOM-01
+    asset_family: loom
+    max_meters_per_hour: 320.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-02
+    asset_family: loom
+    max_meters_per_hour: 320.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-03
+    asset_family: loom
+    max_meters_per_hour: 310.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-04
+    asset_family: loom
+    max_meters_per_hour: 310.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-05
+    asset_family: loom
+    max_meters_per_hour: 300.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-06
+    asset_family: loom
+    max_meters_per_hour: 300.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-07
+    asset_family: loom
+    max_meters_per_hour: 290.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-08
+    asset_family: loom
+    max_meters_per_hour: 290.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-09
+    asset_family: loom
+    max_meters_per_hour: 260.0  # denim heavyweight: slower
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 45
+    downtime_windows: []
+
+  - asset_id: LOOM-10
+    asset_family: loom
+    max_meters_per_hour: 260.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 45
+    downtime_windows: []
+
+  - asset_id: LOOM-11
+    asset_family: loom
+    max_meters_per_hour: 280.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  - asset_id: LOOM-12
+    asset_family: loom
+    max_meters_per_hour: 280.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 30
+    downtime_windows: []
+
+  # ============================================================
+  # SPIN (8) — spinning, higher throughput in m of yarn
+  # ============================================================
+  - asset_id: SPIN-01
+    asset_family: spinning
+    max_meters_per_hour: 1500.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-02
+    asset_family: spinning
+    max_meters_per_hour: 1500.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-03
+    asset_family: spinning
+    max_meters_per_hour: 1400.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-04
+    asset_family: spinning
+    max_meters_per_hour: 1400.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-05
+    asset_family: spinning
+    max_meters_per_hour: 1300.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-06
+    asset_family: spinning
+    max_meters_per_hour: 1300.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-07
+    asset_family: spinning
+    max_meters_per_hour: 1200.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  - asset_id: SPIN-08
+    asset_family: spinning
+    max_meters_per_hour: 1200.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 20
+    downtime_windows: []
+
+  # ============================================================
+  # WARP (4) — warping (beam preparation upstream of weaving)
+  # ============================================================
+  - asset_id: WARP-01
+    asset_family: warping
+    max_meters_per_hour: 2500.0
+    max_concurrent_dye_lots: 2
+    dye_lot_changeover_minutes: 25
+    downtime_windows: []
+
+  - asset_id: WARP-02
+    asset_family: warping
+    max_meters_per_hour: 2500.0
+    max_concurrent_dye_lots: 2
+    dye_lot_changeover_minutes: 25
+    downtime_windows: []
+
+  - asset_id: WARP-03
+    asset_family: warping
+    max_meters_per_hour: 2200.0
+    max_concurrent_dye_lots: 2
+    dye_lot_changeover_minutes: 25
+    downtime_windows: []
+
+  - asset_id: WARP-04
+    asset_family: warping
+    max_meters_per_hour: 2200.0
+    max_concurrent_dye_lots: 2
+    dye_lot_changeover_minutes: 25
+    downtime_windows: []
+
+  # ============================================================
+  # DYE (4) — dyeing, slowest throughput, longest changeover
+  # ============================================================
+  - asset_id: DYE-01
+    asset_family: dyeing
+    max_meters_per_hour: 60.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 60
+    downtime_windows: []
+
+  - asset_id: DYE-02
+    asset_family: dyeing
+    max_meters_per_hour: 55.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 60
+    downtime_windows: []
+
+  - asset_id: DYE-03
+    asset_family: dyeing
+    max_meters_per_hour: 50.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 75
+    downtime_windows: []
+
+  - asset_id: DYE-04
+    asset_family: dyeing
+    max_meters_per_hour: 50.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 75
+    downtime_windows: []
+
+  # ============================================================
+  # STEN (2) — stentering (finishing thermofixation)
+  # ============================================================
+  - asset_id: STEN-01
+    asset_family: finishing
+    max_meters_per_hour: 1000.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 15
+    downtime_windows: []
+
+  - asset_id: STEN-02
+    asset_family: finishing
+    max_meters_per_hour: 1000.0
+    max_concurrent_dye_lots: 1
+    dye_lot_changeover_minutes: 15
+    downtime_windows: []

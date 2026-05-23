@@ -1,0 +1,137 @@
+# Anomaly baselines (D-AD-02) — per (asset_family, sensor_id) bands + severity mapping
+#
+# Sorgenti baseline:
+#   - Phase 2/3 telemetry calibrazione (sft-assets registry tag list)
+#   - Industry handbook (Mantis Textile reference)
+#
+# severity_mapping: soglia di deviazione OLTRE il band edge (in unita' della misura).
+# Es. loom warp_tension band [0..0.8 g] → valore 1.0 g → deviazione 0.2 g → "major".
+#
+# Schema: vedi packages/sft-domain/src/sft_domain/ops/anomaly.py (AnomalyBaseline)
+# Loader: packages/sft-domain/src/sft_domain/ops/anomaly.py (load_anomaly_baselines)
+
+anomaly_baselines:
+  # ============================================================
+  # LOOM — weaving sensors
+  # ============================================================
+  - asset_family: loom
+    sensor_id: warp_tension
+    low: 0.2
+    high: 0.8
+    unit: g
+    severity_mapping:
+      minor: 0.05
+      major: 0.20
+      critical: 0.50
+
+  - asset_family: loom
+    sensor_id: pick_density
+    low: 22.0
+    high: 28.0
+    unit: picks_per_cm
+    severity_mapping:
+      minor: 1.0
+      major: 3.0
+      critical: 6.0
+
+  - asset_family: loom
+    sensor_id: loom_temperature
+    low: 18.0
+    high: 28.0
+    unit: degC
+    severity_mapping:
+      minor: 2.0
+      major: 5.0
+      critical: 10.0
+
+  - asset_family: loom
+    sensor_id: creel_speed
+    low: 200.0
+    high: 600.0
+    unit: rpm
+    severity_mapping:
+      minor: 30.0
+      major: 100.0
+      critical: 250.0
+
+  # ============================================================
+  # SPINNING — drafting + spindle
+  # ============================================================
+  - asset_family: spinning
+    sensor_id: spindle_rpm
+    low: 8000.0
+    high: 18000.0
+    unit: rpm
+    severity_mapping:
+      minor: 500.0
+      major: 1500.0
+      critical: 3500.0
+
+  - asset_family: spinning
+    sensor_id: drafting_force
+    low: 5.0
+    high: 25.0
+    unit: N
+    severity_mapping:
+      minor: 2.0
+      major: 5.0
+      critical: 12.0
+
+  # ============================================================
+  # DYEING — temperature + pH
+  # ============================================================
+  - asset_family: dyeing
+    sensor_id: dyer_temperature
+    low: 80.0
+    high: 95.0
+    unit: degC
+    severity_mapping:
+      minor: 2.0
+      major: 5.0
+      critical: 12.0
+
+  - asset_family: dyeing
+    sensor_id: bath_ph
+    low: 4.5
+    high: 7.0
+    unit: pH
+    severity_mapping:
+      minor: 0.3
+      major: 0.8
+      critical: 1.5
+
+  # ============================================================
+  # WARPING — beam tension
+  # ============================================================
+  - asset_family: warping
+    sensor_id: warper_tension
+    low: 0.3
+    high: 1.0
+    unit: g
+    severity_mapping:
+      minor: 0.1
+      major: 0.3
+      critical: 0.6
+
+  # ============================================================
+  # FINISHING (stenter) — humidity + temperature
+  # ============================================================
+  - asset_family: finishing
+    sensor_id: stenter_humidity
+    low: 35.0
+    high: 55.0
+    unit: percent
+    severity_mapping:
+      minor: 5.0
+      major: 12.0
+      critical: 25.0
+
+  - asset_family: finishing
+    sensor_id: stenter_temperature
+    low: 140.0
+    high: 180.0
+    unit: degC
+    severity_mapping:
+      minor: 5.0
+      major: 15.0
+      critical: 30.0
