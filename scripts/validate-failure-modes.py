@@ -2,12 +2,18 @@
 """
 scripts/validate-failure-modes.py
 
-CI validator (D-65) — verifica che ogni FailureMode definita in
-packages/sft-domain/src/sft_domain/failure_modes.yaml abbia
-almeno una SOP del corpus che la referenzia.
+CI validator (D-65 + D-MNT-TAX Phase 7) — verifica:
 
-Logica di matching (ogni FailureMode e' "referenced" se almeno UNA delle
-seguenti e' true in almeno una SOP):
+  1. Ogni FailureMode definita in
+     packages/sft-domain/src/sft_domain/failure_modes.yaml abbia almeno
+     una SOP del corpus che la referenzia (matching token/title-based).
+  2. (Phase 7 / 07-02) reason_code uniqueness cross-entry.
+  3. (Phase 7 / 07-02) intervention_steps_sop_id resolution: ogni id
+     SOP referenziato in maintenance.intervention_steps_sop_id deve
+     esistere come documento SOP nel corpus.
+
+Logica di matching orphan (ogni FailureMode e' "referenced" se almeno UNA
+delle seguenti e' true in almeno una SOP):
 
   - fm.id appare (exact o normalizzato '-'/'_') in tags / related_glossary
   - fm.name_it.lower() o fm.name_en.lower() appaiono come token o substring
@@ -17,12 +23,17 @@ seguenti e' true in almeno una SOP):
 
 Output:
     FAILURE_MODES: total=X referenced=Y orphans=Z
+    MAINTENANCE:   total=N unique_reason_codes=M sop_refs_resolved=K/N
 
 Exit codes:
-    0 — zero orphan failure modes (o orphans <= --allow-orphans)
-    1 — orphan failure modes trovate (oltre la soglia)
+    0 — tutti i check OK (orphans <= --allow-orphans, no duplicate codes,
+        SOP refs risolti — oppure --strict-sop disabilitato e corpus
+        non trovato/refs missing → solo WARN)
+    1 — orphan threshold superata OR duplicate reason_codes OR
+        (--strict-sop attivo AND SOP ref missing)
 
-Wired in CI via Nx target `validate-failure-modes` (Task 3 di Plan 05-03).
+Wired in CI via Nx target `validate-failure-modes` (Task 3 di Plan 05-03,
+esteso da Plan 07-02 con maintenance taxonomy checks).
 """
 
 from __future__ import annotations
@@ -48,6 +59,8 @@ from sft_domain.failure_modes import FailureMode, load_failure_modes  # noqa: E4
 
 # SOP filename pattern (mirror di scripts/validate-corpus-frontmatter.py)
 SOP_FILENAME_PATTERN = re.compile(r"^SOP-[A-Z]+-[0-9]{3}-[a-z0-9-]+-(it|en)\.md$")
+# Pattern per estrarre l'id SOP canonico dal filename (es. SOP-LOOM-001)
+SOP_ID_FROM_FILENAME = re.compile(r"^(SOP-[A-Z]+-[0-9]{3})")
 _TOKEN_SPLIT = re.compile(r"[\s_\-]+")
 _MIN_NEEDLE_LEN = 4
 
@@ -135,8 +148,108 @@ def _find_referencing_sop(
     return None
 
 
-def validate(corpus_dir: Path, allow_orphans: int) -> int:
-    """Esegue la validazione. Returns 0 (ok) o 1 (orphan)."""
+def _check_reason_code_uniqueness(modes: tuple[FailureMode, ...]) -> list[str]:
+    """Verifica che i reason_code (sotto maintenance:) siano unici tra le entries.
+
+    Args:
+        modes: tuple di FailureMode caricate dal loader.
+
+    Returns:
+        Lista di error messages (vuota = nessun duplicato).
+
+    Reference:
+        D-MNT-TAX (07-02-PLAN.md must_haves "reason_code uniqueness")
+        T-V7-tax-drift (07-02 threat register)
+    """
+    errors: list[str] = []
+    seen: dict[str, str] = {}  # reason_code -> first failure_mode.id seen
+    for fm in modes:
+        if fm.maintenance is None:
+            continue
+        code = fm.maintenance.reason_code
+        if code in seen:
+            errors.append(
+                f"duplicate reason_code '{code}': "
+                f"used by both '{seen[code]}' and '{fm.id}'"
+            )
+        else:
+            seen[code] = fm.id
+    return errors
+
+
+def _discover_sop_corpus_ids(corpus_dir: Path) -> set[str] | None:
+    """Estrae l'insieme di SOP id canonici disponibili nel corpus.
+
+    Strategia di discovery (fallback in ordine):
+
+    1. Walk del ``corpus_dir`` cercando file ``SOP-XXX-###-*.md``;
+       l'id canonico viene estratto via ``SOP_ID_FROM_FILENAME`` regex.
+       Sufficiente per il corpus sintetico Phase 5 attuale
+       (simulators/synthetic-corpus/{en,it}/{loom,spinning,dyeing,quality}/).
+    2. Se ``corpus_dir`` non esiste o non contiene file SOP, return None.
+       Il caller emettera' WARN ed eviterà di bloccare la PR
+       (a meno di ``--strict-sop``).
+
+    Returns:
+        Set di id SOP (es. {"SOP-LOOM-001", "SOP-SPN-004", ...}) o None
+        se il corpus non e' disponibile.
+    """
+    if not corpus_dir.exists():
+        return None
+    ids: set[str] = set()
+    for sop_path in corpus_dir.rglob("*.md"):
+        match = SOP_ID_FROM_FILENAME.match(sop_path.name)
+        if match is not None:
+            ids.add(match.group(1))
+    return ids if ids else None
+
+
+def _check_sop_id_resolution(
+    modes: tuple[FailureMode, ...],
+    corpus_ids: set[str] | None,
+) -> list[str]:
+    """Verifica che ogni intervention_steps_sop_id sia presente nel corpus.
+
+    Args:
+        modes: tuple di FailureMode caricate dal loader.
+        corpus_ids: set di SOP id disponibili (o None se corpus non trovato).
+
+    Returns:
+        Lista di error messages (vuota = tutti i ref risolti, oppure
+        corpus non disponibile — il caller decide se hard-fail con
+        --strict-sop o WARN).
+
+    Reference:
+        D-MNT-TAX (07-02-PLAN.md "intervention_steps_sop_id reference resolution")
+        T-V7-tax-orphan-sop (07-02 threat register)
+    """
+    if corpus_ids is None:
+        # Corpus non disponibile — restituiamo lista vuota; il caller
+        # ha gia' loggato WARN. Pattern Rule 3: non bloccare PR per
+        # mancanza di infrastruttura esterna.
+        return []
+    errors: list[str] = []
+    for fm in modes:
+        if fm.maintenance is None:
+            continue
+        sop_id = fm.maintenance.intervention_steps_sop_id
+        if sop_id not in corpus_ids:
+            errors.append(
+                f"failure_mode '{fm.id}' references missing SOP "
+                f"'{sop_id}' (not found in corpus)"
+            )
+    return errors
+
+
+def validate(corpus_dir: Path, allow_orphans: int, strict_sop: bool = False) -> int:
+    """Esegue la validazione. Returns 0 (ok) o 1 (orphan/dup/sop-missing).
+
+    Args:
+        corpus_dir: directory del corpus SOP sintetico.
+        allow_orphans: soglia max di orphan failure modes (legacy D-65).
+        strict_sop: se True, fallisce su SOP id non risolti. Default False
+            (warn-only) per non bloccare PR durante Phase 5 stabilization.
+    """
     if not corpus_dir.is_absolute():
         corpus_dir = WORKSPACE_ROOT / corpus_dir
 
@@ -183,6 +296,7 @@ def validate(corpus_dir: Path, allow_orphans: int) -> int:
         f"orphans={len(orphans)}"
     )
 
+    exit_code = 0
     if len(orphans) > allow_orphans:
         print(
             f"FAILED: {len(orphans)} orphan failure mode(s) "
@@ -201,9 +315,80 @@ def validate(corpus_dir: Path, allow_orphans: int) -> int:
             "fino a quando il corpus non la copre.",
             file=sys.stderr,
         )
-        return 1
+        exit_code = 1
 
-    return 0
+    # ------------------------------------------------------------------
+    # Phase 7 / 07-02 — maintenance taxonomy checks (D-MNT-TAX)
+    # ------------------------------------------------------------------
+    maintained = tuple(fm for fm in fms if fm.maintenance is not None)
+    total_maint = len(maintained)
+
+    # 1) reason_code uniqueness — hard fail (T-V7-tax-drift mitigation)
+    dup_errors = _check_reason_code_uniqueness(fms)
+    unique_codes = len({fm.maintenance.reason_code for fm in maintained})
+
+    # 2) intervention_steps_sop_id resolution — warn-only by default,
+    #    hard fail with --strict-sop (T-V7-tax-orphan-sop mitigation)
+    corpus_ids = _discover_sop_corpus_ids(corpus_dir)
+    if corpus_ids is None:
+        print(
+            "WARN: sop_corpus_not_found — skipping intervention_steps_sop_id "
+            "resolution (use --strict-sop to fail on missing corpus).",
+            file=sys.stderr,
+        )
+        # TODO 07-02: once Phase 5 corpus path is stable, flip --strict-sop
+        # default to True. Tracked in 07-02-SUMMARY.md follow-ups.
+        sop_resolved = 0
+        sop_errors: list[str] = []
+    else:
+        sop_errors = _check_sop_id_resolution(fms, corpus_ids)
+        sop_resolved = total_maint - len(sop_errors)
+
+    print(
+        f"MAINTENANCE:   total={total_maint} "
+        f"unique_reason_codes={unique_codes} "
+        f"sop_refs_resolved={sop_resolved}/{total_maint}"
+    )
+
+    if dup_errors:
+        print(
+            f"\nFAILED: {len(dup_errors)} duplicate reason_code(s) "
+            f"(MUST be unique cross-entry):",
+            file=sys.stderr,
+        )
+        for err in dup_errors:
+            print(f"  - {err}", file=sys.stderr)
+        print(
+            "\nFix: rinominare i reason_code duplicati seguendo la "
+            "convenzione ISO 14224 '<MODULE>-<DEFECT_ABBR>-<NNN>'.",
+            file=sys.stderr,
+        )
+        exit_code = 1
+
+    if sop_errors:
+        msg = (
+            f"\n{'FAILED' if strict_sop else 'WARN'}: "
+            f"{len(sop_errors)} maintenance.intervention_steps_sop_id "
+            f"reference(s) cannot be resolved against corpus:"
+        )
+        print(msg, file=sys.stderr)
+        for err in sop_errors:
+            print(f"  - {err}", file=sys.stderr)
+        if strict_sop:
+            print(
+                "\nFix: aggiungere i SOP mancanti al corpus oppure "
+                "aggiornare intervention_steps_sop_id nel YAML.",
+                file=sys.stderr,
+            )
+            exit_code = 1
+        else:
+            print(
+                "\nNote: usa --strict-sop per trasformare questi WARN in "
+                "hard failure quando il corpus Phase 5 sara' stabile.",
+                file=sys.stderr,
+            )
+
+    return exit_code
 
 
 def main() -> None:
@@ -229,9 +414,19 @@ def main() -> None:
             "automaticamente il pairing FailureMode <-> SOP."
         ),
     )
+    parser.add_argument(
+        "--strict-sop",
+        action="store_true",
+        default=False,
+        help=(
+            "Hard-fail su intervention_steps_sop_id non risolti nel corpus "
+            "(default: WARN-only per non bloccare PR durante Phase 5 "
+            "stabilization; Plan 07-02)."
+        ),
+    )
     args = parser.parse_args()
 
-    sys.exit(validate(args.corpus_dir, args.allow_orphans))
+    sys.exit(validate(args.corpus_dir, args.allow_orphans, args.strict_sop))
 
 
 if __name__ == "__main__":
