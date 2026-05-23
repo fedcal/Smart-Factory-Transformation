@@ -9,6 +9,9 @@ Crea (o aggiorna se esistente) i JetStream streams:
     AUDIT_OT       — audit.ot.>                         retention=Limits    max_age=30d
     AUDIT_STREAM   — audit.actions.> + hitl.approvals.> + hitl.governor.>
                      retention=Limits max_age=90d  (Phase 4 D-56 + HITL-05)
+    QUALITY_STREAM — quality.events.>                   retention=Limits    max_age=7d
+                     (Phase 6 D-QI-01: QualityInspector durable consumer
+                     qi-consumer ack_policy=EXPLICIT max_deliver=5 ack_wait=30s)
 
 Idempotency (Pitfall 3 mitigation):
     try: add_stream(config) except BadRequestError: update_stream(config)
@@ -106,7 +109,27 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         "num_replicas": 1,
     }
 
-    all_cfg_specs = [sensor_events_cfg, audit_ot_cfg, audit_stream_cfg]
+    # Phase 6 D-QI-01: QualityInspector durable JetStream consumer
+    # (qi-consumer) on quality.events.>. 7-day retention (Pitfall §4 -
+    # generous catch-up so qi-consumer never starves on cold start).
+    quality_stream_cfg = {
+        "name": "QUALITY_STREAM",
+        "subjects": ["quality.events.>"],
+        "retention": "LimitsPolicy",
+        "max_age_days": 7,
+        "storage": "FileStorage",
+        "max_msgs": -1,
+        "max_bytes": -1,
+        "discard": "DiscardPolicy.OLD",
+        "num_replicas": 1,
+    }
+
+    all_cfg_specs = [
+        sensor_events_cfg,
+        audit_ot_cfg,
+        audit_stream_cfg,
+        quality_stream_cfg,
+    ]
 
     if dry_run:
         print("[dry-run] Stream configurations (would create/update):")
@@ -121,11 +144,14 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         print("SENSOR_EVENTS: would create/update")
         print("AUDIT_OT: would create/update")
         print("AUDIT_STREAM: would create/update")
+        print("QUALITY_STREAM: would create/update")
         return 0
 
     # Importa nats solo se non dry-run (evita ModuleNotFoundError su ambienti dev)
     import nats
     from nats.js.api import (
+        AckPolicy,
+        ConsumerConfig,
         DiscardPolicy,
         RetentionPolicy,
         StorageType,
@@ -172,7 +198,22 @@ async def bootstrap(server: str, dry_run: bool) -> int:
         num_replicas=1,
     )
 
-    all_configs = [cfg_sensor, cfg_audit, cfg_audit_stream]
+    # Phase 6 D-QI-01: QualityInspector input stream for QC events emitted by
+    # sim-textile + operator API. 7-day retention (Pitfall §4 - generous
+    # catch-up window). Stream MUST exist before sim-textile starts publishing.
+    cfg_quality_stream = StreamConfig(
+        name="QUALITY_STREAM",
+        subjects=["quality.events.>"],
+        retention=RetentionPolicy.LIMITS,
+        max_age=7 * 24 * 3600,  # 7 giorni in secondi (nats-py 2.14 semantic)
+        storage=StorageType.FILE,
+        max_msgs=-1,
+        max_bytes=-1,
+        discard=DiscardPolicy.OLD,
+        num_replicas=1,
+    )
+
+    all_configs = [cfg_sensor, cfg_audit, cfg_audit_stream, cfg_quality_stream]
 
     # Connessione reale
     try:
@@ -203,6 +244,34 @@ async def bootstrap(server: str, dry_run: bool) -> int:
             print(f"ERROR [{cfg.name}]: add_stream failed: {exc}", file=sys.stderr)
             await nc.close()
             return 1
+
+    # Phase 6 D-QI-01: qi-consumer durable JetStream consumer (pull-based).
+    # ack_policy=EXPLICIT + max_deliver=5 + ack_wait=30s per RESEARCH §Pattern 3.
+    qi_consumer_cfg = ConsumerConfig(
+        durable_name="qi-consumer",
+        ack_policy=AckPolicy.EXPLICIT,
+        max_deliver=5,
+        ack_wait=30,                     # 30s
+        filter_subject="quality.events.>",
+        deliver_subject=None,            # pull-based (no deliver_subject)
+    )
+    try:
+        await js.add_consumer("QUALITY_STREAM", config=qi_consumer_cfg)
+        print("OK [QUALITY_STREAM/qi-consumer]: durable consumer created")
+    except nats.js.errors.BadRequestError as exc:
+        # Already exists — assume config matches (nats-py does not expose
+        # update_consumer; manual reconciliation is left to operators).
+        print(
+            f"OK [QUALITY_STREAM/qi-consumer]: consumer already exists "
+            f"(BadRequestError: {exc})"
+        )
+    except Exception as exc:
+        print(
+            f"ERROR [QUALITY_STREAM/qi-consumer]: add_consumer failed: {exc}",
+            file=sys.stderr,
+        )
+        await nc.close()
+        return 1
 
     await nc.close()
     return 0
