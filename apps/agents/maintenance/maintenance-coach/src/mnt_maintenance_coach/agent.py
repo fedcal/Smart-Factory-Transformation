@@ -16,15 +16,16 @@ HITL flow (D-MC-02):
     detected → wraps ``escalate_to_supervisor`` → supervisor interrupt.
   - Audit rows written AFTER ``ainvoke`` returns (Pitfall §3 — no audit before interrupt).
 
-AsyncPostgresSaver notes (Plan 07-08 SUMMARY annotation):
-  - This version of ``langgraph-checkpoint-postgres`` (3.1.x) uses a ``conn``
-    parameter (not ``pool``), and ``from_conn_string`` returns an async context
-    manager. When a caller injects a pre-built saver (tests), the saver is used
-    directly. When PG_DSN is available, the recommended pattern is
-    ``async with AsyncPostgresSaver.from_conn_string(PG_DSN) as saver: ...``.
-  - The ``MaintenanceCoach`` class accepts an injected ``saver`` to support both
-    long-lived agent instances (test injection) and per-request context-manager
-    pattern (production with PG_DSN string).
+AsyncPostgresSaver notes (Plan 07-13 CR-01 fix):
+  - The saver MUST be injected at construction time; ``_get_graph()`` raises
+    ``RuntimeError`` if ``self._graph is None`` (no self-compile fallback).
+  - The api-gateway lifespan is responsible for creating ONE long-lived saver:
+    ``async with AsyncPostgresSaver.from_conn_string(pg_dsn) as saver: ...``
+    and injecting it into MaintenanceCoach at startup. The saver lives for the
+    application lifetime; graph invocations reuse it without closing it.
+  - The previous per-call self-compile path (CR-01) closed the saver immediately
+    after compiling the graph, making checkpoint reads/writes fail on all
+    subsequent calls with ``ConnectionDoesNotExistError``.
 
 State compression (07-PATTERNS.md Section 6, T-V7-coach-state-bloat):
   - When ``len(state['messages']) > _MESSAGE_TRIM_THRESHOLD``, the ``_trim_messages``
@@ -36,7 +37,6 @@ State compression (07-PATTERNS.md Section 6, T-V7-coach-state-bloat):
 
 from __future__ import annotations
 
-import os
 from datetime import datetime, timezone
 from typing import Any, Literal
 from uuid import uuid4
@@ -417,32 +417,36 @@ class MaintenanceCoach:
         return f"{CLUSTER}.{AGENT_ID}.{intervention_id}.{step_no}"
 
     async def _get_graph(self) -> Any:
-        """Return the compiled graph, building it lazily if saver was not injected."""
-        if self._graph is not None:
-            return self._graph
-        # Production path: use PG_DSN env variable
-        pg_dsn = os.environ.get("PG_DSN", "")
-        if not pg_dsn:
+        """Return the compiled graph (requires saver injected at construction).
+
+        CR-01 fix: the previous self-compile path opened AsyncPostgresSaver in
+        an ``async with`` block, cached the compiled graph, then exited the
+        context manager — closing the saver connection before any ainvoke call
+        could use it. Every subsequent graph call would raise
+        ``ConnectionDoesNotExistError``.
+
+        The correct pattern (07-REVIEW.md lines 77-83) is to inject a long-lived
+        saver via the FastAPI lifespan and compile the graph once at construction.
+        The ``__init__`` injected-saver branch already does this correctly. This
+        method now simply raises if the graph was not compiled at construction —
+        preventing the use-after-close defect entirely.
+
+        Production wiring (api-gateway lifespan):
+            async with AsyncPostgresSaver.from_conn_string(pg_dsn) as saver:
+                await saver.setup()
+                coach = MaintenanceCoach(..., saver=saver)
+                app.state.maintenance_coach = coach
+                yield  # saver lives for the application lifetime
+        """
+        if self._graph is None:
             raise RuntimeError(
-                "MaintenanceCoach requires either an injected 'saver' or "
-                "PG_DSN environment variable for AsyncPostgresSaver."
+                "MaintenanceCoach._graph is None. "
+                "Inject a pre-built saver at construction or wire via lifespan. "
+                "See api-gateway lifespan.py for the correct pattern: "
+                "async with AsyncPostgresSaver.from_conn_string(pg_dsn) as saver: "
+                "coach = MaintenanceCoach(..., saver=saver)."
             )
-        from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-        # Note: from_conn_string returns an async context manager, so for
-        # long-lived usage, the saver should be injected. This path is for
-        # backward compat with single-invocation test scenarios only.
-        # Production deployments should inject a pre-built saver.
-        async with AsyncPostgresSaver.from_conn_string(pg_dsn) as saver:
-            graph = build_coach_graph(
-                llm=self._llm,
-                rag_search_tool=self._rag_tool,
-                request_help_tool=self._request_help_tool,
-                escalate_tool=self._escalate_tool,
-            ).compile(checkpointer=saver)
-            # Store for reuse within current async context
-            # (WARNING: saver is closed when this async with exits)
-            self._graph = graph
-            return graph
+        return self._graph
 
     async def _write_audit(
         self,
@@ -680,7 +684,9 @@ class MaintenanceCoach:
             )
             raise
 
-    async def step(self, request: CoachStepRequest) -> CoachResponse:
+    async def step(
+        self, request: CoachStepRequest, *, skip_audit: bool = False
+    ) -> CoachResponse:
         """Submit technician input for the current step and resume the graph.
 
         Resumes the LangGraph thread with the technician's input via
@@ -689,6 +695,10 @@ class MaintenanceCoach:
 
         Args:
             request: CoachStepRequest with intervention_id and technician_input.
+            skip_audit: When True, suppresses the internal ``_write_audit`` calls
+                (WR-02 fix). Use this when the caller (e.g. ``resume_after_help``)
+                will write its own authoritative audit row. This ensures exactly
+                one row is written per operation on the append-only audit table.
 
         Returns:
             CoachResponse with next guidance or completion state.
@@ -742,12 +752,13 @@ class MaintenanceCoach:
                     except (ValueError, Exception):
                         pass
 
-            await self._write_audit(
-                intervention_id=request.intervention_id,
-                step_no=max(0, current_step - 1),
-                completed_step=last_step,
-                decision="auto",
-            )
+            if not skip_audit:
+                await self._write_audit(
+                    intervention_id=request.intervention_id,
+                    step_no=max(0, current_step - 1),
+                    completed_step=last_step,
+                    decision="auto",
+                )
 
             return CoachResponse(
                 intervention_id=request.intervention_id,
@@ -786,12 +797,13 @@ class MaintenanceCoach:
                         else:
                             completed_step = last
 
-                await self._write_audit(
-                    intervention_id=request.intervention_id,
-                    step_no=max(0, step_no - 1),
-                    completed_step=completed_step,
-                    decision="auto",
-                )
+                if not skip_audit:
+                    await self._write_audit(
+                        intervention_id=request.intervention_id,
+                        step_no=max(0, step_no - 1),
+                        completed_step=completed_step,
+                        decision="auto",
+                    )
 
                 return CoachResponse(
                     intervention_id=request.intervention_id,
@@ -859,15 +871,19 @@ class MaintenanceCoach:
         Returns:
             CoachResponse with next guidance or completion state.
         """
-        # Delegate to step() with the supervisor input — same Command(resume=...) flow
+        # Delegate to step() with the supervisor input — same Command(resume=...) flow.
+        # WR-02 fix: pass skip_audit=True so step() does NOT write its internal
+        # decision='auto' audit row. This method is the authoritative caller and
+        # writes exactly one row with decision='hitl_supervisor' below.
         resume_request = CoachStepRequest(
             intervention_id=intervention_id,
             technician_input=supervisor_input,
         )
-        response = await self.step(resume_request)
+        response = await self.step(resume_request, skip_audit=True)
 
-        # Override the audit with escalation_trigger='technician_request'
-        # (step() writes 'auto'; we re-write with correct marker)
+        # Write the single authoritative audit row for this resume operation.
+        # decision='hitl_supervisor' + escalation_trigger='technician_request'
+        # captures that a supervisor resolved a HITL help request (D-MC-02).
         await self._write_audit(
             intervention_id=intervention_id,
             step_no=response.current_step,
