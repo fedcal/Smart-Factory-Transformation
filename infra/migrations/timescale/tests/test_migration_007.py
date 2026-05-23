@@ -25,13 +25,21 @@ container (see conftest.py). Marked @pytest.mark.testcontainers AND
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from uuid import uuid4
 
 import asyncpg
 import pytest
 
-from infra.migrations.timescale.migrate import migrate
+# Make the workspace root importable so `infra.migrations.timescale.migrate`
+# resolves regardless of pytest invocation cwd. Mirrors the pattern used in
+# tests/integration/test_migrations_idempotent.py (Phase 4 Plan 04-02).
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from infra.migrations.timescale.migrate import migrate  # noqa: E402
 
 _MIGRATION_007 = Path(__file__).parent.parent / "007_extend_audit_decisions.sql"
 

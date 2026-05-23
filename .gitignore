@@ -35,6 +35,8 @@ htmlcov/
 
 # uv
 uv.lock.bak
+# Sub-project uv.lock files (single source of truth is ./uv.lock at workspace root)
+infra/migrations/timescale/uv.lock
 
 # Environment files
 .env
