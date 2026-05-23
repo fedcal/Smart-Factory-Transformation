@@ -21,6 +21,12 @@ failure_modes:
     asset_families: [weaving]
     parts: [warp, heddle]
     severity: medium
+    hitl_tier: supervisor
+    setup_minutes: 15
+    severity_band:
+      minor: {max_frequency_per_meter: 5}
+      major: {max_frequency_per_meter: 20}
+      critical: {safety_risk: true}
 
   - id: rottura_filo
     name_it: rottura filo
@@ -35,6 +41,12 @@ failure_modes:
     asset_families: [weaving, quality_grading]
     parts: [weft, reed]
     severity: medium
+    hitl_tier: auto-log
+    setup_minutes: 5
+    severity_band:
+      minor: {max_frequency_per_meter: 8}
+      major: {max_frequency_per_meter: 30}
+      critical: {full_width: true}
 
   - id: shuttle_jam
     name_it: inceppamento navetta
@@ -56,6 +68,12 @@ failure_modes:
     asset_families: [weaving]
     parts: [selvage, heddle]
     severity: low
+    hitl_tier: supervisor
+    setup_minutes: 15
+    severity_band:
+      minor: {max_frequency_per_meter: 10}
+      major: {max_frequency_per_meter: 25}
+      critical: {full_edge: true}
 
   - id: difetto_orlatura
     name_it: difetto orlatura
@@ -94,6 +112,25 @@ failure_modes:
     asset_families: [spinning, quality_grading]
     parts: [drafting_cylinder, roving]
     severity: medium
+    hitl_tier: auto-log
+    setup_minutes: 5
+    severity_band:
+      minor: {max_frequency_per_meter: 5}
+      major: {max_frequency_per_meter: 15}
+      critical: {customer_visible: true}
+
+  - id: neppy
+    name_it: filato neppy
+    name_en: neppy yarn
+    asset_families: [spinning, quality_grading]
+    parts: [fiber, drafting_cylinder, roving]
+    severity: medium
+    hitl_tier: auto-log
+    setup_minutes: 5
+    severity_band:
+      minor: {max_frequency_per_meter: 10}
+      major: {max_frequency_per_meter: 30}
+      critical: {customer_visible: true}
 
   - id: irregolarita_filato
     name_it: irregolarita filato
@@ -153,6 +190,25 @@ failure_modes:
     asset_families: [dyeing, quality_grading]
     parts: [dye_bath, fabric_lot]
     severity: medium
+    hitl_tier: supervisor
+    setup_minutes: 30
+    severity_band:
+      minor: {delta_e_max: 1.0}
+      major: {delta_e_max: 3.0}
+      critical: {delta_e_max: 5.0}
+
+  - id: unlevel_dyeing
+    name_it: tintura non uniforme
+    name_en: unlevel dyeing
+    asset_families: [dyeing, quality_grading]
+    parts: [dye_bath, fabric_lot]
+    severity: medium
+    hitl_tier: manager+safety
+    setup_minutes: 45
+    severity_band:
+      minor: {patch_coverage_pct: 5}
+      major: {patch_coverage_pct: 15}
+      critical: {patch_coverage_pct: 30}
 
   - id: delta_e_excess
     name_it: delta e fuori specifica
