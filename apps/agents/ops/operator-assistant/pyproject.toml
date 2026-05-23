@@ -12,6 +12,10 @@ dependencies = [
   "structlog>=24.4",
   "langchain-core>=0.3",
   "langgraph>=0.4,<0.5",
+  # Pin langgraph-prebuilt to the 0.x line: prebuilt 1.x requires langgraph>=1.0
+  # (it imports langgraph.stream which doesn't exist on 0.4.x). uv otherwise picks
+  # the latest 1.1.0 which breaks `from langgraph.prebuilt import create_react_agent`.
+  "langgraph-prebuilt>=0.2,<1.0",
   "pydantic>=2.7",
   "langdetect>=1.0.9",
 ]
