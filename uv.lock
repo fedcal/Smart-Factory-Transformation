@@ -21,6 +21,7 @@ members = [
     "sft-contracts",
     "sft-domain",
     "sft-knowledge",
+    "sft-ml",
     "sft-tools",
     "sim-textile",
     "smart-factory-transformation",
@@ -3046,6 +3047,36 @@ requires-dist = [
     { name = "sft-domain", editable = "packages/sft-domain" },
     { name = "structlog", specifier = ">=24.4" },
     { name = "testcontainers", extras = ["qdrant", "neo4j"], marker = "extra == 'dev'", specifier = ">=4.8" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "sft-ml"
+version = "0.1.0"
+source = { editable = "packages/sft-ml" }
+dependencies = [
+    { name = "joblib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "pydantic" },
+    { name = "scikit-learn" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "joblib", specifier = ">=1.5.0,<2.0.0" },
+    { name = "numpy", specifier = ">=1.26.0,<3.0.0" },
+    { name = "pandas", specifier = ">=2.3.0,<3.0.0" },
+    { name = "pydantic", specifier = ">=2.7.0,<3.0.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24" },
+    { name = "scikit-learn", specifier = ">=1.7.0,<1.9.0" },
 ]
 provides-extras = ["dev"]
 

@@ -1,0 +1,30 @@
+{
+  "name": "sft-ml",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/sft-ml/src",
+  "targets": {
+    "test": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "packages/sft-ml"
+      }
+    },
+    "lint": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run ruff check src",
+        "cwd": "packages/sft-ml"
+      }
+    },
+    "train": {
+      "executor": "@nxlv/python:run-commands",
+      "options": {
+        "command": "uv run python -m sft_ml.cmapss.training",
+        "cwd": "packages/sft-ml"
+      }
+    }
+  },
+  "implicitDependencies": []
+}

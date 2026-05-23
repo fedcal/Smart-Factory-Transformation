@@ -1,0 +1,8 @@
+{
+  "python_min": "3.12",
+  "random_state": 42,
+  "rul_cap": 125,
+  "sklearn_min": "1.7.0",
+  "training_dataset": "NASA C-MAPSS FD001+FD003 (joint)",
+  "version": "v1.0"
+}
