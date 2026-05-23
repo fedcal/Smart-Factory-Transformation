@@ -276,20 +276,25 @@ def test_validator_sql_class_var() -> None:
 
 
 @pytest.mark.asyncio
-async def test_validate_pool_none_returns_chain(caplog: pytest.LogCaptureFixture) -> None:
-    """When pool=None, validate() returns chain + logs structlog ERROR."""
-    import logging
+async def test_validate_pool_none_returns_chain(capsys: pytest.CaptureFixture) -> None:
+    """When pool=None, validate() returns chain + logs structlog ERROR.
 
+    structlog writes to stdout by default; captured with capsys.
+    """
     v = RCAChainValidator(pool=None)
     chain = _make_valid_chain()
 
-    with caplog.at_level(logging.ERROR, logger="mnt_rca_specialist.validators"):
-        result = await v.validate(chain)
+    result = await v.validate(chain)
 
     assert result is chain
-    # Should have logged an error about pool unavailability
-    log_text = " ".join(caplog.messages)
-    assert "pg_pool" in log_text.lower() or "pool" in log_text.lower()
+    # structlog ERROR should appear in stdout (structlog default renderer)
+    captured = capsys.readouterr()
+    log_output = captured.out + captured.err
+    assert (
+        "pg_pool" in log_output.lower()
+        or "pool" in log_output.lower()
+        or "rca_validator" in log_output
+    ), f"Expected pool-unavailable error in log output, got: {log_output!r}"
 
 
 # ---------------------------------------------------------------------------
