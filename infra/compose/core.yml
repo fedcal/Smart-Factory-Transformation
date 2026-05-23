@@ -113,6 +113,32 @@ services:
       - sft-core
     restart: unless-stopped
 
+  # Phase 6 Plan 06-11: APScheduler-based cron container that POSTs to the
+  # api-gateway every 5 minutes to trigger AnomalyDetector (D-AD-04, OPS-04).
+  # SINGLE-INSTANCE CONSTRAINT (Pitfall §5 / T-V6-multi-instance):
+  # APScheduler has no shared jobstore in this image — never scale > 1.
+  # Helm chart pins replicas: 1 with strategy: Recreate.
+  agents-scheduler:
+    build:
+      context: ../..
+      dockerfile: services/agents-scheduler/Dockerfile
+    image: sft-agents-scheduler:dev
+    environment:
+      API_GATEWAY_URL: "http://api-gateway:8081"
+      ANOMALY_WINDOW_MINUTES: "15"
+      ANOMALY_CRON: "*/5 * * * *"
+      LOG_LEVEL: "INFO"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - sft-core
+    restart: unless-stopped
+    deploy:
+      # Compose v2 reads `deploy.replicas` only under swarm but we declare it
+      # for documentation parity with Helm: the scheduler MUST stay at 1.
+      replicas: 1
+
 volumes:
   pg-data:
   redis-data:

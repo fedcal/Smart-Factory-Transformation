@@ -1,0 +1,17 @@
+apiVersion: v2
+name: agents-scheduler
+description: Smart Factory Transformation - APScheduler cron container that triggers AnomalyDetector every 5 min (D-AD-04, OPS-04). Single-instance by contract.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - smart-factory
+  - agents-scheduler
+  - apscheduler
+  - cron
+home: https://github.com/fedcal/smart-factory-transformation
+sources:
+  - https://github.com/fedcal/smart-factory-transformation
+maintainers:
+  - name: fedcal
+    email: fedcal01@gmail.com
