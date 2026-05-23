@@ -1506,6 +1506,42 @@ wheels = [
 name = "mnt-downtime-analyzer"
 version = "0.1.0"
 source = { editable = "apps/agents/maintenance/downtime-analyzer" }
+dependencies = [
+    { name = "asyncpg" },
+    { name = "nats-py" },
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "sft-assets" },
+    { name = "sft-domain" },
+    { name = "sft-tools" },
+    { name = "sim-textile" },
+    { name = "structlog" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asyncpg", specifier = ">=0.29" },
+    { name = "nats-py", specifier = ">=2.10.0,<3.0.0" },
+    { name = "pydantic", specifier = ">=2.7.0,<3.0.0" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "sft-assets", editable = "packages/sft-assets" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-tools", editable = "packages/sft-tools" },
+    { name = "sim-textile", editable = "simulators/sim-textile" },
+    { name = "structlog", specifier = ">=24.4" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "pytest-asyncio", specifier = ">=0.24" },
+]
 
 [[package]]
 name = "mnt-maintenance-coach"

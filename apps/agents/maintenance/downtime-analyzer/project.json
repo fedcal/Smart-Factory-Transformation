@@ -22,6 +22,8 @@
   "implicitDependencies": [
     "sft-agents",
     "sft-domain",
-    "sft-contracts"
+    "sft-assets",
+    "sft-tools",
+    "sim-textile"
   ]
 }
