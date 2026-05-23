@@ -16,7 +16,12 @@ from __future__ import annotations
 from sft_tools import QueryTimescaleTool, ReplayCMAPSSTool, ReplayUCITool
 
 from sft_agents.tools.audit import EventType, LogEventInput, LogEventTool
-from sft_agents.tools.hitl import EscalateInput, EscalateToSupervisorTool
+from sft_agents.tools.hitl import (
+    EscalateInput,
+    EscalateToSupervisorTool,
+    RequestHelpInput,
+    RequestHelpTool,
+)
 from sft_agents.tools.registry import ToolRegistry, export_tool_schemas
 
 # Builtin tools — instantiated once at import time (tools are stateless after
@@ -34,6 +39,8 @@ __all__ = [
     "EventType",
     "LogEventInput",
     "LogEventTool",
+    "RequestHelpInput",
+    "RequestHelpTool",
     "ToolRegistry",
     "export_tool_schemas",
 ]
