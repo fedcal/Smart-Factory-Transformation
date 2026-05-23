@@ -81,8 +81,24 @@ class ActionType(str, Enum):
         ANOMALY_ALERT — D-AD-01: anomaly-detector alert audit row
             (anomaly score crossed threshold).
 
+    Phase 7 extensions (Maintenance & Reliability cluster, D-AE-MNT):
+        RUL_ESTIMATE — D-PM-04: predictive-maintenance Remaining
+            Useful Life estimate audit row.
+        RCA_CHAIN — D-RCA-02: rca-specialist 5-Why root-cause chain
+            audit row (one row per investigation).
+        COACH_STEP — D-MC-02: maintenance-coach guided procedure-step
+            audit row (one row per coached step).
+        DOWNTIME_VERDICT — D-DA-01: downtime-analyzer event verdict
+            audit row (classification of a downtime event).
+        OEE_REPORT — D-DA-03: downtime-analyzer OEE roll-up report
+            audit row (periodic Overall Equipment Effectiveness summary).
+
     Migration `infra/migrations/timescale/007_extend_audit_decisions.sql`
-    syncs the SQL CHECK constraint with the values below.
+    introduced the action_type CHECK with Phase 1-6 values; migration
+    `infra/migrations/timescale/009_extend_audit_mnt.sql` extends it with
+    the Phase 7 values below. The SQL CHECK string must stay in lockstep
+    with the .value strings here — drift triggers PG CheckViolationError
+    at runtime.
     """
 
     WRITE_PLC_SETPOINT = "WRITE_PLC_SETPOINT"
@@ -96,3 +112,9 @@ class ActionType(str, Enum):
     QUALITY_VERDICT = "QUALITY_VERDICT"
     SCHEDULE_DRAFT = "SCHEDULE_DRAFT"
     ANOMALY_ALERT = "ANOMALY_ALERT"
+    # Phase 7 additions — keep in lockstep with migration 009 (D-AE-MNT).
+    RUL_ESTIMATE = "RUL_ESTIMATE"          # D-PM-04: predictive-maintenance audit row
+    RCA_CHAIN = "RCA_CHAIN"                # D-RCA-02: rca-specialist 5-Why chain audit
+    COACH_STEP = "COACH_STEP"              # D-MC-02: maintenance-coach step audit
+    DOWNTIME_VERDICT = "DOWNTIME_VERDICT"  # D-DA-01: downtime-analyzer event audit
+    OEE_REPORT = "OEE_REPORT"              # D-DA-03: downtime-analyzer OEE report audit

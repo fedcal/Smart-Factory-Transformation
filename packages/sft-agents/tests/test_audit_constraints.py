@@ -142,6 +142,97 @@ _PHASE6_ACTION_TYPE_VALUES: list[tuple[str, str]] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Phase 7 enum extensions (Plan 07-01 Task 2)
+#
+# The 5 new ActionType members (RUL_ESTIMATE, RCA_CHAIN, COACH_STEP,
+# DOWNTIME_VERDICT, OEE_REPORT) MUST stay in lockstep with the SQL CHECK
+# constraint in infra/migrations/timescale/009_extend_audit_mnt.sql (D-AE-MNT).
+# The migration round-trip integration test lives at
+# infra/migrations/timescale/tests/test_migration_009.py — those tests verify
+# the DB side. The tests below verify the Python side:
+#   - enum members exist and import cleanly
+#   - .value strings match the SQL CHECK enum strings exactly
+#   - Decision enum is NOT extended (D-AE-MNT explicit: existing values suffice)
+# ---------------------------------------------------------------------------
+
+
+_PHASE7_ACTION_TYPE_VALUES: list[tuple[str, str]] = [
+    ("RUL_ESTIMATE", "RUL_ESTIMATE"),
+    ("RCA_CHAIN", "RCA_CHAIN"),
+    ("COACH_STEP", "COACH_STEP"),
+    ("DOWNTIME_VERDICT", "DOWNTIME_VERDICT"),
+    ("OEE_REPORT", "OEE_REPORT"),
+]
+
+
+class TestPhase7ActionTypeEnum:
+    """Five Phase 7 ActionType additions (RUL_ESTIMATE, RCA_CHAIN, COACH_STEP,
+    DOWNTIME_VERDICT, OEE_REPORT) per 07-PATTERNS.md Section 3 lines 148-174
+    and D-AE-MNT."""
+
+    @pytest.mark.parametrize(("member_name", "value"), _PHASE7_ACTION_TYPE_VALUES)
+    def test_member_present_with_expected_value(
+        self, member_name: str, value: str
+    ) -> None:
+        from sft_agents.models import ActionType
+
+        assert hasattr(ActionType, member_name), (
+            f"ActionType.{member_name} missing — Phase 7 enum extension required"
+        )
+        member = ActionType[member_name]
+        assert member.value == value, (
+            f"ActionType.{member_name}.value must equal {value!r} to match"
+            f" migration 009 CHECK constraint; got {member.value!r}"
+        )
+
+    @pytest.mark.parametrize(("_member_name", "value"), _PHASE7_ACTION_TYPE_VALUES)
+    def test_string_lookup_round_trip(
+        self, _member_name: str, value: str
+    ) -> None:
+        from sft_agents.models import ActionType
+
+        # SQL CHECK constraint stores the .value; Python reads it back via ActionType(str)
+        looked_up = ActionType(value)
+        assert looked_up.value == value
+
+
+class TestPhase7DecisionEnumUnchanged:
+    """D-AE-MNT: Decision enum MUST NOT be extended in Phase 7.
+
+    Asserts the exact Decision member set after Phase 6 (Plan 06-01) is the
+    same after Phase 7 enum changes — no additions, no removals, no renames.
+    Catches accidental Decision extensions that would drift from migration 009
+    (which leaves the decision CHECK constraint untouched)."""
+
+    _EXPECTED_DECISION_MEMBERS: set[str] = {
+        # Phase 1-5 baseline
+        "AUTO",
+        "HITL_OPERATOR",
+        "HITL_SUPERVISOR",
+        "HITL_MANAGER",
+        "INTERLOCK_REJECT",
+        "ROLLED_BACK",
+        "TIMED_OUT",
+        "GOVERNOR_ALERT",
+        "ESCALATED",
+        # Phase 6 (migration 007)
+        "SUPPRESSED",
+        "LOGGED",
+    }
+
+    def test_decision_members_exactly_match_phase6_set(self) -> None:
+        from sft_agents.models import Decision
+
+        actual = set(Decision.__members__)
+        assert actual == self._EXPECTED_DECISION_MEMBERS, (
+            "Decision enum drifted from Phase 6 set — D-AE-MNT forbids"
+            f" Phase 7 Decision extensions.\n"
+            f" Added members:   {actual - self._EXPECTED_DECISION_MEMBERS}\n"
+            f" Removed members: {self._EXPECTED_DECISION_MEMBERS - actual}"
+        )
+
+
 class TestPhase6DecisionEnum:
     """D-AD-03 (suppressed) + D-OA-02 (logged) Decision additions."""
 
