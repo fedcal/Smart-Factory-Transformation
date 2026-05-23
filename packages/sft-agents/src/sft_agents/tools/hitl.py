@@ -223,4 +223,180 @@ class EscalateToSupervisorTool(BaseTool):
         return decision
 
 
-__all__ = ["EscalateInput", "EscalateToSupervisorTool"]
+# ---------------------------------------------------------------------------
+# RequestHelpTool — Phase 7 Plan 07-04 MaintenanceCoach wrapper (D-MC-02)
+# ---------------------------------------------------------------------------
+
+
+class RequestHelpInput(BaseModel):
+    """Input schema for :class:`RequestHelpTool`.
+
+    Used by MaintenanceCoach to surface an explicit technician help request
+    (keywords like ``aiuto`` / ``help`` / ``stuck`` in the conversation).
+    The fields capture the intervention context that the supervisor will see
+    when the wrapped :func:`EscalateToSupervisorTool` calls ``interrupt()``.
+
+    Field constraints mitigate prompt-injection (T-V7-injection-prompt-stuffing,
+    T-V7-intervention-id-overflow):
+
+    * ``reason`` / ``context``: ``[10, 2000]`` chars — same bounds as
+      ``EscalateInput``.
+    * ``intervention_id``: ``[1, 64]`` chars — matches Phase 4 thread_id length
+      convention.
+    * ``current_step``: ``[0, 100]`` — guided procedures cap at 100 steps.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    reason: str = Field(
+        min_length=10,
+        max_length=2000,
+        description="Why the technician is asking for help (natural language).",
+    )
+    context: str = Field(
+        min_length=10,
+        max_length=2000,
+        description="Short context: what was tried, what is observed.",
+    )
+    intervention_id: str = Field(
+        min_length=1,
+        max_length=64,
+        description="Maintenance intervention identifier (correlates with audit row).",
+    )
+    current_step: int = Field(
+        ge=0,
+        le=100,
+        description="Zero-based index of the current step in the guided procedure.",
+    )
+
+
+_REQUEST_HELP_DESCRIPTION = (
+    "Technician explicit help request (keyword: 'aiuto', 'help', 'stuck'). "
+    "Wraps escalate_to_supervisor: pauses the agent and routes the request to "
+    "a human supervisor for explicit guidance. "
+    "Required args: reason, context, intervention_id, current_step."
+)
+
+
+class RequestHelpTool(BaseTool):
+    """MaintenanceCoach wrapper around :class:`EscalateToSupervisorTool` (D-MC-02).
+
+    Why a wrapper and not a re-implementation
+    -----------------------------------------
+    D-MC-02 (07-CONTEXT.md) explicitly mandates that ``request_help`` *wraps*
+    ``escalate_to_supervisor`` rather than duplicating the interrupt /
+    safety-check / audit pipeline. The wrapping pattern preserves the
+    following Phase 6 invariants by construction:
+
+    * **Pitfall §3 inheritance (no audit before interrupt)** — this tool
+      performs NO ``AuditWriter.write``, NO ``ApprovalQueueWriter.insert``,
+      and NO ``AuditNatsPublisher.publish`` call. It only formats the
+      escalation payload and delegates to ``EscalateToSupervisorTool._arun``,
+      which is itself audit-side-effect-free before ``interrupt()``. The
+      ``human_approval_node`` performs the dual-write after resume.
+
+    * **Pitfall §9 (uniform safety gate)** — the underlying
+      ``EscalateToSupervisorTool`` still routes the synthetic
+      ``ProposedAction`` through ``SafetyInterlockMiddleware.check`` before
+      calling ``interrupt()``.
+
+    * **Async-only convention (Shared Pattern B)** — sync ``_run`` raises
+      ``NotImplementedError`` so synchronous agent loops cannot silently
+      deadlock on an async tool.
+
+    Audit marker (D-MC-02)
+    ----------------------
+    The audit row written by the calling ``human_approval_node`` MUST include
+    ``escalation_trigger: 'technician_request'`` in the payload to distinguish
+    technician-driven escalations from autonomous agent escalations. This
+    tool does NOT write that row itself (see Pitfall §3 above) — the marker
+    is the responsibility of the calling node and is documented here so the
+    contract is discoverable from the tool surface.
+
+    Composition contract
+    --------------------
+    ``_arun`` composes the wrapped call as::
+
+        evidence_summary = f"intervention={intervention_id} step={current_step} "
+                            f"context={context[:1000]}"
+        suggested_action = f"Supervisor: review step {current_step} of "
+                            f"intervention {intervention_id}"
+        return await self._escalate._arun(
+            reason=reason,
+            suggested_action=suggested_action,
+            evidence_summary=evidence_summary,
+            **kwargs,
+        )
+
+    The 1000-char ``context`` clip in ``evidence_summary`` is defense-in-depth
+    on top of the schema-level ``max_length=2000`` — the supervisor UI panel
+    has a soft cap and the truncation keeps the audit payload predictable.
+    """
+
+    name: str = "request_help"
+    description: str = _REQUEST_HELP_DESCRIPTION
+    args_schema: type[BaseModel] = RequestHelpInput
+
+    # PrivateAttr keeps langchain_core from treating this as a tool parameter.
+    _escalate: EscalateToSupervisorTool = PrivateAttr()
+
+    def __init__(
+        self,
+        *,
+        escalate: EscalateToSupervisorTool,
+        **kwargs: Any,
+    ) -> None:
+        """Bind the underlying :class:`EscalateToSupervisorTool` instance.
+
+        Args:
+            escalate: A constructed ``EscalateToSupervisorTool`` (already wired
+                with audit_writer / queue_writer / nats / safety_middleware).
+                The wrapping tool does NOT instantiate one itself — callers
+                inject so the same audit / safety pipeline backs both tools.
+        """
+        super().__init__(**kwargs)
+        self._escalate = escalate
+
+    def _run(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        """Sync ``_run`` disabled — use ``await tool.ainvoke({...})`` instead."""
+        raise NotImplementedError(
+            "RequestHelpTool is async-only. "
+            "Use `await tool.ainvoke({...})` or `await tool._arun(...)` instead."
+        )
+
+    async def _arun(
+        self,
+        reason: str,
+        context: str,
+        intervention_id: str,
+        current_step: int,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Compose the escalation payload and delegate to the wrapped tool.
+
+        See class docstring for the composition contract and the Pitfall §3
+        inheritance rationale. The returned dict is the supervisor's decision
+        as POSTed to ``/approvals/{id}/decide`` — propagated verbatim from
+        the underlying ``EscalateToSupervisorTool._arun``.
+        """
+        evidence_summary = (
+            f"intervention={intervention_id} step={current_step} "
+            f"context={context[:1000]}"
+        )
+        suggested_action = (
+            f"Supervisor: review step {current_step} of intervention {intervention_id}"
+        )
+        return await self._escalate._arun(
+            reason=reason,
+            suggested_action=suggested_action,
+            evidence_summary=evidence_summary,
+            **kwargs,
+        )
+
+
+__all__ = [
+    "EscalateInput",
+    "EscalateToSupervisorTool",
+    "RequestHelpInput",
+    "RequestHelpTool",
+]
