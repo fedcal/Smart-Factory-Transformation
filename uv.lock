@@ -1521,6 +1521,44 @@ source = { editable = "apps/agents/maintenance/predictive-maintenance" }
 name = "mnt-rca-specialist"
 version = "0.1.0"
 source = { editable = "apps/agents/maintenance/rca-specialist" }
+dependencies = [
+    { name = "asyncpg" },
+    { name = "langchain-core" },
+    { name = "langgraph" },
+    { name = "langgraph-prebuilt" },
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "sft-domain" },
+    { name = "sft-knowledge" },
+    { name = "sft-tools" },
+    { name = "structlog" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asyncpg", specifier = ">=0.29" },
+    { name = "langchain-core", specifier = ">=0.3" },
+    { name = "langgraph", specifier = ">=0.4" },
+    { name = "langgraph-prebuilt", specifier = ">=0.2" },
+    { name = "pydantic", specifier = ">=2.7.0,<3.0.0" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-knowledge", editable = "packages/sft-knowledge" },
+    { name = "sft-tools", editable = "packages/sft-tools" },
+    { name = "structlog", specifier = ">=24.4" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "pytest-asyncio", specifier = ">=0.23" },
+]
 
 [[package]]
 name = "mpmath"
