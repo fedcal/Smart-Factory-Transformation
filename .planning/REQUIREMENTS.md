@@ -84,8 +84,8 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **OPS-02**: `ProductionPlanner` — ottimizza scheduling ordini su linee/macchine con vincoli capacità
 - [ ] **OPS-03**: `QualityInspector` — valuta segnali QC, applica tassonomia difetti tessili (broken end, mispick, slub, neppy, selvage fault, shade deviation, unlevel dyeing) e 4-point grading
 - [ ] **OPS-04**: `AnomalyDetector` — rileva anomalie real-time su streaming sensori con baseline per-machine
-- [ ] **OPS-05**: Ogni agente OPS dichiara: tool usati, fonti dati, livello HITL richiesto, KPI impattati
-- [ ] **OPS-06**: Test end-to-end per ciascun agente OPS su scenario simulato con verità nota
+- [x] **OPS-05**: Ogni agente OPS dichiara: tool usati, fonti dati, livello HITL richiesto, KPI impattati
+- [x] **OPS-06**: Test end-to-end per ciascun agente OPS su scenario simulato con verità nota
 
 ### Agenti Maintenance & Reliability (MNT)
 
@@ -306,8 +306,8 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | OPS-02 | Phase 6 | Pending |
 | OPS-03 | Phase 6 | Pending |
 | OPS-04 | Phase 6 | Pending |
-| OPS-05 | Phase 6 | Pending |
-| OPS-06 | Phase 6 | Pending |
+| OPS-05 | Phase 6 | Complete |
+| OPS-06 | Phase 6 | Complete |
 | MNT-01 | Phase 7 | Pending |
 | MNT-02 | Phase 7 | Pending |
 | MNT-03 | Phase 7 | Pending |

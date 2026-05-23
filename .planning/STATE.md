@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-05-23T11:13:11.634Z"
-last_activity: 2026-05-23 -- Phase 06 planning complete
+last_updated: "2026-05-23T12:06:05.943Z"
+last_activity: 2026-05-23
 progress:
   total_phases: 12
   completed_phases: 4
   total_plans: 58
-  completed_plans: 43
+  completed_plans: 44
   percent: 33
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 05 — knowledge-layer-rag-graph
+**Current focus:** Phase 06 — agents-operations-production
 
 ## Current Position
 
-Phase: 05 (knowledge-layer-rag-graph) — EXECUTING
-Plan: 1 of 10
+Phase: 06 (agents-operations-production) — EXECUTING
+Plan: 2 of 15
 Status: Ready to execute
-Last activity: 2026-05-23 -- Phase 06 planning complete
+Last activity: 2026-05-23
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [████████░░] 76%
 
 ### Phase 1 plans (waves — DAG-computed)
 
@@ -60,6 +60,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 06 P00 | 25min | 3 tasks | 61 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Recent decisions affecting current work:
 - Roadmap: 12 fine-grained phases derived from the hard dependency graph (HITL before agents, simulator before sensor-dependent agents, knowledge layer before knowledge-dependent agents, CostAnalyzer last)
 - Architecture: Hierarchical supervisor + cluster subgraphs pattern in LangGraph; OT Bridge enforces strict data-diode at Docker network level
 - Stack: All choices locked — Nx 20.x + @nxlv/python 21.x, LangGraph 0.4+, Qwen2.5 via Ollama/vLLM, Qdrant, BGE-M3, TimescaleDB, NATS JetStream, Langfuse v3, Angular 18 SSR, FastAPI
+- [Phase ?]: Phase 6 Wave 0: chose def test_placeholder body convention over module-level pytest.skip for predictable per-test reporting
+- [Phase ?]: Wave 0 scaffold added packages/sft-agents/tests/runtime/__init__.py for sub-package parity (Rule 3 auto-fix)
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-23T10:12:12.423Z
+Last session: 2026-05-23T12:05:48.202Z
 Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-agents-operations-production/06-CONTEXT.md
+Resume file: None
