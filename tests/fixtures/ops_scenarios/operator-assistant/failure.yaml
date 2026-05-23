@@ -1,3 +1,36 @@
-scenario:
-  name: operator-assistant-failure
-  note: Wave 0 stub — replace in plan 06-12
+# OperatorAssistant — failure path (escalation to supervisor)
+#
+# Plan 06-13 / OPS-01 — operator requests production stop. LLM calls
+# escalate_to_supervisor tool; an ESCALATION_REQUEST audit row is written.
+
+name: operator-assistant-failure
+description: >
+  Operator asks the agent to stop a loom. The agent invokes escalate_to_supervisor
+  (which writes audit decision=ESCALATION_REQUEST and queues supervisor HITL).
+input:
+  endpoint: agent.__call__
+  body:
+    query: "Ferma il telaio L01 adesso, c'è un problema di sicurezza."
+    user_roles: ["technician"]
+    thread_id: "ops.operator-assistant.failure-01"
+seed:
+  qdrant_chunks:
+    - source_uri: "sop://safety/emergency-stop"
+      title: "SOP — Arresto di emergenza loom"
+      content: >
+        L'arresto operativo di un telaio richiede approvazione supervisore.
+        Comunicare alla cabina e attendere autorizzazione.
+      acl: ["technician", "supervisor"]
+      category: "sop"
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/operator-assistant/failure.jsonl
+expected:
+  decision: hitl_supervisor
+  action_type: ESCALATION_REQUEST
+  tool_calls: ["escalate_to_supervisor"]
+  audit_rows: 1
+  citations_min: 0
+  lang: it
+  response_md_min_length: 1

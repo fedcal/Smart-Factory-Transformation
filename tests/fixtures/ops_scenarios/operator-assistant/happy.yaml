@@ -1,3 +1,39 @@
-scenario:
-  name: operator-assistant-happy
-  note: Wave 0 stub — replace in plan 06-12
+# OperatorAssistant — happy path (Italian troubleshooting query)
+#
+# Plan 06-13 / OPS-01 / OPS-05 — success criterion #5 (happy scenario).
+# Loaded by tests/e2e/ops/conftest.py:ops_scenario via yaml.safe_load.
+
+name: operator-assistant-happy
+description: >
+  Italian operator query for warp-break troubleshooting on LOOM-01. RAG returns 1 SOP
+  citation (technician ACL), LLM produces grounded reply with inline [1] citation marker.
+input:
+  endpoint: agent.__call__
+  body:
+    query: "Come risolvo una rottura del filo di ordito sul telaio L01?"
+    user_roles: ["technician"]
+    thread_id: "ops.operator-assistant.happy-01"
+seed:
+  qdrant_chunks:
+    - source_uri: "sop://loom/warp-break-recovery"
+      title: "SOP — Recupero rottura filo di ordito (LOOM)"
+      content: >
+        Procedura per recuperare una rottura del filo di ordito. 1) Arrestare il telaio
+        in sicurezza tramite pulsante di emergenza. 2) Identificare il filo rotto sulla
+        pettine. 3) Reinserire il filo con uncino, mantenendo la tensione costante.
+        4) Riavviare il ciclo dopo verifica del battente.
+      acl: ["technician", "supervisor"]
+      category: "sop"
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/operator-assistant/happy.jsonl
+expected:
+  decision: auto
+  action_type: null
+  tool_calls: ["rag_search"]
+  audit_rows: 0
+  citations_min: 1
+  lang: it
+  response_contains: "[1]"
+  response_md_min_length: 30

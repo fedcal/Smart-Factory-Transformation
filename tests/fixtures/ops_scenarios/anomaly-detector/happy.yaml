@@ -1,3 +1,31 @@
-scenario:
-  name: anomaly-detector-happy
-  note: Wave 0 stub — replace in plan 06-12
+# AnomalyDetector — happy path (1 out-of-band sensor sample → 1 anomaly emitted)
+#
+# Plan 06-13 / OPS-04 — Single LOOM-01 sample crosses baseline → 1 anomaly,
+# 1 audit row Decision.AUTO + ActionType.ANOMALY_ALERT.
+
+name: anomaly-detector-happy
+description: >
+  One loom-vibration sensor reading well outside baseline triggers exactly
+  one anomaly + audit row.
+input:
+  endpoint: agent.__call__
+  body:
+    window_minutes: 15
+    triggered_by: scheduler
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows:
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 25.0  # baseline ~ [0, 8] → out-of-band
+      timestamp_offset_seconds: -60  # 1 minute ago, inside 15-min window
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/anomaly-detector/happy.jsonl
+expected:
+  decision: auto
+  action_type: ANOMALY_ALERT
+  tool_calls: []
+  audit_rows_min: 1
+  anomalies_min: 1
+  suppressed_count: 0

@@ -1,3 +1,29 @@
-scenario:
-  name: anomaly-detector-degraded
-  note: Wave 0 stub — replace in plan 06-12
+# AnomalyDetector — degraded path (no samples in window → no anomalies)
+#
+# Plan 06-13 / OPS-04 — Empty TSDB window → 0 anomalies, structlog event
+# "anomaly_scan_complete" with emitted=0.
+
+name: anomaly-detector-degraded
+description: >
+  No sensor samples in the window. Scan completes cleanly with 0 anomalies
+  and 0 audit rows.
+input:
+  endpoint: agent.__call__
+  body:
+    window_minutes: 15
+    triggered_by: scheduler
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []  # intentionally empty
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/anomaly-detector/degraded.jsonl
+expected:
+  decision: null
+  action_type: null
+  tool_calls: []
+  audit_rows_min: 0
+  audit_rows_max: 0
+  anomalies_min: 0
+  anomalies_max: 0
+  suppressed_count: 0

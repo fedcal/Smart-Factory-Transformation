@@ -1,3 +1,34 @@
-scenario:
-  name: anomaly-detector-failure
-  note: Wave 0 stub — replace in plan 06-12
+# AnomalyDetector — failure path (rate-limit suppression at 12/h cap)
+#
+# Plan 06-13 / OPS-04 — RateLimiter pre-loaded with 12 alerts in the past hour;
+# the next anomaly trips Decision.SUPPRESSED.
+
+name: anomaly-detector-failure
+description: >
+  Rate limiter pre-loaded with 12 alerts in the last hour. The next out-of-band
+  sample is suppressed (Decision.SUPPRESSED audit row, not emitted).
+input:
+  endpoint: agent.__call__
+  body:
+    window_minutes: 15
+    triggered_by: scheduler
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows:
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 30.0
+      timestamp_offset_seconds: -30
+  audit_seed:
+    # 12 prior ANOMALY_ALERT audit rows in the last hour (rate-limit cap = 12/h).
+    pre_existing_anomaly_alerts: 12
+mock_llm_fixture: tests/fixtures/llm_responses/anomaly-detector/failure.jsonl
+expected:
+  decision: suppressed
+  action_type: ANOMALY_ALERT
+  tool_calls: []
+  audit_rows_min: 1  # one new SUPPRESSED row
+  anomalies_min: 0
+  anomalies_max: 0
+  suppressed_count_min: 1

@@ -1,3 +1,36 @@
-scenario:
-  name: production-planner-degraded
-  note: Wave 0 stub — replace in plan 06-12
+# ProductionPlanner — degraded path (LLM produces invalid JSON, fallback rationale)
+#
+# Plan 06-13 / OPS-02 — LLM emits a non-JSON payload. The agent falls back to
+# _FALLBACK_RATIONALE but still produces a valid ScheduleDraft + supervisor HITL.
+
+name: production-planner-degraded
+description: >
+  LLM returns garbled content; agent must fall back to static rationale text
+  while still emitting a valid SCHEDULE_DRAFT to supervisor HITL.
+input:
+  endpoint: agent.__call__
+  body:
+    strategy: edd
+    horizon_days: 1  # narrow horizon → many unscheduled orders
+    user_roles: ["supervisor"]
+    thread_id: "ops.production-planner.degraded-01"
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/production-planner/degraded.jsonl
+expected:
+  decision: hitl_supervisor
+  action_type: SCHEDULE_DRAFT
+  tool_calls: []
+  audit_rows: 0
+  hitl_approvals_min: 1
+  hitl_tier: supervisor
+  schedule_items_min: 0
+  # NB: 20-order seed easily fits 1-day horizon across the 30-asset capacity sheet,
+  # so unscheduled_orders may be 0. The "degraded" character of this scenario is
+  # the LLM JSON parse failure → _FALLBACK_RATIONALE — NOT scheduling pressure.
+  unscheduled_min: 0
+  has_rationale_md: true
+  rationale_is_fallback: true

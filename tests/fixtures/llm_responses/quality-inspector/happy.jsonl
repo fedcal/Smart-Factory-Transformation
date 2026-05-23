@@ -1,1 +1,1 @@
-{"prompt_hash": "0000000000000000000000000000000000000000000000000000000000000000", "response": {"content": "Wave 0 stub", "tool_calls": [], "usage_metadata": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}}}
+{"prompt_hash": "", "response": {"content": "{\"score\": 4, \"severity\": \"minor\", \"rationale_md\": \"Small slub (<1 inch) on a single end. ASTM D5430 four-point grading rates this defect a 4 (minor) — no impact on fabric usability.\", \"citations\": []}", "tool_calls": [], "usage_metadata": {"input_tokens": 420, "output_tokens": 80, "total_tokens": 500}}}

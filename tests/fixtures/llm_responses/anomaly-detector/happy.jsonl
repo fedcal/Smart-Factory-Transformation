@@ -1,1 +1,1 @@
-{"prompt_hash": "0000000000000000000000000000000000000000000000000000000000000000", "response": {"content": "Wave 0 stub", "tool_calls": [], "usage_metadata": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}}}
+{"prompt_hash": "", "response": {"content": "(unused — AnomalyDetector is deterministic and never invokes the LLM; entry kept for fixture-completeness only)", "tool_calls": [], "usage_metadata": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}}}
