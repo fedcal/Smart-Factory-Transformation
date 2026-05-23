@@ -28,6 +28,9 @@ expected:
   hitl_approvals_min: 1
   hitl_tier: supervisor
   schedule_items_min: 0
-  unscheduled_min: 1
+  # NB: 20-order seed easily fits 1-day horizon across the 30-asset capacity sheet,
+  # so unscheduled_orders may be 0. The "degraded" character of this scenario is
+  # the LLM JSON parse failure → _FALLBACK_RATIONALE — NOT scheduling pressure.
+  unscheduled_min: 0
   has_rationale_md: true
   rationale_is_fallback: true
