@@ -1,7 +1,61 @@
-# MaintenanceCoach — failure scenario (Wave 0 stub).
-#
-# Real seed (LLM produces step ID not in SOP corpus → validator fails →
-# escalation) lands in plan 07-12.
-scenario:
-  name: maintenance-coach-failure
-  note: Wave 0 stub — replace in plan 07-12
+name: maintenance-coach-failure
+description: "LLM at step 4 references non-existent step 99 in SOP → agent surfaces error, intervention not completed, checkpoint preserved"
+input:
+  endpoint: POST /v1/agents/maintenance-coach/start
+  body:
+    intervention_id: "INTV-FAIL-001"
+    asset_id: "LOOM-01"
+    sop_id: "SOP-LOOM-001"
+    technician_id: "TECH-009"
+    user_roles:
+      - "technician"
+  multi_turn:
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-FAIL-001"
+        technician_input: "Ho ispezionato il filo. Rottura alla posizione 12."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-FAIL-001"
+        technician_input: "Ho rimosso il filo rotto."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-FAIL-001"
+        technician_input: "Ho verificato la tensione."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-FAIL-001"
+        technician_input: "Pronto per il passo successivo."
+seed:
+  qdrant_chunks:
+    - id: "chunk-coach-f-1"
+      source_uri: "doc://SOP-LOOM-001#step1"
+      text: "Passo 1: Ispeziona visivamente il filo di ordito."
+      vector_seed: 60
+      score: 0.95
+    - id: "chunk-coach-f-2"
+      source_uri: "doc://SOP-LOOM-001#step2"
+      text: "Passo 2: Rimuovi il filo rotto dalla sezione interessata."
+      vector_seed: 61
+      score: 0.92
+    - id: "chunk-coach-f-3"
+      source_uri: "doc://SOP-LOOM-001#step3"
+      text: "Passo 3: Verifica e ricalibra il regolatore di tensione."
+      vector_seed: 62
+      score: 0.89
+    - id: "chunk-coach-f-4"
+      source_uri: "doc://SOP-LOOM-001#step4"
+      text: "Passo 4: Riannoda il filo applicando la tecnica standard."
+      vector_seed: 63
+      score: 0.87
+mock_llm_fixture: tests/fixtures/llm_responses/maintenance-coach/failure.jsonl
+expected:
+  status_code: 500
+  decision: null
+  action_type: "COACH_STEP"
+  audit_rows_min: 3
+  completed_steps_count: 3
+  mttr_minutes_min: null
+  awaiting_help: false
+  escalation_trigger: null
+  checkpoint_preserved: true

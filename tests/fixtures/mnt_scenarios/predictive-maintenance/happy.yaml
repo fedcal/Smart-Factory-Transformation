@@ -1,7 +1,120 @@
-# PredictiveMaintenance — happy scenario (Wave 0 stub).
-#
-# Real seed (sensor window inside healthy range → RUL estimate emitted +
-# Decision.AUTO audit row) lands in plan 07-12.
-scenario:
-  name: predictive-maintenance-happy
-  note: Wave 0 stub — replace in plan 07-12
+name: predictive-maintenance-happy
+description: "AD-triggered RUL inference on LOOM-01 with healthy band (rul ~ 80, health > 0.6)"
+input:
+  endpoint: POST /v1/agents/predictive-maintenance/score
+  body:
+    asset_id: "LOOM-01"
+    triggered_by_action_id: "00000000-0000-4000-8000-000000000001"
+    user_roles:
+      - "technician"
+seed:
+  pg_audit_rows:
+    - action_id: "00000000-0000-4000-8000-000000000001"
+      agent_id: "anomaly-detector"
+      action_type: "ANOMALY_ALERT"
+      cluster: "ops"
+      decision: "auto"
+      ts: "2026-05-23T08:00:00Z"
+      evidence_panel:
+        asset_id: "LOOM-01"
+        tool_calls: []
+  pg_sensor_events:
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.2
+      timestamp: "2026-05-23T08:30:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 42.1
+      timestamp: "2026-05-23T08:30:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 64.8
+      timestamp: "2026-05-23T08:31:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 41.9
+      timestamp: "2026-05-23T08:31:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.5
+      timestamp: "2026-05-23T08:32:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 42.3
+      timestamp: "2026-05-23T08:32:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 3.2
+      timestamp: "2026-05-23T08:33:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 3.4
+      timestamp: "2026-05-23T08:33:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.1
+      timestamp: "2026-05-23T08:34:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 42.0
+      timestamp: "2026-05-23T08:34:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 64.9
+      timestamp: "2026-05-23T08:35:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 41.8
+      timestamp: "2026-05-23T08:35:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 3.1
+      timestamp: "2026-05-23T08:36:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.3
+      timestamp: "2026-05-23T08:37:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 42.2
+      timestamp: "2026-05-23T08:37:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 3.3
+      timestamp: "2026-05-23T08:38:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.0
+      timestamp: "2026-05-23T08:39:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "warp_tension"
+      value: 41.7
+      timestamp: "2026-05-23T08:39:30Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "vibration_mm_s"
+      value: 3.2
+      timestamp: "2026-05-23T08:40:00Z"
+    - asset_id: "LOOM-01"
+      sensor_id: "loom_temperature"
+      value: 65.4
+      timestamp: "2026-05-23T08:41:00Z"
+  sft_assets_overrides:
+    - asset_id: "LOOM-01"
+      asset_family: "loom"
+  production_state_overrides:
+    LOOM-01:
+      good_meters: 980
+      target_meters: 1000
+expected:
+  status_code: 200
+  decision: "auto"
+  action_type: "RUL_ESTIMATE"
+  audit_rows_min: 2
+  tool_calls_includes:
+    - "query_timescale"
+  rul_cycles_band:
+    - 38
+    - 125
+  health_index_min: 0.3
+  triggered_by_action_id_present: true

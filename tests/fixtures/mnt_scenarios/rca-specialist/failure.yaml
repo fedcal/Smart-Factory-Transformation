@@ -1,7 +1,49 @@
-# RCASpecialist — failure scenario (Wave 0 stub).
-#
-# Real seed (2 retries exhausted → escalation to HITL supervisor) lands
-# in plan 07-12.
-scenario:
-  name: rca-specialist-failure
-  note: Wave 0 stub — replace in plan 07-12
+name: rca-specialist-failure
+description: "5-Why analysis: 3 consecutive LLM calls fail (invalid JSON → orphan citations → incomplete steps) → retries exhausted → best_attempt escalated"
+input:
+  endpoint: POST /v1/agents/rca-specialist/analyze
+  body:
+    problem_statement: "Loom L01 ha avuto ripetuti downtime di trama spezzata per 2 ore consecutive."
+    downtime_event_id: "evt-003"
+    asset_id: "LOOM-01"
+    user_roles:
+      - "technician"
+      - "supervisor"
+    lang: "it"
+seed:
+  pg_documents:
+    - source_uri: "doc://SOP-LOOM-001#step1"
+      title: "SOP trama spezzata - ispezione"
+      content: "Ispezione sistema inserimento trama."
+    - source_uri: "doc://SOP-LOOM-002#step1"
+      title: "SOP trama spezzata - intervento rapido"
+      content: "Procedura rapida ripristino trama su telaio rapier."
+  qdrant_chunks:
+    - id: "chunk-rca-fail-1"
+      source_uri: "doc://SOP-LOOM-001#step1"
+      text: "Ispezione sistema trama."
+      vector_seed: 47
+      score: 0.90
+  neo4j_facts:
+    - "CREATE (m:Machine {asset_id:'LOOM-01'})-[:HAS_PART]->(p:Part {name:'weft_insertion'})-[:HAS_FAILURE_MODE]->(fm:FailureMode {id:'broken_weft'})-[:DOCUMENTED_BY]->(s:SOP {id:'SOP-LOOM-001'})"
+  pg_downtime_events:
+    - event_id: "evt-003"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-BW-004"
+      duration_min: 120
+      severity: "critical"
+      source: "operator"
+      timestamp: "2026-05-23T11:00:00Z"
+mock_llm_fixture: tests/fixtures/llm_responses/rca-specialist/failure.jsonl
+expected:
+  status_code: 202
+  decision: "hitl_supervisor"
+  action_type: "RCA_CHAIN"
+  audit_rows_min: 1
+  tool_calls_includes:
+    - "rag_search"
+    - "escalate_to_supervisor"
+  hitl_status: "supervisor_pending"
+  citations_min_per_step: 0
+  validation_exhausted: true
+  best_attempt_present: true
