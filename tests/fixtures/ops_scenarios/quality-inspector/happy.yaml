@@ -1,3 +1,37 @@
-scenario:
-  name: quality-inspector-happy
-  note: Wave 0 stub — replace in plan 06-12
+# QualityInspector — happy path (slub minor, auto-log)
+#
+# Plan 06-13 / OPS-03 — small slub defect → severity=minor → tier=auto-log.
+# Writes a single audit row decision=AUTO (no HITL).
+
+name: quality-inspector-happy
+description: >
+  Small slub defect (length<1in). Grader returns score=4/severity=minor; agent
+  routes to auto-log and writes Decision.AUTO with QUALITY_VERDICT action.
+input:
+  endpoint: agent.handle_event
+  body:
+    event:
+      asset_id: "LOOM-01"
+      dye_lot_id: "DL-LOOM-01-20260523-a001"
+      defect_type: "slub"
+      defect_length_inches: 0.5
+      full_width: false
+      position_meters: 12.3
+      timestamp: "2026-05-23T10:00:00+00:00"
+      source: "simulator"
+    user_roles: ["technician"]
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/quality-inspector/happy.jsonl
+expected:
+  decision: auto
+  action_type: QUALITY_VERDICT
+  tool_calls: []
+  audit_rows: 1
+  hitl_routed_to: auto-log
+  severity: minor
+  score: 4
+  hitl_approvals_min: 0

@@ -1,3 +1,30 @@
-scenario:
-  name: operator-assistant-degraded
-  note: Wave 0 stub — replace in plan 06-12
+# OperatorAssistant — degraded path (no SOPs found, graceful fallback)
+#
+# Plan 06-13 / OPS-01 — RAG returns 0 hits; agent emits answer with
+# citations_missing=true + structured-log warning.
+
+name: operator-assistant-degraded
+description: >
+  Italian query but Qdrant has no matching SOP chunks. Agent should still
+  produce a response, set citations_missing=true, and log a warning.
+input:
+  endpoint: agent.__call__
+  body:
+    query: "Come faccio a calibrare un sensore di tensione completamente nuovo?"
+    user_roles: ["technician"]
+    thread_id: "ops.operator-assistant.degraded-01"
+seed:
+  qdrant_chunks: []  # intentionally empty — no SOPs match
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/operator-assistant/degraded.jsonl
+expected:
+  decision: auto
+  action_type: null
+  tool_calls: ["rag_search"]
+  audit_rows: 0
+  citations_min: 0
+  citations_missing: true
+  lang: it
+  response_md_min_length: 1

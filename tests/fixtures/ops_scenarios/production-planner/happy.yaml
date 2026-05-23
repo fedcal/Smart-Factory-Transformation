@@ -1,3 +1,39 @@
-scenario:
-  name: production-planner-happy
-  note: Wave 0 stub — replace in plan 06-12
+# ProductionPlanner — happy path (SPT strategy, 3-day horizon)
+#
+# Plan 06-13 / OPS-02 — deterministic SPT schedule produces N items, all routed
+# to Tier.SUPERVISOR via human_approval_node.
+
+name: production-planner-happy
+description: >
+  3-day horizon SPT plan against the seeded orders.yaml + asset_capacity.yaml.
+  Expect a non-empty ScheduleDraft.items and a SUPERVISOR HITL approval row.
+input:
+  endpoint: agent.__call__
+  body:
+    strategy: spt
+    horizon_days: 3
+    user_roles: ["supervisor"]
+    thread_id: "ops.production-planner.happy-01"
+seed:
+  qdrant_chunks:
+    - source_uri: "sop://planning/spt-best-practices"
+      title: "Schede SPT — best practice"
+      content: >
+        La strategia SPT (Shortest Processing Time) ottimizza il throughput
+        eseguendo prima gli ordini con processing_minutes minimo. Tenere
+        conto dei changeover dye-lot.
+      acl: ["supervisor", "manager"]
+      category: "sop"
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/production-planner/happy.jsonl
+expected:
+  decision: hitl_supervisor
+  action_type: SCHEDULE_DRAFT
+  tool_calls: []
+  audit_rows: 0  # human_approval_node writes audit only on resume; pending row in hitl.approvals
+  hitl_approvals_min: 1
+  hitl_tier: supervisor
+  schedule_items_min: 1
+  has_rationale_md: true

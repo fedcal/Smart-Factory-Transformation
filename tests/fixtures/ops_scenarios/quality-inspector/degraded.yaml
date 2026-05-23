@@ -1,3 +1,36 @@
-scenario:
-  name: quality-inspector-degraded
-  note: Wave 0 stub — replace in plan 06-12
+# QualityInspector — degraded path (LLM grader returns invalid JSON → fallback verdict)
+#
+# Plan 06-13 / OPS-03 — grader catches ValidationError, returns conservative
+# fallback verdict (severity=major) → tier=supervisor.
+
+name: quality-inspector-degraded
+description: >
+  Major defect with LLM grader emitting invalid JSON. The grader falls back to
+  a conservative verdict (score=2, severity=major). Routing → supervisor tier.
+input:
+  endpoint: agent.handle_event
+  body:
+    event:
+      asset_id: "LOOM-02"
+      dye_lot_id: "DL-LOOM-02-20260523-b001"
+      defect_type: "mispick"
+      defect_length_inches: 3.5
+      full_width: false
+      position_meters: 45.0
+      timestamp: "2026-05-23T10:30:00+00:00"
+      source: "simulator"
+    user_roles: ["technician"]
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/quality-inspector/degraded.jsonl
+expected:
+  decision: auto  # fallback verdict still routes to supervisor (hitl_supervisor on resume)
+  action_type: QUALITY_VERDICT
+  tool_calls: []
+  audit_rows: 0  # supervisor branch ⇒ pending in hitl.approvals, audit only on resume
+  hitl_routed_to: supervisor
+  severity: major
+  hitl_approvals_min: 1

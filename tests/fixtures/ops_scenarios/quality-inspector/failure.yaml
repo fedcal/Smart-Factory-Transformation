@@ -1,3 +1,38 @@
-scenario:
-  name: quality-inspector-failure
-  note: Wave 0 stub — replace in plan 06-12
+# QualityInspector — failure path (full-width broken_end → critical, manager+safety)
+#
+# Plan 06-13 / OPS-03 — broken_end full_width=true → severity=critical →
+# tier=manager+safety. SafetyInterlockMiddleware.check called.
+
+name: quality-inspector-failure
+description: >
+  Full-width broken_end defect. Grader returns score=1/severity=critical;
+  agent routes through SafetyInterlockMiddleware and queues MANAGER HITL.
+input:
+  endpoint: agent.handle_event
+  body:
+    event:
+      asset_id: "LOOM-03"
+      dye_lot_id: "DL-LOOM-03-20260523-c001"
+      defect_type: "broken_end"
+      defect_length_inches: 36.0
+      full_width: true
+      position_meters: 100.0
+      timestamp: "2026-05-23T11:00:00+00:00"
+      source: "simulator"
+    user_roles: ["technician"]
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/quality-inspector/failure.jsonl
+expected:
+  decision: auto  # pre-resume; on supervisor decide → hitl_manager
+  action_type: QUALITY_VERDICT
+  tool_calls: []
+  audit_rows: 0
+  hitl_routed_to: manager+safety
+  severity: critical
+  score: 1
+  hitl_approvals_min: 1
+  safety_check_invoked: true

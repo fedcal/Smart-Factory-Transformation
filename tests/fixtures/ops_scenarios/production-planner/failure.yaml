@@ -1,3 +1,30 @@
-scenario:
-  name: production-planner-failure
-  note: Wave 0 stub — replace in plan 06-12
+# ProductionPlanner — failure path (invalid strategy → ValidationError)
+#
+# Plan 06-13 / OPS-02 — Caller supplies a strategy outside the {spt,edd} whitelist.
+# Pydantic raises ValidationError BEFORE the heuristic dispatcher (T-V6-injection).
+
+name: production-planner-failure
+description: >
+  Invalid scheduling strategy 'random' should be rejected at the boundary by
+  PlanRequest's Literal whitelist. The agent must raise pydantic.ValidationError
+  and NOT touch the HITL queue.
+input:
+  endpoint: agent.__call__
+  body:
+    strategy: "random"  # rejected by PlanRequest Literal["spt","edd"]
+    horizon_days: 3
+    user_roles: ["supervisor"]
+    thread_id: "ops.production-planner.failure-01"
+seed:
+  qdrant_chunks: []
+  neo4j_facts: []
+  tsdb_rows: []
+  audit_seed: []
+mock_llm_fixture: tests/fixtures/llm_responses/production-planner/failure.jsonl
+expected:
+  raises: pydantic.ValidationError
+  decision: null
+  action_type: null
+  tool_calls: []
+  audit_rows: 0
+  hitl_approvals_min: 0
