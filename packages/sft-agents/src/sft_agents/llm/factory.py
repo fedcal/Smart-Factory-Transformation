@@ -1,17 +1,23 @@
-"""Provider-agnostic LLM factory (CORE-05, CORE-06).
+"""Provider-agnostic LLM factory (CORE-05, CORE-06, OPS-05, OPS-06).
 
 Env-var dispatch idiom mirrors `services/ot-bridge/src/svc_ot_bridge/main.py:62-71`:
     LLM_BACKEND=ollama → langchain_ollama.ChatOllama (dev — Qwen2.5-7B Q4_K_M)
     LLM_BACKEND=vllm   → langchain_openai.ChatOpenAI (prod — Qwen2.5-14B AWQ + OpenAI-compatible)
+    LLM_BACKEND=mock   → sft_agents.llm.mock.MockReplayChatModel (CI determinism; D-X-01)
     Anything else      → RuntimeError (T-04-LLM-Inject mitigation: whitelist Literal)
 
 vLLM branch passes ``stream_usage=True`` (Pitfall §4): without this flag langchain-openai
 drops ``usage_metadata`` on streaming responses, breaking BudgetTracker enforcement.
+
+The ``mock`` branch (added Phase 6, plan 06-03) requires ``MOCK_LLM_FIXTURE`` to point
+at a JSONL fixture; T-V6-mock-prod-leak is mitigated because the default backend remains
+``ollama`` (operator must explicitly opt-in to mock).
 """
 
 from __future__ import annotations
 
 import os
+import pathlib
 from typing import Any, Literal
 
 import structlog
@@ -19,8 +25,8 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 logger = structlog.get_logger(__name__)
 
-LLMBackend = Literal["ollama", "vllm"]
-_VALID_BACKENDS = ("ollama", "vllm")
+LLMBackend = Literal["ollama", "vllm", "mock"]
+_VALID_BACKENDS = ("ollama", "vllm", "mock")
 
 # Defaults — locked for Phase 4 (D-CONTEXT line 421)
 _DEFAULT_OLLAMA_MODEL = "qwen2.5:7b-instruct-q4_K_M"
@@ -36,7 +42,7 @@ def _resolve_backend(backend: LLMBackend | str | None) -> str:
         backend = os.environ.get("LLM_BACKEND", "ollama")
     if backend not in _VALID_BACKENDS:
         raise RuntimeError(
-            f"LLM_BACKEND must be one of ollama|vllm, got {backend!r}"
+            f"LLM_BACKEND must be one of ollama|vllm|mock, got {backend!r}"
         )
     return backend
 
@@ -88,29 +94,48 @@ def build_chat_model(
             **kw,
         )
 
-    # resolved == "vllm"
-    from langchain_openai import ChatOpenAI
+    if resolved == "vllm":
+        from langchain_openai import ChatOpenAI
 
-    model = os.environ.get("VLLM_MODEL", _DEFAULT_VLLM_MODEL)
-    base_url = os.environ.get("VLLM_BASE_URL", _DEFAULT_VLLM_BASE_URL)
-    api_key = os.environ.get("VLLM_API_KEY", _DEFAULT_VLLM_API_KEY)
+        model = os.environ.get("VLLM_MODEL", _DEFAULT_VLLM_MODEL)
+        base_url = os.environ.get("VLLM_BASE_URL", _DEFAULT_VLLM_BASE_URL)
+        api_key = os.environ.get("VLLM_API_KEY", _DEFAULT_VLLM_API_KEY)
+        logger.info(
+            "llm_factory_build",
+            backend=resolved,
+            model=model,
+            base_url=base_url,
+            temperature=temperature,
+            stream_usage=True,
+        )
+        return ChatOpenAI(
+            model=model,
+            base_url=base_url,
+            api_key=api_key,
+            temperature=temperature,
+            seed=seed,
+            stream_usage=True,  # Pitfall §4 — required for vLLM streaming usage_metadata
+            **kw,
+        )
+
+    # resolved == "mock" — Phase 6 / plan 06-03 (D-X-01 mock LLM backend)
+    # Local import keeps the mock module out of the prod hot-path import graph;
+    # mirror of ollama/vllm late-import idiom.
+    from sft_agents.llm.mock import MockReplayChatModel
+
+    fixture = os.environ.get("MOCK_LLM_FIXTURE")
+    if not fixture:
+        raise RuntimeError(
+            "LLM_BACKEND=mock requires MOCK_LLM_FIXTURE env var with path to "
+            "JSONL fixture (see tests/fixtures/llm_responses/<agent>/<scenario>.jsonl)."
+        )
     logger.info(
         "llm_factory_build",
         backend=resolved,
-        model=model,
-        base_url=base_url,
+        fixture=fixture,
         temperature=temperature,
-        stream_usage=True,
     )
-    return ChatOpenAI(
-        model=model,
-        base_url=base_url,
-        api_key=api_key,
-        temperature=temperature,
-        seed=seed,
-        stream_usage=True,  # Pitfall §4 — required for vLLM streaming usage_metadata
-        **kw,
-    )
+    return MockReplayChatModel(fixture_path=pathlib.Path(fixture))
 
 
 def get_llm(**kw: Any) -> BaseChatModel:
