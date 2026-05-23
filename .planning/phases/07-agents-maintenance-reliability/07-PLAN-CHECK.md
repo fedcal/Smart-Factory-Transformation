@@ -389,3 +389,99 @@ issues:
     fix_hint: "Pre-task verification step: aprire docs/mkdocs.yml + identificare plugin + path convention (docs/docs/en/... vs file.en.md co-located) prima di authoring 10 pagine"
 ```
 
+
+---
+
+## Iteration 2 Re-verification
+
+**Date**: 2026-05-23
+**Checker**: gsd-plan-checker (re-verification mode)
+**Scope**: 2 blockers from iteration 1 + cross-plan consistency check 07-08 ↔ 07-10
+**Verdict**: **NEEDS_REVISION** — 1 NUOVO BLOCKER (cross-plan consistency 07-10 stale)
+
+### Block 1 — RESEARCH.md Open Questions RESOLVED — **PASS**
+
+Verificato `07-RESEARCH.md` line 1143:
+- Heading aggiornato a `## Open Questions (RESOLVED)` ✓
+- Tutte e 5 le questions hanno marker `RESOLVED in 07-XX` inline con riferimento al plan risolutore:
+  - Q1 → RESOLVED in 07-06 (Option a thin AD extension) ✓
+  - Q2 → RESOLVED in 07-05+07-09 (5min CAGG refresh) ✓
+  - Q3 → RESOLVED in 07-08 (technician_id nullable + validator pre-step) ✓
+  - Q4 → RESOLVED in 07-03 (Ridge baseline + RF opzionale) ✓
+  - Q5 → RESOLVED in 07-09 (dual-path performance + placeholder fallback) ✓
+
+Dimension 11 (research_resolution) ora **PASS**.
+
+### Block 2 — Coach technician_id nullable (07-08 internal consistency) — **PASS**
+
+Verificato `07-08-PLAN.md` su tutti i 5 touchpoint dichiarati nel fix:
+
+1. **`<truths>` line 25**: `technician_id (str|None — nullable per RCA auto-open path; assignment può avvenire later)` ✓
+2. **`<truths>` line 26**: Validator pre-step semantics esplicito — primo `step_node` (step_no=0) verifica `state.technician_id is not None`, altrimenti `interrupt({"type":"technician_assignment_required",...})` HITL + audit `Decision.HITL_SUPERVISOR + escalation_trigger='technician_assignment_required'` + resume contract via `Command(update={'technician_id': ...}, resume=True)`. Pydantic re-validation invariante steps successivi. ✓
+3. **`CoachThreadState`** line 112: `technician_id: str | None = None  # nullable per RCA auto-open; validator pre-step enforce non-null prima del primo SOP step` ✓
+4. **`CoachStartRequest`** line 136: `technician_id: str | None = None  # opzionale: omettere per RCA auto-open path; supervisor assegna via /resume con payload {technician_id: '<id>'}` ✓
+5. **`<langgraph_resume_contract>` Start** line 177: dual-path completo documentato (technician_id None → HITL `technician_assignment_required` interrupt + `state="awaiting_technician_assignment"`; technician_id non-null → SOP step 0 normale). ✓
+6. **`MaintenanceCoach.start()`** line 345: dual-path implementato — se None invoca `interrupt({"type": "technician_assignment_required"})` + audit `HITL_SUPERVISOR + escalation_trigger='technician_assignment_required'` + CoachResponse `state="awaiting_technician_assignment"`; se non-null procede normale + audit AUTO. ✓
+7. **Endpoint contract for 07-10** line 36: start con technician_id opzionale, step ritorna 409 se technician_id ancora null nel state, resume endpoint con `technician_assignment_required` interrupt richiede `{technician_id: '<id>'}` per popolare lo state. ✓
+
+07-08 è internamente consistente. Dimension 7b (scope_reduction) e Dimension 2 (task_completeness) per 07-08 **PASS**.
+
+### Cross-plan consistency 07-08 ↔ 07-10 — **FAIL (NUOVO BLOCKER)**
+
+Verifica esplicitamente richiesta dall'orchestrator. Trovata regressione: il fix Block 2 in 07-08 non è stato propagato a 07-10.
+
+---
+
+## NUOVI BLOCKERS (Iteration 2)
+
+### BLOCKER #3 — 07-10 contraddice il contratto 07-08 nullable technician_id
+
+- **Dimension**: cross_plan_data_contracts (#9) + context_compliance (#7)
+- **File**: `.planning/phases/07-agents-maintenance-reliability/07-10-PLAN.md`
+- **Severity**: BLOCKER
+- **Description**: Il fix Block 2 (technician_id nullable) è stato applicato correttamente in 07-08, ma 07-10 (api-gateway router) continua a dichiarare il vecchio contratto non-nullable. Tre punti specifici di stale:
+
+  1. **Line 21 (`must_haves.truths`)**: dichiara verbatim
+     ```
+     CoachStartRequest{intervention_id: str | None, asset_id: str, sop_id: str, technician_id: str, user_roles: list[str]}
+     ```
+     `technician_id: str` non-nullable contraddice 07-08 line 136 (`technician_id: str | None = None`).
+     Pur essendoci alla line 119 il commento `# CoachStartRequest/CoachStepRequest from 07-08 — re-use directly` (che tecnicamente erediterebbe la signature nullable), il `must_haves.truths` è la fonte di verità per il plan-checker e per i test in Task 1, e qui ridichiara esplicitamente il tipo non-nullable. Ambiguity blocking → al run-time, Task 1 test `test_post_coach_start_with_explicit_intervention_id` userà un body con `technician_id` valorizzato e non coprirà mai il path HITL `technician_assignment_required`.
+
+  2. **Truths 07-10 silent sul HITL `technician_assignment_required` flow**: 07-08 ha aggiunto un nuovo CoachResponse state `awaiting_technician_assignment` (lines 36, 177, 345) e un nuovo resume contract per il payload `{technician_id: '<id>'}`. 07-10 non ha alcuna truth, alcun endpoint behavior, alcun task di test per questo scenario. Il client non potrà completare il flusso end-to-end perché non c'è documentazione del response shape né del resume endpoint per assegnare technician.
+
+  3. **Task 1 test coverage gap**: I 5 test Coach in Task 1 (lines 178-182) coprono `intervention_id` opzionale (auto-generated) ma non coprono `technician_id` opzionale. Manca un test esplicito tipo:
+     - `test_post_coach_start_without_technician_id_returns_awaiting_assignment`: body senza `technician_id` → 200 con `state="awaiting_technician_assignment"`; supervisor invocato con `technician_id=None` nello state.
+     - `test_post_coach_step_without_technician_returns_409`: body /step quando lo state checkpoint ha `technician_id=None` → 409.
+     - `test_post_coach_resume_with_technician_assignment_payload`: body /resume con `{intervention_id, message: {technician_id: 'T-001'}, supervisor_id}` per popolare il technician.
+
+- **Why blocker (not warning)**: 
+  - Inconsistenza pubblica tra plan-stated contract: il 07-08 dichiara nullable + HITL flow, 07-10 dichiara non-nullable + nessun HITL flow. Al run-time il pydantic model `CoachStartRequest` definito in 07-08 sarà nullable, ma il router 07-10 dichiarato dalle truths non-nullable causerà: (a) test in Task 1 che validano payload senza `technician_id` falliranno; (b) il bypass direct-DI per Coach.step (WARNING #5 iter 1) renderà ambigua chi enforcement il dual-path (supervisor stato vs Pydantic vs MaintenanceCoach.start()).
+  - Il fix di iterazione 1 ha aperto una nuova superficie HITL (technician_assignment_required) che richiede esplicito endpoint contract definito in 07-10 (non solo in 07-08), perché la superficie HTTP è di 07-10.
+
+- **Fix richiesto**:
+  1. **07-10 line 21**: cambiare verbatim
+     ```
+     CoachStartRequest{..., technician_id: str | None = None, user_roles: list[str]}
+     ```
+     e aggiungere alla stessa truth: "Returns 200 with `CoachResponse(state='in_progress')` quando technician_id fornito; returns 200 with `CoachResponse(state='awaiting_technician_assignment')` quando technician_id absent (per RCA auto-open path)."
+  2. **07-10 line 22 (/step truth)**: aggiungere clausola "Returns 409 se lo state checkpoint corrente ha `technician_id=None` (cliente deve prima completare assignment via /resume)."
+  3. **07-10 line 23 (/resume truth)**: estendere il contratto per coprire DUE casi di resume: (a) post-request_help (esistente) e (b) post-technician_assignment_required HITL — per (b) il body può includere campo strutturato `technician_id: str` da propagare via `Command(update={'technician_id': ...}, resume=True)`. Esempio:
+     ```
+     CoachResumeRequest{intervention_id: str, supervisor_input: str | None, supervisor_id: str, technician_id: str | None = None}
+     ```
+     dove `technician_id` non-null è valido SOLO se il thread era in stato `awaiting_technician_assignment`; in caso contrario il campo è ignorato (o 422 se preferito strict).
+  4. **07-10 Task 1**: aggiungere 3 nuovi test per la nuova superficie HITL (lista dettagliata sopra). Totale endpoint tests passa da 16 a 19.
+  5. **07-12** (E2E): verificare se gli scenario YAML coach happy/degraded/failure assumono `technician_id` sempre presente — se sì, aggiungere uno scenario "auto_open_from_rca" che valida il path completo (start senza technician_id → awaiting_assignment → resume con assignment → primo step).
+
+### Riepilogo Verdict Iteration 2
+
+| Item | Status |
+|------|--------|
+| Block 1 (RESEARCH Open Questions RESOLVED) | ✓ FIXED |
+| Block 2 (07-08 internal consistency nullable technician_id) | ✓ FIXED |
+| Cross-plan consistency 07-08 ↔ 07-10 | ✗ NUOVO BLOCKER (#3) |
+| Warnings iter 1 (#1-#6) | non re-litigati per directive |
+
+**Raccomandazione**: ritornare al planner per il fix di BLOCKER #3 (4 sotto-fix in 07-10 + 1 ottimale in 07-12). Stima effort: ~15 min sul 07-10 truth + interfaces + Task 1 test scaffold; 07-12 fixture additivo. Dopo il fix re-verifica solo BLOCKER #3.
+
