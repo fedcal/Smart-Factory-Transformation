@@ -1511,6 +1511,44 @@ source = { editable = "apps/agents/maintenance/downtime-analyzer" }
 name = "mnt-maintenance-coach"
 version = "0.1.0"
 source = { editable = "apps/agents/maintenance/maintenance-coach" }
+dependencies = [
+    { name = "asyncpg" },
+    { name = "langchain-core" },
+    { name = "langgraph" },
+    { name = "langgraph-checkpoint-postgres" },
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "sft-domain" },
+    { name = "sft-knowledge" },
+    { name = "structlog" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "testcontainers" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asyncpg", specifier = ">=0.29" },
+    { name = "langchain-core", specifier = ">=0.3" },
+    { name = "langgraph", specifier = ">=0.4,<0.6" },
+    { name = "langgraph-checkpoint-postgres", specifier = ">=3.1.0,<4.0.0" },
+    { name = "pydantic", specifier = ">=2.7.0,<3.0.0" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "sft-domain", editable = "packages/sft-domain" },
+    { name = "sft-knowledge", editable = "packages/sft-knowledge" },
+    { name = "structlog", specifier = ">=24.4" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.2" },
+    { name = "pytest-asyncio", specifier = ">=0.23" },
+    { name = "testcontainers", extras = ["postgres"], specifier = ">=4.8.0,<5.0.0" },
+]
 
 [[package]]
 name = "mnt-predictive-maintenance"
