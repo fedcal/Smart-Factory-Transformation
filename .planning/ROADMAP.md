@@ -150,9 +150,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 06-09-PLAN.md — sim-textile QualityEvent generator + ProductionState dye_lot rotation (OPS-03)
   - [x] 06-10-PLAN.md — OperatorAssistant agent: create_react_agent + 5-tool toolbelt + langdetect + citation validator (OPS-01, OPS-05)
   - [x] 06-11-PLAN.md — agents-scheduler APScheduler 5-min cron container + Docker + Helm (OPS-04)
-  - [ ] 06-12-PLAN.md — api-gateway endpoints: /v1/quality/events + /v1/agents/{slug}/{action} (OPS-01..04)
+  - [x] 06-12-PLAN.md — api-gateway endpoints: /v1/quality/events + /v1/agents/{slug}/{action} (OPS-01..04)
   - [ ] 06-13-PLAN.md — 12 E2E scenarios (4 agents × happy/degraded/failure) with testcontainers + mock LLM (OPS-06)
-  - [ ] 06-14-PLAN.md — Agent docs IT+EN (8 pages) + evidence_panel unit tests + mkdocs nav (OPS-05)
+  - [x] 06-14-PLAN.md — Agent docs IT+EN (8 pages) + evidence_panel unit tests + mkdocs nav (OPS-05)
 
 ### Phase 7: Agents — Maintenance & Reliability
 **Goal**: All four Maintenance cluster agents (PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer) are implemented with C-MAPSS-adapted RUL estimation, 5-Why RCA, humidity-aware modeling, and integration with the asset registry and event store.
@@ -240,7 +240,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
-| 6. Agents — Operations & Production | 12/15 | In Progress|  |
+| 6. Agents — Operations & Production | 14/15 | In Progress|  |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
