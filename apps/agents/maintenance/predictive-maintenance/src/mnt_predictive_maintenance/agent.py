@@ -168,7 +168,9 @@ class PredictiveMaintenance:
         -----
         NEVER mutates ``state`` — returns a new dict (LangGraph reducer convention).
         """
-        asset_id = state["asset_id"]  # KeyError if absent → fail-fast
+        asset_id = state.get("asset_id")  # CR-04: use .get() to avoid bare KeyError
+        if not asset_id:
+            raise ValueError("PredictiveMaintenance requires 'asset_id' in state")
         triggered_by_action_id = state.get("triggered_by_action_id")
 
         now = datetime.now(UTC)
@@ -317,17 +319,17 @@ class PredictiveMaintenance:
             duration_ms=0,
         )
 
-        # HITL_SUPERVISOR requires motivation + approval_id (AuditRecord validator).
-        # For the PM flow, we use the escalation response as motivation when available.
+        # HITL_SUPERVISOR: motivation is required (describes the pending escalation).
+        # approval_id remains None until a supervisor approves via the HITL system.
+        # CR-03 fix: never fabricate a random UUID — a None approval_id correctly
+        # represents the pending-escalation state. The HITL system assigns the real
+        # approval_id (FK to hitl.approvals) after supervisor approval. The AuditRecord
+        # validator (updated in Plan 07-15) permits approval_id=None for HITL decisions.
         motivation = None
         approval_id = None
         if decision is Decision.HITL_SUPERVISOR:
-            motivation = f"Supervisor approved escalation for asset {estimate.asset_id}"
-            # In a real HITL flow the approval_id comes from hitl.approvals.
-            # For the PM deterministic node we generate a placeholder UUID so
-            # the audit record is schema-valid during testing.
-            from uuid import uuid4 as _uuid4  # noqa: PLC0415
-            approval_id = _uuid4()
+            motivation = f"Supervisor approval required for asset {estimate.asset_id}"
+            # approval_id stays None — not a finalized approval, but a pending escalation
 
         record = AuditRecord(
             id=uuid4(),

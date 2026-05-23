@@ -130,17 +130,39 @@ class TestAuditRecordHITLMotivation:
 
 
 class TestAuditRecordApprovalIdMatrix:
-    """approval_id consistency: hitl_* implies NOT NULL; auto implies NULL."""
+    """approval_id consistency: hitl_* allows NULL (pending) or UUID (approved); auto implies NULL.
 
-    def test_hitl_without_approval_id_rejected(self) -> None:
+    Plan 07-15 (CR-03 fix): HITL decisions now allow approval_id=None to represent
+    a *pending* escalation where the supervisor has been notified but has not yet
+    approved. The fabricated-UUID anti-pattern (generating uuid4() as a placeholder
+    that breaks hitl.approvals JOIN integrity) is replaced by explicit None + a
+    pending-state motivation string.
+    """
+
+    def test_hitl_with_null_approval_id_allowed_for_pending_escalation(self) -> None:
+        """HITL decision with approval_id=None is valid — represents pending escalation."""
         from sft_agents.models import Decision
 
-        with pytest.raises(ValidationError):
-            _make_audit(
-                decision=Decision.HITL_OPERATOR,
-                motivation="ok",
-                approval_id=None,
-            )
+        # approval_id=None is now permitted for HITL decisions (pending state)
+        record = _make_audit(
+            decision=Decision.HITL_OPERATOR,
+            motivation="Supervisor approval required for asset LOOM-01",
+            approval_id=None,
+        )
+        assert record.approval_id is None
+        assert record.decision.value == "hitl_operator"
+
+    def test_hitl_with_valid_approval_id_allowed_for_finalized_approval(self) -> None:
+        """HITL decision with a real approval UUID is valid — represents finalized approval."""
+        from sft_agents.models import Decision
+
+        approval_id = uuid4()
+        record = _make_audit(
+            decision=Decision.HITL_SUPERVISOR,
+            motivation="Supervisor approved corrective action for asset LOOM-01",
+            approval_id=approval_id,
+        )
+        assert record.approval_id == approval_id
 
     def test_auto_with_approval_id_rejected(self) -> None:
         from sft_agents.models import Decision

@@ -83,11 +83,17 @@ class TestHITL07MotivationMatrix:
             _audit(Decision(dec_value), motivation="", approval_id=uuid4())
 
     @pytest.mark.parametrize("dec_value", HITL_DECISIONS)
-    def test_approval_id_required(self, dec_value: str) -> None:
+    def test_approval_id_null_allowed_for_pending_escalation(self, dec_value: str) -> None:
+        """Plan 07-15 CR-03 fix: HITL decisions with approval_id=None represent pending
+        escalations where the supervisor has been notified but has not yet approved.
+        The AuditRecord validator no longer rejects HITL+None — fabricating a random
+        UUID placeholder was the CR-03 defect being corrected here."""
         from sft_agents.models import Decision
 
-        with pytest.raises(ValidationError):
-            _audit(Decision(dec_value), motivation="ok", approval_id=None)
+        # approval_id=None is valid for HITL decisions (pending escalation state)
+        rec = _audit(Decision(dec_value), motivation="Supervisor approval required for pending escalation", approval_id=None)
+        assert rec.approval_id is None
+        assert rec.motivation is not None
 
     @pytest.mark.parametrize("dec_value", HITL_DECISIONS)
     def test_valid_combo(self, dec_value: str) -> None:
