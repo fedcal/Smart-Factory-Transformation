@@ -292,7 +292,7 @@ async def test_compute_oee_integration_abc_product() -> None:
     async def production_reader(asset_id, window_start, window_end):
         return (950, 1000)  # P=0.95
 
-    availability, performance, quality, oee, total_downtime, event_count = await compute_oee(
+    availability, performance, quality, oee, total_downtime, event_count, quality_source = await compute_oee(
         asset_id="LOOM-01",
         window_start=now,
         window_end=end,
@@ -310,6 +310,7 @@ async def test_compute_oee_integration_abc_product() -> None:
     assert abs(oee - expected_oee) < 1e-6, f"OEE={oee}, expected={expected_oee}"
     assert total_downtime == 6
     assert event_count == 1
+    assert quality_source == "audit"
 
 
 @pytest.mark.asyncio
@@ -330,7 +331,7 @@ async def test_compute_oee_zero_events_returns_ones() -> None:
     async def production_reader(asset_id, window_start, window_end):
         return (1000, 1000)  # P=1.0
 
-    availability, performance, quality, oee, total_downtime, event_count = await compute_oee(
+    availability, performance, quality, oee, total_downtime, event_count, quality_source = await compute_oee(
         asset_id="LOOM-01",
         window_start=now,
         window_end=end,

@@ -23,6 +23,7 @@ Security:
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any, Literal
@@ -78,6 +79,15 @@ _EMPTY_BUDGET = BudgetSnapshot(
     limit_cost_usd=0.0,
     limit_duration_s=0,
 )
+
+#: CR-05 fix: maximum number of assets processed by by_asset=True per report request.
+#: Prevents unbounded sequential DB iteration on large asset registries (DoS vector).
+#: Phase 11 can raise this limit when a PG-backed registry supports pagination.
+_MAX_BY_ASSET: int = 50
+
+#: CR-05 fix: semaphore limit for concurrent per-asset OEE queries in by_asset block.
+#: Bounds the number of simultaneous asyncpg connections used per report request.
+_BY_ASSET_CONCURRENCY: int = 10
 
 # ---------------------------------------------------------------------------
 # DowntimeAnalyzer
@@ -200,23 +210,19 @@ class DowntimeAnalyzer:
             )
 
         # Step 2: Compute aggregate OEE.
-        availability, performance, quality, oee, total_downtime, event_count = await compute_oee(
-            asset_id=None,  # aggregate across all assets
-            window_start=window_start,
-            window_end=window_end,
-            repository=self._repository,
-            quality_reader=self._quality_reader,
-            production_state_reader=self._production_state_reader,
-            sim_fallback_reader=self._production_state_reader,
-        )
-
-        # Get quality source for audit row (call compute_quality_cross_cluster separately).
-        _, quality_source = await compute_quality_cross_cluster(
-            asset_id=None,
-            window_start=window_start,
-            window_end=window_end,
-            quality_reader=self._quality_reader,
-            sim_fallback_reader=self._production_state_reader,
+        # CR-05 fix (dedup): compute_oee now returns quality_source as the 7th element.
+        # We no longer call compute_quality_cross_cluster separately — one DB query for
+        # quality across the aggregate path (previously this was called twice).
+        availability, performance, quality, oee, total_downtime, event_count, quality_source = (
+            await compute_oee(
+                asset_id=None,  # aggregate across all assets
+                window_start=window_start,
+                window_end=window_end,
+                repository=self._repository,
+                quality_reader=self._quality_reader,
+                production_state_reader=self._production_state_reader,
+                sim_fallback_reader=self._production_state_reader,
+            )
         )
 
         # Step 3: Compute Pareto.
@@ -224,32 +230,51 @@ class DowntimeAnalyzer:
         pareto_entries = compute_pareto(raw_pareto, top_n=top_n_pareto)
 
         # Step 4: Per-asset breakdown (optional).
+        # CR-05 fix: cap at _MAX_BY_ASSET and use asyncio.gather with semaphore to
+        # avoid unbounded sequential DB iteration (DoS vector) on large asset registries.
         by_asset_dict: dict[str, OEEMetrics] | None = None
         if by_asset and self._asset_registry is not None:
-            by_asset_dict = {}
-            assets = list(self._asset_registry)
-            for asset in assets:
+            assets = [
+                a for a in list(self._asset_registry)[:_MAX_BY_ASSET]
+                if getattr(a, "asset_id", None) is not None
+            ]
+            sem = asyncio.Semaphore(_BY_ASSET_CONCURRENCY)
+
+            async def _per_asset(asset: Any) -> tuple[str, OEEMetrics] | None:
                 asset_id = getattr(asset, "asset_id", None)
                 if asset_id is None:
-                    continue
-                a_avail, a_perf, a_qual, a_oee, a_dt, a_cnt = await compute_oee(
-                    asset_id=asset_id,
-                    window_start=window_start,
-                    window_end=window_end,
-                    repository=self._repository,
-                    quality_reader=self._quality_reader,
-                    production_state_reader=self._production_state_reader,
-                    sim_fallback_reader=self._production_state_reader,
+                    return None
+                async with sem:
+                    a_avail, a_perf, a_qual, a_oee, a_dt, a_cnt, _qs = await compute_oee(
+                        asset_id=asset_id,
+                        window_start=window_start,
+                        window_end=window_end,
+                        repository=self._repository,
+                        quality_reader=self._quality_reader,
+                        production_state_reader=self._production_state_reader,
+                        sim_fallback_reader=self._production_state_reader,
+                    )
+                return (
+                    asset_id,
+                    OEEMetrics(
+                        asset_id=asset_id,
+                        availability=a_avail,
+                        performance=a_perf,
+                        quality=a_qual,
+                        oee=a_oee,
+                        total_downtime_min=a_dt,
+                        event_count=a_cnt,
+                    ),
                 )
-                by_asset_dict[asset_id] = OEEMetrics(
-                    asset_id=asset_id,
-                    availability=a_avail,
-                    performance=a_perf,
-                    quality=a_qual,
-                    oee=a_oee,
-                    total_downtime_min=a_dt,
-                    event_count=a_cnt,
-                )
+
+            results = await asyncio.gather(*[_per_asset(a) for a in assets])
+            # Build immutable new dict from gathered results (preserves immutability pattern)
+            by_asset_dict = {
+                asset_id: metrics
+                for item in results
+                if item is not None
+                for asset_id, metrics in [item]
+            }
 
         # Step 5: Build OEEReport.
         now = datetime.now(UTC)
