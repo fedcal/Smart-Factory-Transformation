@@ -1140,32 +1140,19 @@ Già coperto in §Architecture Patterns 1-9 sopra. Reference quick:
 | A11 | Trigger event-driven AnomalyDetector→PredictiveMaintenance via NATS subject `maintenance.predict.*` può essere implementato in Phase 7 side senza touch Phase 6 code | Cross-cluster wiring | Se Phase 6 AnomalyDetector non pubblica già su questo subject, Phase 7 deve aggiungere publish (modificare Phase 6) — VIOLA locked constraint. **Planner DEVE verificare** in `apps/agents/ops/anomaly-detector/src/.../agent.py` se publish hook esiste o va aggiunto. |
 | A12 | Bootstrap `MAINTENANCE_STREAM` via `js.add_stream(...)` idempotent in agent process startup è acceptable (no nuovo bootstrap script) | Pattern 4 | Race condition se 2 agent process competono → mitigation: dedicated bootstrap script tipo Phase 3 `nats-bootstrap-streams.py` esteso |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **AnomalyDetector publish hook esiste?**
-   - **What we know:** Phase 6 D-AD-01 dice "alert via audit.actions"; non c'è mention esplicita di NATS publish su `maintenance.predict.*`.
-   - **What's unclear:** Se NATS publish va aggiunto a `apps/agents/ops/anomaly-detector/src/.../agent.py` — violerebbe locked constraint "no modifications a Phase 6 agents/code".
-   - **Recommendation:** Planner ispeziona codice esistente. Se hook assente, valutare alternative: (a) thin extension Phase 7 al codice AD (audit comment chiarito come non-business-logic-modification), (b) usare DIFFERENT trigger pathway (es. Phase 7 PredictiveMaintenance consumer su `audit.actions` rows INSERT via PG NOTIFY/LISTEN — più elegant ma più costoso da implementare). Discutere con user.
+Tutte le 5 questions sono state risolte nei plan 07-06..07-12. Riassunto delle decisioni:
 
-2. **Continuous aggregate refresh interval ottimo.**
-   - **What we know:** D-DA-03 specifica 5min default; research conferma "5min ragionevole" su low-frequency event stream (downtime ~5 events/h/asset, total ~150 events/h cluster).
-   - **What's unclear:** Se planner vuole "near-real-time" OEE dashboard (1min refresh), trade-off worker contention vs freshness.
-   - **Recommendation:** Mantenere 5min per Phase 7. Phase 11 può tunare in base a Langfuse traces se UI mostra "stale OEE perceived".
+1. **AnomalyDetector publish hook esiste?** → **RESOLVED in 07-06** con Option (a) thin AD extension: aggiunto kwarg keyword-only `nats_client=None` (backward-compatible) + publish condizionato a `Decision.AUTO AND severity in {major, critical}`. Audit chain preservato (no modifica business logic). Vedi `<open_q1_resolution>` in 07-06-PLAN.md.
 
-3. **Coach thread state initial bootstrap quando intervention starts senza technician noto.**
-   - **What we know:** D-MC-01 schema include `technician_id`.
-   - **What's unclear:** Se intervention auto-opens su RCA recommendation (no technician assigned), valore di `technician_id`?
-   - **Recommendation:** Allow nullable + assert non-null prima del primo step. Planner decide UX.
+2. **Continuous aggregate refresh interval ottimo.** → **RESOLVED in 07-05** (migration 008) e 07-09: 5min default mantenuto come da D-DA-03. Tunable Phase 11 se Langfuse mostra "stale OEE perceived".
 
-4. **Joint training su FD001 + FD003 vs ensemble vs strategy.**
-   - **What we know:** D-PM-02 dice "FD001 + FD003 committato".
-   - **What's unclear:** Single model joint o 2 model + routing per asset_family (mechanical vs dye chamber)?
-   - **Recommendation:** Single Ridge model joint baseline (simpler, deterministic). RandomForest variant come optional. Document choice in model card.
+3. **Coach thread state initial bootstrap quando intervention starts senza technician noto.** → **RESOLVED in 07-08**: `technician_id: str | None` nullable in `CoachThreadState`. Validator pre-step enforce: prima invocation di `step_node` richiede `technician_id` non-null altrimenti `interrupt({"type":"technician_assignment_required"})` HITL supervisor. Start endpoint accetta `technician_id` opzionale per supportare RCA auto-open + later assignment. Vedi `<technician_id_nullability>` in 07-08-PLAN.md.
 
-5. **OEE.Performance computation.**
-   - **What we know:** D-DA-03 menziona OEE = A × P × Q; data sources documented per A (downtime) e Q (cross-cluster).
-   - **What's unclear:** P (Performance = actual_speed / ideal_speed) data source. Sim-textile production_state ha `target_meters_per_hour`? Cycle time disponibile?
-   - **Recommendation:** Planner verifica `production_state.py` e `asset_capacity.yaml` (Phase 6 D-PP-02): se `target_throughput` esiste, usalo. Else: P = 1.0 placeholder + flag `performance_source: 'placeholder'` in OEEReport. Phase 11 può raffinare.
+4. **Joint training su FD001 + FD003 vs ensemble vs strategy.** → **RESOLVED in 07-03**: Single Ridge model joint baseline (deterministic, simpler), RandomForest opzionale come secondary artifact. Choice documentata in `packages/sft-ml/MODEL_CARD.md` (Pitfall 3 disclaimer incluso).
+
+5. **OEE.Performance computation.** → **RESOLVED in 07-09**: dual-path — primary `target_throughput` da `asset_capacity.yaml` (Phase 6 D-PP-02), fallback `P = 1.0` con flag `performance_source: 'placeholder'` in `OEEReport`. structlog marker `oee_performance_source_placeholder` per tracciabilità. Phase 11 può raffinare.
 
 ## Environment Availability
 
