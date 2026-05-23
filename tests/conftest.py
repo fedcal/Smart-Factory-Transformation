@@ -72,6 +72,10 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "e2e: marks tests as full-stack end-to-end (docker compose required)",
     )
+    config.addinivalue_line(
+        "markers",
+        "real-llm: opt-in real Qwen2.5 smoke tests (skipped in CI default)",
+    )
 
 
 # ---------------------------------------------------------------------------
