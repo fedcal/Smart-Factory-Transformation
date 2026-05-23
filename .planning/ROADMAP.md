@@ -11,7 +11,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 3: IT/OT Simulation Layer** - Python textile simulator with OPC-UA, fault injection, OT Bridge data-diode, TimescaleDB ingest, dataset replay (completed 2026-05-18)
 - [x] **Phase 4: Core Agentic Runtime & HITL** - LangGraph supervisor + cluster subgraphs skeleton, PG checkpointer, LLM adapter, full HITL interrupt loop, audit trail (completed 2026-05-18)
 - [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (functional 2026-05-19; 3 gap-closure plans in progress 2026-05-19)
-- [ ] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests
+- [x] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests (completed 2026-05-23)
 - [ ] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests
 - [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
@@ -151,7 +151,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 06-10-PLAN.md — OperatorAssistant agent: create_react_agent + 5-tool toolbelt + langdetect + citation validator (OPS-01, OPS-05)
   - [x] 06-11-PLAN.md — agents-scheduler APScheduler 5-min cron container + Docker + Helm (OPS-04)
   - [x] 06-12-PLAN.md — api-gateway endpoints: /v1/quality/events + /v1/agents/{slug}/{action} (OPS-01..04)
-  - [ ] 06-13-PLAN.md — 12 E2E scenarios (4 agents × happy/degraded/failure) with testcontainers + mock LLM (OPS-06)
+  - [x] 06-13-PLAN.md — 12 E2E scenarios (4 agents × happy/degraded/failure) with testcontainers + mock LLM (OPS-06)
   - [x] 06-14-PLAN.md — Agent docs IT+EN (8 pages) + evidence_panel unit tests + mkdocs nav (OPS-05)
 
 ### Phase 7: Agents — Maintenance & Reliability
@@ -240,7 +240,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 3. IT/OT Simulation Layer | 7/7 | Complete   | 2026-05-18 |
 | 4. Core Agentic Runtime & HITL | 8/8 | Complete   | 2026-05-18 |
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
-| 6. Agents — Operations & Production | 14/15 | In Progress|  |
+| 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 0/TBD | Not started | - |
 | 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
