@@ -250,31 +250,46 @@ async def test_audit_written_once_on_resume_not_first_run() -> None:
 
     specialist, _, audit_writer = _make_specialist(escalate_tool=escalate_tool)
 
-    # Mock _invoke_react_loop to return valid JSON without invoking real LangGraph.
+    # Mock _invoke_react_loop to return (valid JSON, []) without invoking real LangGraph.
+    # Returns a tuple (content, tool_call_records) as per the WR-05 fix.
     specialist._invoke_react_loop = AsyncMock(  # type: ignore[method-assign]
-        return_value=json.dumps(_VALID_CHAIN_JSON)
+        return_value=(json.dumps(_VALID_CHAIN_JSON), [])
     )
+
+    # Track interrupt() call count at the module level to simulate first-run vs resume.
+    # interrupt() is now imported at module level in agent.py (CR-02 fix).
+    interrupt_call_count = 0
+
+    def _simulated_interrupt(value: Any) -> Any:
+        nonlocal interrupt_call_count
+        interrupt_call_count += 1
+        if interrupt_call_count == 1:
+            # First execution: interrupt raises, aborting the node.
+            raise GraphInterrupt(value)
+        # Resume: interrupt returns the supervisor decision.
+        return {"approved": True, "decision": "proceed"}
 
     # ---- First execution: node should unwind before _write_audit ----
-    with pytest.raises(GraphInterrupt):
-        await specialist(state=_STATE)
+    with patch("mnt_rca_specialist.agent.interrupt", _simulated_interrupt):
+        with pytest.raises(GraphInterrupt):
+            await specialist(state=_STATE)
 
-    assert audit_writer.write.call_count == 0, (
-        f"CR-02 FAIL (first run): audit_writer.write was called "
-        f"{audit_writer.write.call_count} time(s) — expected 0. "
-        f"The audit write must NOT fire on the first execution."
-    )
+        assert audit_writer.write.call_count == 0, (
+            f"CR-02 FAIL (first run): audit_writer.write was called "
+            f"{audit_writer.write.call_count} time(s) — expected 0. "
+            f"The audit write must NOT fire on the first execution."
+        )
 
-    # ---- Second execution (resume): _write_audit should fire exactly once ----
-    # Patch _write_audit to avoid AuditRecord Pydantic constraint (approval_id=None
-    # with HITL_SUPERVISOR is a separate pre-existing bug outside CR-02 scope).
-    write_audit_calls: list[dict] = []
+        # ---- Second execution (resume): _write_audit should fire exactly once ----
+        # Patch _write_audit to avoid AuditRecord Pydantic constraint (approval_id=None
+        # with HITL_SUPERVISOR is a separate pre-existing bug outside CR-02 scope).
+        write_audit_calls: list[dict] = []
 
-    async def _spy_write_audit(**kwargs: Any) -> None:
-        write_audit_calls.append(dict(kwargs))
+        async def _spy_write_audit(**kwargs: Any) -> None:
+            write_audit_calls.append(dict(kwargs))
 
-    with patch.object(specialist, "_write_audit", side_effect=_spy_write_audit):
-        await specialist(state=_STATE)
+        with patch.object(specialist, "_write_audit", side_effect=_spy_write_audit):
+            await specialist(state=_STATE)
 
     assert len(write_audit_calls) == 1, (
         f"CR-02 FAIL (resume): _write_audit was called {len(write_audit_calls)} "
@@ -365,6 +380,9 @@ async def test_tool_calls_log_populated_from_react_messages() -> None:
 
     with (
         patch.object(specialist, "_write_audit", side_effect=_spy_write_audit),
+        # Patch interrupt() so it returns a supervisor decision on resume
+        # (rather than requiring a real LangGraph runnable context).
+        patch("mnt_rca_specialist.agent.interrupt", return_value={"approved": True}),
         patch(
             "langgraph.prebuilt.create_react_agent",
             return_value=MagicMock(),

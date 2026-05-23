@@ -52,6 +52,16 @@ from sft_agents.models.budget import BudgetSnapshot
 from sft_agents.models.enums import ActionType, Decision, Tier
 from sft_agents.models.evidence import EvidencePanel, TokenUsage, ToolCall
 
+# Import interrupt from langgraph.types with graceful fallback for test environments
+# that do not install the full langgraph stack. The fallback is never used in
+# production — it exists only to allow unit-test imports without langgraph installed.
+try:
+    from langgraph.types import interrupt
+except ImportError:  # pragma: no cover
+    def interrupt(value: Any) -> Any:  # type: ignore[misc]
+        """Fallback stub — only reached in non-langgraph test environments."""
+        raise NotImplementedError("langgraph.types.interrupt is not available in this environment")
+
 from mnt_rca_specialist.metadata import AGENT_ID as _AGENT_ID
 from mnt_rca_specialist.metadata import build_ops05_evidence_panel
 from mnt_rca_specialist.models import RCAChain, RCASpecialistRequest, RCASpecialistResponse
@@ -178,18 +188,24 @@ class RCASpecialist:
         messages: list[Any],
         *,
         user_roles: list[str],
-    ) -> str:
-        """Run one pass of the ReAct loop; return the final LLM text content.
+    ) -> tuple[str, list[dict[str, Any]]]:
+        """Run one pass of the ReAct loop; return (content, tool_call_records).
 
         Compiles a ``create_react_agent`` runnable with rag_search + traverse_graph.
         The LLM is expected to output a JSON RCAChain after gathering evidence.
+
+        WR-05 fix: iterates all final_messages and extracts tool_calls attributes
+        from each AIMessage, building tool_call_records for evidence panel population.
 
         Args:
             messages:   Full conversation history (system + human + any retry messages).
             user_roles: RBAC roles for RagSearchTool ACL (Phase 5 D-66).
 
         Returns:
-            The raw string content of the final AIMessage from the ReAct loop.
+            A tuple of:
+                - str: raw string content of the final AIMessage from the ReAct loop.
+                - list[dict]: tool call records extracted from intermediate messages
+                  (each dict has name, args, result, duration_ms, ts keys).
         """
         try:
             from langgraph.prebuilt import create_react_agent
@@ -198,9 +214,12 @@ class RCASpecialist:
             # Graceful degradation for test environments that mock the LLM
             # but don't install the full langgraph stack.
             raw_result = await self._llm.ainvoke(messages)
+            content: str
             if hasattr(raw_result, "content"):
-                return raw_result.content
-            return str(raw_result)
+                content = raw_result.content
+            else:
+                content = str(raw_result)
+            return content, []
 
         tools = [self._rag_search, self._traverse_graph]
         runnable = create_react_agent(
@@ -212,12 +231,31 @@ class RCASpecialist:
         }
         result = await safe_invoke(runnable, {"messages": messages}, config=invoke_config)
         final_messages = result.get("messages", [])
+
+        # WR-05 fix: collect tool call records from all messages in the ReAct trace.
+        # Uses immutable list building (new list per entry — no in-place mutation).
+        now = datetime.now(timezone.utc)
+        tool_call_records: list[dict[str, Any]] = []
+        for msg in final_messages:
+            msg_tool_calls = getattr(msg, "tool_calls", None)
+            if msg_tool_calls:
+                for tc in msg_tool_calls:
+                    tool_call_records = tool_call_records + [
+                        {
+                            "name": tc.get("name", "unknown") if isinstance(tc, dict) else getattr(tc, "name", "unknown"),
+                            "args": tc.get("args", {}) if isinstance(tc, dict) else getattr(tc, "args", {}),
+                            "result": None,
+                            "duration_ms": 0,
+                            "ts": now,
+                        }
+                    ]
+
         if not final_messages:
-            return ""
+            return "", tool_call_records
         last_msg = final_messages[-1]
         if hasattr(last_msg, "content"):
-            return last_msg.content
-        return str(last_msg)
+            return last_msg.content, tool_call_records
+        return str(last_msg), tool_call_records
 
     async def _escalate_to_supervisor(
         self,
@@ -411,10 +449,13 @@ class RCASpecialist:
 
         for attempt in range(_MAX_VALIDATION_RETRIES + 1):
             try:
-                raw_output = await self._invoke_react_loop(
+                raw_output, new_tool_calls = await self._invoke_react_loop(
                     messages=messages,
                     user_roles=user_roles,
                 )
+                # WR-05 fix: accumulate tool call records from this ReAct pass.
+                # Immutable extend — builds new list, never mutates existing.
+                tool_calls_log = tool_calls_log + new_tool_calls
 
                 # Strip markdown fences (robustness)
                 json_str = _strip_fences(raw_output)
@@ -507,13 +548,24 @@ class RCASpecialist:
                 }
             )[:2000]
 
-        await self._escalate_to_supervisor(
-            reason=escalate_reason,
-            suggested_action=escalate_suggested,
-            evidence_summary=escalate_evidence,
+        # CR-02 fix: call interrupt() DIRECTLY in the node — NOT via escalate_tool.
+        # On the FIRST execution, LangGraph raises GraphInterrupt here, unwinding
+        # the stack. The lines below only execute on the RESUMED execution, so
+        # _write_audit fires exactly once (on resume), never on the first run.
+        # This replaces the old _escalate_to_supervisor() call which raised inside
+        # the tool, making the audit write unreachable on the first execution and
+        # causing a double-write on the third execution.
+        _supervisor_decision = interrupt(
+            {
+                "reason": escalate_reason,
+                "suggested_action": escalate_suggested,
+                "evidence_summary": escalate_evidence,
+            }
         )
 
-        # -------- 5. Audit row (AFTER escalation — Pitfall §3)
+        # -------- 5. Audit row (executes ONLY on resume — Pitfall §3 solved)
+        # interrupt() returns here only on the resumed execution. The write fires
+        # exactly once per logical invocation.
         duration_ms = int(time.time() * 1000) - start_epoch_ms
         model_name = getattr(self._llm, "model_name", None) or getattr(
             self._llm, "model", None
