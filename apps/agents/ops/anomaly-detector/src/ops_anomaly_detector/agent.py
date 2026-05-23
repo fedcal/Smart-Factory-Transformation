@@ -1,5 +1,9 @@
 """AnomalyDetector LangGraph node (D-AD-01 / D-AD-02 / D-AD-03).
 
+Phase 7 thin extension (Open Q1 Option a): emits cross-cluster PM trigger on
+AUTO+severity>={major,critical}. Backwards-compatible (nats_client default=None
+→ no-op → preserves all Phase 6 tests without modification).
+
 First of the 4 OPS agents to ship. Fully deterministic — no LLM call,
 no NATS consumer, no JetStream subscription. The node body:
 
@@ -42,10 +46,11 @@ Security / threat-model notes:
 
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import structlog
 from sft_agents.audit.writer import AuditWriter
@@ -80,6 +85,11 @@ _DEFAULT_WINDOW_MINUTES: int = 15
 
 #: Default rate-limit ceiling (D-AD-03 — 12 alerts per agent per hour).
 _DEFAULT_RATE_LIMIT: int = 12
+
+#: Phase 7 Open Q1 Option (a): severity values that trigger a PM publish.
+#: Anomaly.severity is Literal["minor","major","critical"] per sft_domain/ops/anomaly.py.
+#: Only major+critical cross-cluster triggers are published; minor alerts stay in OPS.
+_PM_SEVERITY_TRIGGER: frozenset[str] = frozenset({"major", "critical"})
 
 _EMPTY_BUDGET = BudgetSnapshot(
     tokens_input=0,
@@ -124,6 +134,12 @@ class AnomalyDetector:
         Optional ``RateLimiter``. When omitted, constructed at init time
         bound to ``pool`` with ``agent_id="anomaly-detector"`` and the
         12/h ceiling.
+    nats_client:
+        Optional NATS client (``nats.aio.client.Client``-like). When ``None``
+        (default), the Phase 7 PM publish hook is a no-op — preserves all
+        Phase 6 behaviour (Open Q1 Option a backwards-compat contract).
+        When provided, publishes a ``PredictRequest``-compatible JSON payload
+        to ``maintenance.predict.<asset_id>`` ONLY for AUTO + major/critical.
     """
 
     def __init__(
@@ -135,6 +151,7 @@ class AnomalyDetector:
         audit_writer: AuditWriter | Any,
         query_tool: QueryTimescaleTool | Any | None = None,
         rate_limiter: RateLimiter | Any | None = None,
+        nats_client: Any | None = None,
     ) -> None:
         if pool is None:
             raise ValueError("pool must not be None")
@@ -152,6 +169,9 @@ class AnomalyDetector:
             agent_id=AGENT_ID,
             limit=_DEFAULT_RATE_LIMIT,
         )
+        # Phase 7 thin extension (Open Q1 Option a).
+        # Default None preserves Phase 6 contract: no publish, no import of nats-py.
+        self._nats = nats_client
 
     # ------------------------------------------------------------------
     # LangGraph node entrypoint
@@ -232,10 +252,43 @@ class AnomalyDetector:
                     )
                     continue
 
-                await self._write_audit(
+                record = await self._write_audit(
                     anomaly=anomaly, decision=Decision.AUTO, rate_count=count
                 )
                 emitted.append(anomaly)
+
+                # Phase 7 thin extension (Open Q1 Option a): cross-cluster PM trigger.
+                # Publish ONLY for AUTO + major/critical. SUPPRESSED alerts never trigger.
+                # Publish happens AFTER _write_audit so action_id is available for
+                # cross-cluster audit chain (MNT-06 triggered_by_action_id link).
+                if (
+                    self._nats is not None
+                    and anomaly.severity in _PM_SEVERITY_TRIGGER
+                ):
+                    try:
+                        payload = json.dumps({
+                            "asset_id": anomaly.asset_id,
+                            "triggered_by_action_id": str(record.action_id),
+                            "severity": anomaly.severity,
+                            "emitted_at": now.isoformat(),
+                        }).encode()
+                        await self._nats.publish(
+                            f"maintenance.predict.{anomaly.asset_id}",
+                            payload,
+                        )
+                        _log.debug(
+                            "pm_trigger_published",
+                            asset_id=anomaly.asset_id,
+                            severity=anomaly.severity,
+                            triggered_by_action_id=str(record.action_id),
+                        )
+                    except Exception as exc:  # noqa: BLE001
+                        # Publish failure MUST NOT propagate — audit row is source of truth.
+                        _log.warning(
+                            "pm_trigger_publish_failed",
+                            asset_id=anomaly.asset_id,
+                            error=str(exc),
+                        )
 
         _log.info(
             "anomaly_scan_complete",
@@ -255,13 +308,16 @@ class AnomalyDetector:
         anomaly: Anomaly,
         decision: Decision,
         rate_count: int,
-    ) -> None:
+    ) -> AuditRecord:
         """Persist one ``AuditRecord`` (PG + NATS via the injected writer).
 
         The original anomaly fields are stashed inside ``EvidencePanel``
         as a synthetic ``ToolCall`` so downstream consumers can query the
         suppressed payload without a JSONB ad-hoc scan (mirrors the
         ``LogEventTool`` convention from Plan 06-05).
+
+        Returns the written ``AuditRecord`` so callers can extract
+        ``action_id`` for cross-cluster audit chain linking (Phase 7 PM trigger).
         """
         now = datetime.now(UTC)
 
@@ -317,6 +373,7 @@ class AnomalyDetector:
         )
 
         await self._audit.write(record)
+        return record
 
 
 def _ensure_utc(value: Any, *, fallback: datetime) -> datetime:
