@@ -628,17 +628,17 @@ def api_gateway_client(
                 })
             except Exception:  # noqa: BLE001
                 # Agent not installed → synthesize from mock LLM JSONL + spec
-                mock_model = self._scenario.get("_mock_model")
-                llm_backend = self._scenario.get("_llm_backend", {})
-                fixture_path = llm_backend.get("fixture_path") if isinstance(llm_backend, dict) else None
+                # Read the fixture path from the scenario YAML (mock_llm_fixture key)
+                fixture_relpath = self._scenario.get("mock_llm_fixture", "")
+                fixture_path = _REPO_ROOT / fixture_relpath if fixture_relpath else None
 
                 # Read JSONL to determine validation_exhausted
                 validation_exhausted = False
                 retry_count = 0
-                if fixture_path and pathlib.Path(str(fixture_path)).exists():
+                if fixture_path and fixture_path.exists():
                     entries = [
                         json.loads(l)
-                        for l in pathlib.Path(str(fixture_path)).read_text().splitlines()
+                        for l in fixture_path.read_text().splitlines()
                         if l.strip()
                     ]
                     for entry in entries:
@@ -750,6 +750,10 @@ def api_gateway_client(
             elif action == "resume_after_help":
                 existing_state["awaiting_help"] = False
                 existing_state["status"] = "in_progress"
+                # Advance the LLM entry index past the request_help entry so the
+                # next step call reads the post-help guidance (not request_help again)
+                llm_idx = existing_state.get("llm_entry_index", existing_state.get("current_step", 0))
+                existing_state["llm_entry_index"] = llm_idx + 1
                 await checkpointer.aput(config, existing_state)
                 return _MockResponse(200, {
                     "status": "in_progress",
@@ -774,11 +778,10 @@ def api_gateway_client(
                             if l.strip()
                         ]
 
-                # Find the entry for this step index
-                step_entry_idx = current_step
-                # For degraded: after start + 2 steps before help, the 3rd entry is request_help
-                # We track which LLM entry to use based on the step count
-                all_steps_done = len(completed_steps)
+                # Use a dedicated LLM entry index tracked in state (separate from step count)
+                # This handles resume_after_help correctly: after help, the index is advanced
+                # past the request_help entry so the next step gets post-help guidance.
+                step_entry_idx = existing_state.get("llm_entry_index", current_step)
 
                 # Check if we have an entry for this step
                 if step_entry_idx < len(llm_entries):
@@ -792,6 +795,8 @@ def api_gateway_client(
                             existing_state["awaiting_help"] = True
                             existing_state["status"] = "awaiting_help"
                             existing_state["escalation_trigger"] = "technician_request"
+                            # Store current JSONL index so resume_after_help can advance it
+                            existing_state["llm_entry_index"] = step_entry_idx
                             await checkpointer.aput(config, existing_state)
 
                             audit_writer = self._collaborators["audit_writer"]
@@ -833,6 +838,7 @@ def api_gateway_client(
                     completed_steps = list(completed_steps) + [current_step + 1]
                     existing_state["completed_steps"] = completed_steps
                     existing_state["current_step"] = current_step + 1
+                    existing_state["llm_entry_index"] = step_entry_idx + 1
                     existing_state["last_guidance"] = content
 
                     if len(completed_steps) >= 5:

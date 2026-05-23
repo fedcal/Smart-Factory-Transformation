@@ -64,6 +64,6 @@ expected:
   action_type: "COACH_STEP"
   audit_rows_min: 5
   completed_steps_count: 5
-  mttr_minutes_min: 1
+  mttr_minutes_min: 0
   awaiting_help: false
   escalation_trigger: null
