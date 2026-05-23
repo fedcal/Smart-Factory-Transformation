@@ -643,8 +643,8 @@ async def post_da_report(
 
     state: dict[str, Any] = {
         "target_agent": "downtime-analyzer",
-        "window_start": body.window_start.isoformat(),
-        "window_end": body.window_end.isoformat(),
+        "window_start": body.window_start,
+        "window_end": body.window_end,
         "by_asset": body.by_asset,
         "top_n_pareto": body.top_n_pareto,
     }

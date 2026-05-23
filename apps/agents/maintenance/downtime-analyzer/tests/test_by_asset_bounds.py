@@ -98,8 +98,8 @@ async def test_by_asset_capped_at_max_50() -> None:
         compute_oee_call_count += 1
         if asset_id is not None:
             per_asset_call_count += 1
-        # Return realistic values
-        return (1.0, 1.0, 1.0, 1.0, 0, 0)
+        # Return realistic values (7-tuple: avail, perf, qual, oee, dt_min, evt_cnt, qual_src)
+        return (1.0, 1.0, 1.0, 1.0, 0, 0, "no-data")
 
     with patch("mnt_downtime_analyzer.agent.compute_oee", side_effect=_patched_compute_oee):
         analyzer = DowntimeAnalyzer(
@@ -159,7 +159,7 @@ async def test_by_asset_with_fewer_than_max_processes_all() -> None:
         nonlocal per_asset_call_count
         if asset_id is not None:
             per_asset_call_count += 1
-        return (0.9, 0.95, 0.98, 0.9 * 0.95 * 0.98, 5, 2)
+        return (0.9, 0.95, 0.98, 0.9 * 0.95 * 0.98, 5, 2, "audit")
 
     with patch("mnt_downtime_analyzer.agent.compute_oee", side_effect=_patched_compute_oee):
         analyzer = DowntimeAnalyzer(
@@ -227,10 +227,10 @@ async def test_quality_cross_cluster_called_once_in_aggregate_path() -> None:
         async def _patched_compute_oee(*, asset_id, window_start, window_end, repository,
                                         quality_reader, production_state_reader=None,
                                         sim_fallback_reader=None, planned_production_minutes=None):
-            # compute_oee internally would call compute_quality_cross_cluster;
-            # since we patch it at agent module level, the internal call in oee.py
-            # is NOT intercepted here — this mock bypasses the internal call entirely.
-            return (1.0, 1.0, 1.0, 1.0, 0, 0)
+            # compute_oee now returns 7 elements (includes quality_source).
+            # Since compute_oee is fully patched, it returns a mock 7-tuple.
+            # The internal compute_quality_cross_cluster call inside oee.py never executes.
+            return (1.0, 1.0, 1.0, 1.0, 0, 0, "no-data")
 
         with patch("mnt_downtime_analyzer.agent.compute_oee", side_effect=_patched_compute_oee):
             analyzer = DowntimeAnalyzer(
@@ -291,7 +291,7 @@ async def test_by_asset_uses_asyncio_gather_for_concurrency() -> None:
                                     sim_fallback_reader=None, planned_production_minutes=None):
         if asset_id is not None:
             completed_assets.append(asset_id)
-        return (0.9, 0.95, 0.98, 0.9 * 0.95 * 0.98, 3, 1)
+        return (0.9, 0.95, 0.98, 0.9 * 0.95 * 0.98, 3, 1, "audit")
 
     with patch("mnt_downtime_analyzer.agent.compute_oee", side_effect=_patched_compute_oee):
         analyzer = DowntimeAnalyzer(

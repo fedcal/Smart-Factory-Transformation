@@ -241,12 +241,17 @@ async def compute_oee(
     production_state_reader: Callable | None = None,
     sim_fallback_reader: Callable | None = None,
     planned_production_minutes: int | None = None,
-) -> tuple[float, float, float, float, int, int]:
+) -> tuple[float, float, float, float, int, int, QualitySource]:
     """Compute aggregate OEE A×P×Q for the given window and asset.
 
     Returns:
-        Tuple (availability, performance, quality, oee, total_downtime_min, event_count).
+        Tuple (availability, performance, quality, oee, total_downtime_min,
+        event_count, quality_source).
         oee = availability × performance × quality.
+        quality_source is one of: "audit", "simfallback", "no-data".
+
+    CR-05 fix: quality_source is now returned so callers can surface it in audit
+    rows without issuing a second compute_quality_cross_cluster query.
 
     Notes:
         CAGG usage heuristic: for hour-aligned windows the CAGG maintenance.oee_hourly
@@ -275,7 +280,7 @@ async def compute_oee(
     )
 
     # Step 4: Q (cross-cluster + fallback)
-    quality, _quality_source = await compute_quality_cross_cluster(
+    quality, quality_source = await compute_quality_cross_cluster(
         asset_id=asset_id,
         window_start=window_start,
         window_end=window_end,
@@ -284,7 +289,7 @@ async def compute_oee(
     )
 
     oee = availability * performance * quality
-    return (availability, performance, quality, oee, total_downtime_min, event_count)
+    return (availability, performance, quality, oee, total_downtime_min, event_count, quality_source)
 
 
 # ---------------------------------------------------------------------------
@@ -315,9 +320,12 @@ def compute_pareto(
 
     # Sort by total DESC, then occurrence_count DESC as tiebreak.
     sorted_rows = sorted(rows, key=lambda r: (r[1], r[2]), reverse=True)
+
+    # WR-04 fix: grand_total must use ALL sorted rows before trimming so that
+    # cumulative_percent reflects true dataset coverage, not just the top-N subset.
+    grand_total = sum(r[1] for r in sorted_rows)
     trimmed = sorted_rows[:top_n]
 
-    grand_total = sum(r[1] for r in trimmed)
     if grand_total <= 0:
         # Edge case: all zero downtime
         return [
