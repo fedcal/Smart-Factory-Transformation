@@ -38,6 +38,7 @@ __all__ = [
     "RoutingDecision",
     "VALID_CLUSTERS",
     "build_cluster_subgraph",
+    "build_maintenance_subgraph",
     "build_ops_subgraph",
     "build_supervisor_graph",
     "format_thread_id",
@@ -62,6 +63,10 @@ def __getattr__(name: str):  # type: ignore[no-untyped-def]
         from sft_agents.runtime.clusters import build_ops_subgraph  # noqa: PLC0415
 
         return build_ops_subgraph
+    if name == "build_maintenance_subgraph":
+        from sft_agents.runtime.clusters import build_maintenance_subgraph  # noqa: PLC0415
+
+        return build_maintenance_subgraph
     if name in {"build_supervisor_graph", "safe_invoke"}:
         from sft_agents.runtime import supervisor as _sup  # noqa: PLC0415
 
