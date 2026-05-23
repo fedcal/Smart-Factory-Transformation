@@ -1,7 +1,110 @@
-# DowntimeAnalyzer — happy scenario (Wave 0 stub).
-#
-# Real seed (pre-seeded downtime_events → OEE.A + OEE.Q + Pareto top-N
-# computed correctly) lands in plan 07-12.
-scenario:
-  name: downtime-analyzer-happy
-  note: Wave 0 stub — replace in plan 07-12
+name: downtime-analyzer-happy
+description: "OEE report with audit-source Quality (QUALITY_VERDICT present) + Pareto top-3 reason_codes match seeded distribution"
+input:
+  endpoint: POST /v1/agents/downtime-analyzer/report
+  body:
+    window_start: "2026-05-23T08:00:00Z"
+    window_end: "2026-05-23T09:00:00Z"
+    by_asset: true
+    top_n_pareto: 5
+seed:
+  pg_downtime_events:
+    - event_id: "dt-001"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-BE-001"
+      duration_min: 5
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:05:00Z"
+    - event_id: "dt-002"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-MP-002"
+      duration_min: 4
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:12:00Z"
+    - event_id: "dt-003"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-MP-002"
+      duration_min: 6
+      severity: "major"
+      source: "simulator"
+      timestamp: "2026-05-23T08:18:00Z"
+    - event_id: "dt-004"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-SF-003"
+      duration_min: 3
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:24:00Z"
+    - event_id: "dt-005"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-MP-002"
+      duration_min: 5
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:30:00Z"
+    - event_id: "dt-006"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-BE-001"
+      duration_min: 4
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:36:00Z"
+    - event_id: "dt-007"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-MP-002"
+      duration_min: 7
+      severity: "major"
+      source: "simulator"
+      timestamp: "2026-05-23T08:42:00Z"
+    - event_id: "dt-008"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-SF-003"
+      duration_min: 5
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:47:00Z"
+    - event_id: "dt-009"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-BE-001"
+      duration_min: 3
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:52:00Z"
+    - event_id: "dt-010"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-SF-003"
+      duration_min: 4
+      severity: "minor"
+      source: "simulator"
+      timestamp: "2026-05-23T08:57:00Z"
+  pg_audit_rows:
+    - action_id: "qv-001"
+      agent_id: "quality-inspector"
+      action_type: "QUALITY_VERDICT"
+      cluster: "ops"
+      decision: "auto"
+      ts: "2026-05-23T08:30:00Z"
+      evidence_panel:
+        asset_id: "LOOM-01"
+        tool_calls:
+          - result:
+              good_parts: 950
+              total_parts: 1000
+  sft_assets_overrides:
+    - asset_id: "LOOM-01"
+      asset_family: "loom"
+expected:
+  status_code: 200
+  decision: "auto"
+  action_type: "OEE_REPORT"
+  audit_rows_min: 1
+  oee_bounds:
+    - 0.7
+    - 1.0
+  quality_source: "audit"
+  pareto_top:
+    - "WEAVING-MP-002"
+    - "WEAVING-BE-001"
+    - "WEAVING-SF-003"

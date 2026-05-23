@@ -1,7 +1,20 @@
-# DowntimeAnalyzer — failure scenario (Wave 0 stub).
-#
-# Real seed (NATS message references missing asset_id → nak + audit row
-# Decision.SUPPRESSED) lands in plan 07-12.
-scenario:
-  name: downtime-analyzer-failure
-  note: Wave 0 stub — replace in plan 07-12
+name: downtime-analyzer-failure
+description: "Invalid ReportRequest: window_end < window_start → 422 validation error from api-gateway"
+input:
+  endpoint: POST /v1/agents/downtime-analyzer/report
+  body:
+    window_start: "2026-05-23T09:00:00Z"
+    window_end: "2026-05-23T08:00:00Z"
+    by_asset: true
+    top_n_pareto: 5
+seed:
+  pg_downtime_events: []
+  pg_audit_rows: []
+expected:
+  status_code: 422
+  decision: null
+  action_type: null
+  audit_rows_min: 0
+  oee_bounds: null
+  quality_source: null
+  pareto_top: []

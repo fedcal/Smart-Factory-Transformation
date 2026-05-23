@@ -1,7 +1,69 @@
-# MaintenanceCoach — happy scenario (Wave 0 stub).
-#
-# Real seed (5-step intervention completes end-to-end with checkpoint
-# replay) lands in plan 07-12.
-scenario:
-  name: maintenance-coach-happy
-  note: Wave 0 stub — replace in plan 07-12
+name: maintenance-coach-happy
+description: "5-step intervention completed without help request, MTTR ~25min"
+input:
+  endpoint: POST /v1/agents/maintenance-coach/start
+  body:
+    intervention_id: "INTV-001"
+    asset_id: "LOOM-01"
+    sop_id: "SOP-LOOM-001"
+    technician_id: "TECH-007"
+    user_roles:
+      - "technician"
+  multi_turn:
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-001"
+        technician_input: "Ho ispezionato il filo di ordito. Il punto di rottura e' al nodo 3."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-001"
+        technician_input: "Ho rimosso il filo rotto dalla sezione interessata."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-001"
+        technician_input: "Ho verificato la calibrazione del regolatore di tensione. Era a 38 N/m, ricalibrato a 42 N/m."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-001"
+        technician_input: "Ho riannodato il filo e verificato la tensione su tutta la larghezza."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-001"
+        technician_input: "Riavviato il telaio, tessitura corretta per 30 secondi. Tutto ok."
+seed:
+  qdrant_chunks:
+    - id: "chunk-coach-h-1"
+      source_uri: "doc://SOP-LOOM-001#step1"
+      text: "Passo 1: Ispeziona visivamente il filo di ordito su tutta la larghezza del telaio. Identifica il punto di rottura."
+      vector_seed: 50
+      score: 0.97
+    - id: "chunk-coach-h-2"
+      source_uri: "doc://SOP-LOOM-001#step2"
+      text: "Passo 2: Rimuovi il filo rotto dalla sezione interessata. Mantieni la tensione sui fili adiacenti."
+      vector_seed: 51
+      score: 0.94
+    - id: "chunk-coach-h-3"
+      source_uri: "doc://SOP-LOOM-001#step3"
+      text: "Passo 3: Verifica e ricalibra il regolatore di tensione (specifica: 40-45 N/m)."
+      vector_seed: 52
+      score: 0.92
+    - id: "chunk-coach-h-4"
+      source_uri: "doc://SOP-LOOM-001#step4"
+      text: "Passo 4: Riannoda il filo applicando la tecnica standard. Verifica tensione uniforme."
+      vector_seed: 53
+      score: 0.91
+    - id: "chunk-coach-h-5"
+      source_uri: "doc://SOP-LOOM-001#step5"
+      text: "Passo 5: Riavvia il telaio e verifica la corretta tessitura per almeno 30 secondi."
+      vector_seed: 54
+      score: 0.89
+mock_llm_fixture: tests/fixtures/llm_responses/maintenance-coach/happy.jsonl
+expected:
+  status_code: 200
+  decision: "auto"
+  action_type: "COACH_STEP"
+  audit_rows_min: 5
+  completed_steps_count: 5
+  mttr_minutes_min: 1
+  awaiting_help: false
+  escalation_trigger: null

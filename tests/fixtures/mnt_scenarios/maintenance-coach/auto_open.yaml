@@ -1,0 +1,47 @@
+name: maintenance-coach-auto-open
+description: "RCA recommendation auto-opens intervention without technician_id; supervisor assigns technician via /resume; SOP step 0 proceeds"
+input:
+  endpoint: POST /v1/agents/maintenance-coach/start
+  body:
+    intervention_id: "INTV-AUTO-01"
+    asset_id: "LOOM-02"
+    sop_id: "SOP-LOOM-002"
+    user_roles:
+      - "supervisor"
+  multi_turn:
+    - endpoint: POST /v1/agents/maintenance-coach/resume
+      body:
+        intervention_id: "INTV-AUTO-01"
+        technician_id: "TECH-099"
+        supervisor_id: "SUP-01"
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-AUTO-01"
+        technician_input: "Iniziato controllo sistema trama LOOM-02."
+seed:
+  qdrant_chunks:
+    - id: "chunk-coach-ao-1"
+      source_uri: "doc://SOP-LOOM-002#step1"
+      text: "Passo 1: Ispezione sistema trama LOOM-02. Verifica inserimento trama."
+      vector_seed: 65
+      score: 0.95
+    - id: "chunk-coach-ao-2"
+      source_uri: "doc://SOP-LOOM-002#step2"
+      text: "Passo 2: Verifica tensione trama. Specifica: 35-40 N/m."
+      vector_seed: 66
+      score: 0.91
+    - id: "chunk-coach-ao-3"
+      source_uri: "doc://SOP-LOOM-002#step3"
+      text: "Passo 3: Ricalibrazione secondo specifiche OEM LOOM-02."
+      vector_seed: 67
+      score: 0.88
+mock_llm_fixture: tests/fixtures/llm_responses/maintenance-coach/auto_open.jsonl
+expected:
+  first_response_state: "awaiting_technician_assignment"
+  first_audit_row:
+    decision: "hitl_supervisor"
+    action_type: "COACH_STEP"
+    escalation_trigger: "technician_assignment_required"
+  after_resume_state: "in_progress"
+  after_resume_technician_id: "TECH-099"
+  after_step_completed_steps_count: 1

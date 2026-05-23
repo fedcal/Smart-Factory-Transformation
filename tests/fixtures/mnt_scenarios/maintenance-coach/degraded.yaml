@@ -1,7 +1,74 @@
-# MaintenanceCoach — degraded scenario (Wave 0 stub).
-#
-# Real seed (technician utters keyword "aiuto" mid-flow → request_help
-# tool call + supervisor escalation) lands in plan 07-12.
-scenario:
-  name: maintenance-coach-degraded
-  note: Wave 0 stub — replace in plan 07-12
+name: maintenance-coach-degraded
+description: "Mid-flow step 3, technician says 'aiuto' → LLM invokes request_help → graph interrupts → supervisor resume → intervention completes"
+input:
+  endpoint: POST /v1/agents/maintenance-coach/start
+  body:
+    intervention_id: "INTV-DEG-001"
+    asset_id: "LOOM-01"
+    sop_id: "SOP-LOOM-001"
+    technician_id: "TECH-008"
+    user_roles:
+      - "technician"
+  multi_turn:
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-DEG-001"
+        technician_input: "Ho ispezionato il filo. Rottura al nodo 7."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-DEG-001"
+        technician_input: "Ho rimosso il filo rotto."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-DEG-001"
+        technician_input: "aiuto, non capisco questo passaggio sul regolatore di tensione"
+    - endpoint: POST /v1/agents/maintenance-coach/resume_after_help
+      body:
+        intervention_id: "INTV-DEG-001"
+        supervisor_input: "Usa il manuale OEM sezione 3.2 per la calibrazione. Imposta a 42 N/m."
+        supervisor_id: "SUP-01"
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-DEG-001"
+        technician_input: "Calibrato a 42 N/m come da istruzioni supervisore."
+    - endpoint: POST /v1/agents/maintenance-coach/step
+      body:
+        intervention_id: "INTV-DEG-001"
+        technician_input: "Riavviato il telaio. Funziona correttamente."
+seed:
+  qdrant_chunks:
+    - id: "chunk-coach-d-1"
+      source_uri: "doc://SOP-LOOM-001#step1"
+      text: "Passo 1: Ispeziona visivamente il filo di ordito."
+      vector_seed: 55
+      score: 0.96
+    - id: "chunk-coach-d-2"
+      source_uri: "doc://SOP-LOOM-001#step2"
+      text: "Passo 2: Rimuovi il filo rotto dalla sezione interessata."
+      vector_seed: 56
+      score: 0.93
+    - id: "chunk-coach-d-3"
+      source_uri: "doc://SOP-LOOM-001#step3"
+      text: "Passo 3: Verifica e ricalibra il regolatore di tensione (specifica: 40-45 N/m)."
+      vector_seed: 57
+      score: 0.90
+    - id: "chunk-coach-d-4"
+      source_uri: "doc://SOP-LOOM-001#step4"
+      text: "Passo 4: Riannoda il filo applicando la tecnica standard."
+      vector_seed: 58
+      score: 0.88
+    - id: "chunk-coach-d-5"
+      source_uri: "doc://SOP-LOOM-001#step5"
+      text: "Passo 5: Riavvia il telaio e verifica la corretta tessitura."
+      vector_seed: 59
+      score: 0.86
+mock_llm_fixture: tests/fixtures/llm_responses/maintenance-coach/degraded.jsonl
+expected:
+  status_code: 200
+  decision: "auto"
+  action_type: "COACH_STEP"
+  audit_rows_min: 4
+  completed_steps_count: 5
+  mttr_minutes_min: 1
+  awaiting_help: false
+  escalation_trigger: "technician_request"

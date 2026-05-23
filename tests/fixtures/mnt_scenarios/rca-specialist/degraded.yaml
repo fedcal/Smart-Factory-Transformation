@@ -1,7 +1,57 @@
-# RCASpecialist — degraded scenario (Wave 0 stub).
-#
-# Real seed (first LLM call fails schema validator → 1 retry needed) lands
-# in plan 07-12.
-scenario:
-  name: rca-specialist-degraded
-  note: Wave 0 stub — replace in plan 07-12
+name: rca-specialist-degraded
+description: "5-Why analysis: 1st LLM call returns orphan citation → retry fires → 2nd call succeeds with valid chain"
+input:
+  endpoint: POST /v1/agents/rca-specialist/analyze
+  body:
+    problem_statement: "Loom L01 ha avuto un downtime di 45 minuti per rottura del filo di ordito alle 10:00."
+    downtime_event_id: "evt-002"
+    asset_id: "LOOM-01"
+    user_roles:
+      - "technician"
+      - "supervisor"
+    lang: "it"
+seed:
+  pg_documents:
+    - source_uri: "doc://SOP-LOOM-001#step1"
+      title: "SOP rottura filo ordito - ispezione"
+      content: "Ispezione visiva del filo di ordito su tutta la larghezza del telaio."
+    - source_uri: "doc://SOP-LOOM-001#step2"
+      title: "SOP rottura filo ordito - intervento"
+      content: "Verifica calibrazione del regolatore di tensione. Ricalibra secondo specifiche OEM."
+    - source_uri: "doc://MAN-LOOM-OEM#warp"
+      title: "Manuale OEM - sistema ordito"
+      content: "Il regolatore tensione deve essere calibrato a 40-45 N/m."
+  qdrant_chunks:
+    - id: "chunk-rca-deg-1"
+      source_uri: "doc://SOP-LOOM-001#step1"
+      text: "Ispezione visiva del filo di ordito. Identifica punto di rottura."
+      vector_seed: 45
+      score: 0.93
+    - id: "chunk-rca-deg-2"
+      source_uri: "doc://MAN-LOOM-OEM#warp"
+      text: "Regolatore tensione OEM: procedura calibrazione."
+      vector_seed: 46
+      score: 0.85
+  neo4j_facts:
+    - "CREATE (m:Machine {asset_id:'LOOM-01'})-[:HAS_PART]->(p:Part {name:'warp'})-[:HAS_FAILURE_MODE]->(fm:FailureMode {id:'broken_end'})-[:DOCUMENTED_BY]->(s:SOP {id:'SOP-LOOM-001'})"
+  pg_downtime_events:
+    - event_id: "evt-002"
+      asset_id: "LOOM-01"
+      reason_code: "WEAVING-BE-001"
+      duration_min: 45
+      severity: "major"
+      source: "operator"
+      timestamp: "2026-05-23T10:00:00Z"
+mock_llm_fixture: tests/fixtures/llm_responses/rca-specialist/degraded.jsonl
+expected:
+  status_code: 202
+  decision: "hitl_supervisor"
+  action_type: "RCA_CHAIN"
+  audit_rows_min: 1
+  tool_calls_includes:
+    - "rag_search"
+    - "escalate_to_supervisor"
+  hitl_status: "supervisor_pending"
+  citations_min_per_step: 1
+  validation_exhausted: false
+  retry_count_min: 1

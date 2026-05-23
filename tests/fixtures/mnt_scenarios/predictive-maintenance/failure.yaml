@@ -1,7 +1,32 @@
-# PredictiveMaintenance — failure scenario (Wave 0 stub).
-#
-# Real seed (malformed sensor input → predictable error + audit row) lands
-# in plan 07-12.
-scenario:
-  name: predictive-maintenance-failure
-  note: Wave 0 stub — replace in plan 07-12
+name: predictive-maintenance-failure
+description: "Unknown asset GHOST-99 not in sft_assets registry → agent returns error, no audit row created"
+input:
+  endpoint: POST /v1/agents/predictive-maintenance/score
+  body:
+    asset_id: "GHOST-99"
+    triggered_by_action_id: "00000000-0000-4000-8000-000000000003"
+    user_roles:
+      - "technician"
+seed:
+  pg_audit_rows:
+    - action_id: "00000000-0000-4000-8000-000000000003"
+      agent_id: "anomaly-detector"
+      action_type: "ANOMALY_ALERT"
+      cluster: "ops"
+      decision: "auto"
+      ts: "2026-05-23T10:00:00Z"
+      evidence_panel:
+        asset_id: "GHOST-99"
+        tool_calls: []
+  pg_sensor_events: []
+  sft_assets_overrides: []
+expected:
+  status_code: 200
+  decision: null
+  action_type: null
+  audit_rows_min: 1
+  tool_calls_includes: []
+  rul_cycles_band: null
+  health_index_min: null
+  triggered_by_action_id_present: false
+  error_logged: true
