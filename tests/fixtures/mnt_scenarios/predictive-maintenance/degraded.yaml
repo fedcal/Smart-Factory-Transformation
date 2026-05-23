@@ -1,0 +1,7 @@
+# PredictiveMaintenance — degraded scenario (Wave 0 stub).
+#
+# Real seed (health_index < 0.3 → HITL supervisor interrupt) lands in
+# plan 07-12.
+scenario:
+  name: predictive-maintenance-degraded
+  note: Wave 0 stub — replace in plan 07-12

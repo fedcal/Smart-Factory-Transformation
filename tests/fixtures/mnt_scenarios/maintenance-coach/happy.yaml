@@ -1,0 +1,7 @@
+# MaintenanceCoach — happy scenario (Wave 0 stub).
+#
+# Real seed (5-step intervention completes end-to-end with checkpoint
+# replay) lands in plan 07-12.
+scenario:
+  name: maintenance-coach-happy
+  note: Wave 0 stub — replace in plan 07-12

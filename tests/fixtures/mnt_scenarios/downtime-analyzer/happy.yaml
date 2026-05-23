@@ -1,0 +1,7 @@
+# DowntimeAnalyzer — happy scenario (Wave 0 stub).
+#
+# Real seed (pre-seeded downtime_events → OEE.A + OEE.Q + Pareto top-N
+# computed correctly) lands in plan 07-12.
+scenario:
+  name: downtime-analyzer-happy
+  note: Wave 0 stub — replace in plan 07-12

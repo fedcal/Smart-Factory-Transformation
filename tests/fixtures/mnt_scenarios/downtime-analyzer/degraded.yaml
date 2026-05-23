@@ -1,0 +1,7 @@
+# DowntimeAnalyzer — degraded scenario (Wave 0 stub).
+#
+# Real seed (cross-cluster audit query falls back to default path —
+# OEE.Q < 1.0) lands in plan 07-12.
+scenario:
+  name: downtime-analyzer-degraded
+  note: Wave 0 stub — replace in plan 07-12

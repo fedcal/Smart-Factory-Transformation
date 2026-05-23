@@ -1,0 +1,7 @@
+# RCASpecialist — happy scenario (Wave 0 stub).
+#
+# Real seed (5-Why chain produced with valid citations on first LLM call)
+# lands in plan 07-12.
+scenario:
+  name: rca-specialist-happy
+  note: Wave 0 stub — replace in plan 07-12

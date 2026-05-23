@@ -1,0 +1,7 @@
+# MaintenanceCoach — degraded scenario (Wave 0 stub).
+#
+# Real seed (technician utters keyword "aiuto" mid-flow → request_help
+# tool call + supervisor escalation) lands in plan 07-12.
+scenario:
+  name: maintenance-coach-degraded
+  note: Wave 0 stub — replace in plan 07-12

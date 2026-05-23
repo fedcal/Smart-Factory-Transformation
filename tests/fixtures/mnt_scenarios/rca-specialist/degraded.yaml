@@ -1,0 +1,7 @@
+# RCASpecialist — degraded scenario (Wave 0 stub).
+#
+# Real seed (first LLM call fails schema validator → 1 retry needed) lands
+# in plan 07-12.
+scenario:
+  name: rca-specialist-degraded
+  note: Wave 0 stub — replace in plan 07-12
