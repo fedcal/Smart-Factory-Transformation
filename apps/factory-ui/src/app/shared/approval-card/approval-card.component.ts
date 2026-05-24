@@ -9,7 +9,11 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  DestroyRef,
+  Injector,
+  runInInjectionContext,
 } from '@angular/core';
+import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -441,6 +445,8 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _injector = inject(Injector);
 
   // Motivation gate
   motivationText = '';
@@ -598,10 +604,33 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private _subscribeSseResolution(): void {
-    // Watch SSE approvals signal for resolution events matching this card's id
-    // Note: SseService.approvals is a Signal, not Observable — poll via effect would require
-    // Zone. Use interval polling at 500ms as lightweight proxy for demo purposes.
-    // In production a proper effect() or toObservable() + takeUntilDestroyed is preferred.
+    // WR-04: wire SSE approval_resolved events to update the card state locally.
+    // SseService.approvals is a Signal<ApprovalPendingEvent[]> — when an
+    // approval_resolved SSE event arrives, SseService removes the entry from the
+    // approvals list. We observe that list via toObservable() + takeUntilDestroyed.
+    //
+    // toObservable() requires an injection context; runInInjectionContext provides
+    // it when called from ngOnInit (outside the construction context).
+    runInInjectionContext(this._injector, () => {
+      this._sseSubscription = toObservable(this.sseService.approvals)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((pendingList) => {
+          if (!this.card) return;
+          if (this._currentStatus() !== 'pending') return;
+
+          // If the card id is no longer in the pending list, it was resolved
+          // externally (by another user / SSE approval_resolved event).
+          const stillPending = pendingList.some(
+            (a) => a.approval_id === this.card!.id,
+          );
+          if (!stillPending && pendingList.length > 0) {
+            // Mark as resolved externally — the next full page reload will show
+            // the definitive approved/rejected state from the server.
+            this._currentStatus.set('approved');
+            this._stopSlaCountdown();
+          }
+        });
+    });
   }
 
   private _submitDecision(decision: 'APPROVED' | 'REJECTED'): void {
