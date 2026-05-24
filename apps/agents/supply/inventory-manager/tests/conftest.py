@@ -6,24 +6,38 @@ Provides shared fixtures mirroring the shift-handover conftest pattern:
 - Patched interrupt() that raises GraphInterrupt on first call and returns
   payload on subsequent calls (NOT a MagicMock — per WR-01 lesson from Phase 8).
 
-Real fixtures (scm schema query harness, reorder simulation) land
-with plan 09-02 (inventory-manager implementation).
+WR-03 (Phase 9 review): mock_pool now returns one SKU-below-threshold row by
+default, so that the HITL contracts (draft/signoff audit writes) are exercised.
+Tests that want the empty-rows path should use make_empty_pool() directly.
 """
 
 from __future__ import annotations
 
+from decimal import Decimal
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+# ---------------------------------------------------------------------------
+# Synthetic inventory row — SKU below reorder threshold to trigger HITL path
+# ---------------------------------------------------------------------------
 
-@pytest.fixture()
-def mock_pool() -> MagicMock:
-    """AsyncMock asyncpg connection pool.
+_BELOW_THRESHOLD_ROW: dict[str, Any] = {
+    "sku_id": "SKU-FAB-JERSEY-BLU",
+    "quantity": Decimal("310.000"),       # 310 < reorder_point 500 → below threshold
+    "ts": None,                           # not used by check_reorder
+    "reorder_point": Decimal("500.00"),
+    "reorder_qty": Decimal("1500.00"),
+    "unit_cost_eur": Decimal("8.4000"),
+    "lead_time_days": 5,
+}
 
-    Provides an acquire() context manager that returns a mock asyncpg connection.
-    Pattern mirrors apps/agents/knowledge/shift-handover/tests/conftest.py.
+
+def _make_pool_with_rows(rows: list[dict[str, Any]]) -> MagicMock:
+    """Build a mock asyncpg pool whose connection.fetch() returns `rows`.
+
+    Used by mock_pool (HITL path, rows non-empty) and make_empty_pool (WR-03 path).
     """
     pool = MagicMock()
     conn = AsyncMock()
@@ -34,11 +48,36 @@ def mock_pool() -> MagicMock:
         )
     )
     pool.fetchrow = AsyncMock(return_value=None)
-    pool.fetch = AsyncMock(return_value=[])
+    pool.fetch = AsyncMock(return_value=rows)
     conn.fetchrow = AsyncMock(return_value=None)
-    conn.fetch = AsyncMock(return_value=[])
+    conn.fetch = AsyncMock(return_value=rows)
     conn.execute = AsyncMock()
     return pool
+
+
+@pytest.fixture()
+def mock_pool() -> MagicMock:
+    """AsyncMock asyncpg connection pool with one below-threshold SKU row.
+
+    Returns a pool whose connection.fetch() yields one synthetic inventory row
+    (SKU-FAB-JERSEY-BLU, qty=310, reorder_point=500) so that the HITL path is
+    triggered and audit contracts (DRAFT/SIGNOFF writes) can be verified.
+
+    WR-03: pool must return non-empty rows for the HITL contracts to fire.
+    Tests that want the empty-rows early-exit path should use make_empty_pool.
+    """
+    return _make_pool_with_rows([_BELOW_THRESHOLD_ROW])
+
+
+@pytest.fixture()
+def make_empty_pool() -> MagicMock:
+    """AsyncMock asyncpg connection pool that returns no rows (empty fetch).
+
+    Use this fixture when testing the WR-03 early-exit path: inventory_manager
+    must return {reorder_recommendation: None, reorder_alert: None} and emit
+    a warning log when the repository returns zero rows, without firing HITL.
+    """
+    return _make_pool_with_rows([])
 
 
 @pytest.fixture()

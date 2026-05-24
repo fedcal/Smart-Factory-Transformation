@@ -353,3 +353,47 @@ async def test_reorder_alert_emitted_in_agent_output(
     rec = result["reorder_recommendation"]
     assert rec is not None, "reorder_recommendation must not be None."
     assert "recommendation_id" in rec, "recommendation must contain recommendation_id."
+
+
+# ---------------------------------------------------------------------------
+# Contract 8: WR-03 — early-exit with no recommendation when rows is empty
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_no_recommendation_when_repository_returns_empty_rows(
+    make_empty_pool,
+    mock_audit_writer,
+    make_interrupt_fn,
+) -> None:
+    """When the repository returns zero rows, the agent must exit without HITL (WR-03).
+
+    Before the WR-03 fix, an empty repository result caused the agent to fall through
+    to a synthetic recommendation block (sku_id="SKU-UNKNOWN") and fire HITL even in
+    production, when the repository returned nothing (timeout, bad sku_ids, partial
+    connection failure).
+
+    After the fix: the agent logs a warning and returns {reorder_recommendation: None,
+    reorder_alert: None} without calling interrupt() or audit_writer.write().
+
+    This test uses make_empty_pool (conn.fetch returns []) to simulate the empty-rows
+    production path.
+    """
+    agent = InventoryManager(
+        pool=make_empty_pool,
+        audit_writer=mock_audit_writer,
+    )
+
+    result = await agent(_STATE)
+
+    # WR-03: agent must return None for both keys — no synthetic recommendation
+    assert result == {"reorder_recommendation": None, "reorder_alert": None}, (
+        f"Expected {{reorder_recommendation: None, reorder_alert: None}}, got {result!r}. "
+        "WR-03: agent must not generate synthetic recommendations when rows is empty."
+    )
+
+    # No audit writes — no HITL fired (no interrupt called, no audit rows written)
+    assert mock_audit_writer.write.call_count == 0, (
+        f"Expected 0 audit writes (no HITL when rows is empty), "
+        f"got {mock_audit_writer.write.call_count}. WR-03 violation."
+    )

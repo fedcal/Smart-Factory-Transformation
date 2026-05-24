@@ -274,7 +274,20 @@ class InventoryManager:
 
         rows = await self._repo.fetch_current_levels(sku_ids)
 
-        # -------- 3. Run check_reorder() per SKU; pick first below-threshold
+        # -------- 3. Early-exit when no rows returned from DB (WR-03 fix)
+        # An empty result set means the repository returned nothing — either the
+        # SKU ids are unknown, a partial connection issue occurred, or the table
+        # is genuinely empty. In all cases we log a warning and exit cleanly
+        # without generating a bogus recommendation or firing HITL.
+        if not rows:
+            logger.warning(
+                "inventory_manager_no_rows_from_db",
+                sku_ids=sku_ids,
+                thread_id=full_thread_id,
+            )
+            return {"reorder_recommendation": None, "reorder_alert": None}
+
+        # -------- 4. Run check_reorder() per SKU; pick first below-threshold
         below_threshold_signals = []
         for row in rows:
             signal = check_reorder(
@@ -288,11 +301,8 @@ class InventoryManager:
             if signal.is_below_threshold:
                 below_threshold_signals.append(signal)
 
-        # If no SKUs need reorder (no rows from mock or none below threshold),
-        # use a synthetic signal for the HITL test path (single-SKU focus for SCM-01).
-        # In production, the agent would return early without HITL if nothing is below threshold.
-        if not below_threshold_signals and rows:
-            # No SKU below threshold — return early without HITL
+        # No SKU below threshold — return early without HITL
+        if not below_threshold_signals:
             logger.info("inventory_manager_no_reorder_needed", thread_id=full_thread_id)
             return {
                 "reorder_recommendation": None,
@@ -300,39 +310,20 @@ class InventoryManager:
             }
 
         # Pick the first below-threshold SKU (priority: first in result set)
-        # If no rows at all (mock with empty fetch), create a synthetic for test path.
-        if below_threshold_signals:
-            primary_signal = below_threshold_signals[0]
-        else:
-            # No rows returned (mock returns []) — generate a synthetic signal for test
-            primary_signal = None
+        primary_signal = below_threshold_signals[0]
 
-        # -------- 4. Derive stable recommendation_id from thread_id (CR-04)
+        # -------- 5. Derive stable recommendation_id from thread_id (CR-04)
         recommendation_id = self._stable_id(state)
 
-        # Build ReorderRecommendation (or None if no signals)
-        if primary_signal is not None:
-            recommendation = ReorderRecommendation(
-                sku_id=primary_signal.sku_id,
-                current_qty=primary_signal.current_qty,
-                reorder_point=primary_signal.reorder_point,
-                reorder_qty=primary_signal.reorder_qty,
-                lead_time_days=primary_signal.lead_time_days,
-                estimated_cost_eur=primary_signal.estimated_cost_eur,
-                recommendation_id=recommendation_id,
-            )
-        else:
-            # Synthetic recommendation for test environments with empty repository
-            from decimal import Decimal
-            recommendation = ReorderRecommendation(
-                sku_id=sku_ids[0] if sku_ids else "SKU-UNKNOWN",
-                current_qty=Decimal("0"),
-                reorder_point=Decimal("1"),
-                reorder_qty=Decimal("1"),
-                lead_time_days=7,
-                estimated_cost_eur=Decimal("0"),
-                recommendation_id=recommendation_id,
-            )
+        recommendation = ReorderRecommendation(
+            sku_id=primary_signal.sku_id,
+            current_qty=primary_signal.current_qty,
+            reorder_point=primary_signal.reorder_point,
+            reorder_qty=primary_signal.reorder_qty,
+            lead_time_days=primary_signal.lead_time_days,
+            estimated_cost_eur=primary_signal.estimated_cost_eur,
+            recommendation_id=recommendation_id,
+        )
 
         alert = InventoryAlert(
             alert_type="REORDER_ALERT",
