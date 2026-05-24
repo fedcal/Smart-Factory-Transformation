@@ -30,6 +30,7 @@ from sft_knowledge.chunking import Chunk, SemanticChunker
 from sft_knowledge.embedding import BgeM3Embedder, EncodeOutput
 from sft_knowledge.models import GraphNode, RagCitation
 from sft_knowledge.parsers import DocumentParser, MarkdownParser, ParsedDoc, ParsedSection
+from sft_knowledge.path_utils import WORKSPACE_ROOT, derive_source_uri
 from sft_knowledge.retrieval import (
     ROLE_TO_ACL,
     BgeReranker,
@@ -69,4 +70,6 @@ __all__ = [
     "TraverseGraphInput",
     "QdrantLongTermMemory",
     "QdrantLongTermMemoryConfig",
+    "derive_source_uri",
+    "WORKSPACE_ROOT",
 ]

@@ -26,6 +26,7 @@ import frontmatter
 import structlog
 
 from sft_knowledge.parsers.base import DocumentParser, ParsedDoc, ParsedSection
+from sft_knowledge.path_utils import derive_source_uri
 
 logger = structlog.get_logger(__name__)
 
@@ -33,11 +34,6 @@ HEADING_RE: re.Pattern[str] = re.compile(r"^(#{1,6})\s+(.+?)(?:\s+#+)?$", re.MUL
 
 # Required frontmatter keys (D-67). Phase 5 enforces; Phase 2 corpus generator guarantees.
 _REQUIRED_FIELDS: tuple[str, ...] = ("id", "title", "version", "lang")
-
-# Walk up from packages/sft-knowledge/src/sft_knowledge/parsers/markdown.py to workspace root.
-# parents[0]=parsers, parents[1]=sft_knowledge, parents[2]=src, parents[3]=sft-knowledge,
-# parents[4]=packages, parents[5]=workspace root.
-_WORKSPACE_ROOT: Path = Path(__file__).resolve().parents[5]
 
 
 def _build_heading_path(content: str) -> list[tuple[int, int, list[str]]]:
@@ -119,13 +115,8 @@ class MarkdownParser(DocumentParser):
                 continue
             sections.append(ParsedSection(heading_path=heading_path, text=text))
 
-        # 6. source_uri derived from relative path inside workspace.
-        try:
-            rel = path.resolve().relative_to(_WORKSPACE_ROOT)
-            source_uri = f"corpus://{rel.as_posix()}"
-        except ValueError:
-            # Path not under workspace root (e.g. tmp_path fixture) — fall back to absolute.
-            source_uri = f"corpus://{path.resolve().as_posix().lstrip('/')}"
+        # 6. source_uri derived from relative path inside workspace via canonical helper.
+        source_uri = derive_source_uri(path)
 
         return ParsedDoc(
             source_uri=source_uri,

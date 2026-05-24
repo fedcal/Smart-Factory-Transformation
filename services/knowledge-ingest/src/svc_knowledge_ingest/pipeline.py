@@ -31,12 +31,12 @@ by the caller (the Typer CLI in __main__.py) and can be mocked in unit tests.
 from __future__ import annotations
 
 import hashlib
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import structlog
 from pydantic import BaseModel
+from sft_knowledge.path_utils import derive_source_uri
 
 if TYPE_CHECKING:
     from sft_domain.failure_modes.models import FailureMode
@@ -50,30 +50,6 @@ if TYPE_CHECKING:
     from svc_knowledge_ingest.state import IngestStateStore
 
 logger = structlog.get_logger(__name__)
-
-
-def _derive_source_uri(path: Path) -> str:
-    """Reproduce ``MarkdownParser`` source_uri derivation for the content-hash gate.
-
-    The orchestrator must look up state by `source_uri` *before* parsing the file
-    (early-exit on unchanged content avoids re-parsing on every ingest). To stay
-    consistent with `MarkdownParser._WORKSPACE_ROOT`, we walk up from this module
-    to the workspace root the same way and produce ``corpus://<rel-posix-path>``.
-
-    services/knowledge-ingest/src/svc_knowledge_ingest/pipeline.py
-        parents[0]=svc_knowledge_ingest
-        parents[1]=src
-        parents[2]=knowledge-ingest
-        parents[3]=services
-        parents[4]=<workspace-root>
-    """
-    workspace_root = Path(__file__).resolve().parents[4]
-    try:
-        rel = path.resolve().relative_to(workspace_root)
-        return f"corpus://{rel.as_posix()}"
-    except ValueError:
-        # tmp_path / out-of-workspace inputs — keep absolute fallback.
-        return f"corpus://{path.resolve().as_posix().lstrip(os.sep)}"
 
 
 class IngestResult(BaseModel):
@@ -167,7 +143,7 @@ async def ingest_file(
         is achieved at the *next* run via content_hash detection + idempotent MERGE.
     """
     content_hash = hashlib.sha256(path.read_bytes()).hexdigest()
-    source_uri = _derive_source_uri(path)
+    source_uri = derive_source_uri(path)
     log = logger.bind(source_uri=source_uri, content_hash=content_hash)
 
     # 1+2. Early-exit BEFORE parse on content_hash match (KNW-07 SC#3).
