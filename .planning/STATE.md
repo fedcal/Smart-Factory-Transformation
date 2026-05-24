@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "10-10 complete — Playwright E2E project + HITL approval flow spec (UI-10 satisfied)"
-last_updated: "2026-05-24T19:55:00Z"
+stopped_at: "10-11 complete — Pydantic→TS contract test (SRV-05) + bilingual mock-UI docs + screenshots (UI-09). Phase 10 DONE. Next: Phase 11 (observability + security hardening)"
+last_updated: "2026-05-24T20:10:00Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 108
-  completed_plans: 107
-  percent: 77
+  completed_plans: 108
+  percent: 78
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 10 (backend-api-frontend) — EXECUTING
-Plan: 13 of 13
-Status: Executing (10-11 remaining)
+Phase: 10 (backend-api-frontend) — COMPLETE
+Plan: 13 of 13 (all complete)
+Status: Phase 10 complete — Phase 11 ready to start
 Last activity: 2026-05-24
 
-Progress: [██████████] 97%
+Progress: [██████████] 78% (Phase 10 complete — 10 of 12 phases done)
 
 ### Phase 1 plans (waves — DAG-computed)
 
@@ -63,6 +63,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 10 P11  | 30min | 2 tasks | 15 files |
 | Phase 10 P10  | 15min | 2 tasks | 4 files |
 | Phase 10 P09  | 8min | 2 tasks | 7 files |
 | Phase 10 P08  | 25min | 2 tasks | 10 files |
@@ -140,6 +141,7 @@ Recent decisions affecting current work:
 - [Phase 10-09]: All 5 persona routes migrated to loadChildren; CIO Elena reuses ManagerComponent (UI-SPEC maps cio → /manager); AdminComponent demo fallback rows (17/20 AUTO) ensures governor alert demonstrable in dev; DemoComponent placeholder retained as dead file
 - [Phase 10-03]: Finite async generator for SSE HTTP tests avoids sse-starlette AppStatus event-loop collision; X-Accel-Buffering + Content-Type combined in one test; auth schema isolation for auth_users; OTEL best-effort guard (try/except) in build_app()
 - [Phase 10-10]: Separate Nx project apps/factory-ui-e2e/ (not inline) per Nx e2e convention; audit via GET /v1/approvals filtered by approval_id (no /v1/audit/{id} endpoint); beforeAll reachability guard prevents silent false-green; ubuntu26.04-x64 lacks Playwright browser support — live run is CI/human item
+- [Phase 10-11]: openapi-typescript@7.8.0 pinned as workspace devDep; byte-identity divergence guard in contract.spec.ts (21 tests); mkdocs-static-i18n treats root-level dirs as locales — use flat file ui-mock.md not ui/mock-ui.md; placeholder PNGs for mkdocs --strict; SFT_SKIP_SCREENSHOTS=true for CI without display
 
 ### Pending Todos
 
@@ -160,6 +162,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T19:55:00Z
-Stopped at: "10-10 complete — apps/factory-ui-e2e + hitl-flow.spec.ts (8-step HITL approval E2E). Next: 10-11 (TS contract test + bilingual mock UI)"
-Resume file: .planning/phases/10-backend-api-frontend/10-11-PLAN.md
+Last session: 2026-05-24T20:10:00Z
+Stopped at: "10-11 complete — Phase 10 DONE. openapi.json (39 schemas) + api-types.ts + 21-test contract guard (SRV-05) + bilingual screenshot spec + ui-mock.md IT/EN + mkdocs strict pass (UI-09). Phase 11 ready."
+Resume file: None (Phase 10 complete — plan Phase 11)

@@ -15,7 +15,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests (completed 2026-05-23)
 - [x] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests (completed 2026-05-24)
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
-- [ ] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests
+- [x] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests (completed 2026-05-24)
 - [ ] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations
 - [ ] **Phase 12: Documentation, Economic Model & Competition Deliverables** - MkDocs Material i18n, all doc sections, OEPV simulator, TCO, ribasso analysis, deliverable bundle, brand-scrub CI check
 
@@ -240,7 +240,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
   - [x] 10-09-PLAN.md — Frontend features: technician + admin (audit log + governor) + persona walkthrough demo (UI-01/08, HITL-04/09)
   - [x] 10-10-PLAN.md — Playwright E2E: separate Nx project apps/factory-ui-e2e + full HITL approval flow (UI-10, HITL-01/06/07)
-  - [ ] 10-11-PLAN.md — Pydantic↔TS contract test (openapi-typescript) + bilingual mock-UI screenshots (SRV-05, UI-09)
+  - [x] 10-11-PLAN.md — Pydantic↔TS contract test (openapi-typescript) + bilingual mock-UI screenshots (SRV-05, UI-09)
 
 ### Phase 11: Observability, Evaluation & Security Hardening
 **Goal**: OpenTelemetry instrumentation spans all services, Langfuse traces every LLM call, Grafana dashboards expose agent and factory KPIs, DeepEval gates PRs on hallucination rate, and STRIDE threat model mitigations are implemented including OWASP LLM Top 10 defenses.

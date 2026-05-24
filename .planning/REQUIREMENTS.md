@@ -122,7 +122,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [x] **UI-06**: Stream eventi via SSE/WebSocket dal backend FastAPI
 - [x] **UI-07**: i18n IT+EN su tutti i testi UI con lazy load lingua
 - [ ] **UI-08**: Persona walkthrough demo (operatore, capo turno, tecnico, CIO) integrato nell'app
-- [ ] **UI-09**: Mock UI documentate in `docs/` con screenshot generati automaticamente in CI
+- [x] **UI-09**: Mock UI documentate in `docs/` con screenshot generati automaticamente in CI
 - [x] **UI-10**: Test E2E Playwright per i flussi HITL approval e operator handover
 
 ### Backend Services (SRV)
@@ -131,7 +131,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [x] **SRV-02**: Endpoint REST + SSE per approval queue, evidence, KPI, audit
 - [ ] **SRV-03**: WebSocket bridge tra Angular UI e NATS subjects autorizzati
 - [x] **SRV-04**: Health/readiness probe + OTEL spans su ogni endpoint
-- [ ] **SRV-05**: Contract test Pydantic ↔ TypeScript per type-safety end-to-end
+- [x] **SRV-05**: Contract test Pydantic ↔ TypeScript per type-safety end-to-end
 
 ### Observability & Evaluation (OBS)
 
@@ -327,7 +327,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | SRV-02 | Phase 10 | Complete |
 | SRV-03 | Phase 10 | Pending |
 | SRV-04 | Phase 10 | Complete |
-| SRV-05 | Phase 10 | Pending |
+| SRV-05 | Phase 10 | Complete |
 | UI-01 | Phase 10 | Pending |
 | UI-02 | Phase 10 | Complete |
 | UI-03 | Phase 10 | Pending |
@@ -336,7 +336,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | UI-06 | Phase 10 | Complete |
 | UI-07 | Phase 10 | Complete |
 | UI-08 | Phase 10 | Pending |
-| UI-09 | Phase 10 | Pending |
+| UI-09 | Phase 10 | Complete |
 | UI-10 | Phase 10 | Complete |
 | OBS-02 | Phase 11 | Pending |
 | OBS-03 | Phase 11 | Pending |
