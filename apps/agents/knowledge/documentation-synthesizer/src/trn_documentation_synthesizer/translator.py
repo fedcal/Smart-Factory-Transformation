@@ -237,7 +237,8 @@ def translate_sop(
 ) -> dict[str, str]:
     """Synchronous shim for SOPTranslator.translate() (for non-async callers and tests).
 
-    Uses asyncio.run() or asyncio.get_event_loop() to run the async translate method.
+    Uses asyncio.run() which always creates a fresh event loop — safe in synchronous
+    contexts and not deprecated (WR-04 fix: replaces asyncio.get_event_loop()).
 
     Args:
         sections_it: Dict of IT section key → content.
@@ -254,17 +255,7 @@ def translate_sop(
     import asyncio
 
     translator = SOPTranslator(llm=llm)
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            import concurrent.futures
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                future = pool.submit(asyncio.run, translator.translate(sections_it, anchor_map))
-                return future.result()
-        else:
-            return loop.run_until_complete(translator.translate(sections_it, anchor_map))
-    except RuntimeError:
-        return asyncio.run(translator.translate(sections_it, anchor_map))
+    return asyncio.run(translator.translate(sections_it, anchor_map))
 
 
 __all__ = [
