@@ -139,8 +139,8 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **OBS-02**: OpenTelemetry SDK su tutti gli agenti, OT Bridge, API Gateway con propagazione trace ID
 - [ ] **OBS-03**: Stack LGTM (Loki + Grafana + Tempo + Mimir/Prometheus) opzionale documentato
 - [ ] **OBS-04**: Dashboard Grafana preconfezionate per KPI agenti e KPI factory
-- [ ] **OBS-05**: Suite di eval RAG con DeepEval e RAGAS, gate in CI con threshold configurabili
-- [ ] **OBS-06**: Eval di agenti: ground truth dataset di 30+ scenari per cluster con scoring documentato
+- [x] **OBS-05**: Suite di eval RAG con DeepEval e RAGAS, gate in CI con threshold configurabili
+- [x] **OBS-06**: Eval di agenti: ground truth dataset di 30+ scenari per cluster con scoring documentato
 - [ ] **OBS-07**: Cost dashboard: token consumati, costo simulato, latency p50/p95/p99 per agente
 
 ### Security & Governance (SEC)
@@ -341,8 +341,8 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | OBS-02 | Phase 11 | Pending |
 | OBS-03 | Phase 11 | Pending |
 | OBS-04 | Phase 11 | Pending |
-| OBS-05 | Phase 11 | Pending |
-| OBS-06 | Phase 11 | Pending |
+| OBS-05 | Phase 11 | Complete |
+| OBS-06 | Phase 11 | Complete |
 | OBS-07 | Phase 11 | Pending |
 | SEC-01 | Phase 11 | Pending |
 | SEC-02 | Phase 11 | Pending |

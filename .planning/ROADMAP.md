@@ -255,7 +255,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 **Plans**: 6 plans (3 waves)
   - [x] 11-00-PLAN.md — Wave 1: infra/deps/scaffolds (obs.yml Grafana/Prometheus/Tempo, OTEL package, migration 014, eval scaffolds, Langfuse/RAGAS verify)
   - [x] 11-01-PLAN.md — Wave 2: OTEL trace propagation end-to-end gateway→NATS→agent (OBS-02)
-  - [ ] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
+  - [x] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
   - [ ] 11-03-PLAN.md — Wave 2: security hardening — auditor RBAC, sanitizer, OT AST guard, restricted audit (SEC-03/04/06/07)
   - [ ] 11-04-PLAN.md — Wave 3: Grafana dashboards JSON + LGTM doc (OBS-03/04/07)
   - [ ] 11-05-PLAN.md — Wave 3: STRIDE doc + OWASP LLM + secrets/.env.example + AR-01..07 closure (SEC-01/02/05)
@@ -290,5 +290,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 13/13 | Complete    | 2026-05-24 |
-| 11. Observability, Evaluation & Security Hardening | 1/6 | In Progress | 2026-05-25 |
+| 11. Observability, Evaluation & Security Hardening | 3/6 | In Progress|  |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |
