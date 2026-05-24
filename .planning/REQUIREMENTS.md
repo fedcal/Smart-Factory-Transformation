@@ -73,7 +73,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **KNW-04**: Pipeline di document ingestion: PDF/DOCX/HTML/MD → chunking → embedding → upsert
 - [ ] **KNW-05**: Provenance obbligatoria: ogni chunk indicizzato ha `source_uri`, `page`, `version`, `lang`
 - [ ] **KNW-06**: Access control tag per chunk (es. `public`, `internal`, `restricted`) rispettati a query time
-- [ ] **KNW-07**: Reindex incrementale via watcher sul filesystem (o webhook Git)
+- [x] **KNW-07**: Reindex incrementale via watcher sul filesystem (o webhook Git)
 - [ ] **KNW-08**: Entity graph (Neo4j Community o Memgraph OSS) per relazioni asset-procedura-difetto-causa
 - [ ] **KNW-09**: Hybrid retrieval (dense BGE-M3 + sparse BM25) con rerank opzionale
 - [ ] **KNW-10**: Corpus sintetico bilingue (IT/EN) di SOP tessili seedato nel repo per demo
@@ -298,7 +298,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | KNW-04 | Phase 5 | Pending |
 | KNW-05 | Phase 5 | Pending |
 | KNW-06 | Phase 5 | Pending |
-| KNW-07 | Phase 5 | Pending |
+| KNW-07 | Phase 5 | Complete |
 | KNW-08 | Phase 5 | Pending |
 | KNW-09 | Phase 5 | Pending |
 | TRN-01 | Phase 5 | Pending |
