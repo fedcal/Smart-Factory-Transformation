@@ -2989,6 +2989,12 @@ source = { editable = "apps/agents/supply/cost-analyzer" }
 name = "scm-demand-forecaster"
 version = "0.1.0"
 source = { editable = "apps/agents/supply/demand-forecaster" }
+dependencies = [
+    { name = "numpy" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "numpy", specifier = ">=1.26.0,<3.0.0" }]
 
 [[package]]
 name = "scm-energy-optimizer"
@@ -3485,6 +3491,10 @@ dependencies = [
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "scm-cost-analyzer" },
+    { name = "scm-demand-forecaster" },
+    { name = "scm-energy-optimizer" },
+    { name = "scm-inventory-manager" },
     { name = "sft-agents" },
     { name = "structlog" },
     { name = "trn-documentation-synthesizer" },
@@ -3519,6 +3529,10 @@ requires-dist = [
     { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.24" },
     { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.14" },
     { name = "pyyaml", specifier = ">=6" },
+    { name = "scm-cost-analyzer", editable = "apps/agents/supply/cost-analyzer" },
+    { name = "scm-demand-forecaster", editable = "apps/agents/supply/demand-forecaster" },
+    { name = "scm-energy-optimizer", editable = "apps/agents/supply/energy-optimizer" },
+    { name = "scm-inventory-manager", editable = "apps/agents/supply/inventory-manager" },
     { name = "sft-agents", editable = "packages/sft-agents" },
     { name = "structlog", specifier = ">=24.4" },
     { name = "testcontainers", extras = ["postgres"], marker = "extra == 'test'", specifier = ">=4.14" },
