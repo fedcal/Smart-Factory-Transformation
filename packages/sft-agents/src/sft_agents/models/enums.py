@@ -106,8 +106,10 @@ class ActionType(str, Enum):
     introduced the action_type CHECK with Phase 1-6 values; migration
     `infra/migrations/timescale/009_extend_audit_mnt.sql` extends it with
     the Phase 7 values; migration `infra/migrations/timescale/010_extend_audit_knw.sql`
-    extends it with the Phase 8 values below. The SQL CHECK string must stay
-    in lockstep with the .value strings here — drift triggers PG CheckViolationError
+    extends it with the Phase 8 values; migration
+    `infra/migrations/timescale/012_extend_audit_scm.sql` extends it with
+    the Phase 9 values below. The SQL CHECK string must stay in lockstep
+    with the .value strings here — drift triggers PG CheckViolationError
     at runtime.
     """
 
@@ -136,3 +138,12 @@ class ActionType(str, Enum):
     KNOWLEDGE_DEDUP = "KNOWLEDGE_DEDUP"     # D-KC-01: dedup verdict (exact or near-dup)
     STALE_FLAG = "STALE_FLAG"               # D-KC-02: staleness flag on a document
     SOP_DRAFT = "SOP_DRAFT"                 # D-DS-03: synthesized SOP draft before indexing
+    # Phase 9 additions — keep in lockstep with migration 012 (D-DATA / Supply Chain & Economics).
+    REORDER_ALERT = "REORDER_ALERT"                          # SCM-01: InventoryManager reorder alert
+    PURCHASE_RECOMMENDATION_DRAFT = "PURCHASE_RECOMMENDATION_DRAFT"  # SCM-01: InventoryManager procurement draft
+    PURCHASE_SIGNOFF = "PURCHASE_SIGNOFF"                    # SCM-01: procurement supervisor sign-off
+    ENERGY_PROPOSAL = "ENERGY_PROPOSAL"                      # SCM-02: EnergyOptimizer off-peak proposal draft
+    ENERGY_SIGNOFF = "ENERGY_SIGNOFF"                        # SCM-02: energy supervisor sign-off
+    DEMAND_PLAN_DRAFT = "DEMAND_PLAN_DRAFT"                  # SCM-04: DemandForecaster demand plan draft
+    DEMAND_PLAN_SIGNOFF = "DEMAND_PLAN_SIGNOFF"              # SCM-04: ProductionPlanner publish sign-off
+    COST_REPORT = "COST_REPORT"                              # SCM-03: CostAnalyzer autonomous ROI/OEPV report row (Decision.AUTO)
