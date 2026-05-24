@@ -211,7 +211,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 09-03-PLAN.md — EnergyOptimizer: ISO 50001 EnPI + repository + off-peak HITL agent (SCM-02)
   - [x] 09-04-PLAN.md — CostAnalyzer: parametric OEPV ribasso simulator + cost aggregator + autonomous agent (Decision.AUTO) (SCM-03, ECO-02, ECO-05)
   - [x] 09-05-PLAN.md — DemandForecaster: Holt-Winters + rolling MAPE + HITL agent publishing to ProductionPlanner via state (SCM-04)
-  - [ ] 09-06-PLAN.md — API gateway supply_agents.py router + DI wiring (build_supply_subgraph) with Phase 8 boundary fixes (SCM-01..04, SEC-02)
+  - [x] 09-06-PLAN.md — API gateway supply_agents.py router + DI wiring (build_supply_subgraph) with Phase 8 boundary fixes (SCM-01..04, SEC-02)
   - [ ] 09-07-PLAN.md — Four-agent supply cluster E2E against the Mantis seed (per-agent audit-row counts, OEPV, cross-cluster plan) (SCM-01..05)
   - [ ] 09-08-PLAN.md — Bilingual IT+EN supply-cluster docs + Mantis synthetic-dataset page + mkdocs nav (SCM-05)
 

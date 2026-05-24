@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 9 Plan 05 complete (DemandForecaster SCM-04 HITL agent + ProductionPlanner publish)
-last_updated: "2026-05-24T15:15:03.678Z"
+stopped_at: Phase 9 Plan 06 complete (Supply agents API gateway router + DI wiring SCM-01/02/03/04)
+last_updated: "2026-05-24T16:00:00.000Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 09 (agents-supply-chain-economics) — EXECUTING
-Plan: 8 of 11
+Plan: 9 of 11
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -75,6 +75,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 09 P03 | 30 | 2 tasks | 7 files |
 | Phase 09 P04 | 25min | 2 tasks | 7 files |
 | Phase 09 P05 | 13min | 2 tasks | 10 files |
+| Phase 09 P06 | 20min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 09-03: EnergyOptimizer uses single-supervisor HITL (mirrors InventoryManager SCM-01); off_peak_kwh_pct over ALL readings per Pattern 7; expected_savings_pct clamped [0,100] CR-05
 - [Phase ?]: Phase 09-04: CostAnalyzer pienamente autonomo (Decision.AUTO) — anomaly_threshold_pct è WARNING configurabile non regola definitiva F12
 - [Phase ?]: Phase 09-05: Open Question 2 resolved — DemandForecaster publishes via state['demand_plan']
+- [Phase 09-06]: CostAnalyzer.__init__ takes positional args (not keyword-only *-args) — constructed as CostAnalyzer(pool, audit_writer, None)
+- [Phase 09-06]: cost-analyzer/analyze has no resume endpoint (autonomous SCM-03, D-SCM-AUTO); test verifies 404/405 on /cost-analyzer/resume
+- [Phase 09-06]: EnergyOptimizeRequest + CostAnalyzeRequest datetime fields are Optional — tz validator fires only when value is not None (WR-02 compliant)
 
 ### Pending Todos
 
@@ -123,6 +127,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T15:15:03.656Z
-Stopped at: Phase 9 Plan 05 complete (DemandForecaster SCM-04 HITL agent + ProductionPlanner publish)
+Last session: 2026-05-24T16:00:00.000Z
+Stopped at: Phase 9 Plan 06 complete (Supply agents API gateway router + DI wiring SCM-01/02/03/04)
 Resume file: None
