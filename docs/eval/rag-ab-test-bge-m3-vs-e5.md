@@ -1,6 +1,8 @@
 # RAG A/B Eval — BGE-M3 vs multilingual-e5-large (Phase 5 / KNW-03)
 
-> **Preliminary run notice:** numbers below were produced from a placeholder testset (Q-gen LLM unavailable in CI). When the LLM backend is reachable, regenerate the testset with `uv run python services/knowledge-ingest/scripts/generate_rag_testset.py --regenerate --seed=42` and re-run this script without `--skip-eval`.
+> **Preliminary run notice:** numbers below were produced from a placeholder testset (Q-gen LLM unavailable in CI). When the LLM backend is reachable, regenerate the testset with `uv run python services/knowledge-ingest/scripts/generate_rag_testset.py --regenerate --seed=42` and re-run this script with `--stub` for placeholder output or wait for the Phase 8 live run.
+
+> ⚠ Preliminary stub metrics — pending real eval run
 
 
 We choose **BGE-M3** as the Phase 5 production embedder. The decision is grounded in three lines of evidence: (1) the live A/B metrics below (NDCG@10, MRR, Recall@10 partitioned by query type), (2) BGE-M3 ships dense + sparse + multi-vector representations in one model, which the hybrid retrieval pipeline (D-63) already consumes via Qdrant Query API Prefetch + RRF fusion, and (3) the MIT licence preserves downstream deployment flexibility (multilingual-e5-large is also MIT but does not ship sparse weights). Even at parity on dense-only metrics, the sparse channel is a free upgrade for keyword queries that BGE-M3 alone provides.
@@ -38,10 +40,25 @@ xychart-beta
 - Seed: 42
 - Testset: `tests/data/rag_eval/testset.jsonl` (sha256 `034c6c6a8e99a3c2`)
 - Q-gen LLM: Qwen2.5-7B via `LLM_BACKEND=ollama`
-- Re-run: `nx run knowledge-ingest:run --args='--mode=full'` then `uv run python services/knowledge-ingest/scripts/run_ab_eval.py --testset=tests/data/rag_eval/testset.jsonl` (omit `--skip-eval` for live retrieval).
+- Re-run (stub): `uv run python services/knowledge-ingest/scripts/run_ab_eval.py --stub --testset=tests/data/rag_eval/testset.jsonl`.
+- Re-run (live, Phase 8): `nx run knowledge-ingest:run --args='--mode=full'` then `uv run python services/knowledge-ingest/scripts/run_ab_eval.py --full --testset=tests/data/rag_eval/testset.jsonl` (requires Qdrant + Neo4j + GPU; see Phase 8 KnowledgeCurator in ROADMAP).
 
 
 ## Threat model addenda (T-05-10-04 mitigation)
 
 - A 10% human spot-check (`spot_check_testset.py --sample-rate=0.10`) is required before consuming this deliverable for production decisions; the reject_rate gate is 20%.
 - Seed + testset hash are committed so the audit trail is reproducible (reproducibility-as-non-repudiation per Phase 5 STRIDE register).
+
+
+## Deferred follow-up — Phase 8 KnowledgeCurator
+
+Phase 8 KnowledgeCurator owns the live A/B eval run: BGE-M3 vs multilingual-e5-large
+against the warm retrieval stack (Qdrant + reranker) on the real synthetic-corpus testset.
+
+**Phase 5 ships:** the framework (`run_ab_eval.py --stub`) and acceptance gates (D-71);
+stub numbers clearly labeled as preliminary pending Phase 8 live run.
+
+**Phase 8 ships:** the measured numbers from a real retrieval run against the indexed
+synthetic corpus. When Phase 8 KnowledgeCurator completes this task, the stub numbers
+in this document will be replaced with live measurements and the "Preliminary run notice"
+disclaimer removed.

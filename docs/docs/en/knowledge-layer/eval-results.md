@@ -9,6 +9,13 @@ tags:
 
 # A/B eval results — BGE-M3 vs multilingual-e5-large
 
+!!! warning "⚠ Preliminary stub metrics — pending real eval run"
+    The numbers below come from `_stub_summary()` (deterministic placeholders for CI).
+    The live A/B pipeline is deferred to Phase 8 KnowledgeCurator; the canonical
+    deliverable is `docs/eval/rag-ab-test-bge-m3-vs-e5.md`. To regenerate the
+    placeholder version:
+    `uv run python services/knowledge-ingest/scripts/run_ab_eval.py --stub`
+
 The full deliverable that closes **KNW-03** is `docs/eval/rag-ab-test-bge-m3-vs-e5.md`. This page summarizes metrics and decision; the eval document is the canonical source (with seed, testset hash, reproduction command).
 
 ---
@@ -47,12 +54,18 @@ To regenerate the deliverable:
 uv run python services/knowledge-ingest/scripts/generate_rag_testset.py \
   --regenerate --seed=42
 
-# 2. Eval (skip-eval for the deterministic CI stub; --full for the live re-index)
-uv run python services/knowledge-ingest/scripts/run_ab_eval.py --seed=42
+# 2. Eval with deterministic placeholders (--stub flag required)
+uv run python services/knowledge-ingest/scripts/run_ab_eval.py --stub --seed=42
 
 # 3. 10% manual spot-check (Task 5 checkpoint)
 uv run python services/knowledge-ingest/scripts/spot_check_testset.py \
   --sample-rate=0.10 --seed=42
+```
+
+For live eval with real infrastructure (deferred to Phase 8 KnowledgeCurator):
+
+```bash
+uv run python services/knowledge-ingest/scripts/run_ab_eval.py --full --seed=42
 ```
 
 See also the canonical deliverable `docs/eval/rag-ab-test-bge-m3-vs-e5.md` (in the repo, outside the mkdocs site tree) for the extended justification.
