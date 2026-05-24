@@ -189,7 +189,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [ ] 08-04-PLAN.md — ShiftHandover dual-supervisor HITL agent + NATS shift.boundary consumer (D-SH-01/03, SC-1)
   - [x] 08-05-PLAN.md — TrainingCoach deterministic quiz + dynamic difficulty + supervisor sign-off (D-TC-01/02/03, SC-2)
   - [x] 08-06-PLAN.md — KnowledgeCurator autonomous hybrid dedup + staleness + reuse-rate KPI (D-KC-01/02/03/04, SC-3)
-  - [ ] 08-07-PLAN.md — DocumentationSynthesizer bilingual SOP + citation re-anchoring + pre-index HITL (D-DS-01/02/03, SC-4)
+  - [x] 08-07-PLAN.md — DocumentationSynthesizer bilingual SOP + citation re-anchoring + pre-index HITL (D-DS-01/02/03, SC-4)
   - [ ] 08-08-PLAN.md — knowledge_agents.py gateway router + lifespan DI wiring (D-X-04)
   - [ ] 08-09-PLAN.md — four-agent E2E + TRN-05 opaque-output rejection + bilingual docs (SC-5)
 
@@ -257,7 +257,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
-| 8. Agents — Knowledge & Training | 6/10 | In Progress|  |
+| 8. Agents — Knowledge & Training | 7/10 | In Progress|  |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
