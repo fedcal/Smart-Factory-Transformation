@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 9 Plan 00a complete (migration 011 + 012 + ActionType lockstep)
-last_updated: "2026-05-24T14:08:15.537Z"
+stopped_at: Phase 9 Plan 01 complete (build_supply_subgraph + Mantis synthetic seed)
+last_updated: "2026-05-24T14:50:00.000Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 09 (agents-supply-chain-economics) — EXECUTING
-Plan: 3 of 11
+Plan: 4 of 11
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -70,6 +70,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 08 P08 | 40min | 2 tasks | 6 files |
 | Phase 08 P09 | 40min | 2 tasks | 4 files |
 | Phase 05 P13 | 25min | 2 tasks | 5 files |
+| Phase 09 P01 | 35min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 08-09: E2E uses MagicMock(spec=SOPDraft) for negative TRN-05 gate to bypass Pydantic frozen model
 - [Phase 05-13]: KNW-03 gap closure path (A) chosen: disclaimer + safer CLI flag (--stub default False); live eval deferred to Phase 8 KnowledgeCurator
 - [Phase 09-00a]: 8 Phase 9 ActionType values chosen (incl. COST_REPORT for autonomous CostAnalyzer); scm.historical_orders is NOT a hypertable (order frequency too low for time-series partitioning)
+- [Phase 09-01]: Hypertable idempotency test limited to PK tables only — inventory_levels and energy_readings are append-only TimescaleDB hypertables without PK; NOW()-based inserts accumulate on re-run (expected behavior)
+- [Phase 09-01]: 19 monthly buckets inserted (Jan 2024 — Jul 2025) to guarantee >=18 monthly buckets per sku_group with 1-month margin
 
 ### Pending Todos
 
@@ -111,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T14:08:15.525Z
-Stopped at: Phase 9 Plan 00a complete (migration 011 + 012 + ActionType lockstep)
+Last session: 2026-05-24T14:50:00.000Z
+Stopped at: Phase 9 Plan 01 complete (build_supply_subgraph + Mantis synthetic seed)
 Resume file: None

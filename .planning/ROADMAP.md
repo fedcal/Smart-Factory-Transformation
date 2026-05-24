@@ -206,7 +206,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 **Plans**: 11 plans (8 waves)
   - [x] 09-00a-PLAN.md — Migration 011 (scm.* schema) + migration 012 (audit ActionType enum/CHECK lockstep, 8 Phase 9 action types) + migration tests (SCM-01, SCM-02, SCM-04, SCM-05)
   - [x] 09-00b-PLAN.md — Nyquist agent test-contract scaffolds for all 4 supply agents (tests before implementation) (SCM-01, SCM-02, SCM-03, SCM-04)
-  - [ ] 09-01-PLAN.md — build_supply_subgraph (fallback cost-analyzer) + Mantis synthetic seed dataset + seed smoke test (SCM-01, SCM-02, SCM-04, SCM-05)
+  - [x] 09-01-PLAN.md — build_supply_subgraph (fallback cost-analyzer) + Mantis synthetic seed dataset + seed smoke test (SCM-01, SCM-02, SCM-04, SCM-05)
   - [ ] 09-02-PLAN.md — InventoryManager: reorder-point logic + repository + HITL agent (interrupt-then-audit, stable id) (SCM-01)
   - [ ] 09-03-PLAN.md — EnergyOptimizer: ISO 50001 EnPI + repository + off-peak HITL agent (SCM-02)
   - [ ] 09-04-PLAN.md — CostAnalyzer: parametric OEPV ribasso simulator + cost aggregator + autonomous agent (Decision.AUTO) (SCM-03, ECO-02, ECO-05)
