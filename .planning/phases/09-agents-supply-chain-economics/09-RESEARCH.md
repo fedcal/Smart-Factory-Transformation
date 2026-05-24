@@ -1119,7 +1119,7 @@ async def fetch_monthly_orders(
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Dipendenza sft-ml nei pacchetti supply**
    - Cosa sappiamo: `sft-ml` ha numpy+pandas; i pacchetti supply hanno `dependencies = []` nel pyproject.toml attuale.

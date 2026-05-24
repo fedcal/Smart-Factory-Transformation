@@ -203,7 +203,18 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. CostAnalyzer aggregates downtime cost, scrap cost, and energy cost into an ROI dashboard and produces a OEPV ribasso simulation with sensitivity analysis
   4. DemandForecaster produces a demand plan for at least two fabric SKU groups, publishes it to ProductionPlanner via HITL-gated approval, and tracks forecast accuracy KPI
   5. Realistic numerical examples for Mantis Textile Group (product lines, capacity, unit costs) are documented explicitly as synthetic in `docs/`
-**Plans**: TBD
+**Plans**: 11 plans (8 waves)
+  - [ ] 09-00a-PLAN.md — Migration 011 (scm.* schema) + migration 012 (audit ActionType enum/CHECK lockstep, 7 Phase 9 action types) + migration tests (SCM-01, SCM-02, SCM-04, SCM-05)
+  - [ ] 09-00b-PLAN.md — Nyquist agent test-contract scaffolds for all 4 supply agents (tests before implementation) (SCM-01, SCM-02, SCM-03, SCM-04)
+  - [ ] 09-01-PLAN.md — build_supply_subgraph (fallback cost-analyzer) + Mantis synthetic seed dataset + seed smoke test (SCM-01, SCM-02, SCM-04, SCM-05)
+  - [ ] 09-02-PLAN.md — InventoryManager: reorder-point logic + repository + HITL agent (interrupt-then-audit, stable id) (SCM-01)
+  - [ ] 09-03-PLAN.md — EnergyOptimizer: ISO 50001 EnPI + repository + off-peak HITL agent (SCM-02)
+  - [ ] 09-04-PLAN.md — CostAnalyzer: parametric OEPV ribasso simulator + cost aggregator + autonomous agent (Decision.AUTO) (SCM-03, ECO-02, ECO-05)
+  - [ ] 09-05-PLAN.md — DemandForecaster: Holt-Winters + rolling MAPE + HITL agent publishing to ProductionPlanner via state (SCM-04)
+  - [ ] 09-06-PLAN.md — API gateway supply_agents.py router + DI wiring (build_supply_subgraph) with Phase 8 boundary fixes (SCM-01..04, SEC-02)
+  - [ ] 09-07-PLAN.md — Four-agent supply cluster E2E against the Mantis seed (per-agent audit-row counts, OEPV, cross-cluster plan) (SCM-01..05)
+  - [ ] 09-08-PLAN.md — Bilingual IT+EN supply-cluster docs + Mantis synthetic-dataset page + mkdocs nav (SCM-05)
+
 
 ### Phase 10: Backend API & Frontend
 **Goal**: The FastAPI gateway with JWT/RBAC, SSE/WebSocket streaming, and the Angular 18+ SSR application with HITL approval UI, evidence panel, control room dashboard, bilingual i18n, touch-friendly design, and Playwright E2E tests are production-ready.
