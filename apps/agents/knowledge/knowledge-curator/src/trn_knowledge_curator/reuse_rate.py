@@ -128,7 +128,10 @@ async def compute_reuse_rate(
         logger.info("reuse_rate_zero_indexed", window_start=window_start, window_end=window_end)
         return 0.0
 
-    rate = float(distinct_cited) / float(total_indexed)
+    # CR-05: clamp to [0.0, 1.0] — distinct_cited can exceed total_indexed when citations
+    # come from documents removed from the index or from other clusters/agents.
+    # CurationReport.reuse_rate has le=1.0 constraint; exceeding it causes ValidationError.
+    rate = min(float(distinct_cited) / float(total_indexed), 1.0)
     logger.info(
         "reuse_rate_computed",
         distinct_cited=distinct_cited,
