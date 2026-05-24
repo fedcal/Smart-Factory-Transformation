@@ -110,7 +110,7 @@ class CurationReport(BaseModel):
     ]
     citations: Annotated[
         list[RagCitation],
-        Field(default_factory=list, description="RAG citations in this curation run"),
+        Field(description="RAG citations in this curation run"),
     ] = []
 
 

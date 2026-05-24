@@ -3838,6 +3838,10 @@ dev = [
 name = "trn-knowledge-curator"
 version = "0.1.0"
 source = { editable = "apps/agents/knowledge/knowledge-curator" }
+dependencies = [
+    { name = "sft-agents" },
+    { name = "structlog" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -3846,6 +3850,10 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "structlog", specifier = ">=24.4" },
+]
 
 [package.metadata.requires-dev]
 dev = [
