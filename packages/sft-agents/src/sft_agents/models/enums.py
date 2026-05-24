@@ -93,11 +93,21 @@ class ActionType(str, Enum):
         OEE_REPORT — D-DA-03: downtime-analyzer OEE roll-up report
             audit row (periodic Overall Equipment Effectiveness summary).
 
+    Phase 8 extensions (Knowledge & Training cluster, D-X-01):
+        HANDOVER_DRAFT — D-SH-01: shift handover draft compiled by ShiftHandover.
+        HANDOVER_SIGNOFF — D-SH-03: supervisor sign-off row (2 rows per handover).
+        TRAINING_SESSION — D-TC-01: quiz delivery session record.
+        TRAINING_SIGNOFF — D-TC-03: supervisor competency sign-off.
+        KNOWLEDGE_DEDUP — D-KC-01: dedup verdict (exact or near-dup).
+        STALE_FLAG — D-KC-02: staleness flag on a document.
+        SOP_DRAFT — D-DS-03: synthesized SOP draft before indexing.
+
     Migration `infra/migrations/timescale/007_extend_audit_decisions.sql`
     introduced the action_type CHECK with Phase 1-6 values; migration
     `infra/migrations/timescale/009_extend_audit_mnt.sql` extends it with
-    the Phase 7 values below. The SQL CHECK string must stay in lockstep
-    with the .value strings here — drift triggers PG CheckViolationError
+    the Phase 7 values; migration `infra/migrations/timescale/010_extend_audit_knw.sql`
+    extends it with the Phase 8 values below. The SQL CHECK string must stay
+    in lockstep with the .value strings here — drift triggers PG CheckViolationError
     at runtime.
     """
 
@@ -118,3 +128,11 @@ class ActionType(str, Enum):
     COACH_STEP = "COACH_STEP"              # D-MC-02: maintenance-coach step audit
     DOWNTIME_VERDICT = "DOWNTIME_VERDICT"  # D-DA-01: downtime-analyzer event audit
     OEE_REPORT = "OEE_REPORT"              # D-DA-03: downtime-analyzer OEE report audit
+    # Phase 8 additions — keep in lockstep with migration 010 (D-X-01).
+    HANDOVER_DRAFT = "HANDOVER_DRAFT"       # D-SH-01: draft compiled by ShiftHandover
+    HANDOVER_SIGNOFF = "HANDOVER_SIGNOFF"   # D-SH-03: supervisor sign-off row (2 rows per handover)
+    TRAINING_SESSION = "TRAINING_SESSION"   # D-TC-01: quiz delivery session record
+    TRAINING_SIGNOFF = "TRAINING_SIGNOFF"   # D-TC-03: supervisor competency sign-off
+    KNOWLEDGE_DEDUP = "KNOWLEDGE_DEDUP"     # D-KC-01: dedup verdict (exact or near-dup)
+    STALE_FLAG = "STALE_FLAG"               # D-KC-02: staleness flag on a document
+    SOP_DRAFT = "SOP_DRAFT"                 # D-DS-03: synthesized SOP draft before indexing
