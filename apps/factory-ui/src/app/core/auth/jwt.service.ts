@@ -108,9 +108,15 @@ export class JwtService {
   /**
    * Reads the stored token from localStorage on service initialisation.
    * Returns null on server platform (SSR guard).
+   *
+   * WR-01: uses this.isBrowser (already computed from platformId) instead of
+   * calling inject(PLATFORM_ID) a second time. The double inject was fragile —
+   * if _readFromStorage were called outside a DI construction context it would
+   * throw. The field initialiser order in Angular guarantees that platformId
+   * and isBrowser are set before _token's initialiser runs.
    */
   private _readFromStorage(): string | null {
-    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+    if (!this.isBrowser) {
       return null;
     }
     return localStorage.getItem(JWT_STORAGE_KEY);
