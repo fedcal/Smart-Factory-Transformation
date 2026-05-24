@@ -68,8 +68,18 @@ const ROLE_ROUTE_MAP: Record<UserRole, string> = {
   admin: '/admin',
 };
 
-/** SSE stream URL (relative — proxied via API gateway) */
-const SSE_STREAM_URL = '/v1/stream/events';
+/**
+ * SSE stream URLs (relative — proxied via API gateway).
+ * CR-04: /v1/stream/events does not exist; the real endpoints are:
+ *   /v1/stream/kpi        — live KPI updates (all roles)
+ *   /v1/stream/approvals  — approval events (operator/supervisor/manager/admin)
+ *   /v1/stream/alerts     — alert events (all roles, HITL-10 rate-limited)
+ *
+ * The KPI channel is connected after login as the universal primary channel.
+ * Approvals and alerts channels are connected by their respective feature
+ * components (ApprovalQueueComponent, AlertFeedComponent) when mounted.
+ */
+const SSE_KPI_URL = '/v1/stream/kpi';
 
 @Component({
   selector: 'sft-login',
@@ -377,9 +387,11 @@ export class LoginComponent implements OnInit {
   private _handleLoginSuccess(token: string): void {
     this.jwtService.setToken(token);
 
-    // Connect SSE stream with the new token (browser only — SseService guards SSR)
+    // Connect the KPI SSE channel with the new token (browser only — SseService guards SSR).
+    // CR-04: use the real /v1/stream/kpi endpoint (not the non-existent /v1/stream/events).
+    // Approvals and alerts channels are connected by their feature components when mounted.
     if (isPlatformBrowser(this.platformId)) {
-      this.sseService.connect(SSE_STREAM_URL, token);
+      this.sseService.connect(SSE_KPI_URL, token);
     }
 
     const role = this.jwtService.role();
