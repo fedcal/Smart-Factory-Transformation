@@ -204,7 +204,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. DemandForecaster produces a demand plan for at least two fabric SKU groups, publishes it to ProductionPlanner via HITL-gated approval, and tracks forecast accuracy KPI
   5. Realistic numerical examples for Mantis Textile Group (product lines, capacity, unit costs) are documented explicitly as synthetic in `docs/`
 **Plans**: 11 plans (8 waves)
-  - [ ] 09-00a-PLAN.md — Migration 011 (scm.* schema) + migration 012 (audit ActionType enum/CHECK lockstep, 7 Phase 9 action types) + migration tests (SCM-01, SCM-02, SCM-04, SCM-05)
+  - [x] 09-00a-PLAN.md — Migration 011 (scm.* schema) + migration 012 (audit ActionType enum/CHECK lockstep, 8 Phase 9 action types) + migration tests (SCM-01, SCM-02, SCM-04, SCM-05)
   - [ ] 09-00b-PLAN.md — Nyquist agent test-contract scaffolds for all 4 supply agents (tests before implementation) (SCM-01, SCM-02, SCM-03, SCM-04)
   - [ ] 09-01-PLAN.md — build_supply_subgraph (fallback cost-analyzer) + Mantis synthetic seed dataset + seed smoke test (SCM-01, SCM-02, SCM-04, SCM-05)
   - [ ] 09-02-PLAN.md — InventoryManager: reorder-point logic + repository + HITL agent (interrupt-then-audit, stable id) (SCM-01)
@@ -269,7 +269,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
-| 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
+| 9. Agents — Supply Chain & Economics | 1/11 | Executing | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |

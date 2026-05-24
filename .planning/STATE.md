@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 9 context gathered
-last_updated: "2026-05-24T13:16:44.679Z"
-last_activity: 2026-05-24
+status: executing
+stopped_at: Phase 9 Plan 00a complete (migration 011 + 012 + ActionType lockstep)
+last_updated: "2026-05-24T13:52:00Z"
+last_activity: 2026-05-24 -- Phase 09 Plan 00a executed (scm.* schema + enum lockstep)
 progress:
   total_phases: 12
   completed_phases: 8
-  total_plans: 85
+  total_plans: 95
   completed_plans: 88
   percent: 67
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 06 — agents operations production
+**Current focus:** Phase 09 — agents-supply-chain-economics
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-24
+Phase: 09 (agents-supply-chain-economics) — EXECUTING
+Plan: 2 of 11
+Status: Executing Phase 09 (Plan 00a complete)
+Last activity: 2026-05-24 -- Phase 09 Plan 00a complete (migration 011 + 012 + ActionType lockstep)
 
 Progress: [██████████] 100%
 
@@ -90,6 +90,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 08-08: knowledge-curator/ingest is 200 not 202 (autonomous D-KC-04); pyproject.toml extended with trn-* workspace deps for lifespan imports
 - [Phase ?]: Phase 08-09: E2E uses MagicMock(spec=SOPDraft) for negative TRN-05 gate to bypass Pydantic frozen model
 - [Phase 05-13]: KNW-03 gap closure path (A) chosen: disclaimer + safer CLI flag (--stub default False); live eval deferred to Phase 8 KnowledgeCurator
+- [Phase 09-00a]: 8 Phase 9 ActionType values chosen (incl. COST_REPORT for autonomous CostAnalyzer); scm.historical_orders is NOT a hypertable (order frequency too low for time-series partitioning)
 
 ### Pending Todos
 
@@ -110,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T13:16:44.669Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-agents-supply-chain-economics/09-CONTEXT.md
+Last session: 2026-05-24T13:52:00Z
+Stopped at: Phase 9 Plan 00a complete (migration 011 + 012 + ActionType lockstep)
+Resume file: .planning/phases/09-agents-supply-chain-economics/09-00b-PLAN.md
