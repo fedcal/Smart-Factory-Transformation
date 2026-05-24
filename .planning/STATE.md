@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 8 context gathered
-last_updated: "2026-05-24T08:00:41.542Z"
-last_activity: 2026-05-23 -- Phase 07 execution started
+last_updated: "2026-05-24T09:47:32.962Z"
+last_activity: 2026-05-24 -- Phase 08 execution started
 progress:
   total_phases: 12
   completed_phases: 6
-  total_plans: 75
+  total_plans: 85
   completed_plans: 75
   percent: 50
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 07 — agents-maintenance-reliability
+**Current focus:** Phase 08 — agents-knowledge-training
 
 ## Current Position
 
-Phase: 07 (agents-maintenance-reliability) — EXECUTING
-Plan: 1 of 13
-Status: Executing Phase 07
-Last activity: 2026-05-23 -- Phase 07 execution started
+Phase: 08 (agents-knowledge-training) — EXECUTING
+Plan: 1 of 10
+Status: Executing Phase 08
+Last activity: 2026-05-24 -- Phase 08 execution started
 
 Progress: [████████░░] 83%
 

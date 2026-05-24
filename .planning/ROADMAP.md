@@ -182,9 +182,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. DocumentationSynthesizer generates a bilingual SOP draft from historical maintenance events and routes it to HITL approval before indexing; every output includes `source_uri` and timestamp
   5. All TRN agent outputs include citations with `source_uri` and timestamp; no opaque outputs are accepted by the test suite
 **Plans**: 10 plans
-  - [ ] 08-00a-PLAN.md — Wave 1: migration 010 + ActionType enum lockstep + migration test (D-X-01)
-  - [ ] 08-00b-PLAN.md — Wave 1: all agent test scaffolds — Nyquist tests before impl (TRN-02/03/04/05)
-  - [ ] 08-01-PLAN.md — build_knowledge_subgraph + curator fallback (D-X-04)
+  - [x] 08-00a-PLAN.md — Wave 1: migration 010 + ActionType enum lockstep + migration test (D-X-01)
+  - [x] 08-00b-PLAN.md — Wave 1: all agent test scaffolds — Nyquist tests before impl (TRN-02/03/04/05)
+  - [x] 08-01-PLAN.md — build_knowledge_subgraph + curator fallback (D-X-04)
   - [ ] 08-02-PLAN.md — ShiftHandover data layer: models + cross-cluster aggregator (D-SH-02, TRN-03/05)
   - [ ] 08-04-PLAN.md — ShiftHandover dual-supervisor HITL agent + NATS shift.boundary consumer (D-SH-01/03, SC-1)
   - [ ] 08-05-PLAN.md — TrainingCoach deterministic quiz + dynamic difficulty + supervisor sign-off (D-TC-01/02/03, SC-2)
@@ -257,7 +257,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
-| 8. Agents — Knowledge & Training | 0/TBD | Not started | - |
+| 8. Agents — Knowledge & Training | 3/10 | In Progress|  |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
