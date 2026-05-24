@@ -253,7 +253,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. The STRIDE threat model document identifies at least one threat per category (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) for IT/OT boundary, RAG ingestion, and agent orchestration; each threat has a documented mitigation mapped to code
   5. The OT Bridge data-diode boundary is verified by an automated network policy test that attempts to send a write command from the agent layer into the OPC-UA simulator and confirms it is blocked
 **Plans**: 6 plans (3 waves)
-  - [ ] 11-00-PLAN.md — Wave 1: infra/deps/scaffolds (obs.yml Grafana/Prometheus/Tempo, OTEL package, migration 014, eval scaffolds, Langfuse/RAGAS verify)
+  - [x] 11-00-PLAN.md — Wave 1: infra/deps/scaffolds (obs.yml Grafana/Prometheus/Tempo, OTEL package, migration 014, eval scaffolds, Langfuse/RAGAS verify)
   - [ ] 11-01-PLAN.md — Wave 2: OTEL trace propagation end-to-end gateway→NATS→agent (OBS-02)
   - [ ] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
   - [ ] 11-03-PLAN.md — Wave 2: security hardening — auditor RBAC, sanitizer, OT AST guard, restricted audit (SEC-03/04/06/07)
@@ -290,5 +290,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 13/13 | Complete    | 2026-05-24 |
-| 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
+| 11. Observability, Evaluation & Security Hardening | 1/6 | In Progress | 2026-05-25 |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |

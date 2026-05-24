@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 11 context gathered
-last_updated: "2026-05-24T21:31:54.195Z"
-last_activity: 2026-05-24
+status: executing
+stopped_at: Phase 11 Plan 00 complete (Wave 1 foundation)
+last_updated: "2026-05-25T00:17:00Z"
+last_activity: 2026-05-25 -- Phase 11 Plan 00 executed (OTEL package + obs.yml + migration 014 + eval scaffold)
 progress:
   total_phases: 12
   completed_phases: 10
-  total_plans: 108
+  total_plans: 114
   completed_plans: 111
   percent: 83
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 11 — observability, evaluation & security hardening
+**Current focus:** Phase 11 — observability-evaluation-security-hardening
 
 ## Current Position
 
-Phase: 11
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-24
+Phase: 11 (observability-evaluation-security-hardening) — EXECUTING
+Plan: 2 of 6
+Status: Executing Phase 11 (Plan 00 complete)
+Last activity: 2026-05-25 -- Phase 11 Plan 00 complete (Wave 1 foundation)
 
 Progress: [██████████] 78% (Phase 10 complete — 10 of 12 phases done)
 
@@ -64,6 +64,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 11 P00  | 17min | 5 tasks | 19 files |
 | Phase 10 P11  | 30min | 2 tasks | 15 files |
 | Phase 10 P10  | 15min | 2 tasks | 4 files |
 | Phase 10 P09  | 8min | 2 tasks | 7 files |
@@ -143,6 +144,10 @@ Recent decisions affecting current work:
 - [Phase 10-03]: Finite async generator for SSE HTTP tests avoids sse-starlette AppStatus event-loop collision; X-Accel-Buffering + Content-Type combined in one test; auth schema isolation for auth_users; OTEL best-effort guard (try/except) in build_app()
 - [Phase 10-10]: Separate Nx project apps/factory-ui-e2e/ (not inline) per Nx e2e convention; audit via GET /v1/approvals filtered by approval_id (no /v1/audit/{id} endpoint); beforeAll reachability guard prevents silent false-green; ubuntu26.04-x64 lacks Playwright browser support — live run is CI/human item
 - [Phase 10-11]: openapi-typescript@7.8.0 pinned as workspace devDep; byte-identity divergence guard in contract.spec.ts (21 tests); mkdocs-static-i18n treats root-level dirs as locales — use flat file ui-mock.md not ui/mock-ui.md; placeholder PNGs for mkdocs --strict; SFT_SKIP_SCREENSHOTS=true for CI without display
+- [Phase 11-00]: deepeval/ragas in root [dependency-groups].dev (non runtime); ragas 0.4.3 bug langchain-community 0.4.x (ChatVertexAI rimosso) risolto via monkey-patch stub in eval conftest
+- [Phase 11-00]: NatsHeaderCarrier(MutableMapping) pattern manuale ~30 righe (opentelemetry-instrumentation-nats non esiste su PyPI — RESEARCH Pitfall 1)
+- [Phase 11-00]: setup_tracer_provider singleton-guarded con _initialized flag modulo-level (evita ProviderOverride warning su doppio call)
+- [Phase 11-00]: Grafana su host port 3001 (Langfuse possiede 3000) — RESEARCH Pitfall 4; MinIO chainguard preesistente senza comando server: acceptance Langfuse OTLP deferred a fix MinIO
 
 ### Pending Todos
 
