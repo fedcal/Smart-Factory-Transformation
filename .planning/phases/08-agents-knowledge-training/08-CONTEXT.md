@@ -17,8 +17,8 @@ Out of scope: Supply Chain & Economics agents (InventoryManager/EnergyOptimizer/
 ## Implementation Decisions
 
 ### ShiftHandover
-- **D-SH-01:** Trigger = scheduled shift boundary (configurable, e.g. 06:00/14:00/22:00) auto-compilation **plus** manual on-demand start by a supervisor. A "shift" is defined by configurable boundary times.
-- **D-SH-02:** Data sources = `audit.actions` cross-cluster (ops/maintenance) within the shift window **plus** direct queries to source tables (alerts, work_orders, downtime_events) for extra detail. Hybrid: audit chain as backbone, direct tables for completeness.
+- **D-SH-01:** Trigger = scheduled shift boundary (configurable, e.g. 06:00/14:00/22:00) auto-compilation **plus** manual on-demand start by a supervisor. A "shift" is defined by configurable boundary times. **Scheduled trigger mechanism (resolved post-research):** NATS consumer on `shift.boundary.>` subject (mirrors pm-consumer/da-consumer event-driven pattern), not an in-process scheduler.
+- **D-SH-02:** Data sources = `audit.actions` cross-cluster (ops/maintenance) within the shift window. **Resolved post-research:** `ops.alerts` / `ops.work_orders` tables do NOT exist — derive alerts from `audit.actions WHERE action_type='ANOMALY_ALERT'` and work-order/quality/downtime data from the corresponding `action_type` rows + `maintenance.downtime_events`. No new schema tables created in this phase; the audit chain is the single backbone.
 - **D-SH-03:** Sign-off = **dual-supervisor sequential**: outgoing-shift supervisor approves, then incoming-shift supervisor confirms takeover. Two distinct HITL audit rows. Must complete within <3 min elapsed.
 
 ### TrainingCoach
