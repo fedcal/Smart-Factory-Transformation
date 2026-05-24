@@ -124,8 +124,8 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 05-09-retrieval-pipeline-tools-memory-PLAN.md — RetrievalPipeline + RagSearchTool + TraverseGraphTool + QdrantLongTermMemory (KNW-06, KNW-09)
   - [x] 05-10-ingest-service-cli-ci-eval-docs-PLAN.md — Typer CLI + pipeline + reindex.yml + A/B eval + MkDocs (KNW-03, KNW-04, KNW-07, TRN-01)
   - [x] 05-11-PLAN.md — gap-closure: TraverseGraphTool._arun defense-in-depth Pydantic re-validation (KNW-09 / CR-01 BLOCKER)
-  - [ ] 05-12-PLAN.md — gap-closure: shared sft_knowledge.path_utils.derive_source_uri helper for parser+orchestrator (KNW-07 / CR-02 BLOCKER)
-  - [ ] 05-13-PLAN.md — gap-closure: --skip-eval→--stub rename + Preliminary stub metrics admonition on MkDocs IT/EN eval pages (KNW-03 / IN-05)
+  - [x] 05-12-PLAN.md — gap-closure: shared sft_knowledge.path_utils.derive_source_uri helper for parser+orchestrator (KNW-07 / CR-02 BLOCKER)
+  - [x] 05-13-PLAN.md — gap-closure: --skip-eval→--stub rename + Preliminary stub metrics admonition on MkDocs IT/EN eval pages (KNW-03 / IN-05)
 
 ### Phase 6: Agents — Operations & Production
 **Goal**: All four Operations cluster agents (OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector) are implemented with full HITL integration, textile-specific domain knowledge, and passing end-to-end tests on simulated scenarios.
