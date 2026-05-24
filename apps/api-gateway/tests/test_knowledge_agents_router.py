@@ -257,9 +257,11 @@ async def test_post_knowledge_curator_ingest_returns_200(
     )
 
     body = {
+        "document_id": "doc-test-001",
         "document_text": "Questo è un documento di prova per il test di dedup.",
         "doc_type": "sop",
         "last_updated": _VALID_LAST_UPDATED,
+        "source_uri": "sop://test/doc-001",
     }
     response = await client.post("/v1/agents/knowledge-curator/ingest", json=body)
     assert response.status_code == 200, response.text
@@ -269,7 +271,9 @@ async def test_post_knowledge_curator_ingest_returns_200(
     config = graph.ainvoke.call_args.kwargs.get("config") or graph.ainvoke.call_args.args[1]
 
     assert state_arg["target_agent"] == "knowledge-curator"
+    assert state_arg["document_id"] == "doc-test-001"
     assert state_arg["doc_type"] == "sop"
+    assert state_arg["source_uri"] == "sop://test/doc-001"
     assert config["configurable"]["thread_id"].startswith("knowledge.knowledge-curator.")
 
     payload = response.json()
@@ -292,9 +296,11 @@ async def test_post_knowledge_curator_ingest_no_hitl_resume_path(
     )
 
     body = {
+        "document_id": "doc-auto-test-001",
         "document_text": "Documento di test per verifica autonomia.",
         "doc_type": "manual",
         "last_updated": _VALID_LAST_UPDATED,
+        "source_uri": "sop://test/autonomia-001",
     }
     response = await client.post("/v1/agents/knowledge-curator/ingest", json=body)
     # Autonomous: always synchronous 200, never 202
@@ -460,9 +466,11 @@ async def test_knowledge_curator_ingest_idempotency_key_not_required(
     )
 
     body = {
+        "document_id": "doc-idem-test-001",
         "document_text": "Testo ripetuto per test idempotency.",
         "doc_type": "training_material",
         "last_updated": _VALID_LAST_UPDATED,
+        "source_uri": "sop://test/idempotency-001",
     }
 
     r1 = await client.post("/v1/agents/knowledge-curator/ingest", json=body)

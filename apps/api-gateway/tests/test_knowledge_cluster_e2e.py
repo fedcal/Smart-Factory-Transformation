@@ -424,9 +424,11 @@ async def test_knowledge_curator_dedup_and_stale_no_hitl(
 
     async with await _client_for(app) as client:
         ingest_body = {
+            "document_id": "doc-loom01-pulizia-2019",
             "document_text": "Procedura operativa per la pulizia del telaio LOOM-01. Versione 2019.",
             "doc_type": "sop",
             "last_updated": "2019-06-15T10:00:00+00:00",
+            "source_uri": "sop://loom-01/pulizia/v2019",
         }
         response = await client.post("/v1/agents/knowledge-curator/ingest", json=ingest_body)
 
@@ -818,9 +820,11 @@ async def test_all_agents_produce_cited_outputs(
         r_kc = await client.post(
             "/v1/agents/knowledge-curator/ingest",
             json={
+                "document_id": "doc-tessitore-sop-2024",
                 "document_text": "SOP per operatore tessitore v2024.",
                 "doc_type": "sop",
                 "last_updated": "2024-01-01T00:00:00+00:00",
+                "source_uri": "sop://tessitore/standard/v2024",
             },
         )
         assert r_kc.status_code == 200, r_kc.text
