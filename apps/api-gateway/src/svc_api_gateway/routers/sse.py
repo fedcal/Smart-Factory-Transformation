@@ -183,19 +183,18 @@ async def approvals_stream(
 
         try:
             async with pool.acquire() as conn:
-                # Poll pending approvals not yet emitted
+                # Poll pending approvals not yet emitted.
+                # Use parameterised != ALL($1::text[]) to avoid SQL injection
+                # (CR-01 — never interpolate IDs via f-string/join).
+                seen_list = list(seen_ids)
                 pending_rows = await conn.fetch(
                     "SELECT action_id::text AS approval_id, agent_id AS agent,"
                     "       'operator' AS tier, 120 AS sla_seconds"
                     " FROM audit.actions"
                     " WHERE decision = 'hitl_operator'"
-                    "   AND action_id::text NOT IN ("
-                    + (
-                        ", ".join(f"'{aid}'" for aid in seen_ids)
-                        if seen_ids
-                        else "SELECT NULL WHERE false"
-                    )
-                    + ") LIMIT 10"
+                    "   AND action_id::text != ALL($1::text[])"
+                    " LIMIT 10",
+                    seen_list,
                 )
                 for row in pending_rows:
                     aid = str(row["approval_id"])
@@ -277,19 +276,17 @@ async def alerts_stream(
 
         try:
             async with pool.acquire() as conn:
+                # Use parameterised != ALL($1::text[]) — CR-01 SQL injection fix.
+                seen_list = list(seen_ids)
                 alert_rows = await conn.fetch(
                     "SELECT action_id::text AS alert_id,"
                     "       action_type AS message,"
                     "       'warning' AS severity"
                     " FROM audit.actions"
                     " WHERE action_type IN ('ANOMALY_ALERT', 'GOVERNOR_ALERT')"
-                    "   AND action_id::text NOT IN ("
-                    + (
-                        ", ".join(f"'{aid}'" for aid in seen_ids)
-                        if seen_ids
-                        else "SELECT NULL WHERE false"
-                    )
-                    + ") ORDER BY created_at DESC LIMIT 10"
+                    "   AND action_id::text != ALL($1::text[])"
+                    " ORDER BY created_at DESC LIMIT 10",
+                    seen_list,
                 )
                 for row in alert_rows:
                     aid = str(row["alert_id"])
