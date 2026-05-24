@@ -157,6 +157,13 @@ jobs:
             -- python -m pytest tests/load/test_ingestion_throughput.py -v -m load_full --full-load-test
           docker compose -f infra/compose/core.yml -f infra/compose/sim.yml down -v
 
+      - name: Run eval CI gate (OBS-05/06)
+        # Gate BLOCCANTE: nessun || true o continue-on-error (SC-2 enforcement)
+        # Esegue metriche deterministiche (token-overlap + DeepEval MockLLM)
+        # Fallisce il pipeline se hallucination rate >5% o relevance <0.75
+        # Real-Ollama eval: SKIP in CI (non impostato EVAL_REAL_LLM)
+        run: uv run --python 3.12 python -m pytest tests/eval/ -x -q
+
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --parallel=3
 

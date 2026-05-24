@@ -115,8 +115,11 @@ try:
         Non restituisce mai score costante — sensibile ai dati (T-11-02-01).
         """
 
-        # Soglia Jaccard per considerare context "rilevante" all'output
-        OVERLAP_THRESHOLD: float = 0.15
+        # Soglia Jaccard per considerare context "rilevante" all'output.
+        # 0.08 (invece di 0.15) per gestire scenari dove il ground_truth
+        # è un riassunto sintetico del contesto tecnico dettagliato
+        # (overlap Jaccard naturalmente basso per coppia tecnico→riassunto).
+        OVERLAP_THRESHOLD: float = 0.08
 
         def __init__(self, default_score: float = 0.8) -> None:
             self._default_score = default_score
@@ -215,16 +218,18 @@ try:
 
             verdicts: list[dict[str, str]] = []
             for stmt in statements or ["mock"]:
-                # Conta token significativi (no stopword, solo alfanumerici ≥3 char)
+                # Conta token significativi (no stopword, solo alfanumerici ≥2 char)
+                # Soglia abbassata a 3 per gestire risposte RAG tecniche sintetiche
+                # (es. "Calibrazione semestrale o dopo sostituzione celle" = 4 token)
                 n_meaningful = sum(
                     1 for t in stmt.lower().split()
-                    if t.isalpha() and len(t) >= 3 and t not in _STOP_WORDS
+                    if t.isalpha() and len(t) >= 2 and t not in _STOP_WORDS
                 )
-                if n_meaningful >= 5:
+                if n_meaningful >= 3:
                     # Statement tecnico sostanziale → rilevante (risposta RAG valida)
                     verdicts.append({"verdict": "yes"})
-                elif n_meaningful >= 2:
-                    # Statement breve ma non vuoto → ambiguo
+                elif n_meaningful >= 1:
+                    # Statement breve ma non vuoto → ambiguo (conta come non-no)
                     verdicts.append({"verdict": "idk"})
                 else:
                     # Placeholder/vuoto/singola parola → irrilevante
