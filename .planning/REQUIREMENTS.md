@@ -100,9 +100,9 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 
 - [ ] **TRN-01**: `KnowledgeCurator` — ingest e cura RAG su SOP/manuali, deduplicazione, segnalazione contenuti stale
 - [ ] **TRN-02**: `TrainingCoach` — adaptive learning su procedure, valuta competenza con quiz contestualizzati
-- [ ] **TRN-03**: `ShiftHandover` — sintetizza handover di turno aggregando eventi, decisioni, alert aperti
+- [x] **TRN-03**: `ShiftHandover` — sintetizza handover di turno aggregando eventi, decisioni, alert aperti
 - [ ] **TRN-04**: `DocumentationSynthesizer` — genera bozze SOP/runbook da eventi storici, sempre con HITL approval
-- [ ] **TRN-05**: Tutti gli output TRN includono citazioni con `source_uri` e timestamp
+- [x] **TRN-05**: Tutti gli output TRN includono citazioni con `source_uri` e timestamp
 
 ### Agenti Supply Chain & Economics (SCM)
 
@@ -315,9 +315,9 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | MNT-05 | Phase 7 | Pending |
 | MNT-06 | Phase 7 | Pending |
 | TRN-02 | Phase 8 | Pending |
-| TRN-03 | Phase 8 | Pending |
+| TRN-03 | Phase 8 | Complete |
 | TRN-04 | Phase 8 | Pending |
-| TRN-05 | Phase 8 | Pending |
+| TRN-05 | Phase 8 | Complete |
 | SCM-01 | Phase 9 | Pending |
 | SCM-02 | Phase 9 | Pending |
 | SCM-03 | Phase 9 | Pending |
