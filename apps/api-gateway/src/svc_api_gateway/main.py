@@ -52,6 +52,7 @@ def build_app() -> FastAPI:
     from svc_api_gateway.routers import maintenance_agents as maintenance_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import ops_agents as ops_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import quality as quality_router  # noqa: PLC0415
+    from svc_api_gateway.routers import sse as sse_router  # noqa: PLC0415 — Plan 10-03 SSE streaming
     from svc_api_gateway.routers import supply_agents as supply_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import threads as threads_router  # noqa: PLC0415
 
@@ -63,6 +64,7 @@ def build_app() -> FastAPI:
     app.include_router(health_router.router)
     app.include_router(auth_router.router)  # Plan 10-01 — SRV-01 JWT auth + RBAC
     app.include_router(kpi_router.router)   # Plan 10-02 — SRV-02 KPI snapshot
+    app.include_router(sse_router.router)   # Plan 10-03 — SRV-02 SSE streaming
     app.include_router(approvals_router.router)
     app.include_router(threads_router.router)
     app.include_router(quality_router.router)  # Plan 06-12 — OPS-04 ingest
@@ -70,6 +72,19 @@ def build_app() -> FastAPI:
     app.include_router(maintenance_agents_router.router)  # Plan 07-10 — MNT-01/02/03/04
     app.include_router(knowledge_agents_router.router)  # Plan 08-08 — TRN-02/03/04/05
     app.include_router(supply_agents_router.router)  # Plan 09-06 — SCM-01/02/03/04
+
+    # Plan 10-03 — OTEL endpoint spans (best-effort: guards against missing exporter).
+    # Full OTEL stack (traces + metrics + exporter wiring) is Phase 11 concern.
+    try:
+        from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor  # noqa: PLC0415
+        FastAPIInstrumentor.instrument_app(app)
+    except Exception:  # noqa: BLE001
+        import structlog as _structlog  # noqa: PLC0415
+        _structlog.get_logger(__name__).warning(
+            "otel_instrumentation_skipped",
+            reason="FastAPIInstrumentor not available or failed — spans disabled",
+        )
+
     return app
 
 
