@@ -227,7 +227,20 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. The FastAPI OpenAPI spec exports correctly, Pydantic models and TypeScript types are contract-tested, and all endpoints have health/readiness probes with OTEL spans
   5. The persona walkthrough demo (operator, shift supervisor, technician, CIO) is navigable in-app with no broken routes or missing data
 **UI hint**: yes
-**Plans**: TBD
+**Plans**: 13 plans (11 waves, sequential on main tree — worktrees disabled)
+  - [ ] 10-00a-PLAN.md — Wave 0 dependency install (PyJWT/sse-starlette/OTEL backend; @angular/material+cdk+localize, @jsverse/transloco, ng2-charts@8, chart.js, tailwind v4, playwright) + Tailwind/Material 64px baseline (SRV-01/02/04, UI-02/04/05/07/10)
+  - [ ] 10-00b-PLAN.md — Wave 0 Nyquist test scaffolds (pytest auth/RBAC/SSE/KPI; Jest Jwt/SSE/ApprovalCard) (SRV-01/02/05, UI-03/04/07, HITL-07/10)
+  - [ ] 10-01-PLAN.md — Backend JWT issuance + RBAC dependency + auth router (SRV-01, HITL-02)
+  - [ ] 10-02-PLAN.md — Backend real KPI aggregations over TimescaleDB + GET /v1/kpi (SRV-02, UI-04)
+  - [ ] 10-03-PLAN.md — Backend SSE streams + query-param JWT + HITL-10 rate limit + OTEL middleware + migration 013 seed (SRV-02/04, UI-06, HITL-10)
+  - [ ] 10-04-PLAN.md — Frontend foundation: design tokens + dark/light Material themes + responsive AppShell + persona routes (UI-01/02/05)
+  - [ ] 10-05-PLAN.md — Frontend core services: JwtService/interceptor/RbacGuard + Signal SseService + ThemeService + transloco LocaleService (UI-05/06/07, SRV-01)
+  - [ ] 10-06-PLAN.md — Frontend HITL UI: login + dev persona chips + toggles + ApprovalCard + EvidencePanel (UI-02/03/05/07, HITL-01/06/07)
+  - [ ] 10-07-PLAN.md — Frontend dashboard primitives: KpiTile + AlertFeed (rate-limit banner) + virtual-scroll ApprovalQueueFeed (UI-02/04/06, HITL-04/10)
+  - [ ] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
+  - [ ] 10-09-PLAN.md — Frontend features: technician + admin (audit log + governor) + persona walkthrough demo (UI-01/08, HITL-04/09)
+  - [ ] 10-10-PLAN.md — Playwright E2E: separate Nx project apps/factory-ui-e2e + full HITL approval flow (UI-10, HITL-01/06/07)
+  - [ ] 10-11-PLAN.md — Pydantic↔TS contract test (openapi-typescript) + bilingual mock-UI screenshots (SRV-05, UI-09)
 
 ### Phase 11: Observability, Evaluation & Security Hardening
 **Goal**: OpenTelemetry instrumentation spans all services, Langfuse traces every LLM call, Grafana dashboards expose agent and factory KPIs, DeepEval gates PRs on hallucination rate, and STRIDE threat model mitigations are implemented including OWASP LLM Top 10 defenses.
