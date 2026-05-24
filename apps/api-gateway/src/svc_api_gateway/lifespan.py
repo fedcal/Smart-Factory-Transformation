@@ -224,7 +224,7 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
 
     # 11) Supply agent instances + supply_children dict (Plan 09-06, D-X-04 pattern).
     #     CR-01: each class imported by EXACT exported name (verified against agent.py).
-    #     CostAnalyzer.__init__ takes positional args (not keyword-only) — note signature.
+    #     All four agents use keyword-only __init__ (*, pool, audit_writer, llm) — call with kwargs.
     from scm_inventory_manager.agent import InventoryManager  # noqa: PLC0415
     from scm_energy_optimizer.agent import EnergyOptimizer  # noqa: PLC0415
     from scm_cost_analyzer.agent import CostAnalyzer  # noqa: PLC0415
