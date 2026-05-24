@@ -165,7 +165,7 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     from trn_shift_handover.aggregator import ShiftAggregator  # noqa: PLC0415
     from trn_training_coach.agent import TrainingCoach  # noqa: PLC0415
     from trn_documentation_synthesizer.agent import DocumentationSynthesizer  # noqa: PLC0415
-    from trn_documentation_synthesizer.event_aggregator import EventAggregator  # noqa: PLC0415
+    from trn_documentation_synthesizer.event_aggregator import HistoricalEventAggregator  # noqa: PLC0415
     from trn_documentation_synthesizer.validators import SOPCitationValidator  # noqa: PLC0415
     from sft_agents.runtime.clusters import build_knowledge_subgraph  # noqa: PLC0415
 
@@ -194,7 +194,7 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
         llm=None,               # Phase 11: inject LLM
         retrieval_pipeline=None,    # Phase 5/11: inject sft-knowledge RetrievalPipeline
         indexer=None,               # Phase 11: inject Qdrant indexer
-        event_aggregator=EventAggregator(pool=pool),
+        event_aggregator=HistoricalEventAggregator(pool=pool),
         validator=SOPCitationValidator(),
         saver=saver,
     )
