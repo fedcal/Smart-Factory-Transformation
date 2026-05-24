@@ -321,31 +321,41 @@ async def test_historical_orders_18_monthly_buckets_twill(seeded_dsn: str) -> No
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_seed_idempotent_double_apply(seeded_dsn: str) -> None:
-    """Re-applying the seed is a no-op for tables with PRIMARY KEY.
+    """Re-applying the seed must produce stable row counts for ALL scm.* tables (WR-01 fix).
 
-    scm.sku_master, scm.enpi_baseline, and scm.historical_orders have a
-    PRIMARY KEY and use ON CONFLICT DO NOTHING — their row counts must not
-    change on re-apply.
+    ALL five tables must have identical row counts before and after a second seed apply:
 
-    scm.inventory_levels and scm.energy_readings are TimescaleDB hypertables
-    without a PRIMARY KEY (time-series by design). Their inserts use relative
-    timestamps (NOW()) and accumulate on re-run; this is expected and correct
-    for append-only time-series tables. Their idempotency is out of scope for
-    this test.
+    - scm.sku_master, scm.enpi_baseline, scm.historical_orders: have PRIMARY KEY
+      and use ON CONFLICT DO NOTHING — idempotent by constraint.
+    - scm.inventory_levels, scm.energy_readings: TimescaleDB hypertables WITHOUT PK.
+      Before the WR-01 fix, ON CONFLICT DO NOTHING without a conflict target was a
+      no-op (no duplicate protection) and re-runs would duplicate rows, causing
+      InventoryManager to see doubled stock levels and EnergyOptimizer to compute
+      EnPI on doubled data. The fix adds DELETE guards in the seed before each
+      hypertable INSERT block, making re-apply truly idempotent.
+
+    This test asserts that all 5 tables have STABLE row counts across a double-load.
+    Requires Docker/testcontainers. If Docker is unavailable the test is skipped.
     """
-    # Tables with PRIMARY KEY — must be idempotent
-    pk_tables = ("sku_master", "enpi_baseline", "historical_orders")
+    all_tables = (
+        "sku_master",
+        "enpi_baseline",
+        "historical_orders",
+        "inventory_levels",
+        "energy_readings",
+    )
 
     conn = await asyncpg.connect(seeded_dsn, statement_cache_size=0, command_timeout=60.0)
     try:
         before = {
-            tbl: await conn.fetchval(f"SELECT COUNT(*) FROM scm.{tbl}")
-            for tbl in pk_tables
+            tbl: int(await conn.fetchval(f"SELECT COUNT(*) FROM scm.{tbl}"))
+            for tbl in all_tables
         }
     finally:
         await conn.close()
 
-    # Second application
+    # Second seed application — this is the double-load that previously duplicated rows
+    # in inventory_levels and energy_readings (WR-01).
     seed_sql = _SEED_FILE.read_text(encoding="utf-8")
     conn2 = await asyncpg.connect(seeded_dsn, statement_cache_size=0, command_timeout=120.0)
     try:
@@ -356,13 +366,14 @@ async def test_seed_idempotent_double_apply(seeded_dsn: str) -> None:
     conn3 = await asyncpg.connect(seeded_dsn, statement_cache_size=0, command_timeout=60.0)
     try:
         after = {
-            tbl: await conn3.fetchval(f"SELECT COUNT(*) FROM scm.{tbl}")
-            for tbl in pk_tables
+            tbl: int(await conn3.fetchval(f"SELECT COUNT(*) FROM scm.{tbl}"))
+            for tbl in all_tables
         }
     finally:
         await conn3.close()
 
     assert before == after, (
-        f"Row counts changed on re-apply for PK tables — ON CONFLICT not working: "
-        f"before={before}, after={after}"
+        f"Row counts changed on double-load (WR-01: seed not idempotent): "
+        f"before={before}, after={after}. "
+        "inventory_levels and energy_readings must be stable thanks to DELETE guards."
     )

@@ -16,7 +16,12 @@
 -- migration glob so numbered migrations remain idempotent. Apply manually or
 -- via the seed runner in dev/test only.
 --
--- Re-run safety: all INSERT statements use ON CONFLICT DO NOTHING.
+-- Re-run safety:
+--   scm.sku_master, scm.enpi_baseline, scm.historical_orders: ON CONFLICT DO NOTHING
+--     (these tables have PRIMARY KEY constraints — idempotent).
+--   scm.inventory_levels, scm.energy_readings: guarded DELETE before INSERT
+--     (TimescaleDB hypertables without PK — ON CONFLICT without a conflict target
+--     is a no-op, so re-runs would duplicate rows without the DELETE guards below).
 -- Tables populated:
 --   scm.sku_master          (6 SKUs: yarn x2, dye, spare, fabric x2)
 --   scm.enpi_baseline       (dyeing + finishing ISO 50001 EnPI)
@@ -79,7 +84,21 @@ ON CONFLICT (process) DO NOTHING;
 -- 3. scm.inventory_levels — Snapshot inventario recente (SINTETICO)
 --    Include >=1 riga SOTTO il reorder_point per InventoryManager
 --    (SKU-FAB-JERSEY-BLU: qty=310 < reorder_point=500 → trigger reorder)
+--
+--    Guard idempotenza: DELETE delle righe sintetiche prima di re-inserire.
+--    scm.inventory_levels è una TimescaleDB hypertable senza PRIMARY KEY,
+--    quindi ON CONFLICT senza colonna di conflitto è un no-op (nessuna protezione
+--    contro duplicati). Il DELETE sui source='wms_sync'/'manual' garantisce
+--    idempotenza su double-load in dev/test.
 -- ──────────────────────────────────────────────────────────────────────────────
+DELETE FROM scm.inventory_levels
+WHERE source IN ('wms_sync', 'manual')
+  AND sku_id IN (
+      'SKU-FAB-JERSEY-BLU', 'SKU-FAB-TWILL-GRY',
+      'SKU-YARN-NE20-BLU', 'SKU-YARN-NE30-BIA',
+      'SKU-DYE-REACT-BLU', 'SKU-SPARE-NEEDLE-L'
+  );
+
 INSERT INTO scm.inventory_levels (ts, sku_id, quantity, location, source)
 VALUES
     -- Jersey BLU: SOTTO reorder_point (310 < 500) → InventoryManager deve segnalare
@@ -105,14 +124,30 @@ VALUES
      'main_warehouse', 'wms_sync'),
     (NOW() - INTERVAL '50 hours', 'SKU-FAB-JERSEY-BLU', 680.000,
      'main_warehouse', 'wms_sync')
-ON CONFLICT DO NOTHING;
+-- No ON CONFLICT clause: duplicate protection is handled by the DELETE guard above.
+-- (ON CONFLICT DO NOTHING without a conflict target is a no-op on tables without PK)
+;
 
 
 -- ──────────────────────────────────────────────────────────────────────────────
 -- 4. scm.energy_readings — Letture energetiche tintoria + finissaggio (SINTETICO)
 --    Mix peak (06:00-22:00) / off-peak (22:00-06:00)
 --    Sufficiente per calcolo EnPI e % off-peak
+--
+--    Guard idempotenza: DELETE delle righe sintetiche prima di re-inserire.
+--    scm.energy_readings è una TimescaleDB hypertable senza PRIMARY KEY,
+--    quindi ON CONFLICT senza colonna di conflitto è un no-op (nessuna protezione
+--    contro duplicati). Il DELETE sui asset_id sintetici garantisce idempotenza
+--    su double-load in dev/test.
 -- ──────────────────────────────────────────────────────────────────────────────
+DELETE FROM scm.energy_readings
+WHERE asset_id IN (
+    'tintoria-01', 'tintoria-02',
+    'stentatoio-01', 'stentatoio-02',
+    'telaio-01', 'telaio-02',
+    'rapier-01', 'rapier-02'
+);
+
 INSERT INTO scm.energy_readings
     (ts, asset_id, process, kwh, kg_processed, shift, is_peak_hour)
 VALUES
@@ -147,7 +182,9 @@ VALUES
     -- Tessitura (weaving) — campione
     (NOW() - INTERVAL '8 hours',  'rapier-01', 'weaving', 36.80, 21.00, 'day', TRUE),
     (NOW() - INTERVAL '8 hours',  'rapier-02', 'weaving', 35.90, 20.50, 'day', TRUE)
-ON CONFLICT DO NOTHING;
+-- No ON CONFLICT clause: duplicate protection is handled by the DELETE guard above.
+-- (ON CONFLICT DO NOTHING without a conflict target is a no-op on tables without PK)
+;
 
 
 -- ──────────────────────────────────────────────────────────────────────────────
