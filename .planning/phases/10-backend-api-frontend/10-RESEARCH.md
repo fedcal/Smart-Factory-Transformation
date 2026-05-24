@@ -738,7 +738,7 @@ Il proxy Quality da `audit.actions` è la stessa logica già usata in Phase 7 `r
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED — see 10-CONTEXT.md post_research_resolutions)
 
 1. **i18n runtime switch per testi UI**
    - Cosa sappiamo: `@angular/localize` con `loadLocaleData()` aggiorna formati (date, numeri) ma NON testi compilati. La UI-SPEC dice "nessun page reload".

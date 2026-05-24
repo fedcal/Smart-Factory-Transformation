@@ -41,7 +41,7 @@ styling: tailwind-css-v4
 | Font | Inter (variabile, Google Fonts CDN con `font-display: swap`) | default — leggibilità pannello industriale |
 | SSR / hydration | `@angular/ssr` + `provideClientHydration(withEventReplay())` | scaffold esistente |
 | State management | Angular Signals + injectable services; `computed()` per KPI derivati | CONTEXT.md |
-| i18n engine | Angular built-in i18n (`@angular/localize`) — locale `it` default, `en-US` lazy-loaded via `loadLocaleData()` senza ricarica pagina | UI-07 |
+| i18n engine | **`@jsverse/transloco`** (runtime translation, lazy locale JSON, SSR default `it`) — supersedes the `@angular/localize` note below per 10-CONTEXT post_research_resolution #1; transloco is required because `@angular/localize` cannot switch compiled text without a page reload (UI-07) | UI-07 |
 | Theme engine | Angular Material custom-theme via `mat.theme()` mixin + CSS custom properties per dark/light; `prefers-color-scheme` + toggle manuale | UI-05 |
 | Registry | Nessun registry terze parti. Solo `@angular/material` ufficiale. shadcn: non applicabile (stack Angular) | — |
 
