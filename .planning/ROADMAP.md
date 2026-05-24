@@ -231,7 +231,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 10-00a-PLAN.md — Wave 0 dependency install (PyJWT/sse-starlette/OTEL backend; @angular/material+cdk+localize, @jsverse/transloco, ng2-charts@8, chart.js, tailwind v4, playwright) + Tailwind/Material 64px baseline (SRV-01/02/04, UI-02/04/05/07/10)
   - [x] 10-00b-PLAN.md — Wave 0 Nyquist test scaffolds (pytest auth/RBAC/SSE/KPI; Jest Jwt/SSE/ApprovalCard) (SRV-01/02/05, UI-03/04/07, HITL-07/10)
   - [x] 10-01-PLAN.md — Backend JWT issuance + RBAC dependency + auth router (SRV-01, HITL-02)
-  - [ ] 10-02-PLAN.md — Backend real KPI aggregations over TimescaleDB + GET /v1/kpi (SRV-02, UI-04)
+  - [x] 10-02-PLAN.md — Backend real KPI aggregations over TimescaleDB + GET /v1/kpi (SRV-02, UI-04)
   - [ ] 10-03-PLAN.md — Backend SSE streams + query-param JWT + HITL-10 rate limit + OTEL middleware + migration 013 seed (SRV-02/04, UI-06, HITL-10)
   - [ ] 10-04-PLAN.md — Frontend foundation: design tokens + dark/light Material themes + responsive AppShell + persona routes (UI-01/02/05)
   - [ ] 10-05-PLAN.md — Frontend core services: JwtService/interceptor/RbacGuard + Signal SseService + ThemeService + transloco LocaleService (UI-05/06/07, SRV-01)
