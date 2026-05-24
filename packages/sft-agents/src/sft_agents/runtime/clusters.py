@@ -16,6 +16,11 @@ Phase 6 (Ops), Phase 7 (Maintenance), Phase 8 (Knowledge-*), Phase 9 (Supply).
   always-supervisor agent (D-RCA-02) so an unknown-target route falls into
   the safest possible path (HITL gate guaranteed). Emits ``mnt_route_unknown_target``
   structlog warning when the fallback is taken.
+* ``build_knowledge_subgraph`` — Phase 8 (Plan 08-01) router subgraph that
+  mirrors :func:`build_maintenance_subgraph` shape (D-X-04 gateway pattern).
+  Falls back to ``knowledge-curator`` (autonomous, D-KC-04) — no HITL, no
+  irreversible side effects. Emits ``knw_route_unknown_target`` structlog
+  warning when the fallback is taken.
 """
 from __future__ import annotations
 
@@ -38,6 +43,11 @@ _OPS_DEFAULT_AGENT: str = "operator-assistant"
 #: possible path — the HITL gate is guaranteed even when the supervisor
 #: routing table drifts.
 _MNT_DEFAULT_AGENT: str = "rca-specialist"
+
+#: Default fallback target for the knowledge router (Plan 08-01 planner decision).
+#: KnowledgeCurator is autonomous (D-KC-04) — no HITL, no irreversible side effects.
+#: Unknown-target routing to an autonomous agent is the safest fallback.
+_KNW_DEFAULT_AGENT: str = "knowledge-curator"
 
 
 def build_cluster_subgraph(cluster_name: str, child_agent_slugs: list[str]) -> StateGraph:
@@ -251,8 +261,86 @@ def build_maintenance_subgraph(
     return g
 
 
+def build_knowledge_subgraph(
+    child_callables: Mapping[str, Callable[[AgentState], Awaitable[dict[str, Any]]]],
+) -> StateGraph:
+    """Return an *uncompiled* KNOWLEDGE-cluster StateGraph with conditional routing.
+
+    Structural mirror of :func:`build_maintenance_subgraph` (D-X-04 gateway pattern).
+    Each entry in ``child_callables`` is the knowledge-agent's async ``__call__``
+    (already a coroutine that returns a state-delta dict). The graph wires:
+
+        START → conditional_edges(_route) → <selected slug> → END
+
+    ``_route(state)`` reads ``state.get("target_agent")``. If the value is
+    missing or not present in ``child_callables``, the router falls back to
+    ``knowledge-curator`` (autonomous, D-KC-04) and emits a
+    ``knw_route_unknown_target`` structlog warning so observability still surfaces
+    the routing-table drift.
+
+    Parameters
+    ----------
+    child_callables:
+        Mapping of agent slug (kebab-case, e.g. ``shift-handover``,
+        ``training-coach``, ``knowledge-curator``, ``documentation-synthesizer``)
+        to the async callable that implements the agent's node body. MUST include
+        ``knowledge-curator`` (the fallback) — otherwise the fallback would
+        silently fail at run-time. Non-empty.
+
+    Returns
+    -------
+    StateGraph
+        Uncompiled StateGraph(AgentState). Caller is responsible for
+        ``.compile(...)`` — the supervisor typically compiles each cluster
+        subgraph as a supervisor node.
+
+    Raises
+    ------
+    ValueError
+        If ``child_callables`` is empty or does not contain ``knowledge-curator``.
+    """
+    if not child_callables:
+        raise ValueError(
+            "child_callables must be non-empty for the knowledge subgraph"
+        )
+    if _KNW_DEFAULT_AGENT not in child_callables:
+        raise ValueError(
+            f"child_callables must include {_KNW_DEFAULT_AGENT!r} (the fallback "
+            f"target for the knowledge router); got slugs {sorted(child_callables)}"
+        )
+
+    # Defensive copy — callers should not mutate the mapping after build, and
+    # the router closure should not be affected by post-build edits.
+    children: dict[str, Callable[[AgentState], Awaitable[dict[str, Any]]]] = dict(
+        child_callables
+    )
+
+    g: StateGraph = StateGraph(AgentState)
+    for slug, fn in children.items():
+        g.add_node(slug, fn)
+
+    def _route(state: AgentState) -> str:
+        # ``state`` is a TypedDict (mapping-like at runtime).
+        target = state.get("target_agent") if isinstance(state, dict) else None
+        if not target or target not in children:
+            _log.warning(
+                "knw_route_unknown_target",
+                target=target,
+                fallback=_KNW_DEFAULT_AGENT,
+            )
+            return _KNW_DEFAULT_AGENT
+        return str(target)
+
+    g.add_conditional_edges(START, _route, {slug: slug for slug in children})
+    for slug in children:
+        g.add_edge(slug, END)
+
+    return g
+
+
 __all__ = [
     "build_cluster_subgraph",
+    "build_knowledge_subgraph",
     "build_maintenance_subgraph",
     "build_ops_subgraph",
 ]
