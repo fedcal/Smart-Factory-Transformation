@@ -39,13 +39,13 @@ export const RBAC_GUARD_SERVICE_TOKEN = new InjectionToken<{
 }>('SFT_RBAC_GUARD_SERVICE');
 
 /**
- * RBAC guard placeholder — canActivate factory function.
+ * RBAC guard — canActivate factory function.
  *
- * Phase 10-04: scaffold only — allows all routes through (returns true).
- * Phase 10-05: JwtService injected via RBAC_GUARD_SERVICE_TOKEN to enforce roles.
- *
- * Import path stable: this file is the canonical location.
- * The guard is referenced in app.routes.ts; 10-05 fills the service implementation.
+ * RBAC_GUARD_SERVICE_TOKEN is mandatory: inject() without { optional: true }
+ * causes Angular DI to throw if the token is not provided in app.config.ts.
+ * This is intentional — a missing provider is a misconfiguration that must
+ * fail loudly (never silently grant access). CR-03 fix: removed scaffold
+ * fallback that returned true when the service was absent.
  *
  * Authorized roles per route (UI-SPEC):
  *   /operator   → ['operator']
@@ -59,36 +59,28 @@ export const rbacGuard: CanActivateFn = (
   _state: RouterStateSnapshot,
 ): boolean => {
   const router = inject(Router);
-  const allowedRoles = (route.data[ROUTE_ROLES_KEY] ?? []) as UserRole[];
+  // Mandatory injection — throws if RBAC_GUARD_SERVICE_TOKEN is not provided.
+  // On genuine DI error the application fails loudly; it must never fall back
+  // to granting access (CR-03).
+  const guardService = inject(RBAC_GUARD_SERVICE_TOKEN);
 
-  // Attempt to use real service if available (10-05 provides it)
-  try {
-    const guardService = inject(RBAC_GUARD_SERVICE_TOKEN, { optional: true });
-
-    if (guardService) {
-      if (!guardService.isAuthenticated()) {
-        router.navigate(['/auth/login']);
-        return false;
-      }
-
-      if (allowedRoles.length === 0) {
-        // No role restriction (e.g. /demo — all authenticated)
-        return true;
-      }
-
-      const currentRole = guardService.getCurrentRole();
-      if (currentRole && allowedRoles.includes(currentRole)) {
-        return true;
-      }
-
-      // 403 — not authorized for this persona area
-      router.navigate(['/auth/login']);
-      return false;
-    }
-  } catch {
-    // Service not yet provided (10-04 scaffold mode) — allow through
+  if (!guardService.isAuthenticated()) {
+    router.navigate(['/auth/login']);
+    return false;
   }
 
-  // Scaffold fallback: allow all routes (10-05 wires the real guard)
-  return true;
+  const allowedRoles = (route.data[ROUTE_ROLES_KEY] ?? []) as UserRole[];
+  if (allowedRoles.length === 0) {
+    // No role restriction (e.g. /demo — all authenticated)
+    return true;
+  }
+
+  const currentRole = guardService.getCurrentRole();
+  if (currentRole && allowedRoles.includes(currentRole)) {
+    return true;
+  }
+
+  // 403 — not authorized for this persona area
+  router.navigate(['/auth/login']);
+  return false;
 };
