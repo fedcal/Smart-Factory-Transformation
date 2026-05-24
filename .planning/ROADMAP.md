@@ -252,7 +252,13 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. A crafted PDF containing prompt-injection instructions is sanitized during document ingestion and does not influence any subsequent agent action, verified by a security test in CI
   4. The STRIDE threat model document identifies at least one threat per category (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) for IT/OT boundary, RAG ingestion, and agent orchestration; each threat has a documented mitigation mapped to code
   5. The OT Bridge data-diode boundary is verified by an automated network policy test that attempts to send a write command from the agent layer into the OPC-UA simulator and confirms it is blocked
-**Plans**: TBD
+**Plans**: 6 plans (3 waves)
+  - [ ] 11-00-PLAN.md — Wave 1: infra/deps/scaffolds (obs.yml Grafana/Prometheus/Tempo, OTEL package, migration 014, eval scaffolds, Langfuse/RAGAS verify)
+  - [ ] 11-01-PLAN.md — Wave 2: OTEL trace propagation end-to-end gateway→NATS→agent (OBS-02)
+  - [ ] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
+  - [ ] 11-03-PLAN.md — Wave 2: security hardening — auditor RBAC, sanitizer, OT AST guard, restricted audit (SEC-03/04/06/07)
+  - [ ] 11-04-PLAN.md — Wave 3: Grafana dashboards JSON + LGTM doc (OBS-03/04/07)
+  - [ ] 11-05-PLAN.md — Wave 3: STRIDE doc + OWASP LLM + secrets/.env.example + AR-01..07 closure (SEC-01/02/05)
 
 ### Phase 12: Documentation, Economic Model & Competition Deliverables
 **Goal**: The complete bilingual MkDocs Material documentation site is deployed to GitHub Pages covering all required sections, the OEPV economic model with TCO and ribasso simulator is complete and defensible, all competition deliverables are bundled, and a CI check confirms zero references to Accenture or the original brand.
