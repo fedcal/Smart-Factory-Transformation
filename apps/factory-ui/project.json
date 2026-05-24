@@ -21,6 +21,11 @@
           {
             "glob": "**/*",
             "input": "apps/factory-ui/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/factory-ui/src/assets",
+            "output": "assets"
           }
         ],
         "styles": ["apps/factory-ui/src/styles.scss"],

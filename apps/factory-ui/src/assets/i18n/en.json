@@ -1,0 +1,108 @@
+{
+  "auth": {
+    "email": {
+      "label": "Email address",
+      "placeholder": "operator@mantis.it"
+    },
+    "password": {
+      "label": "Password"
+    },
+    "login_cta": "Sign In",
+    "login_as": "Sign in as {{role}}",
+    "error_credentials": "Invalid credentials. Check your email and password.",
+    "loading": "Signing in..."
+  },
+  "actions": {
+    "approve": "Approve action",
+    "reject": "Reject",
+    "confirm_reject": "Confirm rejection",
+    "next": "Next",
+    "prev": "Back",
+    "exit_demo": "Exit demo"
+  },
+  "empty_state": {
+    "approvals_heading": "No pending approvals",
+    "approvals_body": "The system is waiting for new AI proposals. Notifications will arrive in real time.",
+    "alert_feed": "No alerts in the last 24 hours.",
+    "kpi": "Data unavailable. Check server connection.",
+    "tool_calls": "No tool calls",
+    "rag_citations": "No RAG citations"
+  },
+  "error_state": {
+    "sse_connection": "Connection lost. Reconnecting...",
+    "api_500": "An error occurred. Try again or contact the administrator.",
+    "rbac_403": "You do not have permission for this action.",
+    "sla_expired": "Approval time expired. The action has been escalated."
+  },
+  "hitl": {
+    "motivation_label": "Reason",
+    "motivation_placeholder": "Enter your reason (min. 10 characters)...",
+    "motivation_error": "The reason must be at least 10 characters.",
+    "destructive_confirm": "You are about to reject this AI action. A reason is required and will be logged in the audit trail.",
+    "char_counter": "{{current}}/{{min}} min"
+  },
+  "banners": {
+    "rate_limit": "12 alerts/hour limit reached. New alerts temporarily suspended.",
+    "governor_alert": "Warning: more than 80% of recent actions were auto-approved. Review intervention thresholds."
+  },
+  "sse": {
+    "live_indicator": "Live",
+    "disconnected": "Disconnected"
+  },
+  "toggle": {
+    "language": "EN",
+    "theme_aria": "Toggle theme"
+  },
+  "nav": {
+    "operator": "OPERATOR AREA",
+    "technician": "TECHNICIAN AREA",
+    "manager": "MANAGER AREA",
+    "admin": "ADMINISTRATION",
+    "demo": "PERSONA DEMO"
+  },
+  "demo": {
+    "step1": "Operator (Luca) — Anomaly approval",
+    "step2": "Shift Supervisor (Anna) — Shift handover",
+    "step3": "Technician (Marco) — Maintenance procedure",
+    "step4": "CIO (Elena) — ROI dashboard"
+  },
+  "kpi": {
+    "oee": "OEE",
+    "oee_unit": "Overall Equipment Effectiveness",
+    "mttr": "MTTR",
+    "mttr_unit": "Mean time to repair",
+    "mtbf": "MTBF",
+    "mtbf_unit": "Mean time between failures",
+    "scrap_rate": "Scrap Rate",
+    "scrap_rate_unit": "Scrap percentage",
+    "throughput": "Throughput",
+    "throughput_unit": "kg/hour",
+    "downtime": "Downtime",
+    "downtime_unit": "Machine downtime percentage",
+    "dashboard_title": "Control Room"
+  },
+  "approval": {
+    "status_pending": "Pending",
+    "status_approved": "Approved",
+    "status_rejected": "Rejected",
+    "status_expired": "SLA expired",
+    "evidence_panel": "Evidence Panel",
+    "input_section": "Agent input",
+    "tool_calls_section": "Tool calls",
+    "rag_citations_section": "RAG citations",
+    "confidence_section": "Confidence",
+    "confidence_low": "Low confidence",
+    "confidence_medium": "Medium confidence",
+    "confidence_high": "High confidence",
+    "acl_restricted": "Restricted content",
+    "queue_heading": "Pending Approvals"
+  },
+  "alert": {
+    "action_button": "Go to approval"
+  },
+  "shift": {
+    "morning": "Morning Shift",
+    "afternoon": "Afternoon Shift",
+    "night": "Night Shift"
+  }
+}

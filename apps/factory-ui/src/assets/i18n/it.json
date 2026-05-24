@@ -1,0 +1,108 @@
+{
+  "auth": {
+    "email": {
+      "label": "Indirizzo email",
+      "placeholder": "operatore@mantis.it"
+    },
+    "password": {
+      "label": "Password"
+    },
+    "login_cta": "Accedi",
+    "login_as": "Accedi come {{role}}",
+    "error_credentials": "Credenziali non valide. Controlla email e password.",
+    "loading": "Accesso in corso..."
+  },
+  "actions": {
+    "approve": "Approva azione",
+    "reject": "Rifiuta",
+    "confirm_reject": "Conferma rifiuto",
+    "next": "Avanti",
+    "prev": "Indietro",
+    "exit_demo": "Esci dalla demo"
+  },
+  "empty_state": {
+    "approvals_heading": "Nessuna approvazione pendente",
+    "approvals_body": "Il sistema è in attesa di nuove proposte dall'AI. Le notifiche arriveranno in tempo reale.",
+    "alert_feed": "Nessun alert nelle ultime 24 ore.",
+    "kpi": "Dati non disponibili. Controlla la connessione al server.",
+    "tool_calls": "Nessuna tool call",
+    "rag_citations": "Nessuna citazione RAG"
+  },
+  "error_state": {
+    "sse_connection": "Connessione interrotta. Riconnessione in corso...",
+    "api_500": "Si è verificato un errore. Riprova o contatta l'amministratore.",
+    "rbac_403": "Non hai i permessi per questa azione.",
+    "sla_expired": "Il tempo di approvazione è scaduto. L'azione è stata escalata."
+  },
+  "hitl": {
+    "motivation_label": "Motivazione",
+    "motivation_placeholder": "Inserisci la motivazione (min. 10 caratteri)...",
+    "motivation_error": "La motivazione deve contenere almeno 10 caratteri.",
+    "destructive_confirm": "Stai per rifiutare questa azione AI. La motivazione è obbligatoria e verrà registrata nell'audit trail.",
+    "char_counter": "{{current}}/{{min}} min"
+  },
+  "banners": {
+    "rate_limit": "Limite di 12 alert/ora raggiunto. Nuovi alert sospesi temporaneamente.",
+    "governor_alert": "Attenzione: più dell'80% delle azioni recenti è stato auto-approvato. Verifica le soglie di intervento."
+  },
+  "sse": {
+    "live_indicator": "In tempo reale",
+    "disconnected": "Non connesso"
+  },
+  "toggle": {
+    "language": "IT",
+    "theme_aria": "Cambia tema"
+  },
+  "nav": {
+    "operator": "AREA OPERATORE",
+    "technician": "AREA TECNICA",
+    "manager": "AREA MANAGER",
+    "admin": "AMMINISTRAZIONE",
+    "demo": "DEMO PERSONA"
+  },
+  "demo": {
+    "step1": "Operatore (Luca) — Approvazione anomalia",
+    "step2": "Capo Turno (Anna) — Handover turno",
+    "step3": "Tecnico (Marco) — Procedura manutenzione",
+    "step4": "CIO (Elena) — Dashboard ROI"
+  },
+  "kpi": {
+    "oee": "OEE",
+    "oee_unit": "Efficienza Overall",
+    "mttr": "MTTR",
+    "mttr_unit": "Tempo medio di riparazione",
+    "mtbf": "MTBF",
+    "mtbf_unit": "Tempo medio tra guasti",
+    "scrap_rate": "Scarto",
+    "scrap_rate_unit": "Percentuale scarto",
+    "throughput": "Produttività",
+    "throughput_unit": "kg/ora",
+    "downtime": "Fermo",
+    "downtime_unit": "Percentuale fermo macchina",
+    "dashboard_title": "Sala Controllo"
+  },
+  "approval": {
+    "status_pending": "In attesa",
+    "status_approved": "Approvato",
+    "status_rejected": "Rifiutato",
+    "status_expired": "SLA scaduto",
+    "evidence_panel": "Pannello Evidenze",
+    "input_section": "Input agente",
+    "tool_calls_section": "Tool call",
+    "rag_citations_section": "Citazioni RAG",
+    "confidence_section": "Confidenza",
+    "confidence_low": "Bassa confidenza",
+    "confidence_medium": "Confidenza media",
+    "confidence_high": "Alta confidenza",
+    "acl_restricted": "Contenuto riservato",
+    "queue_heading": "Approvazioni Pendenti"
+  },
+  "alert": {
+    "action_button": "Vai all'approvazione"
+  },
+  "shift": {
+    "morning": "Turno Mattino",
+    "afternoon": "Turno Pomeriggio",
+    "night": "Turno Notte"
+  }
+}
