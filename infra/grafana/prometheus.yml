@@ -1,0 +1,39 @@
+# Prometheus configuration for Smart Factory Transformation dev stack.
+# Phase 11 — Plan 11-00, OBS-03.
+#
+# Scrape jobs coprono:
+#   - api-gateway (metrics endpoint FastAPI + prometheus-client)
+#   - ot-bridge (metrics.py con counter/gauge per OPC-UA readings)
+#   - prometheus stesso (self-scrape per healthcheck)
+#
+# Per produzione, usare service discovery Kubernetes (helm/chart 01-06).
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+# Nessuna rule file per ora (Phase 11-04 aggiunge alert rules)
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # API Gateway — FastAPI app con opentelemetry-instrumentation-fastapi
+  # Endpoint esposto da prometheus-client via ASGI middleware (OBS-02)
+  - job_name: "api-gateway"
+    static_configs:
+      - targets: ["api-gateway:8000"]
+    metrics_path: "/metrics"
+    scrape_interval: 15s
+
+  # OT Bridge — metrics.py con prometheus-client (già presente in ot-bridge)
+  # Porta 8001 come da configurazione ot-bridge (infra/compose/dev.yml)
+  - job_name: "ot-bridge"
+    static_configs:
+      - targets: ["ot-bridge:8001"]
+    metrics_path: "/metrics"
+    scrape_interval: 15s

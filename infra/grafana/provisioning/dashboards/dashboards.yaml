@@ -1,0 +1,19 @@
+# Grafana dashboard provisioning for Smart Factory Transformation dev stack.
+# Phase 11 — Plan 11-00, OBS-03.
+#
+# Provider che punta a /var/lib/grafana/dashboards (montato da ./infra/grafana/dashboards).
+# I file JSON dei dashboard vengono aggiunti in Plan 11-04 (Wave 3).
+# Questa configurazione è già in place per essere pronta al mount.
+
+apiVersion: 1
+
+providers:
+  - name: "Smart Factory Dashboards"
+    orgId: 1
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false

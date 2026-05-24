@@ -149,12 +149,73 @@ services:
       - sft-obs
     restart: unless-stopped
 
+  # ---------------------------------------------------------------------------
+  # Phase 11 additions: Prometheus + Tempo + Grafana
+  # Langfuse/ClickHouse/MinIO services above are NOT modified.
+  # Pitfall 4 fix: Grafana usa host port 3001 (Langfuse possiede la 3000).
+  # ---------------------------------------------------------------------------
+
+  prometheus:
+    image: prom/prometheus:v2.53.3
+    volumes:
+      - ./infra/grafana/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  tempo:
+    image: grafana/tempo:2.6.1
+    volumes:
+      - ./infra/grafana/tempo.yaml:/etc/tempo/tempo.yaml:ro
+      - tempo-data:/var/tempo
+    command:
+      - "-config.file=/etc/tempo/tempo.yaml"
+    ports:
+      # OTLP gRPC receiver — agents inviano span qui (OTEL_EXPORTER_OTLP_ENDPOINT)
+      - "${TEMPO_OTLP_GRPC_PORT:-4317}:4317"
+      # HTTP API Tempo (query frontend per Grafana datasource)
+      - "${TEMPO_HTTP_PORT:-3200}:3200"
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    environment:
+      # Dev only: anonymous viewer access (T-11-00-02 accepted risk, no PII)
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      # Host 3001: Langfuse possiede 3000 (RESEARCH Pitfall 4)
+      - "${GRAFANA_PORT:-3001}:3000"
+    depends_on:
+      - prometheus
+      - tempo
+    networks:
+      - sft-obs
+    restart: unless-stopped
+
 volumes:
   langfuse-pg-data:
   langfuse-clickhouse-data:
   langfuse-clickhouse-logs:
   langfuse-minio-data:
   langfuse-redis-data:
+  prometheus-data:
+  tempo-data:
+  grafana-data:
 
 networks:
   sft-obs:

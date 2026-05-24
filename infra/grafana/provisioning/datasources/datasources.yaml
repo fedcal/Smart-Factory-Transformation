@@ -1,0 +1,49 @@
+# Grafana datasource provisioning for Smart Factory Transformation dev stack.
+# Phase 11 — Plan 11-00, OBS-03 (RESEARCH Pattern 5).
+#
+# Datasources configurati automaticamente al boot di Grafana:
+#   - Prometheus (default per metriche agent KPI + factory KPI)
+#   - Tempo (trace backend, linked da Prometheus via exemplar)
+#
+# I datasource Langfuse usano SDK diretto (non Grafana) per LLM traces.
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "15s"
+      httpMethod: POST
+      # Exemplar link verso Tempo per drill-down tracce
+      exemplarTraceIdDestinations:
+        - name: trace_id
+          datasourceUid: tempo
+          urlDisplayLabel: "Apri in Tempo"
+    version: 1
+    editable: false
+
+  - name: Tempo
+    type: tempo
+    uid: tempo
+    access: proxy
+    url: http://tempo:3200
+    isDefault: false
+    jsonData:
+      # Abilitazione ricerca per service name / span name
+      tracesToLogsV2:
+        datasourceUid: ""
+      serviceMap:
+        datasourceUid: prometheus
+      nodeGraph:
+        enabled: true
+      search:
+        hide: false
+      lokiSearch:
+        datasourceUid: ""
+    version: 1
+    editable: false
