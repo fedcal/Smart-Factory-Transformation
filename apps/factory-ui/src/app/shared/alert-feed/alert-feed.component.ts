@@ -40,7 +40,7 @@ const RATE_LIMIT = 12;
             block
           </span>
           <span>
-            Limite di {{ rateLimit }} alert/ora raggiunto. Nuovi alert sospesi temporaneamente.
+            {{ 'banners.rate_limit' | transloco }}
           </span>
         </div>
       }

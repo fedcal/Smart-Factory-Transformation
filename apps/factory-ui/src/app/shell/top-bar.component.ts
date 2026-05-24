@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule } from '@jsverse/transloco';
 
 /**
  * TopBar — 64px fixed header bar.
@@ -17,7 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'sft-top-bar',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
   template: `
     <header class="sft-topbar" role="banner">
       <!-- Logo + area title -->
@@ -41,7 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
           [class.sft-topbar__sse-indicator--live]="sseConnected()">
           <span class="sft-sse-dot" aria-hidden="true"></span>
           <span class="sft-topbar__sse-label sft-type-label">
-            {{ sseConnected() ? 'In tempo reale' : 'Non connesso' }}
+            {{ sseConnected() ? ('sse.live_indicator' | transloco) : ('sse.disconnected' | transloco) }}
           </span>
         </div>
 

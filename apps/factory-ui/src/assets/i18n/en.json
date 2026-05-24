@@ -95,10 +95,20 @@
     "confidence_medium": "Medium confidence",
     "confidence_high": "High confidence",
     "acl_restricted": "Restricted content",
-    "queue_heading": "Pending Approvals"
+    "queue_heading": "Pending Approvals",
+    "tool_result_label": "Result:"
   },
   "alert": {
     "action_button": "Go to approval"
+  },
+  "queue": {
+    "filter_all": "All",
+    "filter_mine": "Mine only",
+    "filter_expiring": "By expiry",
+    "sort_date_asc": "Date ↑",
+    "sort_date_desc": "Date ↓",
+    "sort_priority_desc": "Priority ↑",
+    "cancel": "Cancel"
   },
   "shift": {
     "morning": "Morning Shift",

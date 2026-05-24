@@ -12,6 +12,7 @@ import { JwtService } from '../../core/auth/jwt.service';
 import { ApprovalQueueFeedComponent } from '../../shared/approval-queue/approval-queue-feed.component';
 import { AlertFeedComponent } from '../../shared/alert-feed/alert-feed.component';
 import { KpiTileComponent, KpiKey } from '../../shared/kpi-tile/kpi-tile.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 /** KPI keys shown in the compact summary row on the operator area */
 const OPERATOR_KPI_KEYS: KpiKey[] = ['oee', 'scrap_rate', 'downtime'];
@@ -39,6 +40,7 @@ const SSE_STREAM_URL = '/v1/stream/kpi';
     ApprovalQueueFeedComponent,
     AlertFeedComponent,
     KpiTileComponent,
+    TranslocoModule,
   ],
   template: `
     <div class="sft-operator" data-testid="operator-area">
@@ -52,7 +54,7 @@ const SSE_STREAM_URL = '/v1/stream/kpi';
           <span class="material-symbols-outlined sft-operator__sse-banner-icon" aria-hidden="true">
             wifi_off
           </span>
-          <span>Connessione interrotta. Riconnessione in corso...</span>
+          <span>{{ 'error_state.sse_connection' | transloco }}</span>
         </div>
       }
 

@@ -127,7 +127,7 @@ function isValidUrl(uri: string): boolean {
                   <pre class="sft-evidence-pre sft-evidence-pre--compact">
                     <code class="sft-evidence-code">{{ formatJson(call.args) }}</code>
                   </pre>
-                  <div class="sft-type-label sft-evidence-tool-result-label">Risultato:</div>
+                  <div class="sft-type-label sft-evidence-tool-result-label">{{ 'approval.tool_result_label' | transloco }}</div>
                   <pre class="sft-evidence-pre sft-evidence-pre--compact">
                     <code class="sft-evidence-code">{{ formatJson(call.result) }}</code>
                   </pre>
@@ -171,7 +171,7 @@ function isValidUrl(uri: string): boolean {
                     </span>
                   </div>
                   @if (cite.acl_level === 'restricted') {
-                    <p class="sft-evidence-restricted">Contenuto riservato</p>
+                    <p class="sft-evidence-restricted">{{ 'approval.acl_restricted' | transloco }}</p>
                   } @else {
                     <p class="sft-evidence-chunk">{{ cite.chunk_preview }}</p>
                   }

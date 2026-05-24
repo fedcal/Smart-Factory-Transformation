@@ -11,6 +11,7 @@ import { SseService } from '../../core/sse/sse.service';
 import { JwtService } from '../../core/auth/jwt.service';
 import { KpiTileComponent, KpiKey } from '../../shared/kpi-tile/kpi-tile.component';
 import { ApprovalQueueFeedComponent } from '../../shared/approval-queue/approval-queue-feed.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -139,6 +140,7 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
     CommonModule,
     KpiTileComponent,
     ApprovalQueueFeedComponent,
+    TranslocoModule,
   ],
   template: `
     <div class="sft-tech" data-testid="technician-area">
@@ -152,7 +154,7 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
           <span class="material-symbols-outlined sft-tech__sse-banner-icon" aria-hidden="true">
             wifi_off
           </span>
-          <span>Connessione interrotta. Riconnessione in corso...</span>
+          <span>{{ 'error_state.sse_connection' | transloco }}</span>
         </div>
       }
 

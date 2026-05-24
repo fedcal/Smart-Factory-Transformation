@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslocoModule } from '@jsverse/transloco';
 import { JwtService } from '../core/auth/jwt.service';
 import { SseService } from '../core/sse/sse.service';
 import { UserRole } from '../core/auth/rbac.guard';
@@ -93,6 +94,7 @@ const SSE_KPI_URL = '/v1/stream/kpi';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    TranslocoModule,
   ],
   template: `
     <div class="sft-login-page">
@@ -109,12 +111,12 @@ const SSE_KPI_URL = '/v1/stream/kpi';
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
 
           <mat-form-field appearance="outline" class="sft-login-field">
-            <mat-label>Indirizzo email</mat-label>
+            <mat-label>{{ 'auth.email.label' | transloco }}</mat-label>
             <input
               matInput
               type="email"
               formControlName="email"
-              placeholder="operatore@mantis.it"
+              [placeholder]="'auth.email.placeholder' | transloco"
               autocomplete="email"
               [attr.aria-describedby]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched ? 'email-error' : null">
             @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
@@ -123,7 +125,7 @@ const SSE_KPI_URL = '/v1/stream/kpi';
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="sft-login-field">
-            <mat-label>Password</mat-label>
+            <mat-label>{{ 'auth.password.label' | transloco }}</mat-label>
             <input
               matInput
               [type]="showPassword() ? 'text' : 'password'"
@@ -157,9 +159,9 @@ const SSE_KPI_URL = '/v1/stream/kpi';
             color="primary"
             [disabled]="loading() || loginForm.invalid">
             @if (loading()) {
-              <mat-spinner diameter="20" aria-label="Accesso in corso"></mat-spinner>
+              <mat-spinner diameter="20" [attr.aria-label]="'auth.loading' | transloco"></mat-spinner>
             } @else {
-              Accedi
+              {{ 'auth.login_cta' | transloco }}
             }
           </button>
 
@@ -178,7 +180,7 @@ const SSE_KPI_URL = '/v1/stream/kpi';
                   class="sft-login-chip sft-type-label"
                   [disabled]="loading()"
                   (click)="fillDevCredentials(persona)">
-                  Accedi come {{ persona.label }}
+                  {{ 'auth.login_as' | transloco : { role: persona.label } }}
                 </button>
               }
             </div>

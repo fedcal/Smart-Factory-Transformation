@@ -95,10 +95,20 @@
     "confidence_medium": "Confidenza media",
     "confidence_high": "Alta confidenza",
     "acl_restricted": "Contenuto riservato",
-    "queue_heading": "Approvazioni Pendenti"
+    "queue_heading": "Approvazioni Pendenti",
+    "tool_result_label": "Risultato:"
   },
   "alert": {
     "action_button": "Vai all'approvazione"
+  },
+  "queue": {
+    "filter_all": "Tutti",
+    "filter_mine": "Solo miei",
+    "filter_expiring": "Per scadenza",
+    "sort_date_asc": "Data ↑",
+    "sort_date_desc": "Data ↓",
+    "sort_priority_desc": "Priorità ↑",
+    "cancel": "Annulla"
   },
   "shift": {
     "morning": "Turno Mattino",

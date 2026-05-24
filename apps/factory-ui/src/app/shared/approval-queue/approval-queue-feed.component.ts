@@ -73,7 +73,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
       <!-- Header -->
       <div class="sft-queue__header">
         <h2 class="sft-queue__title sft-type-heading">
-          Approvazioni Pendenti
+          {{ 'approval.queue_heading' | transloco }}
           @if (pendingCount() > 0) {
             <span
               class="sft-queue__count-badge"
@@ -96,7 +96,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__filter-btn--active]="activeFilter() === 'all'"
             (click)="setFilter('all')"
             [attr.aria-pressed]="activeFilter() === 'all'">
-            Tutti
+            {{ 'queue.filter_all' | transloco }}
           </button>
           <button
             mat-stroked-button
@@ -105,7 +105,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__filter-btn--active]="activeFilter() === 'mine'"
             (click)="setFilter('mine')"
             [attr.aria-pressed]="activeFilter() === 'mine'">
-            Solo miei
+            {{ 'queue.filter_mine' | transloco }}
           </button>
           <button
             mat-stroked-button
@@ -114,7 +114,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__filter-btn--active]="activeFilter() === 'expiring'"
             (click)="setFilter('expiring')"
             [attr.aria-pressed]="activeFilter() === 'expiring'">
-            Per scadenza
+            {{ 'queue.filter_expiring' | transloco }}
           </button>
         </div>
 
@@ -127,7 +127,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__sort-btn--active]="activeSort() === 'date-asc'"
             (click)="setSort('date-asc')"
             aria-label="Ordina per data crescente">
-            Data ↑
+            {{ 'queue.sort_date_asc' | transloco }}
           </button>
           <button
             mat-stroked-button
@@ -136,7 +136,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__sort-btn--active]="activeSort() === 'date-desc'"
             (click)="setSort('date-desc')"
             aria-label="Ordina per data decrescente">
-            Data ↓
+            {{ 'queue.sort_date_desc' | transloco }}
           </button>
           <button
             mat-stroked-button
@@ -145,7 +145,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             [class.sft-queue__sort-btn--active]="activeSort() === 'priority-desc'"
             (click)="setSort('priority-desc')"
             aria-label="Ordina per priorità decrescente">
-            Priorità ↑
+            {{ 'queue.sort_priority_desc' | transloco }}
           </button>
         </div>
       </div>

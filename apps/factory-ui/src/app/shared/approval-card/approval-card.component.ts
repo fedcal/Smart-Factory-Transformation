@@ -35,6 +35,7 @@ import {
   EvidencePanel,
 } from './evidence-panel.component';
 import { SseService, ApprovalResolvedEvent } from '../../core/sse/sse.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 // ---------------------------------------------------------------------------
 // ApprovalCard — Types
@@ -106,6 +107,7 @@ const MOTIVATION_MIN_LENGTH = 10;
     MatDialogModule,
     MatSnackBarModule,
     EvidencePanelComponent,
+    TranslocoModule,
   ],
   template: `
     <div
@@ -173,12 +175,12 @@ const MOTIVATION_MIN_LENGTH = 10;
       @if (currentStatus() === 'pending') {
         <div class="sft-approval-card__motivation">
           <mat-form-field appearance="outline" class="sft-motivation-field">
-            <mat-label>Motivazione</mat-label>
+            <mat-label>{{ 'hitl.motivation_label' | transloco }}</mat-label>
             <textarea
               matInput
               [(ngModel)]="motivationText"
               (ngModelChange)="onMotivationChange($event)"
-              placeholder="Inserisci la motivazione (min. 10 caratteri)..."
+              [placeholder]="'hitl.motivation_placeholder' | transloco"
               rows="3"
               data-testid="motivation-textarea"
               [attr.aria-describedby]="motivationErrorId"
@@ -186,7 +188,7 @@ const MOTIVATION_MIN_LENGTH = 10;
             </textarea>
             @if (showMotivationError()) {
               <mat-error [id]="motivationErrorId">
-                La motivazione deve contenere almeno 10 caratteri.
+                {{ 'hitl.motivation_error' | transloco }}
               </mat-error>
             }
           </mat-form-field>
@@ -204,7 +206,7 @@ const MOTIVATION_MIN_LENGTH = 10;
       <!-- Read-only motivation for approved/rejected -->
       @if ((currentStatus() === 'approved' || currentStatus() === 'rejected') && card?.motivation) {
         <div class="sft-approval-card__motivation-readonly">
-          <span class="sft-type-label" style="color: var(--sft-text-secondary)">Motivazione:</span>
+          <span class="sft-type-label" style="color: var(--sft-text-secondary)">{{ 'hitl.motivation_label' | transloco }}:</span>
           <p class="sft-type-body">{{ card!.motivation }}</p>
         </div>
       }
@@ -224,7 +226,7 @@ const MOTIVATION_MIN_LENGTH = 10;
             @if (isSubmitting() && submittingDecision() === 'REJECTED') {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {
-              Rifiuta
+              {{ 'actions.reject' | transloco }}
             }
           </button>
 
@@ -241,7 +243,7 @@ const MOTIVATION_MIN_LENGTH = 10;
             @if (isSubmitting() && submittingDecision() === 'APPROVED') {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {
-              Approva azione
+              {{ 'actions.approve' | transloco }}
             }
           </button>
         </div>
@@ -682,23 +684,20 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
 @Component({
   selector: 'sft-reject-confirm-dialog',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  imports: [CommonModule, MatButtonModule, MatDialogModule, TranslocoModule],
   template: `
-    <h2 mat-dialog-title>Conferma rifiuto</h2>
+    <h2 mat-dialog-title>{{ 'actions.confirm_reject' | transloco }}</h2>
     <mat-dialog-content>
-      <p>
-        Stai per rifiutare questa azione AI. La motivazione è obbligatoria e
-        verrà registrata nell'audit trail. Vuoi procedere?
-      </p>
+      <p>{{ 'hitl.destructive_confirm' | transloco }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button [mat-dialog-close]="false">Annulla</button>
+      <button mat-button [mat-dialog-close]="false">{{ 'queue.cancel' | transloco }}</button>
       <button
         mat-flat-button
         color="warn"
         [mat-dialog-close]="true"
         data-testid="reject-confirm-btn">
-        Rifiuta
+        {{ 'actions.reject' | transloco }}
       </button>
     </mat-dialog-actions>
   `,
