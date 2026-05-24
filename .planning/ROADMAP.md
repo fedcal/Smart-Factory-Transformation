@@ -228,7 +228,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   5. The persona walkthrough demo (operator, shift supervisor, technician, CIO) is navigable in-app with no broken routes or missing data
 **UI hint**: yes
 **Plans**: 13 plans (11 waves, sequential on main tree — worktrees disabled)
-  - [ ] 10-00a-PLAN.md — Wave 0 dependency install (PyJWT/sse-starlette/OTEL backend; @angular/material+cdk+localize, @jsverse/transloco, ng2-charts@8, chart.js, tailwind v4, playwright) + Tailwind/Material 64px baseline (SRV-01/02/04, UI-02/04/05/07/10)
+  - [x] 10-00a-PLAN.md — Wave 0 dependency install (PyJWT/sse-starlette/OTEL backend; @angular/material+cdk+localize, @jsverse/transloco, ng2-charts@8, chart.js, tailwind v4, playwright) + Tailwind/Material 64px baseline (SRV-01/02/04, UI-02/04/05/07/10)
   - [ ] 10-00b-PLAN.md — Wave 0 Nyquist test scaffolds (pytest auth/RBAC/SSE/KPI; Jest Jwt/SSE/ApprovalCard) (SRV-01/02/05, UI-03/04/07, HITL-07/10)
   - [ ] 10-01-PLAN.md — Backend JWT issuance + RBAC dependency + auth router (SRV-01, HITL-02)
   - [ ] 10-02-PLAN.md — Backend real KPI aggregations over TimescaleDB + GET /v1/kpi (SRV-02, UI-04)
@@ -283,6 +283,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
-| 10. Backend API & Frontend | 0/TBD | Not started | - |
+| 10. Backend API & Frontend | 1/13 | In Progress|  |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |
