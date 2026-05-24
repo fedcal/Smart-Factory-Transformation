@@ -237,7 +237,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 10-05-PLAN.md — Frontend core services: JwtService/interceptor/RbacGuard + Signal SseService + ThemeService + transloco LocaleService (UI-05/06/07, SRV-01)
   - [x] 10-06-PLAN.md — Frontend HITL UI: login + dev persona chips + toggles + ApprovalCard + EvidencePanel (UI-02/03/05/07, HITL-01/06/07)
   - [x] 10-07-PLAN.md — Frontend dashboard primitives: KpiTile + AlertFeed (rate-limit banner) + virtual-scroll ApprovalQueueFeed (UI-02/04/06, HITL-04/10)
-  - [ ] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
+  - [x] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
   - [ ] 10-09-PLAN.md — Frontend features: technician + admin (audit log + governor) + persona walkthrough demo (UI-01/08, HITL-04/09)
   - [ ] 10-10-PLAN.md — Playwright E2E: separate Nx project apps/factory-ui-e2e + full HITL approval flow (UI-10, HITL-01/06/07)
   - [ ] 10-11-PLAN.md — Pydantic↔TS contract test (openapi-typescript) + bilingual mock-UI screenshots (SRV-05, UI-09)
@@ -283,6 +283,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
-| 10. Backend API & Frontend | 7/13 | In Progress|  |
+| 10. Backend API & Frontend | 8/13 | In Progress|  |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |
