@@ -90,3 +90,25 @@ class TestBuildInvocationConfig:
         # When LANGFUSE_HOST is unset, the callbacks list filters out None
         # entries (LangGraph still accepts an empty list)
         assert all(cb is not None for cb in cfg["callbacks"])
+
+    def test_phase11_tag_always_present(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """build_invocation_config include 'phase11' nella lista tags (OBS-02, Plan 11-01).
+
+        Il tag è additivo: 'phase4' esistente e qualsiasi tag caller-provided devono
+        coesistere con 'phase11'. Non deve essere rimosso da tag esistenti.
+        """
+        monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+        cfg = build_invocation_config("thread-11", tags=["ops"])
+        tags: list[str] = cfg["metadata"]["langfuse_tags"]
+        assert "phase11" in tags, (
+            f"'phase11' deve essere presente in langfuse_tags, ottenuto: {tags!r}"
+        )
+        # I tag pre-esistenti devono sopravvivere (additivo, non sostitutivo).
+        assert "phase4" in tags, (
+            f"'phase4' deve rimanere in langfuse_tags dopo aggiunta phase11: {tags!r}"
+        )
+        assert "ops" in tags, (
+            f"Tag caller-provided 'ops' deve rimanere in langfuse_tags: {tags!r}"
+        )
