@@ -774,27 +774,31 @@ class SOPDraft(BaseModel):
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **alerts and work_orders tables**
    - What we know: D-SH-02 says ShiftHandover reads from `alerts`, `work_orders`, `downtime_events`. Migrations 001-009 have `maintenance.downtime_events` but no `ops.alerts` or `ops.work_orders`.
    - What's unclear: Were these tables created by Phase 6 agent code (not in infra/migrations), or must Phase 8 create them?
    - Recommendation: First plan in Phase 8 (migration plan) must grep for these table names in all SQL files and app code. If absent, create minimal schemas in migration 010.
+   - RESOLVED: Derive alerts and work-order/quality/downtime data from `audit.actions` JSONB (alerts from rows WHERE `action_type='ANOMALY_ALERT'`; work-order/quality/downtime from the corresponding `action_type` rows + `maintenance.downtime_events`). No new `ops.alerts`/`ops.work_orders` tables are created — the audit chain is the single backbone (D-SH-02, locked post-research in 08-CONTEXT.md). Migration 010 extends only the `action_type` CHECK constraint (08-00a), no new tables.
 
 2. **TrainingCoach quiz bank: pre-built YAML vs. runtime LLM generation**
    - What we know: D-TC-01 says questions may be RAG-curated from SOPs, but scoring is deterministic.
    - What's unclear: Are questions generated once at session start (frozen for the session) or pulled from a pre-built YAML bank?
    - Recommendation: Generate questions at session start from RAG retrieval, freeze them into a `QuizSession` Pydantic model with `correct_answer_index` fields. This preserves RAG-curation while keeping scoring LLM-judge-free.
+   - RESOLVED: Generate-at-session-start. Questions are RAG-curated from SOP content via the LLM once at session start, then frozen into an `MCQSession` Pydantic model with `correct_answer_index` set; scoring is index equality only, never an LLM call (locked in plan 08-05; Pitfall §3).
 
 3. **ShiftHandover scheduled trigger implementation**
    - What we know: D-SH-01 requires scheduled boundary triggers (06:00/14:00/22:00) plus manual on-demand.
    - What's unclear: Does the scheduler run inside the API gateway (as a background task) or as a separate NATS-event-driven consumer?
    - Recommendation: Mirror the PM NATS consumer pattern — a NATS consumer on `shift.boundary.>` subject listens for boundary events (published by a separate scheduler or the sim-textile simulator). Manual trigger via the `/compile` endpoint.
+   - RESOLVED: NATS consumer on the `shift.boundary.>` subject (mirrors the pm-consumer/da-consumer event-driven pattern), NOT an in-process scheduler. Manual on-demand triggering is handled by the gateway `/compile` endpoint (D-SH-01, locked post-research in 08-CONTEXT.md; implemented in plan 08-04).
 
 4. **DocumentationSynthesizer source event scope**
    - What we know: D-DS-02 says source events from `audit.actions` where `action_type IN (RCA_CHAIN, COACH_STEP, DOWNTIME_VERDICT)` filtered by failure_mode + asset + configurable window.
    - What's unclear: Should the evidence_panel JSONB be parsed for failure_mode, or should a `failure_mode` column be added to audit.actions?
    - Recommendation: Parse `evidence_panel JSONB` at query time using PG JSONB operators (e.g., `WHERE evidence_panel->>'failure_mode' = $1`). No schema change needed; leverage existing JSONB flexibility.
+   - RESOLVED: Parse `evidence_panel` JSONB at query time using PG JSONB operators (e.g., `WHERE evidence_panel->>'failure_mode' = $1` and `evidence_panel->>'asset_id' = $2`). No schema change and no new `failure_mode` column on audit.actions (locked in plan 08-07).
 
 ---
 

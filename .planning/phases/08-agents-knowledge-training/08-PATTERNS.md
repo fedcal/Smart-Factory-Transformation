@@ -606,7 +606,8 @@ TOOL_INVENTORY: tuple[str, ...] = (
 DATA_SOURCES: tuple[str, ...] = (
     "audit.actions (all clusters)",
     "maintenance.downtime_events",
-    "ops.alerts (migration 010)",
+    # D-SH-02 (resolved post-research): NO ops.alerts / ops.work_orders tables —
+    # alerts derive from audit.actions WHERE action_type='ANOMALY_ALERT'.
 )
 KPIS_IMPACTED: tuple[str, ...] = (
     "shift_handover_completeness",

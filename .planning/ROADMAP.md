@@ -181,8 +181,9 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. KnowledgeCurator detects a duplicate document during ingest, flags a stale document beyond its staleness threshold, and tracks the knowledge reuse rate KPI
   4. DocumentationSynthesizer generates a bilingual SOP draft from historical maintenance events and routes it to HITL approval before indexing; every output includes `source_uri` and timestamp
   5. All TRN agent outputs include citations with `source_uri` and timestamp; no opaque outputs are accepted by the test suite
-**Plans**: 9 plans
-  - [ ] 08-00-PLAN.md — Wave 0: migration 010 + ActionType enum lockstep (D-X-01) + all agent test scaffolds (TRN-02/03/04/05)
+**Plans**: 10 plans
+  - [ ] 08-00a-PLAN.md — Wave 1: migration 010 + ActionType enum lockstep + migration test (D-X-01)
+  - [ ] 08-00b-PLAN.md — Wave 1: all agent test scaffolds — Nyquist tests before impl (TRN-02/03/04/05)
   - [ ] 08-01-PLAN.md — build_knowledge_subgraph + curator fallback (D-X-04)
   - [ ] 08-02-PLAN.md — ShiftHandover data layer: models + cross-cluster aggregator (D-SH-02, TRN-03/05)
   - [ ] 08-04-PLAN.md — ShiftHandover dual-supervisor HITL agent + NATS shift.boundary consumer (D-SH-01/03, SC-1)
