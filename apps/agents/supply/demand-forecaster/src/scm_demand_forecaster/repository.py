@@ -37,7 +37,7 @@ class DemandRepository:
         "SUM(quantity_kg)::FLOAT AS total_kg "
         "FROM scm.historical_orders "
         "WHERE sku_group = $1 "
-        "AND order_date >= NOW() - INTERVAL '1 month' * $2 "
+        "AND order_date >= NOW() - ($2::int * INTERVAL '1 month') "
         "GROUP BY 1 "
         "ORDER BY 1"
     )
