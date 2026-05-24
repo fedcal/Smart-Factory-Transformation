@@ -234,7 +234,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 10-02-PLAN.md — Backend real KPI aggregations over TimescaleDB + GET /v1/kpi (SRV-02, UI-04)
   - [ ] 10-03-PLAN.md — Backend SSE streams + query-param JWT + HITL-10 rate limit + OTEL middleware + migration 013 seed (SRV-02/04, UI-06, HITL-10)
   - [ ] 10-04-PLAN.md — Frontend foundation: design tokens + dark/light Material themes + responsive AppShell + persona routes (UI-01/02/05)
-  - [ ] 10-05-PLAN.md — Frontend core services: JwtService/interceptor/RbacGuard + Signal SseService + ThemeService + transloco LocaleService (UI-05/06/07, SRV-01)
+  - [x] 10-05-PLAN.md — Frontend core services: JwtService/interceptor/RbacGuard + Signal SseService + ThemeService + transloco LocaleService (UI-05/06/07, SRV-01)
   - [ ] 10-06-PLAN.md — Frontend HITL UI: login + dev persona chips + toggles + ApprovalCard + EvidencePanel (UI-02/03/05/07, HITL-01/06/07)
   - [ ] 10-07-PLAN.md — Frontend dashboard primitives: KpiTile + AlertFeed (rate-limit banner) + virtual-scroll ApprovalQueueFeed (UI-02/04/06, HITL-04/10)
   - [ ] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
