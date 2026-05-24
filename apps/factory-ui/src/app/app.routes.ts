@@ -44,15 +44,13 @@ export const appRoutes: Route[] = [
         pathMatch: 'full',
       },
 
-      // Operator area — role: operator
+      // Operator area — role: operator (plan 10-08: wired to real OperatorComponent)
       {
         path: 'operator',
-        loadComponent: () =>
-          import('./features/operator/operator.component').then(
-            (m) => m.OperatorComponent,
+        loadChildren: () =>
+          import('./features/operator/operator.routes').then(
+            (m) => m.operatorRoutes,
           ),
-        canActivate: [rbacGuard],
-        data: { roles: ['operator'] as UserRole[] },
         title: 'Area Operatore — Smart Factory',
       },
 
@@ -68,15 +66,13 @@ export const appRoutes: Route[] = [
         title: 'Area Tecnica — Smart Factory',
       },
 
-      // Manager area — roles: shift-supervisor, manager
+      // Manager area — roles: shift-supervisor, manager (plan 10-08: wired to real ManagerComponent)
       {
         path: 'manager',
-        loadComponent: () =>
-          import('./features/manager/manager.component').then(
-            (m) => m.ManagerComponent,
+        loadChildren: () =>
+          import('./features/manager/manager.routes').then(
+            (m) => m.managerRoutes,
           ),
-        canActivate: [rbacGuard],
-        data: { roles: ['shift-supervisor', 'manager'] as UserRole[] },
         title: 'Area Manager — Smart Factory',
       },
 
