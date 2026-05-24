@@ -2,25 +2,26 @@ import { Route } from '@angular/router';
 import { rbacGuard, UserRole } from './core/auth/rbac.guard';
 
 /**
- * Application route map — Phase 10-04
+ * Application route map — Phase 10-09 (final)
+ *
+ * All 5 persona areas wired to real feature routes via loadChildren.
+ * No placeholder routes remain.
  *
  * Structure:
  *   /auth/login        — public login page
- *   /                  — AppShell layout route (RBAC guard on each child)
- *     /operator        — operator persona (roles: operator)
- *     /technician      — technician persona (roles: technician)
- *     /manager         — manager/supervisor persona (roles: shift-supervisor, manager)
- *     /admin           — admin area (roles: admin)
- *     /demo            — persona walkthrough demo (all authenticated roles)
+ *   /                  — AppShell layout route
+ *     /operator        → operator.routes.ts  (roles: operator)        [10-08]
+ *     /technician      → technician.routes.ts (roles: technician)     [10-09]
+ *     /manager         → manager.routes.ts   (roles: shift-supervisor, manager) [10-08]
+ *     /admin           → admin.routes.ts     (roles: admin)           [10-09]
+ *     /demo            → demo.routes.ts      (roles: [] = any auth)   [10-09]
  *   **                 — redirect to /auth/login
  *
- * Lazy loading:
- *   - AppShell loaded lazily via loadComponent
- *   - Feature areas loaded via loadComponent (10-07 replaces placeholders)
- *   - Login loaded lazily
+ * Lazy loading via loadChildren (feature route files own their own RBAC guard).
+ * AppShell still loaded via loadComponent.
  *
- * RBAC guard: rbacGuard (scaffold in 10-04, real implementation in 10-05).
- * Roles data key: 'roles' — [] means any authenticated user.
+ * RBAC: rbacGuard applied inside each feature route file.
+ * The RBAC_GUARD_SERVICE_TOKEN is provided by JwtService (app.config.ts 10-05).
  */
 export const appRoutes: Route[] = [
   // Public auth route — no guard
@@ -37,14 +38,14 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./shell/app-shell.component').then((m) => m.AppShellComponent),
     children: [
-      // Default redirect to login when unauthenticated (guard handles it)
+      // Default redirect to operator (guard redirects unauthenticated to /auth/login)
       {
         path: '',
         redirectTo: 'operator',
         pathMatch: 'full',
       },
 
-      // Operator area — role: operator (plan 10-08: wired to real OperatorComponent)
+      // Operator area — role: operator (10-08)
       {
         path: 'operator',
         loadChildren: () =>
@@ -54,19 +55,17 @@ export const appRoutes: Route[] = [
         title: 'Area Operatore — Smart Factory',
       },
 
-      // Technician area — role: technician
+      // Technician area — role: technician (10-09)
       {
         path: 'technician',
-        loadComponent: () =>
-          import('./features/technician/technician.component').then(
-            (m) => m.TechnicianComponent,
+        loadChildren: () =>
+          import('./features/technician/technician.routes').then(
+            (m) => m.technicianRoutes,
           ),
-        canActivate: [rbacGuard],
-        data: { roles: ['technician'] as UserRole[] },
         title: 'Area Tecnica — Smart Factory',
       },
 
-      // Manager area — roles: shift-supervisor, manager (plan 10-08: wired to real ManagerComponent)
+      // Manager area — roles: shift-supervisor, manager (10-08)
       {
         path: 'manager',
         loadChildren: () =>
@@ -76,27 +75,23 @@ export const appRoutes: Route[] = [
         title: 'Area Manager — Smart Factory',
       },
 
-      // Admin area — role: admin
+      // Admin area — role: admin (10-09)
       {
         path: 'admin',
-        loadComponent: () =>
-          import('./features/admin/admin.component').then(
-            (m) => m.AdminComponent,
+        loadChildren: () =>
+          import('./features/admin/admin.routes').then(
+            (m) => m.adminRoutes,
           ),
-        canActivate: [rbacGuard],
-        data: { roles: ['admin'] as UserRole[] },
         title: 'Amministrazione — Smart Factory',
       },
 
-      // Demo persona walkthrough — all authenticated roles (empty roles array = any)
+      // Demo persona walkthrough — all authenticated roles (10-09)
       {
         path: 'demo',
-        loadComponent: () =>
-          import('./features/demo/demo.component').then(
-            (m) => m.DemoComponent,
+        loadChildren: () =>
+          import('./features/demo/demo.routes').then(
+            (m) => m.demoRoutes,
           ),
-        canActivate: [rbacGuard],
-        data: { roles: [] as UserRole[] },
         title: 'Demo Persona — Smart Factory',
       },
     ],
