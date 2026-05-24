@@ -33,9 +33,29 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from langgraph.errors import GraphInterrupt
 
+from sft_agents.models.audit import AuditRecord
 from sft_agents.models.enums import ActionType
 from trn_training_coach.agent import TrainingCoach
 from trn_training_coach.quiz import MCQQuestion, MCQSession
+
+
+def _action_type_of_call(call_args: Any) -> ActionType | None:
+    """Extract action_type from an audit_writer.write() call.
+
+    The new contract passes an AuditRecord as the first positional arg.
+    This helper supports both the new positional-AuditRecord pattern and
+    the old keyword-args pattern so tests survive refactors.
+    """
+    # New pattern: write(record: AuditRecord) — positional
+    if call_args.args:
+        record = call_args.args[0]
+        if isinstance(record, AuditRecord):
+            return ActionType(record.action_type)
+    # Old pattern (fallback): write(action_type=..., ...) — kwargs
+    at = call_args.kwargs.get("action_type")
+    if at is not None:
+        return at if isinstance(at, ActionType) else ActionType(at)
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -119,11 +139,11 @@ async def test_passing_session_produces_exactly_one_training_signoff_row() -> No
     with patch("trn_training_coach.agent.interrupt", return_value={"approved": True}):
         await coach(state=state)
 
-    # Count TRAINING_SIGNOFF writes
+    # Count TRAINING_SIGNOFF writes (inspect AuditRecord.action_type from positional arg)
     signoff_calls = [
         call_args
         for call_args in audit_writer.write.call_args_list
-        if call_args.kwargs.get("action_type") == ActionType.TRAINING_SIGNOFF
+        if _action_type_of_call(call_args) == ActionType.TRAINING_SIGNOFF
     ]
     assert len(signoff_calls) == 1, (
         f"Expected exactly 1 TRAINING_SIGNOFF write, got {len(signoff_calls)}. "
@@ -148,11 +168,11 @@ async def test_passing_session_produces_exactly_one_training_session_row_total()
     with patch("trn_training_coach.agent.interrupt", return_value={"approved": True}):
         await coach(state=state)
 
-    # Count TRAINING_SESSION writes
+    # Count TRAINING_SESSION writes (inspect AuditRecord.action_type from positional arg)
     session_calls = [
         call_args
         for call_args in audit_writer.write.call_args_list
-        if call_args.kwargs.get("action_type") == ActionType.TRAINING_SESSION
+        if _action_type_of_call(call_args) == ActionType.TRAINING_SESSION
     ]
     assert len(session_calls) == 1, (
         f"Expected exactly 1 TRAINING_SESSION write, got {len(session_calls)}. "
@@ -214,15 +234,17 @@ async def test_training_signoff_has_approval_id_none() -> None:
     with patch("trn_training_coach.agent.interrupt", return_value={"approved": True}):
         await coach(state=state)
 
-    # Find the TRAINING_SIGNOFF write call
+    # Find the TRAINING_SIGNOFF write call (inspect AuditRecord from positional arg)
     signoff_calls = [
         call_args
         for call_args in audit_writer.write.call_args_list
-        if call_args.kwargs.get("action_type") == ActionType.TRAINING_SIGNOFF
+        if _action_type_of_call(call_args) == ActionType.TRAINING_SIGNOFF
     ]
     assert len(signoff_calls) == 1, "Expected 1 TRAINING_SIGNOFF call"
 
-    approval_id = signoff_calls[0].kwargs.get("approval_id")
+    # Extract approval_id from AuditRecord (new contract: positional arg)
+    record = signoff_calls[0].args[0] if signoff_calls[0].args else None
+    approval_id = record.approval_id if isinstance(record, AuditRecord) else signoff_calls[0].kwargs.get("approval_id")
     assert approval_id is None, (
         f"CR-03 FAIL: TRAINING_SIGNOFF row has approval_id={approval_id!r}. "
         f"approval_id must be None for pending HITL rows — never fabricate a UUID "
@@ -267,7 +289,7 @@ async def test_failing_session_no_interrupt_no_training_signoff() -> None:
     signoff_calls = [
         call_args
         for call_args in audit_writer.write.call_args_list
-        if call_args.kwargs.get("action_type") == ActionType.TRAINING_SIGNOFF
+        if _action_type_of_call(call_args) == ActionType.TRAINING_SIGNOFF
     ]
     assert len(signoff_calls) == 0, (
         f"D-TC-03 FAIL: TRAINING_SIGNOFF was written {len(signoff_calls)} time(s) "
@@ -291,11 +313,11 @@ async def test_failing_session_produces_exactly_one_training_session_row() -> No
     with patch("trn_training_coach.agent.interrupt", MagicMock()):
         await coach(state=state)
 
-    # Exactly 1 TRAINING_SESSION write
+    # Exactly 1 TRAINING_SESSION write (inspect AuditRecord from positional arg)
     session_calls = [
         call_args
         for call_args in audit_writer.write.call_args_list
-        if call_args.kwargs.get("action_type") == ActionType.TRAINING_SESSION
+        if _action_type_of_call(call_args) == ActionType.TRAINING_SESSION
     ]
     assert len(session_calls) == 1, (
         f"Expected exactly 1 TRAINING_SESSION write on fail, got {len(session_calls)}. "
