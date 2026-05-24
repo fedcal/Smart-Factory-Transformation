@@ -13,14 +13,19 @@ Boundary tests:
 
 Implementation target: trn_knowledge_curator.staleness.StalenessChecker
 (Wave 2-3 plan: 08-06)
-
-Wave 0 scaffold: test functions fail explicitly with a message naming the
-unimplemented contract. NOT module-level pytest.skip (Phase 6/7 Wave 0 decision).
 """
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 import pytest
+
+from trn_knowledge_curator.staleness import StalenessChecker, is_stale
+
+
+# Reference 'now' for all boundary tests (deterministic).
+_NOW = datetime(2026, 5, 24, 12, 0, 0, tzinfo=timezone.utc)
 
 
 # ---------------------------------------------------------------------------
@@ -35,12 +40,12 @@ def test_sop_stale_after_366_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: SOP is_stale=True when age > 365 days. "
-        "Injected 'now' parameter for deterministic boundary test. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=366)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="sop", last_updated=last_updated, now=_NOW)
+    assert result is True, (
+        f"SOP with age 366 days must be stale (threshold=365). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -51,12 +56,12 @@ def test_sop_not_stale_364_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: SOP is_stale=False when age < 365 days. "
-        "Injected 'now' parameter for deterministic boundary test. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=364)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="sop", last_updated=last_updated, now=_NOW)
+    assert result is False, (
+        f"SOP with age 364 days must NOT be stale (threshold=365). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -72,11 +77,12 @@ def test_runbook_stale_after_181_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: runbook is_stale=True when age > 180 days. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=181)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="runbook", last_updated=last_updated, now=_NOW)
+    assert result is True, (
+        f"Runbook with age 181 days must be stale (threshold=180). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -87,11 +93,12 @@ def test_runbook_not_stale_179_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: runbook is_stale=False when age < 180 days. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=179)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="runbook", last_updated=last_updated, now=_NOW)
+    assert result is False, (
+        f"Runbook with age 179 days must NOT be stale (threshold=180). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -107,11 +114,12 @@ def test_note_stale_after_91_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: note is_stale=True when age > 90 days. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=91)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="note", last_updated=last_updated, now=_NOW)
+    assert result is True, (
+        f"Note with age 91 days must be stale (threshold=90). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -122,11 +130,12 @@ def test_note_not_stale_89_days() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker.is_stale()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: note is_stale=False when age < 90 days. "
-        "D-KC-02 per-document-type staleness thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    last_updated = _NOW - timedelta(days=89)
+    checker = StalenessChecker()
+    result = checker.is_stale(doc_type="note", last_updated=last_updated, now=_NOW)
+    assert result is False, (
+        f"Note with age 89 days must NOT be stale (threshold=90). "
+        f"last_updated={last_updated!r}, now={_NOW!r}"
     )
 
 
@@ -145,10 +154,35 @@ def test_staleness_thresholds_configurable_per_doc_type() -> None:
 
     Implementation target: trn_knowledge_curator.staleness.StalenessChecker
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: StalenessChecker thresholds are configurable "
-        "at construction (not hardcoded). Custom thresholds override defaults. "
-        "D-KC-02 configurable per-document-type thresholds. "
-        "Implement in plan 08-06 (knowledge-curator agent). "
-        "Module: trn_knowledge_curator.staleness"
+    checker = StalenessChecker(thresholds={"sop": 30, "runbook": 15})
+
+    # SOP with age 31 days — must be stale with custom threshold=30 (not default 365).
+    last_updated_sop = _NOW - timedelta(days=31)
+    result_sop = checker.is_stale(doc_type="sop", last_updated=last_updated_sop, now=_NOW)
+    assert result_sop is True, (
+        "SOP with age 31d must be stale with custom threshold=30 (not default 365d). "
+        f"Threshold used: 30, age: 31, result: {result_sop}"
+    )
+
+    # SOP with age 29 days — must NOT be stale with custom threshold=30.
+    last_updated_sop_fresh = _NOW - timedelta(days=29)
+    result_sop_fresh = checker.is_stale(
+        doc_type="sop", last_updated=last_updated_sop_fresh, now=_NOW
+    )
+    assert result_sop_fresh is False, (
+        "SOP with age 29d must NOT be stale with custom threshold=30."
+    )
+
+    # Runbook with age 16 days — must be stale with custom threshold=15.
+    last_updated_rb = _NOW - timedelta(days=16)
+    result_rb = checker.is_stale(doc_type="runbook", last_updated=last_updated_rb, now=_NOW)
+    assert result_rb is True, (
+        "Runbook with age 16d must be stale with custom threshold=15."
+    )
+
+    # Note type not overridden — still uses default 90d.
+    last_updated_note = _NOW - timedelta(days=91)
+    result_note = checker.is_stale(doc_type="note", last_updated=last_updated_note, now=_NOW)
+    assert result_note is True, (
+        "Note with age 91d must still be stale using default threshold=90."
     )
