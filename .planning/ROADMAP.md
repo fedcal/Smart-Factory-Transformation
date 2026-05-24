@@ -238,7 +238,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 10-06-PLAN.md — Frontend HITL UI: login + dev persona chips + toggles + ApprovalCard + EvidencePanel (UI-02/03/05/07, HITL-01/06/07)
   - [x] 10-07-PLAN.md — Frontend dashboard primitives: KpiTile + AlertFeed (rate-limit banner) + virtual-scroll ApprovalQueueFeed (UI-02/04/06, HITL-04/10)
   - [x] 10-08-PLAN.md — Frontend features: operator area + manager control room (6 KPI grid + ng2-charts) + route wiring (UI-01/04/06, HITL-01/04)
-  - [ ] 10-09-PLAN.md — Frontend features: technician + admin (audit log + governor) + persona walkthrough demo (UI-01/08, HITL-04/09)
+  - [x] 10-09-PLAN.md — Frontend features: technician + admin (audit log + governor) + persona walkthrough demo (UI-01/08, HITL-04/09)
   - [ ] 10-10-PLAN.md — Playwright E2E: separate Nx project apps/factory-ui-e2e + full HITL approval flow (UI-10, HITL-01/06/07)
   - [ ] 10-11-PLAN.md — Pydantic↔TS contract test (openapi-typescript) + bilingual mock-UI screenshots (SRV-05, UI-09)
 
