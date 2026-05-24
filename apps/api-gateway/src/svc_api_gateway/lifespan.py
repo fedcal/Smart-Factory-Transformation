@@ -70,6 +70,19 @@ logger = structlog.get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     """Construct + tear down all long-lived resources used by routers."""
+    # Phase 11: OTEL TracerProvider init (OBS-02). Singleton-guarded — safe to call
+    # multiple times (provider.py _initialized flag prevents double-override warning).
+    # MUST be called before any NATS publish that injects traceparent (Plan 11-01).
+    try:
+        from sft_agents.otel import setup_tracer_provider  # noqa: PLC0415
+
+        setup_tracer_provider("sft-api-gateway")
+        logger.info("otel_tracer_provider_initialized", service="sft-api-gateway")
+    except Exception as _otel_exc:  # noqa: BLE001
+        # Best-effort: OTEL failure must NOT prevent the gateway from starting.
+        # Traces will be missing but the service remains operational (Phase 10 pattern).
+        logger.warning("otel_tracer_provider_init_failed", error=str(_otel_exc))
+
     # WR-05: warn if WEB_CONCURRENCY > 1 — the SSE alert rate-limit uses an
     # in-process module-level dict (_alert_rate_state). With multiple Uvicorn/
     # Gunicorn workers each process maintains its own independent rate-limit
