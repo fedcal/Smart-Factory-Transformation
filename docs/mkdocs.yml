@@ -86,6 +86,8 @@ plugins:
             Operations: Operations
             Maintenance: Maintenance
             Tassonomia Eventi: Event Taxonomy
+            Knowledge: Knowledge
+            Knowledge Cluster: Knowledge Cluster
       reconfigure_material: true
 
 markdown_extensions:
@@ -160,4 +162,6 @@ nav:
       - MaintenanceCoach: agents/maintenance/maintenance-coach.md
       - DowntimeAnalyzer: agents/maintenance/downtime-analyzer.md
       - Tassonomia Eventi: agents/maintenance/event-taxonomy.md
+    - Knowledge:
+      - Knowledge Cluster: agents/knowledge/knowledge-cluster.md
   - Contributing: contributing/index.md
