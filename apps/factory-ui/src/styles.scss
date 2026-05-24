@@ -1,1 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   Global Styles — Smart Factory Transformation (Phase 10)
+
+   Import order — SCSS requires @use before any other rules.
+   Tailwind v4 is loaded as a CSS @import (plain CSS, not Sass),
+   so it must come AFTER Sass @use rules per SCSS spec.
+   ========================================================================== */
+
+/* 1. Sass @use declarations — must be first in the SCSS file */
+@use "@angular/material" as mat;
+
+/* 2. Tailwind v4 — CSS-first import (no config file in v4) */
+@import "tailwindcss";
+
+/* ==========================================================================
+   Touch Target Override (UI-02) — factory floor / gloved operation
+   Minimum 64px touch targets for all Material button variants.
+   Placed in @layer utilities for correct Tailwind cascade priority.
+   ========================================================================== */
+@layer utilities {
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-flat-button,
+  .mat-mdc-stroked-button,
+  .mat-mdc-icon-button,
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab {
+    min-height: 64px;
+    min-width: 64px;
+  }
+}
