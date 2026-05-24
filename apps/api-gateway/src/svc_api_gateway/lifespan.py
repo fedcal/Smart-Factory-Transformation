@@ -1,4 +1,4 @@
-"""FastAPI lifespan — Plan 04-07 Task 1.
+"""FastAPI lifespan — Plan 04-07 Task 1, extended Plan 08-08.
 
 On startup:
     1. asyncpg pool (size 5-20, statement_cache_size=0 — Pitfall 6 for TimescaleDB)
@@ -10,6 +10,7 @@ On startup:
     7. Compiled supervisor graph (build_supervisor_graph(checkpointer, router))
     8. Background tasks: OutboxRetry, EscalationSupervisor, Governor (asyncio.create_task)
     9. IdempotencyCache (in-memory, 5-min TTL)
+   10. Knowledge agent instances + knowledge_children dict (Plan 08-08, D-X-04)
 
 On shutdown:
     1. Cancel + await background tasks (CancelledError-tolerant)
@@ -25,6 +26,19 @@ Env vars:
 CORE-04 (success criterion #4): the AsyncPostgresSaver wraps an existing
 ``langgraph.checkpoint`` table populated by ``scripts/langgraph-init.py``
 (Plan 04-02 BLOCKING task) — paused approvals survive a process restart.
+
+Plan 08-08 extension:
+    Knowledge agent DI (D-X-04):
+        knowledge_children = {
+            'shift-handover':              ShiftHandover,
+            'training-coach':              TrainingCoach,
+            'knowledge-curator':           KnowledgeCurator,
+            'documentation-synthesizer':  DocumentationSynthesizer,
+        }
+    build_knowledge_subgraph wired alongside maintenance subgraph;
+    full supervisor routing wired in Phase 11. For 07-10/08-08 tests the
+    supervisor_graph is mocked so internal cluster routing is tested E2E in
+    a later phase.
 """
 
 from __future__ import annotations
@@ -141,6 +155,61 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
         governor.run(), name="api-gateway.governor"
     )
 
+    # 10) Knowledge agent instances + knowledge_children dict (Plan 08-08, D-X-04).
+    #     Collaborators that require Phase 5 (retrieval_pipeline, indexer, etc.)
+    #     are passed as None — Phase 11 will wire real implementations. The agents
+    #     accept None for optional collaborators (they raise at call time, not
+    #     construction time, which is acceptable for the gateway DI layer).
+    from trn_knowledge_curator.agent import KnowledgeCurator  # noqa: PLC0415
+    from trn_shift_handover.agent import ShiftHandover  # noqa: PLC0415
+    from trn_shift_handover.aggregator import ShiftAggregator  # noqa: PLC0415
+    from trn_training_coach.agent import TrainingCoach  # noqa: PLC0415
+    from trn_documentation_synthesizer.agent import DocumentationSynthesizer  # noqa: PLC0415
+    from trn_documentation_synthesizer.event_aggregator import EventAggregator  # noqa: PLC0415
+    from trn_documentation_synthesizer.validators import SOPCitationValidator  # noqa: PLC0415
+    from sft_agents.runtime.clusters import build_knowledge_subgraph  # noqa: PLC0415
+
+    shift_handover_agent = ShiftHandover(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,        # Phase 11: inject Qwen2.5 ChatOllama instance
+        aggregator=ShiftAggregator(pool=pool),
+        saver=saver,
+    )
+    training_coach_agent = TrainingCoach(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,              # Phase 11: inject LLM
+        retrieval_pipeline=None,   # Phase 5/11: inject sft-knowledge RetrievalPipeline
+        escalate_tool=None,        # Phase 11: inject EscalateToSupervisorTool
+    )
+    knowledge_curator_agent = KnowledgeCurator(
+        pool=pool,
+        audit_writer=audit_writer,
+        # near_dedup=None (default) — Phase 11: inject NearDedupChecker with Qdrant client
+    )
+    documentation_synthesizer_agent = DocumentationSynthesizer(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,               # Phase 11: inject LLM
+        retrieval_pipeline=None,    # Phase 5/11: inject sft-knowledge RetrievalPipeline
+        indexer=None,               # Phase 11: inject Qdrant indexer
+        event_aggregator=EventAggregator(pool=pool),
+        validator=SOPCitationValidator(),
+        saver=saver,
+    )
+
+    knowledge_children = {
+        "shift-handover": shift_handover_agent,
+        "training-coach": training_coach_agent,
+        "knowledge-curator": knowledge_curator_agent,
+        "documentation-synthesizer": documentation_synthesizer_agent,
+    }
+    # Build the knowledge subgraph (uncompiled — wired into supervisor in Phase 11).
+    # For Phase 8, the supervisor_graph.ainvoke routes via target_agent; the
+    # knowledge_children dict is available for direct DI via get_knowledge_children.
+    _knowledge_subgraph = build_knowledge_subgraph(knowledge_children)  # noqa: F841 — Phase 11 will wire into supervisor
+
     # 9) Wire app.state.
     app.state.pool = pool
     app.state.nats_publisher = nats_publisher
@@ -157,6 +226,7 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     app.state.governor_task = governor_task
     app.state.idempotency_cache = IdempotencyCache(ttl_seconds=300)
     app.state._checkpointer_cm = checkpointer_cm  # private — for teardown
+    app.state.knowledge_children = knowledge_children  # Plan 08-08 D-X-04
 
     logger.info("api_gateway_ready", background_tasks=3)
 

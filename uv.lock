@@ -3487,6 +3487,10 @@ dependencies = [
     { name = "pyyaml" },
     { name = "sft-agents" },
     { name = "structlog" },
+    { name = "trn-documentation-synthesizer" },
+    { name = "trn-knowledge-curator" },
+    { name = "trn-shift-handover" },
+    { name = "trn-training-coach" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -3518,6 +3522,10 @@ requires-dist = [
     { name = "sft-agents", editable = "packages/sft-agents" },
     { name = "structlog", specifier = ">=24.4" },
     { name = "testcontainers", extras = ["postgres"], marker = "extra == 'test'", specifier = ">=4.14" },
+    { name = "trn-documentation-synthesizer", editable = "apps/agents/knowledge/documentation-synthesizer" },
+    { name = "trn-knowledge-curator", editable = "apps/agents/knowledge/knowledge-curator" },
+    { name = "trn-shift-handover", editable = "apps/agents/knowledge/shift-handover" },
+    { name = "trn-training-coach", editable = "apps/agents/knowledge/training-coach" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32" },
 ]
 provides-extras = ["test"]

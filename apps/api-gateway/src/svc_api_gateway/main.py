@@ -46,6 +46,7 @@ def build_app() -> FastAPI:
     # for unit tests that want a fresh app per fixture.
     from svc_api_gateway.routers import approvals as approvals_router  # noqa: PLC0415
     from svc_api_gateway.routers import health as health_router  # noqa: PLC0415
+    from svc_api_gateway.routers import knowledge_agents as knowledge_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import maintenance_agents as maintenance_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import ops_agents as ops_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import quality as quality_router  # noqa: PLC0415
@@ -62,6 +63,7 @@ def build_app() -> FastAPI:
     app.include_router(quality_router.router)  # Plan 06-12 — OPS-04 ingest
     app.include_router(ops_agents_router.router)  # Plan 06-12 — OPS-01/02/03
     app.include_router(maintenance_agents_router.router)  # Plan 07-10 — MNT-01/02/03/04
+    app.include_router(knowledge_agents_router.router)  # Plan 08-08 — TRN-02/03/04/05
     return app
 
 

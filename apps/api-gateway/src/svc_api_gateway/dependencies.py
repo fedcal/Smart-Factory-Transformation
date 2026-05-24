@@ -90,10 +90,30 @@ def get_maintenance_children(request: Request) -> Any:
     return _require_state(request, "maintenance_children")
 
 
+def get_knowledge_children(request: Request) -> Any:
+    """Return ``app.state.knowledge_children`` (dict[str, callable]) or 503.
+
+    The dict maps knowledge agent slugs to their async __call__ callables:
+        {
+            'shift-handover': ShiftHandover.__call__,
+            'training-coach': TrainingCoach.__call__,
+            'knowledge-curator': KnowledgeCurator.__call__,
+            'documentation-synthesizer': DocumentationSynthesizer.__call__,
+        }
+
+    Populated by :func:`svc_api_gateway.lifespan.lifespan` during app startup.
+    Used with build_knowledge_subgraph (08-01) for direct DI wiring.
+    The ``knowledge-curator`` key is REQUIRED — it is the fallback target for
+    the knowledge router (autonomous, D-KC-04).
+    """
+    return _require_state(request, "knowledge_children")
+
+
 __all__ = [
     "get_audit_writer",
     "get_checkpointer",
     "get_idempotency_cache",
+    "get_knowledge_children",
     "get_maintenance_children",
     "get_nats_publisher",
     "get_pool",
