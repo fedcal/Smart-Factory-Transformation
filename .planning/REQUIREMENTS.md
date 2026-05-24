@@ -114,14 +114,14 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 
 ### Frontend & UX (UI)
 
-- [ ] **UI-01**: App Angular 18+ con SSR (Universal) e routing app `operator/`, `technician/`, `manager/`, `admin/`
+- [x] **UI-01**: App Angular 18+ con SSR (Universal) e routing app `operator/`, `technician/`, `manager/`, `admin/`
 - [x] **UI-02**: Design system con Tailwind + Angular Material; touch target ≥64px per uso factory floor
-- [ ] **UI-03**: Approval queue UI con evidence panel inline (input, tool calls, RAG citations, confidence)
+- [x] **UI-03**: Approval queue UI con evidence panel inline (input, tool calls, RAG citations, confidence)
 - [x] **UI-04**: Dashboard control room con KPI live (OEE, MTTR, MTBF, scrap rate, throughput, downtime)
 - [x] **UI-05**: Tema dark/light + alta leggibilità (contrast WCAG AA minimo)
 - [x] **UI-06**: Stream eventi via SSE/WebSocket dal backend FastAPI
 - [x] **UI-07**: i18n IT+EN su tutti i testi UI con lazy load lingua
-- [ ] **UI-08**: Persona walkthrough demo (operatore, capo turno, tecnico, CIO) integrato nell'app
+- [x] **UI-08**: Persona walkthrough demo (operatore, capo turno, tecnico, CIO) integrato nell'app
 - [x] **UI-09**: Mock UI documentate in `docs/` con screenshot generati automaticamente in CI
 - [x] **UI-10**: Test E2E Playwright per i flussi HITL approval e operator handover
 
@@ -129,7 +129,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 
 - [x] **SRV-01**: API Gateway FastAPI con OpenAPI 3.1, autenticazione JWT, RBAC per ruolo
 - [x] **SRV-02**: Endpoint REST + SSE per approval queue, evidence, KPI, audit
-- [ ] **SRV-03**: WebSocket bridge tra Angular UI e NATS subjects autorizzati
+- [x] **SRV-03**: WebSocket bridge tra Angular UI e NATS subjects autorizzati
 - [x] **SRV-04**: Health/readiness probe + OTEL spans su ogni endpoint
 - [x] **SRV-05**: Contract test Pydantic ↔ TypeScript per type-safety end-to-end
 
@@ -325,17 +325,17 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | SCM-05 | Phase 9 | Pending |
 | SRV-01 | Phase 10 | Complete |
 | SRV-02 | Phase 10 | Complete |
-| SRV-03 | Phase 10 | Pending |
+| SRV-03 | Phase 10 | Complete |
 | SRV-04 | Phase 10 | Complete |
 | SRV-05 | Phase 10 | Complete |
-| UI-01 | Phase 10 | Pending |
+| UI-01 | Phase 10 | Complete |
 | UI-02 | Phase 10 | Complete |
-| UI-03 | Phase 10 | Pending |
+| UI-03 | Phase 10 | Complete |
 | UI-04 | Phase 10 | Complete |
 | UI-05 | Phase 10 | Complete |
 | UI-06 | Phase 10 | Complete |
 | UI-07 | Phase 10 | Complete |
-| UI-08 | Phase 10 | Pending |
+| UI-08 | Phase 10 | Complete |
 | UI-09 | Phase 10 | Complete |
 | UI-10 | Phase 10 | Complete |
 | OBS-02 | Phase 11 | Pending |
