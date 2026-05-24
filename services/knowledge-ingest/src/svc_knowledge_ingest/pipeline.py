@@ -38,6 +38,10 @@ import structlog
 from pydantic import BaseModel
 from sft_knowledge.path_utils import derive_source_uri
 
+# Phase 11 (SEC-04): deterministic prompt-injection sanitizer — applied on plain
+# text chunks pre-embedding (Pitfall 6: NOT on raw Markdown, on parsed plain text).
+from svc_knowledge_ingest.sanitizer import sanitize_document
+
 if TYPE_CHECKING:
     from sft_domain.failure_modes.models import FailureMode
 
@@ -181,6 +185,21 @@ async def ingest_file(
             sop_id=str(parsed.frontmatter.get("id", "")) or None,
             content_hash=content_hash,
         )
+
+    # Phase 11 (SEC-04, SC-3): sanitize plain text BEFORE embedding (Pitfall 6 mitigation).
+    # Chunks are frozen (immutability pattern) — create new Chunk objects with sanitized text.
+    # sanitize_document() is deterministic, NO LLM, applied on parsed plain text.
+    from sft_knowledge.chunking.semantic import Chunk as _Chunk  # local import avoids circular at module level
+    chunks = [
+        _Chunk(
+            text=sanitize_document(c.text),
+            chunk_idx=c.chunk_idx,
+            heading_path=c.heading_path,
+            metadata=c.metadata,
+        )
+        for c in chunks
+    ]
+    log.debug("ingest_sanitized_chunks", chunk_count=len(chunks))
 
     encode_output = embedder.encode([c.text for c in chunks])
     dense_vecs = list(encode_output.dense_vecs)
