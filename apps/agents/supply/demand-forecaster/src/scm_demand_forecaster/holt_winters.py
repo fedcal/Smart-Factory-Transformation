@@ -109,7 +109,7 @@ def forecast_holt_winters(
         L, T = L_new, T_new
 
     Forecast for h in range(horizon):
-        f_h = max(0.0, L + (h+1)*T + S[n + h - m + (h % m)])
+        f_h = max(0.0, L + (h+1)*T + S[n + (h % m)])
 
     Args:
         series:    Historical demand series. Must have len >= config.min_periods for HW;
@@ -151,7 +151,7 @@ def forecast_holt_winters(
         trends[t] = T
 
     forecasts = [
-        max(0.0, L + (h + 1) * T + seasonals[n + h - m + (h % m)])
+        max(0.0, L + (h + 1) * T + seasonals[n + (h % m)])
         for h in range(horizon)
     ]
 

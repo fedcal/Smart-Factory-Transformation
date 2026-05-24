@@ -63,15 +63,18 @@ def test_forecast_holt_winters_exact_values_for_fixed_series() -> None:
     """forecast_holt_winters: known series + fixed params → exact rounded forecast values (SCM-04).
 
     Uses the 24-element synthetic series from test module header.
-    Expected values computed from the Holt-Winters formula in 09-RESEARCH.md Pattern 9
-    (seasonals[n + h - m + (h % m)], n+m sized seasonal array).
+    Expected values computed from the corrected Holt-Winters formula:
+        seasonals[n + (h % m)]
+    (CR-01/CR-02 fix: the old formula seasonals[n + h - m + (h % m)] was wrong
+    and caused IndexError for horizon >= 19 and numerically wrong forecasts for h >= 1).
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
     result = forecast_holt_winters(
         _JERSEY_SERIES, horizon=3, config=_DEFAULT_CONFIG, sku_group="jersey"
     )
-    # Expected values computed from Pattern 9 formula (verified via test helper script).
-    expected = [8123.58, 10122.83, 11124.45]
+    # Expected values computed from the corrected formula seasonals[n + (h % m)].
+    # h=0: seasonals[24], h=1: seasonals[25], h=2: seasonals[26]
+    expected = [8180.01, 9135.54, 10164.19]
     assert result.forecast == pytest.approx(expected, abs=0.01), (
         f"Expected {expected}, got {result.forecast}"
     )
@@ -168,3 +171,91 @@ def test_forecast_values_are_non_negative() -> None:
     assert all(f >= 0.0 for f in result.forecast), (
         f"All forecast values must be >= 0.0, got {result.forecast}"
     )
+
+
+# ---------------------------------------------------------------------------
+# CR-01 regression: no IndexError for horizon=36 (the router maximum)
+# ---------------------------------------------------------------------------
+
+
+def test_forecast_holt_winters_no_index_error_for_horizon_36() -> None:
+    """forecast_holt_winters: horizon=36 must NOT raise IndexError (CR-01 regression).
+
+    The API router accepts horizon up to 36 (le=36 in DemandForecastRequest).
+    Before the CR-01 fix, the formula seasonals[n + h - m + (h % m)] caused
+    IndexError for h >= 18 (with m=12, n=24: index n+m=36 is out-of-bounds for
+    an array of size n+m=36, since valid indices are 0..35).
+
+    After the fix (seasonals[n + (h % m)]), the maximum index is n+m-1=35, which
+    is always valid. This test asserts no exception is raised and the forecast
+    has exactly 36 elements.
+
+    Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
+    """
+    result = forecast_holt_winters(
+        _JERSEY_SERIES,
+        horizon=36,
+        config=_DEFAULT_CONFIG,
+        sku_group="jersey",
+    )
+    assert len(result.forecast) == 36, (
+        f"Expected 36 forecast values for horizon=36, got {len(result.forecast)}"
+    )
+    assert all(isinstance(v, float) for v in result.forecast), (
+        "All forecast values must be float"
+    )
+    assert all(v >= 0.0 for v in result.forecast), (
+        f"All forecast values must be non-negative, got {result.forecast}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# CR-02 regression: correct multi-step seasonal alignment
+# ---------------------------------------------------------------------------
+
+
+def test_forecast_holt_winters_correct_seasonal_alignment_on_periodic_series() -> None:
+    """forecast_holt_winters: perfectly periodic series → forecasts repeat the seasonal pattern (CR-02).
+
+    A series of exactly [100, 200, 300, 400] repeated 6 times (24 points, m=4)
+    has zero trend and constant seasonal components. With gamma > 0, the HW
+    smoothing converges the seasonal estimates to the true values.
+
+    For a zero-trend perfectly-periodic series, the formula seasonals[n + (h % m)]
+    produces forecasts that exactly reproduce the seasonal pattern:
+      h=0 → 100.0, h=1 → 200.0, h=2 → 300.0, h=3 → 400.0,
+      h=4 → 100.0, h=5 → 200.0, ...
+
+    The old formula seasonals[n + h - m + (h % m)] would instead access stale
+    mid-cycle seasonals, producing wrong values (e.g. h=1: 300.0 instead of 200.0).
+
+    This test asserts that forecast[h] is within 1.0 of the expected seasonal value
+    for the first 8 steps (two full cycles).
+
+    Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
+    """
+    periodic_pattern = [100.0, 200.0, 300.0, 400.0]
+    # 24 points = 6 full seasons of length 4 — enough for HW (min_periods=24)
+    series = periodic_pattern * 6
+
+    config = HoltWintersConfig(
+        alpha=0.3,
+        beta=0.1,
+        gamma=0.3,
+        season_length=4,
+        min_periods=24,
+    )
+    result = forecast_holt_winters(series, horizon=8, config=config, sku_group="test-periodic")
+
+    assert result.method == "holt_winters", (
+        f"Expected 'holt_winters' method, got '{result.method}'"
+    )
+    assert len(result.forecast) == 8
+
+    for h in range(8):
+        expected_seasonal = periodic_pattern[h % 4]
+        got = result.forecast[h]
+        assert abs(got - expected_seasonal) < 1.0, (
+            f"h={h}: expected ~{expected_seasonal} (h%4={h%4}), "
+            f"got {got} — seasonal misalignment detected (CR-02 regression)."
+        )
