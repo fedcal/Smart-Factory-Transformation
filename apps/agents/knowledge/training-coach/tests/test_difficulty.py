@@ -7,14 +7,13 @@ CONTRACT: DifficultyAdaptor adjusts difficulty within a session based on answers
 
 Implementation target: trn_training_coach.difficulty.DifficultyAdaptor
 (Wave 2-3 plan: 08-05)
-
-Wave 0 scaffold: test functions fail explicitly with a message naming the
-unimplemented contract. NOT module-level pytest.skip (Phase 6/7 Wave 0 decision).
 """
 
 from __future__ import annotations
 
 import pytest
+
+from trn_training_coach.difficulty import DifficultyAdaptor
 
 
 # ---------------------------------------------------------------------------
@@ -30,11 +29,16 @@ def test_difficulty_rises_on_correct_answer() -> None:
 
     Implementation target: trn_training_coach.difficulty.DifficultyAdaptor.next_difficulty()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: difficulty rises on correct answer "
-        "(easy->medium, medium->hard). D-TC-02 dynamic difficulty adaption. "
-        "Implement in plan 08-05 (training-coach agent). "
-        "Module: trn_training_coach.difficulty"
+    adaptor = DifficultyAdaptor()
+
+    result_easy_to_medium = adaptor.next_difficulty("easy", answer_correct=True)
+    assert result_easy_to_medium == "medium", (
+        f"Expected 'medium' after correct at 'easy', got '{result_easy_to_medium}'"
+    )
+
+    result_medium_to_hard = adaptor.next_difficulty("medium", answer_correct=True)
+    assert result_medium_to_hard == "hard", (
+        f"Expected 'hard' after correct at 'medium', got '{result_medium_to_hard}'"
     )
 
 
@@ -46,11 +50,16 @@ def test_difficulty_falls_on_wrong_answer() -> None:
 
     Implementation target: trn_training_coach.difficulty.DifficultyAdaptor.next_difficulty()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: difficulty falls on wrong answer "
-        "(hard->medium, medium->easy). D-TC-02 dynamic difficulty adaption. "
-        "Implement in plan 08-05 (training-coach agent). "
-        "Module: trn_training_coach.difficulty"
+    adaptor = DifficultyAdaptor()
+
+    result_hard_to_medium = adaptor.next_difficulty("hard", answer_correct=False)
+    assert result_hard_to_medium == "medium", (
+        f"Expected 'medium' after wrong at 'hard', got '{result_hard_to_medium}'"
+    )
+
+    result_medium_to_easy = adaptor.next_difficulty("medium", answer_correct=False)
+    assert result_medium_to_easy == "easy", (
+        f"Expected 'easy' after wrong at 'medium', got '{result_medium_to_easy}'"
     )
 
 
@@ -61,11 +70,11 @@ def test_difficulty_capped_at_hard_ceiling() -> None:
 
     Implementation target: trn_training_coach.difficulty.DifficultyAdaptor.next_difficulty()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: difficulty capped at 'hard' ceiling; "
-        "correct answer at hard level stays hard. "
-        "Implement in plan 08-05 (training-coach agent). "
-        "Module: trn_training_coach.difficulty"
+    adaptor = DifficultyAdaptor()
+
+    result = adaptor.next_difficulty("hard", answer_correct=True)
+    assert result == "hard", (
+        f"Expected 'hard' (ceiling cap) after correct at 'hard', got '{result}'"
     )
 
 
@@ -76,11 +85,11 @@ def test_difficulty_capped_at_easy_floor() -> None:
 
     Implementation target: trn_training_coach.difficulty.DifficultyAdaptor.next_difficulty()
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: difficulty capped at 'easy' floor; "
-        "wrong answer at easy level stays easy. "
-        "Implement in plan 08-05 (training-coach agent). "
-        "Module: trn_training_coach.difficulty"
+    adaptor = DifficultyAdaptor()
+
+    result = adaptor.next_difficulty("easy", answer_correct=False)
+    assert result == "easy", (
+        f"Expected 'easy' (floor cap) after wrong at 'easy', got '{result}'"
     )
 
 
@@ -92,10 +101,16 @@ def test_difficulty_sequence_across_session() -> None:
 
     Implementation target: trn_training_coach.difficulty.DifficultyAdaptor
     """
-    pytest.fail(
-        "NOT IMPLEMENTED — contract: full session difficulty trajectory "
-        "easy->medium->easy->medium->hard over 4 answers (correct,wrong,correct,correct). "
-        "D-TC-02 per-session dynamic difficulty. "
-        "Implement in plan 08-05 (training-coach agent). "
-        "Module: trn_training_coach.difficulty"
-    )
+    adaptor = DifficultyAdaptor()
+
+    # Start at easy
+    current = "easy"
+    answers = [True, False, True, True]
+    expected_trajectory = ["medium", "easy", "medium", "hard"]
+
+    for i, (answer, expected) in enumerate(zip(answers, expected_trajectory)):
+        current = adaptor.next_difficulty(current, answer_correct=answer)
+        assert current == expected, (
+            f"Step {i}: after answer_correct={answer}, expected '{expected}', got '{current}'. "
+            f"Full expected trajectory: {expected_trajectory}"
+        )
