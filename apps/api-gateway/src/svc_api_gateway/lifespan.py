@@ -70,6 +70,30 @@ logger = structlog.get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     """Construct + tear down all long-lived resources used by routers."""
+    # WR-05: warn if WEB_CONCURRENCY > 1 — the SSE alert rate-limit uses an
+    # in-process module-level dict (_alert_rate_state). With multiple Uvicorn/
+    # Gunicorn workers each process maintains its own independent rate-limit
+    # counter, effectively multiplying the allowed alert rate by the worker count.
+    # This violates HITL-10. Phase 11 will replace with a Redis-backed counter.
+    # For dev mode, always run with --workers 1 (WEB_CONCURRENCY=1).
+    _web_concurrency = int(os.environ.get("WEB_CONCURRENCY", "1"))
+    if _web_concurrency > 1:
+        import warnings as _warnings
+        _warnings.warn(
+            f"WEB_CONCURRENCY={_web_concurrency} detected. "
+            "The SSE alert rate-limit (_alert_rate_state) is in-process only "
+            "and does NOT enforce HITL-10 across multiple workers. "
+            "Set WEB_CONCURRENCY=1 for dev mode, or implement a Redis-backed "
+            "sliding-window counter (Phase 11) before multi-worker production deploy.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        logger.warning(
+            "sse_rate_limit_multi_worker_violation",
+            web_concurrency=_web_concurrency,
+            note="HITL-10 rate-limit is per-process only; Phase 11 adds Redis backend",
+        )
+
     # Local imports keep cold-import time of the module low (only paid at boot).
     from sft_agents.audit import (  # noqa: PLC0415
         AuditNatsPublisher,
