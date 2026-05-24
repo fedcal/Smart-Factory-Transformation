@@ -8,8 +8,9 @@ import {
   SimpleChanges,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -18,7 +19,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import {
+  MatDialogModule,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import {
@@ -435,6 +440,7 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
   private readonly sseService = inject(SseService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly platformId = inject(PLATFORM_ID);
 
   // Motivation gate
   motivationText = '';
@@ -536,13 +542,20 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
   onReject(): void {
     if (!this.isMotivationValid() || this.isSubmitting()) return;
 
-    // Show confirm dialog (destructive action — UI-SPEC Destructive List)
-    const confirmed = window.confirm(
-      'Stai per rifiutare questa azione AI. La motivazione è obbligatoria e verrà registrata nell\'audit trail.',
+    // WR-02: replaced window.confirm() with MatDialog.
+    // - SSR guard: dialog must not be opened on the server (no DOM available).
+    // - MatDialog is accessible, testable, and respects the Material design system.
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const dialogRef: MatDialogRef<unknown, boolean> = this.dialog.open(
+      RejectConfirmDialogComponent,
+      { width: '400px', disableClose: false },
     );
-    if (confirmed) {
-      this._submitDecision('REJECTED');
-    }
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed === true) {
+        this._submitDecision('REJECTED');
+      }
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -628,4 +641,39 @@ export class ApprovalCardComponent implements OnInit, OnChanges, OnDestroy {
         },
       });
   }
+}
+
+// ---------------------------------------------------------------------------
+// RejectConfirmDialogComponent — inline dialog for onReject() (WR-02)
+// ---------------------------------------------------------------------------
+// Replaces the non-SSR-safe window.confirm(). Opened by ApprovalCardComponent
+// via MatDialog.open(); closes with true (confirmed) or undefined (cancelled).
+// ---------------------------------------------------------------------------
+
+@Component({
+  selector: 'sft-reject-confirm-dialog',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  template: `
+    <h2 mat-dialog-title>Conferma rifiuto</h2>
+    <mat-dialog-content>
+      <p>
+        Stai per rifiutare questa azione AI. La motivazione è obbligatoria e
+        verrà registrata nell'audit trail. Vuoi procedere?
+      </p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button [mat-dialog-close]="false">Annulla</button>
+      <button
+        mat-flat-button
+        color="warn"
+        [mat-dialog-close]="true"
+        data-testid="reject-confirm-btn">
+        Rifiuta
+      </button>
+    </mat-dialog-actions>
+  `,
+})
+export class RejectConfirmDialogComponent {
+  private readonly dialogRef = inject(MatDialogRef<RejectConfirmDialogComponent>);
 }
