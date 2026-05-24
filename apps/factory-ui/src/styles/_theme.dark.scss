@@ -1,0 +1,65 @@
+// =============================================================================
+// SFT Angular Material Dark Theme
+// Phase 10 — UI-SPEC Color contract (LOCKED)
+//
+// Uses mat.define-theme() with azure (blue-family) as primary palette.
+// Material M3 color roles are then overridden by SFT CSS custom properties
+// from _tokens.scss so all components pick up the SFT design system.
+// =============================================================================
+
+@use "@angular/material" as mat;
+
+// Dark theme definition (applied at :root for SSR default)
+$sft-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Inter, system-ui, sans-serif',
+    bold-weight: 600,
+    medium-weight: 600,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+// Emit all Material component styles inside :root (dark default)
+:root {
+  @include mat.all-component-themes($sft-dark-theme);
+  @include mat.all-component-typographies($sft-dark-theme);
+}
+
+// Override Material system tokens with SFT design tokens
+:root {
+  // Surface / background overrides
+  --mat-app-background-color:      var(--sft-surface);
+  --mat-app-on-background:         var(--sft-text-primary);
+  --mat-app-surface:               var(--sft-surface);
+  --mat-app-on-surface:            var(--sft-text-primary);
+
+  // Card overrides
+  --mat-card-background-color:     var(--sft-surface-card);
+  --mat-card-subtitle-text-color:  var(--sft-text-secondary);
+
+  // Button / primary
+  --mat-sys-primary:               var(--sft-accent);
+  --mat-sys-on-primary:            #FFFFFF;
+  --mat-sys-primary-container:     var(--sft-surface-card);
+  --mat-sys-surface:               var(--sft-surface);
+  --mat-sys-surface-variant:       var(--sft-surface-card);
+  --mat-sys-on-surface:            var(--sft-text-primary);
+  --mat-sys-on-surface-variant:    var(--sft-text-secondary);
+  --mat-sys-outline:               var(--sft-border);
+  --mat-sys-outline-variant:       var(--sft-border);
+  --mat-sys-error:                 var(--sft-destructive);
+
+  // Form field
+  --mdc-filled-text-field-container-color:     var(--sft-surface-card);
+  --mdc-outlined-text-field-outline-color:     var(--sft-border);
+  --mdc-outlined-text-field-label-text-color:  var(--sft-text-secondary);
+  --mdc-outlined-text-field-input-text-color:  var(--sft-text-primary);
+}

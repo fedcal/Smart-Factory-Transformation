@@ -4,18 +4,35 @@
    Import order — SCSS requires @use before any other rules.
    Tailwind v4 is loaded as a CSS @import (plain CSS, not Sass),
    so it must come AFTER Sass @use rules per SCSS spec.
+
+   Phase 10-04 additions (after 10-00a base):
+     _tokens.scss     — SFT CSS custom properties (dark + light palettes)
+     _theme.dark.scss — Angular Material dark theme (SSR default)
+     _theme.light.scss — Angular Material light theme (toggle)
+     _typography.scss — Inter font + 4 type roles
    ========================================================================== */
 
 /* 1. Sass @use declarations — must be first in the SCSS file */
 @use "@angular/material" as mat;
 
-/* 2. Tailwind v4 — CSS-first import (no config file in v4) */
+/* 2. SFT design tokens — dark palette at :root (SSR default, no browser API) */
+@use "styles/tokens" as *;
+
+/* 3. Angular Material themes — dark at :root, light under [data-theme="light"] */
+@use "styles/theme.dark" as *;
+@use "styles/theme.light" as *;
+
+/* 4. Typography — Inter font load + type role classes */
+@use "styles/typography" as *;
+
+/* 5. Tailwind v4 — CSS-first import (no config file in v4) */
 @import "tailwindcss";
 
 /* ==========================================================================
    Touch Target Override (UI-02) — factory floor / gloved operation
    Minimum 64px touch targets for all Material button variants.
    Placed in @layer utilities for correct Tailwind cascade priority.
+   Preserved from 10-00a.
    ========================================================================== */
 @layer utilities {
   .mat-mdc-button,
@@ -27,5 +44,41 @@
   .mat-mdc-mini-fab {
     min-height: 64px;
     min-width: 64px;
+  }
+}
+
+/* ==========================================================================
+   Global interaction states (UI-SPEC Interaction States)
+   ========================================================================== */
+
+/* Focus ring — accent color, 2px offset, visible on all interactive elements */
+:focus-visible {
+  outline: var(--sft-focus-ring);
+  outline-offset: var(--sft-focus-ring-offset);
+}
+
+/* Disabled state */
+[disabled],
+:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Hover transitions */
+*,
+*::before,
+*::after {
+  transition-duration: var(--sft-transition-default);
+  transition-property: background-color, color, border-color, opacity, transform, box-shadow;
+}
+
+/* Reduced motion — remove all animations/transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }

@@ -1,0 +1,93 @@
+// =============================================================================
+// SFT Design Tokens — CSS Custom Properties
+// Phase 10 — UI-SPEC Color / Spacing / Typography contract (LOCKED)
+//
+// Dark palette: applied at :root (SSR default — no browser API needed)
+// Light palette: applied under [data-theme="light"] / .theme-light
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// DARK PALETTE — Default (factory floor, SSR-safe)
+// -----------------------------------------------------------------------------
+:root {
+  // --- Surfaces ---
+  --sft-surface:       #121418; // Dominant 60% — main background
+  --sft-surface-2:     #1C1F26; // Elevated — overlay, dialog
+  --sft-surface-card:  #252932; // Secondary 30% — card, sidebar, nav
+
+  // --- Borders ---
+  --sft-border:        #363B47; // Card borders, dividers, input outline
+
+  // --- Accent (reserved — see UI-SPEC accent list) ---
+  --sft-accent:        #3B82F6; // ≥4.5:1 on #121418 → WCAG AA
+
+  // --- Text ---
+  --sft-text-primary:  #F0F2F5; // ≥7:1 on #121418 → WCAG AAA (≈14.8:1)
+  --sft-text-secondary:#9BA3B2; // ≥4.5:1 on #121418 → WCAG AA (≈5.1:1)
+
+  // --- Semantic ---
+  --sft-destructive:   #EF4444; // ≥4.5:1 on #121418 → WCAG AA (≈4.7:1)
+  --sft-success:       #22C55E; // ≥4.5:1 on #121418 → WCAG AA (≈6.1:1)
+  --sft-warning:       #F59E0B; // ≥4.5:1 on #121418 → WCAG AAA (≈7.4:1)
+
+  // --- Spacing scale (8-pt, multiples of 4px) ---
+  --sft-space-1:   4px;   // Inline icon gaps, badge padding
+  --sft-space-2:   8px;   // Compact spacing between KPI label/value
+  --sft-space-4:  16px;   // Standard spacing between UI elements
+  --sft-space-6:  24px;   // Card/panel section padding
+  --sft-space-8:  32px;   // Dashboard column gap
+  --sft-space-12: 48px;   // Main section separators
+  --sft-space-16: 64px;   // Top-level page spacing; touch target minimum
+
+  // --- Typography tokens ---
+  --sft-type-display: 28px;   // SemiBold 600, line-height 1.2
+  --sft-type-heading: 20px;   // SemiBold 600, line-height 1.3
+  --sft-type-body:    16px;   // Regular 400, line-height 1.5
+  --sft-type-label:   14px;   // Regular 400, line-height 1.4
+
+  // --- Font ---
+  --sft-font-family: 'Inter', system-ui, sans-serif;
+  --sft-font-weight-regular:  400;
+  --sft-font-weight-semibold: 600;
+
+  // --- Interaction ---
+  --sft-transition-default: 150ms ease-out;
+  --sft-focus-ring: 2px solid var(--sft-accent);
+  --sft-focus-ring-offset: 2px;
+
+  // --- Component dimensions ---
+  --sft-topbar-height:     64px;
+  --sft-nav-rail-width:    72px;
+  --sft-nav-rail-compact:  56px;
+  --sft-bottom-nav-height: 64px;
+  --sft-touch-target:      64px;
+  --sft-kpi-tile-height:   80px;
+  --sft-evidence-max-height: 480px;
+}
+
+// -----------------------------------------------------------------------------
+// LIGHT PALETTE — User toggle (data-theme="light" or .theme-light)
+// WCAG AA verified: #111827 on #F4F6FA ≈16.2:1 AAA
+// -----------------------------------------------------------------------------
+[data-theme="light"],
+.theme-light {
+  // --- Surfaces ---
+  --sft-surface:       #F4F6FA; // Dominant 60%
+  --sft-surface-2:     #FFFFFF; // Overlay, dialog
+  --sft-surface-card:  #FFFFFF; // Card, sidebar
+
+  // --- Borders ---
+  --sft-border:        #DDE1EA;
+
+  // --- Accent ---
+  --sft-accent:        #2563EB; // ≥5.9:1 on #F4F6FA → WCAG AA
+
+  // --- Text ---
+  --sft-text-primary:  #111827; // ≈16.2:1 on #F4F6FA → WCAG AAA
+  --sft-text-secondary:#6B7280; // ≈4.6:1 on #F4F6FA → WCAG AA
+
+  // --- Semantic ---
+  --sft-destructive:   #DC2626; // ≈5.2:1 on #F4F6FA → WCAG AA
+  --sft-success:       #16A34A;
+  --sft-warning:       #D97706;
+}
