@@ -165,11 +165,15 @@ class DocumentationSynthesizer:
         asset_id: str,
         events: list[dict[str, Any]],
         citations: list[Any],
+        sop_id: str | None = None,
     ) -> tuple[SOPDraft, dict[str, str]]:
         """Generate IT SOP with [SRC:N] anchors (D-DS-01, Pitfall §1).
 
         Returns the initial SOPDraft (sections_en is a placeholder) and anchor_map.
         The caller must call _translate_en() to fill sections_en.
+
+        Args:
+            sop_id: Optional stable SOP ID from state for replay idempotency (CR-04).
         """
         from trn_documentation_synthesizer.sop_builder import SOPBuilder
 
@@ -179,6 +183,7 @@ class DocumentationSynthesizer:
             asset_id=asset_id,
             events=events,
             citations=citations,
+            sop_id=sop_id,
         )
         return sop_draft, anchor_map
 
@@ -316,6 +321,8 @@ class DocumentationSynthesizer:
         window_days: int = state.get("window_days", 180)
         user_roles: list[str] = state.get("user_roles", ["technician"])
         asset_family: str | None = state.get("asset_family")
+        # CR-04: read pre-existing sop_id from state for stable IDs across LangGraph replays
+        stable_sop_id: str | None = state.get("sop_id") or None
 
         logger.info(
             "documentation_synthesizer_start",
@@ -346,6 +353,7 @@ class DocumentationSynthesizer:
             asset_id=asset_id,
             events=events,
             citations=citations,
+            sop_id=stable_sop_id,  # CR-04: propagate stable ID to prevent replay drift
         )
 
         # -------- 4. Translate to EN, re-anchor citations (D-DS-01)

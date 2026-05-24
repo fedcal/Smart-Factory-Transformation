@@ -342,8 +342,15 @@ class ShiftHandover:
         # -------- 1. Compile HandoverReport (LLM-free aggregation — Pitfall §4)
         report = await self._compile_report(state)
 
-        # Generate a stable handover_id for this invocation
-        handover_id = str(uuid4())
+        # Derive a stable handover_id across LangGraph replays (CR-04).
+        # On first execution, state may not carry handover_id yet — fall back to
+        # thread_id from config (stable across resumes) or generate once from uuid4.
+        # On resume, the interrupt payload propagates handover_id back via state.
+        handover_id = str(
+            state.get("handover_id")
+            or state.get("thread_id")
+            or str(uuid4())
+        )
         thread_id = self._thread_id(handover_id)
 
         logger.info(

@@ -66,6 +66,7 @@ class SOPBuilder:
         events: list[dict[str, Any]],
         citations: list[Any],
         title_it: str | None = None,
+        sop_id: str | None = None,
     ) -> tuple[SOPDraft, dict[str, str]]:
         """Generate an Italian SOP draft with [SRC:N] anchors.
 
@@ -113,7 +114,10 @@ class SOPBuilder:
         # The agent will call translator.translate() and create a new SOPDraft with real EN.
         effective_title_it = title_it or f"SOP: {failure_mode} su {asset_id}"
 
-        sop_id = str(uuid4())
+        # CR-04: use caller-supplied sop_id if present (stable across LangGraph replays);
+        # otherwise generate once. The caller should read state.get("sop_id") to detect
+        # a pre-existing id from a prior execution checkpoint.
+        sop_id = sop_id or str(uuid4())
         now = datetime.now(timezone.utc)
 
         sop_draft = SOPDraft(
