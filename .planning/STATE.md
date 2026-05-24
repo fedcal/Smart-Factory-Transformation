@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 11-03-PLAN.md
-last_updated: "2026-05-24T23:26:53.609Z"
+stopped_at: Completed 11-04-PLAN.md
+last_updated: "2026-05-25T00:05:00Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 11 (observability-evaluation-security-hardening) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -97,6 +97,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 09 P08 | 20min | 1 task | 5 files |
 | Phase 11 P02 | 31 | 2 tasks | 6 files |
 | Phase 11 P03 | 25min | 3 tasks | 10 files |
+| Phase 11 P04 | 7min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -159,6 +160,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 11-03: shift-supervisor vs supervisor — valore canonico JWT è shift-supervisor; auditor è ruolo nuovo indipendente (SEC-03)
 - [Phase ?]: Phase 11-03: audit_writer duck-typed in RetrievalPipeline; import lazy AuditRecord/ActionType in _write_restricted_audit (no LangChain coupling)
 - [Phase ?]: Phase 11-03: sanitize_document() su chunk post-chunking (Pitfall 6); ricostruzione nuovi Chunk frozen (immutabilità)
+- [Phase 11-04]: Dashboard p50/p95/p99 usano ingest_latency_seconds_bucket (unico histogram dev disponibile); BudgetSnapshot metric wiring via Pushgateway deferred a 11-05; factory KPIs OEE/MTTR/MTBF richiedono Pushgateway o HTTP datasource (TimescaleDB non interrogabile direttamente via PromQL)
 
 ### Pending Todos
 
@@ -179,6 +181,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T23:26:53.598Z
-Stopped at: Completed 11-03-PLAN.md
+Last session: 2026-05-25T00:05:00Z
+Stopped at: Completed 11-04-PLAN.md
 Resume file: None
