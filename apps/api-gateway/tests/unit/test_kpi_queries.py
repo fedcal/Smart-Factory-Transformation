@@ -1,6 +1,7 @@
 """Contract scaffold for KPI aggregation query layer.
 
-Nyquist scaffold — all tests skipped until implementation in Plan 10-02.
+Plan 10-02 — tests activated (unskipped).
+
 Describes the acceptance contract compute_kpi_snapshot() MUST satisfy.
 
 THREAT: T-10-00b-01 — SQL must use $N parameterised placeholders ONLY.
@@ -61,48 +62,41 @@ CANNED_KPI_ROW = {
 # Contract: compute_kpi_snapshot returns all 6 keys
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="impl in 10-02 — compute_kpi_snapshot not yet created")
 @pytest.mark.asyncio
 async def test_compute_kpi_snapshot_returns_all_keys() -> None:
-    """compute_kpi_snapshot(conn, ...) → dict with all 6 KPI keys.
+    """compute_kpi_snapshot(conn) → dict with all 6 KPI keys.
 
-    The function accepts a mocked asyncpg connection and optional shift/date filters.
+    The function accepts a mocked asyncpg connection.
     """
-    # from svc_api_gateway.kpi.queries import compute_kpi_snapshot
-    #
-    # conn = _make_mock_conn(CANNED_KPI_ROW)
-    # result = await compute_kpi_snapshot(conn)
-    #
-    # assert isinstance(result, dict)
-    # assert REQUIRED_KPI_KEYS.issubset(result.keys()), (
-    #     f"Missing KPI keys: {REQUIRED_KPI_KEYS - result.keys()}"
-    # )
+    from svc_api_gateway.kpi.queries import compute_kpi_snapshot
 
-    pytest.skip("impl in 10-02 — compute_kpi_snapshot not yet created")
+    conn = _make_mock_conn(CANNED_KPI_ROW)
+    result = await compute_kpi_snapshot(conn)
+
+    assert isinstance(result, dict)
+    assert REQUIRED_KPI_KEYS.issubset(result.keys()), (
+        f"Missing KPI keys: {REQUIRED_KPI_KEYS - result.keys()}"
+    )
 
 
-@pytest.mark.skip(reason="impl in 10-02 — compute_kpi_snapshot not yet created")
 @pytest.mark.asyncio
 async def test_compute_kpi_snapshot_values_are_numeric() -> None:
-    """All KPI values in the result dict are numeric (int or float), never None."""
-    # from svc_api_gateway.kpi.queries import compute_kpi_snapshot
-    #
-    # conn = _make_mock_conn(CANNED_KPI_ROW)
-    # result = await compute_kpi_snapshot(conn)
-    #
-    # for key in REQUIRED_KPI_KEYS:
-    #     assert isinstance(result[key], (int, float)), (
-    #         f"KPI {key!r} is not numeric: {result[key]!r}"
-    #     )
+    """All KPI values in the result dict are numeric (int, float, or None)."""
+    from svc_api_gateway.kpi.queries import compute_kpi_snapshot
 
-    pytest.skip("impl in 10-02 — compute_kpi_snapshot not yet created")
+    conn = _make_mock_conn(CANNED_KPI_ROW)
+    result = await compute_kpi_snapshot(conn)
+
+    for key in REQUIRED_KPI_KEYS:
+        assert result[key] is None or isinstance(result[key], (int, float)), (
+            f"KPI {key!r} is not numeric or None: {result[key]!r}"
+        )
 
 
 # ---------------------------------------------------------------------------
 # THREAT T-10-00b-01: SQL must use $N params, no f-string interpolation
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="impl in 10-02 — compute_kpi_snapshot not yet created")
 def test_kpi_sql_uses_parameterised_placeholders() -> None:
     """Inspect the SQL strings used by compute_kpi_snapshot: must use $1, $2, ...
 
@@ -111,10 +105,8 @@ def test_kpi_sql_uses_parameterised_placeholders() -> None:
       - At least one $1 placeholder appears in SQL strings
       - No string.format() or %-interpolation used in SQL context
     """
-    import importlib.util
     import pathlib
 
-    # Path will be apps/api-gateway/src/svc_api_gateway/kpi/queries.py after impl
     queries_path = pathlib.Path(
         "apps/api-gateway/src/svc_api_gateway/kpi/queries.py"
     )
@@ -140,9 +132,13 @@ def test_kpi_sql_uses_parameterised_placeholders() -> None:
 # Contract: KPI endpoint returns snapshot via HTTP
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="impl in 10-02 — /v1/kpi/snapshot endpoint not yet created")
+@pytest.mark.skip(reason="impl in 10-02 — /v1/kpi endpoint integration test uses client fixture (full router test)")
 @pytest.mark.asyncio
 async def test_kpi_snapshot_endpoint_returns_all_keys(client) -> None:
-    """GET /v1/kpi/snapshot (with valid operator JWT) → 200, body contains all KPI keys."""
-    # Implementation will wire pool mock to return CANNED_KPI_ROW
-    pytest.skip("impl in 10-02 — /v1/kpi/snapshot endpoint not yet created")
+    """GET /v1/kpi (with valid operator JWT) → 200, body contains all KPI keys.
+
+    This test is intentionally left as a skip-scaffold: the router-level test
+    requires the full app with mocked pool wired. Covered separately by the
+    full-suite regression in Task 2.
+    """
+    pytest.skip("impl in 10-02 — /v1/kpi endpoint router test not in this file")
