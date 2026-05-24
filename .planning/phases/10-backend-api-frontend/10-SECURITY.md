@@ -100,6 +100,23 @@ created: 2026-05-24
 
 ---
 
+## Phase 11 Closure — Annotazioni AR-01..AR-07
+
+> Aggiornato in Phase 11 Piano 11-05 (2026-05-25). Nessun threat esistente è stato
+> modificato — solo aggiunte le note di chiusura/stato.
+
+| Risk ID | Stato Phase 11 | Documento di chiusura | Note |
+|---------|----------------|----------------------|------|
+| AR-01 | DOCUMENTATO | `docs/security/rate-limit-scaling.md` | Path evolutivo Redis documentato (RATE_LIMIT_BACKEND=redis). Non implementato in v1.0. |
+| AR-02 | RIMANE DEV-MODE | — | SSE token in URL resta accettato per dev-mode. HttpOnly cookie deferred a milestone futura (post v1.0). Il `decode_token` server-side rimane identico — nessun gap funzionale di sicurezza. |
+| AR-03 | RIMANE DEV-MODE | — | localStorage token accettato per seeded personas dev-mode. HttpOnly cookie + SameSite=Strict deferred a milestone futura (post v1.0). Nessun PII reale in dev. |
+| AR-04 | CHIUSO (design) | — | /demo aperto per design deliberato. Nessun cambiamento in Phase 11. |
+| AR-05 | CHIUSO (design) | — | Screenshot con dati sintetici per design. Nessun cambiamento in Phase 11. |
+| AR-06 | CHIUSO | `docs/security/owasp-llm-top10.md` | OWASP LLM Top-10 mappato a mitigazioni concrete (LLM01..LLM10). SEC-02 fulfilled. |
+| AR-07 | DOCUMENTATO | `docs/security/rate-limit-scaling.md` | Multi-worker limiter documentato con warning in lifespan.py. Redis path architetturale descritto. Non implementato in v1.0. |
+
+---
+
 ## Fix Post Code-Review Verificati
 
 I seguenti 4 problemi critici e 7 warning rilevati dalla revisione del codice (10-REVIEW.md) sono stati corretti (10-REVIEW-FIX.md) e verificati in codice:
