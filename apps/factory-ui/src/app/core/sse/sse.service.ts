@@ -75,14 +75,22 @@ export class SseService implements OnDestroy {
   private readonly _disconnectedAt = signal<number | null>(null);
 
   /**
+   * WR-03: dedicated boolean signal for the "disconnected too long" state.
+   * A pure computed() over _disconnectedAt would never re-evaluate after 5 s
+   * because Angular computed() only re-runs when a dependency signal changes.
+   * Instead, a setTimeout fires after DISCONNECT_BANNER_THRESHOLD_MS and sets
+   * this signal to true, causing the computed below to update reactively.
+   */
+  private readonly _disconnectedTooLongSignal = signal<boolean>(false);
+  private _disconnectBannerTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /**
    * True after 5s of continuous disconnection — drives the warning banner
    * (10-UI-SPEC: "Mostra banner --sft-warning dopo 5s di disconnessione").
    */
-  readonly disconnectedTooLong = computed<boolean>(() => {
-    const ts = this._disconnectedAt();
-    if (ts === null) return false;
-    return Date.now() - ts > DISCONNECT_BANNER_THRESHOLD_MS;
-  });
+  readonly disconnectedTooLong = computed<boolean>(
+    () => this._disconnectedTooLongSignal(),
+  );
 
   // ---------------------------------------------------------------------------
   // Private state
@@ -124,6 +132,7 @@ export class SseService implements OnDestroy {
     this._closeEventSource();
     this.connectionStatus.set('disconnected');
     this._disconnectedAt.set(Date.now());
+    this._startDisconnectBannerTimer();
   }
 
   /**
@@ -141,6 +150,8 @@ export class SseService implements OnDestroy {
         case 'sse_heartbeat':
           this.connectionStatus.set('connected');
           this._disconnectedAt.set(null);
+          this._cancelDisconnectBannerTimer();
+          this._disconnectedTooLongSignal.set(false);
           this._currentBackoffMs = BACKOFF_INITIAL_MS;
           break;
 
@@ -182,6 +193,7 @@ export class SseService implements OnDestroy {
   handleError(_event: Event): void {
     this.connectionStatus.set('reconnecting');
     this._disconnectedAt.set(Date.now());
+    this._startDisconnectBannerTimer();
     this._closeEventSource();
     this._scheduleReconnect();
   }
@@ -200,6 +212,9 @@ export class SseService implements OnDestroy {
 
   private _openConnection(url: string, token: string): void {
     this._closeEventSource();
+    // Reset the banner signal when a new connection attempt starts.
+    this._cancelDisconnectBannerTimer();
+    this._disconnectedTooLongSignal.set(false);
 
     const fullUrl = `${url}?token=${encodeURIComponent(token)}`;
     const es = new EventSource(fullUrl);
@@ -259,6 +274,30 @@ export class SseService implements OnDestroy {
     if (this._reconnectTimer !== null) {
       clearTimeout(this._reconnectTimer);
       this._reconnectTimer = null;
+    }
+  }
+
+  /**
+   * WR-03: starts a one-shot timer that sets _disconnectedTooLongSignal to true
+   * after DISCONNECT_BANNER_THRESHOLD_MS (5 s). SSR-safe: only runs when
+   * isBrowser is true (setTimeout is not available on the server).
+   *
+   * Cancels any previously pending timer first so repeated disconnects
+   * correctly restart the 5 s countdown.
+   */
+  private _startDisconnectBannerTimer(): void {
+    this._cancelDisconnectBannerTimer();
+    if (!this.isBrowser) return;
+    this._disconnectBannerTimer = setTimeout(() => {
+      this._disconnectedTooLongSignal.set(true);
+      this._disconnectBannerTimer = null;
+    }, DISCONNECT_BANNER_THRESHOLD_MS);
+  }
+
+  private _cancelDisconnectBannerTimer(): void {
+    if (this._disconnectBannerTimer !== null) {
+      clearTimeout(this._disconnectBannerTimer);
+      this._disconnectBannerTimer = null;
     }
   }
 }
