@@ -50,7 +50,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **HITL-07**: Override umano sempre tracciato con motivazione obbligatoria
 - [ ] **HITL-08**: Rollback di azione agente tramite event sourcing replay
 - [ ] **HITL-09**: Approval rate governor: se >80% azioni auto-approvate consecutivamente, alert al Manager
-- [ ] **HITL-10**: Rate-limit alarm su UI operatore (max 12 alert/ora per persona)
+- [x] **HITL-10**: Rate-limit alarm su UI operatore (max 12 alert/ora per persona)
 
 ### IT/OT Integration (IOT)
 
@@ -119,7 +119,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **UI-03**: Approval queue UI con evidence panel inline (input, tool calls, RAG citations, confidence)
 - [x] **UI-04**: Dashboard control room con KPI live (OEE, MTTR, MTBF, scrap rate, throughput, downtime)
 - [x] **UI-05**: Tema dark/light + alta leggibilità (contrast WCAG AA minimo)
-- [ ] **UI-06**: Stream eventi via SSE/WebSocket dal backend FastAPI
+- [x] **UI-06**: Stream eventi via SSE/WebSocket dal backend FastAPI
 - [x] **UI-07**: i18n IT+EN su tutti i testi UI con lazy load lingua
 - [ ] **UI-08**: Persona walkthrough demo (operatore, capo turno, tecnico, CIO) integrato nell'app
 - [ ] **UI-09**: Mock UI documentate in `docs/` con screenshot generati automaticamente in CI
@@ -291,7 +291,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | HITL-07 | Phase 4 | Pending |
 | HITL-08 | Phase 4 | Pending |
 | HITL-09 | Phase 4 | Pending |
-| HITL-10 | Phase 4 | Pending |
+| HITL-10 | Phase 4 | Complete |
 | KNW-01 | Phase 5 | Pending |
 | KNW-02 | Phase 5 | Pending |
 | KNW-03 | Phase 5 | Pending |
@@ -333,7 +333,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | UI-03 | Phase 10 | Pending |
 | UI-04 | Phase 10 | Complete |
 | UI-05 | Phase 10 | Complete |
-| UI-06 | Phase 10 | Pending |
+| UI-06 | Phase 10 | Complete |
 | UI-07 | Phase 10 | Complete |
 | UI-08 | Phase 10 | Pending |
 | UI-09 | Phase 10 | Pending |
