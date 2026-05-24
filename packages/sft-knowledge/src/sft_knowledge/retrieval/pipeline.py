@@ -14,12 +14,27 @@ ACL (D-63 + T-05-09-01 mitigation):
     Il filtro è applicato a livello di engine Qdrant (mai post-filter Python).
     ``build_acl_filter`` solleva ``ValueError`` se nessun role mappa ad alcun
     livello (fail-closed).
+
+Audit (SEC-07 — Phase 11):
+    Se ``audit_writer`` è fornito e la query restituisce ≥1 chunk con
+    ``acl_level == 'restricted'``, viene scritto un ``AuditRecord`` con
+    ``action_type = ActionType.RESTRICTED_DOC_ACCESS`` e ``decision = Decision.LOGGED``.
+    I chunk_ids e query_hash sono inclusi nei details (T-11-03-04 mitigation).
+    Il testo della query NON viene incluso in chiaro (solo hash SHA-256).
+
+    Dipendenza circolare (Assumption A4, Piano 11-03): sft_knowledge importa già da
+    sft_agents.models.* (RagCitation, Decision, ecc.) — import da sft_agents.models.enums
+    e sft_agents.models.audit NON è una nuova dipendenza circolare. L'audit_writer è
+    passato come collaboratore (protocol duck-typing) per evitare coupling con
+    sft_agents.tools.audit (tool LangChain).
 """
 
 from __future__ import annotations
 
+import hashlib
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
+from uuid import uuid4
 
 import structlog
 
@@ -119,6 +134,7 @@ class RetrievalPipeline:
         qdrant_client: AsyncQdrantClient,
         embedder: BgeM3Embedder,
         reranker: BgeReranker | None = None,
+        audit_writer: Any | None = None,
     ) -> None:
         """Inizializza la pipeline.
 
@@ -127,10 +143,15 @@ class RetrievalPipeline:
             embedder: ``BgeM3Embedder`` (Plan 05-07).
             reranker: ``BgeReranker`` opzionale; se ``None`` ne viene creato uno
                 con singleton lazy (lazy-load del modello al primo rerank).
+            audit_writer: Collaboratore con metodo ``async write(AuditRecord)`` per
+                l'audit SEC-07 su chunk restricted. Se ``None``, nessun audit viene scritto.
+                Passato come collaboratore duck-typed per evitare coupling con
+                sft_agents.tools.audit (T-11-03-04 mitigation).
         """
         self._client = qdrant_client
         self._embedder = embedder
         self._reranker = reranker if reranker is not None else BgeReranker()
+        self._audit_writer = audit_writer
         self._log = logger.bind(component="retrieval_pipeline")
 
     async def search(
@@ -143,6 +164,7 @@ class RetrievalPipeline:
         sop_ids: list[str] | None = None,
         asset_family: str | None = None,
         rerank: bool = True,
+        principal: dict[str, Any] | None = None,
     ) -> list[RagCitation]:
         """Esegui retrieval ibrido + ACL pre-filter + rerank opzionale.
 
@@ -156,6 +178,8 @@ class RetrievalPipeline:
             asset_family: se impostato, filtra per ``payload.asset_family``.
             rerank: se ``True`` applica BGE cross-encoder rerank; altrimenti
                 usa lo score Fusion RRF.
+            principal: dict JWT payload (sub, role) per l'audit SEC-07.
+                Se ``None``, principal_id sarà "anonymous".
 
         Returns:
             Lista di ``RagCitation`` ordinata desc per score, lunghezza ≤ k.
@@ -313,7 +337,117 @@ class RetrievalPipeline:
             returned=len(citations),
             reranked=rerank,
         )
+
+        # ---- 6. Audit restricted chunk access (SEC-07, T-11-03-04) --------
+        # If audit_writer is configured and any returned hit has acl_level=='restricted',
+        # write a RESTRICTED_DOC_ACCESS audit row. The query text is never stored in
+        # clear — only query_hash (SHA-256) to avoid information leakage (T-11-03-04).
+        if self._audit_writer is not None:
+            await self._write_restricted_audit(
+                fused_hits=fused_hits,
+                query=query,
+                principal=principal or {},
+                retrieved_at=retrieved_at,
+            )
+
         return citations
+
+    async def _write_restricted_audit(
+        self,
+        fused_hits: list[Any],
+        query: str,
+        principal: dict[str, Any],
+        retrieved_at: datetime,
+    ) -> None:
+        """Scrive AuditRecord RESTRICTED_DOC_ACCESS se ≥1 hit ha acl_level='restricted'.
+
+        Chiamata solo se self._audit_writer è configurato (non None).
+        Il query hash SHA-256 è incluso nei details (T-11-03-04 mitigation).
+
+        Args:
+            fused_hits: lista di ScoredPoint da Qdrant (pre-top-k, per catturare tutti i restricted).
+            query: testo della query originale (non incluso in chiaro nell'audit).
+            principal: dict JWT payload (sub, role) del chiamante.
+            retrieved_at: timestamp UTC del retrieval.
+        """
+        # Cerca chunk restricted nella lista totale di hits (non solo top-k)
+        restricted_hits = [
+            h for h in fused_hits
+            if (h.payload or {}).get("acl_level") == "restricted"
+        ]
+
+        if not restricted_hits:
+            return  # nessun chunk restricted — nessun audit (no false positive)
+
+        # Import lazy per non creare circolarità a livello di modulo
+        from sft_agents.models.audit import AuditRecord
+        from sft_agents.models.budget import BudgetSnapshot
+        from sft_agents.models.enums import ActionType, Decision
+        from sft_agents.models.evidence import EvidencePanel, TokenUsage
+
+        # query_hash SHA-256 — non il testo in chiaro (T-11-03-04)
+        query_hash = hashlib.sha256(query.encode("utf-8")).hexdigest()
+
+        chunk_ids = [str(h.id) for h in restricted_hits]
+        principal_id = str(principal.get("sub", "anonymous"))
+
+        # EvidencePanel minimale — row osservazionale (Decision.LOGGED)
+        evidence = EvidencePanel(
+            input_summary=f"Restricted chunk access: {len(restricted_hits)} chunk(s)",
+            input_truncated=False,
+            tool_calls=[],
+            rag_citations=[],
+            confidence=1.0,
+            model="retrieval-pipeline@sft-knowledge",
+            prompt_hash="0" * 64,  # nessun prompt LLM — zero hash sentinella
+            tokens=TokenUsage(input=0, output=0, total=0),
+            duration_ms=0,
+        )
+
+        # BudgetSnapshot zero — nessun LLM invocato
+        budget = BudgetSnapshot(
+            tokens_input=0,
+            tokens_output=0,
+            tokens_total=0,
+            cost_usd_simulated=0.0,
+            duration_ms=0,
+            limit_tokens=50000,
+            limit_cost_usd=1.0,
+            limit_duration_s=60,
+        )
+
+        record = AuditRecord(
+            id=uuid4(),
+            ts=retrieved_at,
+            action_id=uuid4(),
+            agent_id="retrieval-pipeline",
+            thread_id=f"retrieval.{query_hash[:8]}",
+            cluster="knowledge",
+            action_type=ActionType.RESTRICTED_DOC_ACCESS.value,
+            evidence_panel=evidence,
+            decision=Decision.LOGGED,
+            decision_actor=None,
+            motivation=None,
+            budget_snapshot=budget,
+            approval_id=None,
+        )
+
+        try:
+            await self._audit_writer.write(record)
+            self._log.info(
+                "restricted_doc_access_audited",
+                principal_id=principal_id,
+                chunk_ids=chunk_ids,
+                query_hash=query_hash,
+                restricted_count=len(restricted_hits),
+            )
+        except Exception as exc:
+            # Audit failure is best-effort — never prevent retrieval from completing
+            self._log.error(
+                "restricted_audit_write_failed",
+                error=str(exc),
+                principal_id=principal_id,
+            )
 
 
 __all__ = ["ROLE_TO_ACL", "RetrievalPipeline", "build_acl_filter"]
