@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 10 complete (13/13) — ready to discuss Phase 11
-last_updated: 2026-05-24T21:20:52.972Z
+status: planning
+stopped_at: Phase 11 context gathered
+last_updated: "2026-05-24T21:31:54.195Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -163,6 +163,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T20:10:00Z
-Stopped at: "10-11 complete — Phase 10 DONE. openapi.json (39 schemas) + api-types.ts + 21-test contract guard (SRV-05) + bilingual screenshot spec + ui-mock.md IT/EN + mkdocs strict pass (UI-09). Phase 11 ready."
-Resume file: None (Phase 10 complete — plan Phase 11)
+Last session: 2026-05-24T21:31:54.183Z
+Stopped at: Phase 11 context gathered
+Resume file: .planning/phases/11-observability-evaluation-security-hardening/11-CONTEXT.md
