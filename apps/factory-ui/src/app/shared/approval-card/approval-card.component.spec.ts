@@ -18,9 +18,39 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 
 import { ApprovalCardComponent, ApprovalCardData } from './approval-card.component';
 import { EvidencePanel } from './evidence-panel.component';
+
+const translocoTesting = TranslocoTestingModule.forRoot({
+  langs: {
+    it: {
+      actions: { approve: 'Approva azione', reject: 'Rifiuta', confirm_reject: 'Conferma rifiuto' },
+      hitl: {
+        motivation_label: 'Motivazione',
+        motivation_placeholder: 'Inserisci la motivazione (min. 10 caratteri)...',
+        motivation_error: 'La motivazione deve contenere almeno 10 caratteri.',
+        destructive_confirm: 'Stai per rifiutare questa azione AI.',
+      },
+      queue: { cancel: 'Annulla' },
+      approval: {
+        input_section: 'Input agente',
+        tool_calls_section: 'Tool call',
+        rag_citations_section: 'Citazioni RAG',
+        confidence_section: 'Confidenza',
+        acl_restricted: 'Contenuto riservato',
+        tool_result_label: 'Risultato:',
+        confidence_low: 'Bassa confidenza',
+        confidence_medium: 'Confidenza media',
+        confidence_high: 'Alta confidenza',
+      },
+      empty_state: { tool_calls: 'Nessuna tool call', rag_citations: 'Nessuna citazione RAG' },
+    },
+  },
+  translocoConfig: { defaultLang: 'it', availableLangs: ['it'] },
+  preloadLangs: true,
+});
 
 // ---------------------------------------------------------------------------
 // Test fixtures
@@ -91,6 +121,7 @@ describe('ApprovalCardComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         ApprovalCardComponent,
+        translocoTesting,
       ],
     }).compileComponents();
 

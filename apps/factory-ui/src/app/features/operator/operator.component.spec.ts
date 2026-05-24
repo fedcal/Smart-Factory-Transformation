@@ -19,6 +19,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { signal } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { OperatorComponent } from './operator.component';
 import {
   SseService,
@@ -27,6 +28,26 @@ import {
   AlertNewEvent,
 } from '../../core/sse/sse.service';
 import { JwtService } from '../../core/auth/jwt.service';
+
+const translocoTesting = TranslocoTestingModule.forRoot({
+  langs: {
+    it: {
+      error_state: { sse_connection: 'Connessione interrotta. Riconnessione in corso...' },
+      empty_state: {
+        approvals_heading: 'Nessuna approvazione pendente',
+        approvals_body: "Il sistema è in attesa di nuove proposte dall'AI.",
+        alert_feed: 'Nessun alert nelle ultime 24 ore.',
+      },
+      banners: { rate_limit: 'Limite di 12 alert/ora raggiunto.' },
+      alert: { action_button: "Vai all'approvazione" },
+      queue: { filter_all: 'Tutti', filter_mine: 'Solo miei', filter_expiring: 'Per scadenza', sort_date_asc: 'Data ↑', sort_date_desc: 'Data ↓', sort_priority_desc: 'Priorità ↑', cancel: 'Annulla' },
+      approval: { queue_heading: 'Approvazioni Pendenti' },
+      kpi: { oee: 'OEE', mttr: 'MTTR', scrap_rate: 'Scarto', downtime: 'Fermo' },
+    },
+  },
+  translocoConfig: { defaultLang: 'it', availableLangs: ['it'] },
+  preloadLangs: true,
+});
 
 // ---------------------------------------------------------------------------
 // Fake SseService
@@ -65,7 +86,7 @@ describe('OperatorComponent', () => {
     fakeJwt = makeFakeJwtService();
 
     await TestBed.configureTestingModule({
-      imports: [OperatorComponent, NoopAnimationsModule],
+      imports: [OperatorComponent, NoopAnimationsModule, translocoTesting],
       providers: [
         { provide: PLATFORM_ID, useValue: 'browser' },
         { provide: SseService, useValue: fakeSse },
@@ -113,7 +134,7 @@ describe('OperatorComponent', () => {
   });
 
   it('calls sseService.connect on init in browser platform', () => {
-    expect(fakeSse.connect).toHaveBeenCalledWith('/v1/stream/events', 'fake-token');
+    expect(fakeSse.connect).toHaveBeenCalledWith('/v1/stream/kpi', 'fake-token');
   });
 
   it('kpiValue returns null when kpiSnapshot is null', () => {

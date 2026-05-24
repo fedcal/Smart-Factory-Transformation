@@ -19,6 +19,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { signal } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { ManagerComponent } from './manager.component';
 import {
   SseService,
@@ -27,6 +28,37 @@ import {
   AlertNewEvent,
 } from '../../core/sse/sse.service';
 import { JwtService } from '../../core/auth/jwt.service';
+
+const translocoTesting = TranslocoTestingModule.forRoot({
+  langs: {
+    it: {
+      error_state: { sse_connection: 'Connessione interrotta. Riconnessione in corso...' },
+      empty_state: {
+        approvals_heading: 'Nessuna approvazione pendente',
+        approvals_body: "Il sistema è in attesa di nuove proposte dall'AI.",
+        alert_feed: 'Nessun alert nelle ultime 24 ore.',
+        kpi: 'Dati non disponibili.',
+      },
+      banners: { rate_limit: 'Limite di 12 alert/ora raggiunto.', governor_alert: 'Attenzione: auto-approvazione.' },
+      alert: { action_button: "Vai all'approvazione" },
+      queue: { filter_all: 'Tutti', filter_mine: 'Solo miei', filter_expiring: 'Per scadenza', sort_date_asc: 'Data ↑', sort_date_desc: 'Data ↓', sort_priority_desc: 'Priorità ↑', cancel: 'Annulla' },
+      approval: { queue_heading: 'Approvazioni Pendenti' },
+      kpi: {
+        oee: 'OEE', oee_unit: 'Efficienza Overall',
+        mttr: 'MTTR', mttr_unit: 'Tempo riparazione',
+        mtbf: 'MTBF', mtbf_unit: 'Tempo tra guasti',
+        scrap_rate: 'Scarto', scrap_rate_unit: 'Percentuale scarto',
+        throughput: 'Produttività', throughput_unit: 'kg/ora',
+        downtime: 'Fermo', downtime_unit: 'Percentuale fermo',
+        dashboard_title: 'Sala Controllo',
+      },
+      sse: { live_indicator: 'In tempo reale', disconnected: 'Non connesso' },
+      shift: { morning: 'Turno Mattino', afternoon: 'Turno Pomeriggio', night: 'Turno Notte' },
+    },
+  },
+  translocoConfig: { defaultLang: 'it', availableLangs: ['it'] },
+  preloadLangs: true,
+});
 
 // ---------------------------------------------------------------------------
 // Fake services
@@ -65,7 +97,7 @@ describe('ManagerComponent', () => {
     fakeJwt = makeFakeJwtService();
 
     await TestBed.configureTestingModule({
-      imports: [ManagerComponent, NoopAnimationsModule],
+      imports: [ManagerComponent, NoopAnimationsModule, translocoTesting],
       providers: [
         { provide: PLATFORM_ID, useValue: 'browser' },
         { provide: SseService, useValue: fakeSse },
@@ -123,7 +155,7 @@ describe('ManagerComponent', () => {
   });
 
   it('calls sseService.connect on init in browser platform', () => {
-    expect(fakeSse.connect).toHaveBeenCalledWith('/v1/stream/events', 'fake-manager-token');
+    expect(fakeSse.connect).toHaveBeenCalledWith('/v1/stream/kpi', 'fake-manager-token');
   });
 
   it('kpiValue returns null when kpiSnapshot is null', () => {

@@ -17,8 +17,8 @@ import { ChartsRowComponent, OeeTrendPoint, DowntimePareto } from './charts-row.
 /** All 6 KPI keys displayed in the control-room grid */
 const KPI_GRID_KEYS: KpiKey[] = ['oee', 'mttr', 'mtbf', 'scrap_rate', 'throughput', 'downtime'];
 
-/** Default SSE stream endpoint */
-const SSE_STREAM_URL = '/v1/stream/events';
+/** SSE stream endpoint for KPI updates (UI-SPEC SSE Contract) */
+const SSE_STREAM_URL = '/v1/stream/kpi';
 
 /** Shift options for the ShiftSelector */
 const SHIFT_OPTIONS = [

@@ -19,8 +19,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 import { AlertFeedComponent } from './alert-feed.component';
 import { AlertNewEvent } from '../../core/sse/sse.service';
+
+const translocoTestingModule = TranslocoTestingModule.forRoot({
+  langs: {
+    it: {
+      empty_state: { alert_feed: 'Nessun alert nelle ultime 24 ore.' },
+      banners: { rate_limit: 'Limite di 12 alert/ora raggiunto. Nuovi alert sospesi temporaneamente.' },
+      alert: { action_button: "Vai all'approvazione" },
+    },
+  },
+  translocoConfig: { defaultLang: 'it', availableLangs: ['it'] },
+  preloadLangs: true,
+});
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -39,7 +52,7 @@ function createFixture(
   rateLimitReached = false,
 ): ComponentFixture<AlertFeedComponent> {
   TestBed.configureTestingModule({
-    imports: [NoopAnimationsModule, AlertFeedComponent],
+    imports: [NoopAnimationsModule, AlertFeedComponent, translocoTestingModule],
   });
   const fixture = TestBed.createComponent(AlertFeedComponent);
   fixture.componentRef.setInput('alerts', alerts);

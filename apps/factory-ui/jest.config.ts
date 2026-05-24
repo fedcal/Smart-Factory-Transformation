@@ -12,7 +12,7 @@ export default {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$|ng2-charts|chart\\.js|lodash-es))'],
+  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$|ng2-charts|chart\\.js|lodash-es|@jsverse))'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

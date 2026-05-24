@@ -14,11 +14,29 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslocoTestingModule } from '@jsverse/transloco';
 
 import { LoginComponent } from './login.component';
 import { JwtService } from '../core/auth/jwt.service';
 import { SseService } from '../core/sse/sse.service';
 import { RBAC_GUARD_SERVICE_TOKEN } from '../core/auth/rbac.guard';
+
+const translocoTesting = TranslocoTestingModule.forRoot({
+  langs: {
+    it: {
+      auth: {
+        email: { label: 'Indirizzo email', placeholder: 'operatore@mantis.it' },
+        password: { label: 'Password' },
+        login_cta: 'Accedi',
+        login_as: 'Accedi come {{role}}',
+        error_credentials: 'Credenziali non valide. Controlla email e password.',
+        loading: 'Accesso in corso...',
+      },
+    },
+  },
+  translocoConfig: { defaultLang: 'it', availableLangs: ['it'] },
+  preloadLangs: true,
+});
 
 // ---------------------------------------------------------------------------
 // Helpers — minimal valid JWT (8h from now)
@@ -56,6 +74,7 @@ describe('LoginComponent — CR-04: correct SSE URL after login', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         LoginComponent,
+        translocoTesting,
       ],
       providers: [
         { provide: PLATFORM_ID, useValue: 'browser' },
