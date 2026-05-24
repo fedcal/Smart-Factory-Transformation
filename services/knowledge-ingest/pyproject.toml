@@ -12,6 +12,7 @@ dependencies = [
   "sft-knowledge",
   "sft-domain",
   "sft-assets",
+  "bleach>=6.3,<7",
 ]
 
 [tool.uv.sources]

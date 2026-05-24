@@ -52,6 +52,9 @@ dev = [
   "asyncpg>=0.30",
   "asyncua>=1.1.8",
   "nats-py>=2.14.0",
+  # Phase 11 eval deps — eval gate tests only, NOT runtime packages
+  "deepeval>=4.0,<5",
+  "ragas>=0.4,<0.5",
 ]
 
 [tool.ruff]
