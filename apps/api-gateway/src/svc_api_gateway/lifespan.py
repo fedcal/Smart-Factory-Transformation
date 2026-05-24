@@ -1,4 +1,4 @@
-"""FastAPI lifespan — Plan 04-07 Task 1, extended Plan 08-08.
+"""FastAPI lifespan — Plan 04-07 Task 1, extended Plan 08-08, Plan 09-06.
 
 On startup:
     1. asyncpg pool (size 5-20, statement_cache_size=0 — Pitfall 6 for TimescaleDB)
@@ -11,6 +11,7 @@ On startup:
     8. Background tasks: OutboxRetry, EscalationSupervisor, Governor (asyncio.create_task)
     9. IdempotencyCache (in-memory, 5-min TTL)
    10. Knowledge agent instances + knowledge_children dict (Plan 08-08, D-X-04)
+   11. Supply agent instances + supply_children dict (Plan 09-06, D-X-04 pattern)
 
 On shutdown:
     1. Cancel + await background tasks (CancelledError-tolerant)
@@ -39,6 +40,17 @@ Plan 08-08 extension:
     full supervisor routing wired in Phase 11. For 07-10/08-08 tests the
     supervisor_graph is mocked so internal cluster routing is tested E2E in
     a later phase.
+
+Plan 09-06 extension:
+    Supply agent DI (D-X-04 pattern — mirrors knowledge DI):
+        supply_children = {
+            'inventory-manager':  InventoryManager,
+            'energy-optimizer':   EnergyOptimizer,
+            'cost-analyzer':      CostAnalyzer,
+            'demand-forecaster':  DemandForecaster,
+        }
+    build_supply_subgraph wired; cost-analyzer MUST be present (SCM fallback).
+    CR-01: each class imported by EXACT exported name verified against agent modules.
 """
 
 from __future__ import annotations
@@ -210,6 +222,47 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     # knowledge_children dict is available for direct DI via get_knowledge_children.
     _knowledge_subgraph = build_knowledge_subgraph(knowledge_children)  # noqa: F841 — Phase 11 will wire into supervisor
 
+    # 11) Supply agent instances + supply_children dict (Plan 09-06, D-X-04 pattern).
+    #     CR-01: each class imported by EXACT exported name (verified against agent.py).
+    #     CostAnalyzer.__init__ takes positional args (not keyword-only) — note signature.
+    from scm_inventory_manager.agent import InventoryManager  # noqa: PLC0415
+    from scm_energy_optimizer.agent import EnergyOptimizer  # noqa: PLC0415
+    from scm_cost_analyzer.agent import CostAnalyzer  # noqa: PLC0415
+    from scm_demand_forecaster.agent import DemandForecaster  # noqa: PLC0415
+    from sft_agents.runtime.clusters import build_supply_subgraph  # noqa: PLC0415
+
+    inventory_manager_agent = InventoryManager(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,  # Phase 11: inject Qwen2.5 ChatOllama instance (LLM-free reorder path)
+    )
+    energy_optimizer_agent = EnergyOptimizer(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,  # Phase 11: inject LLM (EnPI path is LLM-free)
+    )
+    # CostAnalyzer.__init__ takes positional args (not keyword-only *-args).
+    cost_analyzer_agent = CostAnalyzer(
+        pool,
+        audit_writer,
+        None,  # llm — not used (LLM-free, deterministic OEPV)
+    )
+    demand_forecaster_agent = DemandForecaster(
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,  # Phase 11: inject LLM (Holt-Winters path is LLM-free)
+    )
+
+    supply_children = {
+        "inventory-manager": inventory_manager_agent,
+        "energy-optimizer": energy_optimizer_agent,
+        "cost-analyzer": cost_analyzer_agent,   # REQUIRED fallback (D-SCM-AUTO)
+        "demand-forecaster": demand_forecaster_agent,
+    }
+    # Build the supply subgraph (uncompiled — wired into supervisor in Phase 11).
+    # cost-analyzer MUST be in supply_children (build_supply_subgraph enforces this).
+    _supply_subgraph = build_supply_subgraph(supply_children)  # noqa: F841 — Phase 11 will wire into supervisor
+
     # 9) Wire app.state.
     app.state.pool = pool
     app.state.nats_publisher = nats_publisher
@@ -227,6 +280,7 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
     app.state.idempotency_cache = IdempotencyCache(ttl_seconds=300)
     app.state._checkpointer_cm = checkpointer_cm  # private — for teardown
     app.state.knowledge_children = knowledge_children  # Plan 08-08 D-X-04
+    app.state.supply_children = supply_children  # Plan 09-06 D-X-04 pattern
 
     logger.info("api_gateway_ready", background_tasks=3)
 

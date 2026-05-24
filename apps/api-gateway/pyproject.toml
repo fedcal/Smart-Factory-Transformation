@@ -27,6 +27,11 @@ dependencies = [
   "trn-training-coach",
   "trn-knowledge-curator",
   "trn-documentation-synthesizer",
+  # Phase 9 supply agents (Plan 09-06 — SCM-01/02/03/04)
+  "scm-inventory-manager",
+  "scm-energy-optimizer",
+  "scm-cost-analyzer",
+  "scm-demand-forecaster",
 ]
 
 [project.optional-dependencies]
@@ -56,6 +61,10 @@ trn-shift-handover = { workspace = true }
 trn-training-coach = { workspace = true }
 trn-knowledge-curator = { workspace = true }
 trn-documentation-synthesizer = { workspace = true }
+scm-inventory-manager = { workspace = true }
+scm-energy-optimizer = { workspace = true }
+scm-cost-analyzer = { workspace = true }
+scm-demand-forecaster = { workspace = true }
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

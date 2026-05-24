@@ -50,6 +50,7 @@ def build_app() -> FastAPI:
     from svc_api_gateway.routers import maintenance_agents as maintenance_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import ops_agents as ops_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import quality as quality_router  # noqa: PLC0415
+    from svc_api_gateway.routers import supply_agents as supply_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import threads as threads_router  # noqa: PLC0415
 
     app = FastAPI(
@@ -64,6 +65,7 @@ def build_app() -> FastAPI:
     app.include_router(ops_agents_router.router)  # Plan 06-12 — OPS-01/02/03
     app.include_router(maintenance_agents_router.router)  # Plan 07-10 — MNT-01/02/03/04
     app.include_router(knowledge_agents_router.router)  # Plan 08-08 — TRN-02/03/04/05
+    app.include_router(supply_agents_router.router)  # Plan 09-06 — SCM-01/02/03/04
     return app
 
 

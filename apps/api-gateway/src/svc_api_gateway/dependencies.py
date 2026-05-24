@@ -109,6 +109,25 @@ def get_knowledge_children(request: Request) -> Any:
     return _require_state(request, "knowledge_children")
 
 
+def get_supply_children(request: Request) -> Any:
+    """Return ``app.state.supply_children`` (dict[str, callable]) or 503.
+
+    The dict maps supply agent slugs to their async __call__ callables:
+        {
+            'inventory-manager':  InventoryManager.__call__,
+            'energy-optimizer':   EnergyOptimizer.__call__,
+            'cost-analyzer':      CostAnalyzer.__call__,
+            'demand-forecaster':  DemandForecaster.__call__,
+        }
+
+    Populated by :func:`svc_api_gateway.lifespan.lifespan` during app startup.
+    Used with build_supply_subgraph (09-01) for direct DI wiring.
+    The ``cost-analyzer`` key is REQUIRED — it is the fallback target for
+    the supply router (autonomous, D-SCM-AUTO).
+    """
+    return _require_state(request, "supply_children")
+
+
 __all__ = [
     "get_audit_writer",
     "get_checkpointer",
@@ -118,5 +137,6 @@ __all__ = [
     "get_nats_publisher",
     "get_pool",
     "get_queue_writer",
+    "get_supply_children",
     "get_supervisor_graph",
 ]
