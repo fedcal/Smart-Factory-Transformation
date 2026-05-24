@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 05-11 TraverseGraphTool _arun injection defense (CR-01 BLOCKER closed)
-last_updated: "2026-05-24T12:44:54.372Z"
+stopped_at: Completed 05-13 KNW-03 eval disclaimer and --stub flag gap closure (IN-05 closed)
+last_updated: "2026-05-24T14:55:00.000Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 85
-  completed_plans: 87
-  percent: 58
+  completed_plans: 88
+  percent: 67
 ---
 
 # Project State
@@ -68,6 +68,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 08 P04 | 25min | 2 tasks | 4 files |
 | Phase 08 P08 | 40min | 2 tasks | 6 files |
 | Phase 08 P09 | 40min | 2 tasks | 4 files |
+| Phase 05 P13 | 25min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 08-06: KnowledgeCurator autonomous pattern — audit rows written immediately before return, no HITL gating (D-KC-04)
 - [Phase ?]: Phase 08-08: knowledge-curator/ingest is 200 not 202 (autonomous D-KC-04); pyproject.toml extended with trn-* workspace deps for lifespan imports
 - [Phase ?]: Phase 08-09: E2E uses MagicMock(spec=SOPDraft) for negative TRN-05 gate to bypass Pydantic frozen model
+- [Phase 05-13]: KNW-03 gap closure path (A) chosen: disclaimer + safer CLI flag (--stub default False); live eval deferred to Phase 8 KnowledgeCurator
 
 ### Pending Todos
 
@@ -107,6 +109,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T12:44:54.359Z
-Stopped at: Completed 05-11 TraverseGraphTool _arun injection defense (CR-01 BLOCKER closed)
+Last session: 2026-05-24T14:55:00.000Z
+Stopped at: Completed 05-13 KNW-03 eval disclaimer and --stub flag gap closure (IN-05 closed)
 Resume file: None
