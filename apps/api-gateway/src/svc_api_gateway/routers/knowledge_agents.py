@@ -37,7 +37,7 @@ from uuid import uuid4
 import structlog
 from fastapi import APIRouter, Body, Depends, Request, status
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from sft_agents.llm.langfuse_callback import build_invocation_config
 
 from svc_api_gateway.dependencies import (
@@ -83,6 +83,17 @@ class ShiftHandoverCompileRequest(BaseModel):
         min_length=1,
         description="Caller roles for ACL enforcement (Phase 11)",
     )
+
+    @field_validator("shift_start", "shift_end")
+    @classmethod
+    def _require_tz(cls, v: datetime) -> datetime:
+        """Reject naive datetimes at the HTTP boundary (WR-02)."""
+        if v.tzinfo is None:
+            raise ValueError(
+                f"Il campo datetime deve essere tz-aware (UTC). "
+                f"Ricevuto naive: {v!r}. Aggiungere 'Z' o '+00:00' alla stringa ISO."
+            )
+        return v
 
     @model_validator(mode="after")
     def _check_window_order(self) -> "ShiftHandoverCompileRequest":
@@ -142,6 +153,11 @@ class KnowledgeCuratorIngestRequest(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
+    document_id: str = Field(
+        min_length=1,
+        max_length=256,
+        description="Unique document identifier (client-provided or SHA256 of content)",
+    )
     document_text: str = Field(
         min_length=1,
         max_length=100_000,
@@ -155,6 +171,26 @@ class KnowledgeCuratorIngestRequest(BaseModel):
     last_updated: datetime = Field(
         description="Document last-updated timestamp (tz-aware) for staleness check",
     )
+    source_uri: str = Field(
+        min_length=1,
+        max_length=512,
+        description="Document source URI for citation traceability (TRN-05)",
+    )
+    user_roles: list[str] = Field(
+        default_factory=list,
+        description="Caller roles for future ACL enforcement (Phase 11)",
+    )
+
+    @field_validator("last_updated")
+    @classmethod
+    def _require_tz(cls, v: datetime) -> datetime:
+        """Reject naive datetimes at the HTTP boundary (WR-02)."""
+        if v.tzinfo is None:
+            raise ValueError(
+                f"Il campo datetime deve essere tz-aware (UTC). "
+                f"Ricevuto naive: {v!r}. Aggiungere 'Z' o '+00:00' alla stringa ISO."
+            )
+        return v
 
 
 class DocumentationDraftRequest(BaseModel):
@@ -203,15 +239,19 @@ def _handle_recursion_error(exc: RecursionError, thread_id: str) -> JSONResponse
 
 
 def _handle_agent_error(exc: Exception, thread_id: str) -> JSONResponse:
-    """Surface unexpected agent invocation errors as 500 (T-08-debugability)."""
+    """Surface unexpected agent invocation errors as 500 (T-08-debugability).
+
+    The raw exception detail is logged server-side only (WR-05 — never in HTTP body).
+    """
     logger.error(
         "knowledge_agent_invocation_error",
         thread_id=thread_id,
         error=str(exc),
+        exc_info=True,
     )
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"error": str(exc), "thread_id": thread_id},
+        content={"error": "internal_agent_error", "thread_id": thread_id},
     )
 
 
@@ -414,9 +454,11 @@ async def post_knowledge_curator_ingest(
 
     state: dict[str, Any] = {
         "target_agent": "knowledge-curator",
+        "document_id": body.document_id,
         "document_text": body.document_text,
         "doc_type": body.doc_type,
         "last_updated": body.last_updated,
+        "source_uri": body.source_uri,
     }
 
     try:
