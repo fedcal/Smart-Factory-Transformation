@@ -20,6 +20,28 @@ from __future__ import annotations
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
+from sft_agents.models.audit import AuditRecord
+from sft_agents.models.enums import ActionType, Decision
+
+from scm_cost_analyzer.agent import CostAnalyzer
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _make_agent(mock_pool, mock_audit_writer):
+    """Costruisce CostAnalyzer con pool e audit_writer mock."""
+    return CostAnalyzer(
+        pool=mock_pool,
+        audit_writer=mock_audit_writer,
+    )
+
+
+async def _invoke(agent, state=None):
+    """Invoca l'agente con state opzionale."""
+    return await agent(state or {})
+
 
 # ---------------------------------------------------------------------------
 # Contract 1: interrupt() is NEVER called (autonomous agent)
@@ -35,12 +57,25 @@ async def test_cost_analyzer_does_not_call_interrupt(mock_audit_writer) -> None:
 
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (SCM-03 autonomous): "
-        "CostAnalyzer.__call__(state) must NOT call interrupt(). "
-        "Patch 'scm_cost_analyzer.agent.interrupt' with a MagicMock (or sentinel). "
-        "Assert: interrupt_mock.call_count == 0 after __call__ returns."
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=conn),
+            __aexit__=AsyncMock(return_value=None),
+        )
     )
+    # Mock fetchrow restituisce None (zero costi — valido per CostBreakdown)
+    conn.fetchrow = AsyncMock(return_value=None)
+
+    agent = _make_agent(pool, mock_audit_writer)
+
+    with patch("scm_cost_analyzer.agent.interrupt", create=True) as interrupt_mock:
+        await _invoke(agent)
+        assert interrupt_mock.call_count == 0, (
+            f"interrupt() non deve essere chiamato da CostAnalyzer (autonomo SCM-03). "
+            f"Chiamate trovate: {interrupt_mock.call_count}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -57,11 +92,25 @@ async def test_cost_analyzer_writes_decision_auto_audit_row(mock_audit_writer) -
 
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: after CostAnalyzer.__call__(state), "
-        "audit_writer.write was called at least once. "
-        "The written AuditRecord must have decision == Decision.AUTO. "
-        "Verify: written_record.decision == Decision.AUTO (from sft_agents.models.enums)."
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=conn),
+            __aexit__=AsyncMock(return_value=None),
+        )
+    )
+    conn.fetchrow = AsyncMock(return_value=None)
+
+    agent = _make_agent(pool, mock_audit_writer)
+    await _invoke(agent)
+
+    assert mock_audit_writer.write.call_count >= 1, (
+        "audit_writer.write deve essere chiamato almeno una volta."
+    )
+    written_record = mock_audit_writer.write.call_args_list[0][0][0]
+    assert written_record.decision == Decision.AUTO, (
+        f"Decision deve essere Decision.AUTO, trovata: {written_record.decision}"
     )
 
 
@@ -77,10 +126,23 @@ async def test_cost_analyzer_writes_cost_report_action_type(mock_audit_writer) -
     COST_REPORT was added to ActionType enum in plan 09-00a (migration 011 lockstep).
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: "
-        "written_record.action_type == ActionType.COST_REPORT.value. "
-        "(ActionType.COST_REPORT added in 09-00a migration 011 lockstep.)"
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=conn),
+            __aexit__=AsyncMock(return_value=None),
+        )
+    )
+    conn.fetchrow = AsyncMock(return_value=None)
+
+    agent = _make_agent(pool, mock_audit_writer)
+    await _invoke(agent)
+
+    assert mock_audit_writer.write.call_count >= 1
+    written_record = mock_audit_writer.write.call_args_list[0][0][0]
+    assert written_record.action_type == ActionType.COST_REPORT.value, (
+        f"action_type deve essere COST_REPORT, trovato: {written_record.action_type!r}"
     )
 
 
@@ -98,12 +160,17 @@ async def test_cost_analyzer_is_read_only_no_scm_writes(mock_pool, mock_audit_wr
 
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: "
-        "After CostAnalyzer.__call__(state), mock_pool connection.execute must NOT "
-        "have been called with any INSERT/UPDATE/DELETE statement targeting scm.* tables. "
-        "CostAnalyzer is read-only; all scm.* access is via SELECT only."
-    )
+    agent = _make_agent(mock_pool, mock_audit_writer)
+    await _invoke(agent)
+
+    # Raccoglie tutte le chiamate a conn.execute
+    conn = mock_pool.acquire.return_value.__aenter__.return_value
+    for call in conn.execute.call_args_list:
+        sql = (call[0][0] if call[0] else "").upper()
+        # Nessuna INSERT/UPDATE/DELETE su tabelle scm.*
+        assert "INSERT INTO SCM." not in sql, f"CostAnalyzer non deve scrivere su scm.*: {sql}"
+        assert "UPDATE SCM." not in sql, f"CostAnalyzer non deve aggiornare scm.*: {sql}"
+        assert "DELETE FROM SCM." not in sql, f"CostAnalyzer non deve cancellare da scm.*: {sql}"
 
 
 # ---------------------------------------------------------------------------
@@ -121,12 +188,24 @@ async def test_cost_analyzer_aggregates_downtime_scrap_energy_cost(mock_audit_wr
 
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: "
-        "CostAnalyzer result state contains a cost breakdown with keys for "
-        "downtime_cost_eur, scrap_cost_eur, energy_cost_eur (or equivalent). "
-        "These are aggregated from audit.actions (read-only cross-cluster query)."
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=conn),
+            __aexit__=AsyncMock(return_value=None),
+        )
     )
+    conn.fetchrow = AsyncMock(return_value=None)
+
+    agent = _make_agent(pool, mock_audit_writer)
+    result = await _invoke(agent)
+
+    assert "cost_breakdown" in result, "Il risultato deve contenere 'cost_breakdown'."
+    cb = result["cost_breakdown"]
+    assert "downtime_cost_eur" in cb, "cost_breakdown deve avere 'downtime_cost_eur'."
+    assert "scrap_cost_eur" in cb, "cost_breakdown deve avere 'scrap_cost_eur'."
+    assert "energy_cost_eur" in cb, "cost_breakdown deve avere 'energy_cost_eur'."
 
 
 # ---------------------------------------------------------------------------
@@ -143,9 +222,35 @@ async def test_audit_written_with_positional_audit_record(mock_audit_writer) -> 
 
     Implementation target: scm_cost_analyzer.agent.CostAnalyzer.__call__
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (CR-02): "
-        "audit_writer.write must be called as write(record) — single positional AuditRecord. "
-        "Verify: call_args_list[0][0][0] is AuditRecord instance, "
-        "call_args_list[0][1] == {} (empty kwargs dict)."
+    pool = MagicMock()
+    conn = AsyncMock()
+    pool.acquire = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(return_value=conn),
+            __aexit__=AsyncMock(return_value=None),
+        )
+    )
+    conn.fetchrow = AsyncMock(return_value=None)
+
+    agent = _make_agent(pool, mock_audit_writer)
+    await _invoke(agent)
+
+    assert mock_audit_writer.write.call_count >= 1, (
+        "audit_writer.write deve essere chiamato almeno una volta."
+    )
+
+    first_call = mock_audit_writer.write.call_args_list[0]
+    positional_args = first_call[0]  # tuple di argomenti posizionali
+    keyword_args = first_call[1]     # dict di argomenti keyword
+
+    assert len(positional_args) == 1, (
+        f"write() deve ricevere esattamente 1 argomento posizionale (AuditRecord). "
+        f"Trovati: {len(positional_args)} posizionali."
+    )
+    assert isinstance(positional_args[0], AuditRecord), (
+        f"Il primo argomento posizionale deve essere AuditRecord, "
+        f"trovato: {type(positional_args[0])!r}"
+    )
+    assert keyword_args == {}, (
+        f"write() non deve ricevere kwargs (CR-02). Trovati: {keyword_args!r}"
     )
