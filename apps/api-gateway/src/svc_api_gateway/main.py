@@ -45,6 +45,7 @@ def build_app() -> FastAPI:
     # Local imports avoid pulling router-module side effects at module import time
     # for unit tests that want a fresh app per fixture.
     from svc_api_gateway.routers import approvals as approvals_router  # noqa: PLC0415
+    from svc_api_gateway.routers import auth as auth_router  # noqa: PLC0415
     from svc_api_gateway.routers import health as health_router  # noqa: PLC0415
     from svc_api_gateway.routers import knowledge_agents as knowledge_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import maintenance_agents as maintenance_agents_router  # noqa: PLC0415
@@ -59,6 +60,7 @@ def build_app() -> FastAPI:
         lifespan=lifespan,
     )
     app.include_router(health_router.router)
+    app.include_router(auth_router.router)  # Plan 10-01 — SRV-01 JWT auth + RBAC
     app.include_router(approvals_router.router)
     app.include_router(threads_router.router)
     app.include_router(quality_router.router)  # Plan 06-12 — OPS-04 ingest

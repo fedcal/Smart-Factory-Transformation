@@ -1,9 +1,9 @@
-"""Contract scaffold for POST /auth/login (JWT issuance).
+"""Contract tests for POST /auth/login (JWT issuance) — Plan 10-01.
 
-Nyquist scaffold — all tests skipped until implementation in Plan 10-01.
-Each test describes the acceptance contract the auth router MUST satisfy.
+Un-skipped from the Nyquist scaffold in 10-00b.
+Each test verifies the acceptance contract the auth router must satisfy.
 
-THREAT: T-10-00b-02 — error detail must be generic (no internal exception text).
+THREAT: T-10-01-03 — error detail must be generic (no internal exception text).
 Ref: 10-CONTEXT.md (Dev-Mode JWT), 10-UI-SPEC.md (Dev-Mode JWT Seeded Persona Users).
 """
 
@@ -31,7 +31,6 @@ REQUIRED_CLAIMS = {"sub", "email", "role", "exp"}
 # Happy-path: operator login returns 200 + valid JWT
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="impl in 10-01 — auth router not yet created")
 @pytest.mark.asyncio
 async def test_login_operator_returns_200_with_jwt(client) -> None:
     """POST /auth/login with operator@mantis.it credentials returns HTTP 200.
@@ -66,7 +65,6 @@ async def test_login_operator_returns_200_with_jwt(client) -> None:
     assert payload["role"] == "operator"
 
 
-@pytest.mark.skip(reason="impl in 10-01 — auth router not yet created")
 @pytest.mark.asyncio
 async def test_login_all_seeded_personas_return_200(client) -> None:
     """Each seeded persona can authenticate.  Role is embedded in the JWT claim."""
@@ -89,16 +87,15 @@ async def test_login_all_seeded_personas_return_200(client) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Error cases — THREAT T-10-00b-02: detail must be GENERIC (no exc text)
+# Error cases — THREAT T-10-01-03: detail must be GENERIC (no exc text)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="impl in 10-01 — auth router not yet created")
 @pytest.mark.asyncio
 async def test_login_bad_password_returns_401_token_invalid(client) -> None:
     """Wrong password → HTTP 401.
 
-    The JSON detail key must be the literal string "token-invalid" or
-    "credentials" (no exception text, no traceback) — CR-02 / T-10-00b-02.
+    The JSON detail key must contain "token-invalid" or "credentials"
+    (no exception text, no traceback) — CR-02 / T-10-01-03.
     """
     response = await client.post(
         "/auth/login",
@@ -116,7 +113,6 @@ async def test_login_bad_password_returns_401_token_invalid(client) -> None:
     assert "Traceback" not in detail
 
 
-@pytest.mark.skip(reason="impl in 10-01 — auth router not yet created")
 @pytest.mark.asyncio
 async def test_login_unknown_email_returns_401(client) -> None:
     """Unknown email → HTTP 401 (same generic body — timing-safe response)."""
@@ -130,7 +126,6 @@ async def test_login_unknown_email_returns_401(client) -> None:
     assert "Traceback" not in detail
 
 
-@pytest.mark.skip(reason="impl in 10-01 — auth router not yet created")
 @pytest.mark.asyncio
 async def test_login_missing_fields_returns_422(client) -> None:
     """Request body without required fields → HTTP 422 (FastAPI validation)."""
