@@ -8,15 +8,25 @@ Recall@10 partitioned by query type; produce the deliverable markdown
 
 Two execution modes:
 
-    --skip-eval (default in CI): produce a deliverable from a hard-coded comparable
-                                 baseline (BGE-M3 marginally ahead on cross-lingual,
-                                 parity elsewhere) with explicit "preliminary" banner.
-                                 This unblocks the deliverable without depending on
-                                 a 5–10 minute live re-index.
+    --stub:   Opt-in to produce a deliverable from a hard-coded deterministic
+              baseline (BGE-M3 marginally ahead on cross-lingual, parity
+              elsewhere) with an explicit "⚠ Preliminary stub metrics — pending
+              real eval run" disclaimer banner. Used by CI to keep the deliverable
+              up to date without requiring live infrastructure. You MUST pass
+              this flag explicitly; omitting it is an error.
 
-    (full run):                  Live re-index + retrieval. Requires Qdrant + Neo4j +
-                                 PG service containers + the LLM adapter for embedder
-                                 init. Used by maintainers, not by CI.
+    --full:   Run the full live re-index + retrieval. Requires Qdrant + Neo4j +
+              PG service containers + the LLM adapter for embedder init. Used by
+              maintainers, not by CI. Currently raises NotImplementedError
+              (deferred to Phase 8 KnowledgeCurator).
+
+    (neither flag): raises NotImplementedError with a Phase 8 deferral pointer.
+              This is the safe default — no accidental stub generation in CI.
+
+Phase 8 follow-up: the live A/B eval path (BGE-M3 vs multilingual-e5-large
+against the warm retrieval stack — Qdrant + reranker + real synthetic-corpus
+testset) is tracked in ROADMAP under Phase 8 KnowledgeCurator. Phase 5 ships
+the framework and acceptance gates (D-71); Phase 8 ships the measured numbers.
 
 Metrics formulas (RESEARCH §7):
     Recall@k(q) = |gold ∩ top_k(q)| / |gold|
@@ -165,7 +175,8 @@ def _render_deliverable(
         "placeholder testset (Q-gen LLM unavailable in CI). When the LLM "
         "backend is reachable, regenerate the testset with "
         "`uv run python services/knowledge-ingest/scripts/generate_rag_testset.py --regenerate --seed=42` "
-        "and re-run this script without `--skip-eval`.\n"
+        "and re-run this script with `--stub` for placeholder output or wait for the Phase 8 live run.\n"
+        "\n> ⚠ Preliminary stub metrics — pending real eval run\n"
         if skipped
         else ""
     )
@@ -198,16 +209,23 @@ def _render_deliverable(
         "\n"
     )
 
+    try:
+        testset_display = testset_path.relative_to(WORKSPACE_ROOT)
+    except ValueError:
+        testset_display = testset_path
+
     repro = (
         "\n## Reproducibility\n\n"
         f"- Seed: {seed}\n"
-        f"- Testset: `{testset_path.relative_to(WORKSPACE_ROOT)}` "
+        f"- Testset: `{testset_display}` "
         f"(sha256 `{testset_hash}`)\n"
         "- Q-gen LLM: Qwen2.5-7B via `LLM_BACKEND=ollama`\n"
-        "- Re-run: `nx run knowledge-ingest:run --args='--mode=full'` then "
+        "- Re-run (stub): `uv run python services/knowledge-ingest/scripts/run_ab_eval.py "
+        f"--stub --testset={testset_display}`.\n"
+        "- Re-run (live, Phase 8): `nx run knowledge-ingest:run --args='--mode=full'` then "
         "`uv run python services/knowledge-ingest/scripts/run_ab_eval.py "
-        f"--testset={testset_path.relative_to(WORKSPACE_ROOT)}` "
-        "(omit `--skip-eval` for live retrieval).\n"
+        f"--full --testset={testset_display}` "
+        "(requires Qdrant + Neo4j + GPU; see Phase 8 KnowledgeCurator in ROADMAP).\n"
     )
 
     threats = (
@@ -228,7 +246,7 @@ def _render_deliverable(
 
 
 def _stub_summary() -> dict[str, dict[str, float]]:
-    """Deterministic comparable numbers when `--skip-eval` is set.
+    """Deterministic comparable numbers when ``--stub`` is set.
 
     BGE-M3 marginally ahead on cross-lingual; parity elsewhere. Numbers respect
     the Phase 5 acceptance gates from D-71.
@@ -254,18 +272,37 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
-        "--skip-eval",
+        "--stub",
         action="store_true",
-        default=True,
-        help="Skip live re-index; produce deliverable from deterministic stub numbers (CI default).",
+        default=False,
+        help=(
+            "Opt-in: produce a deliverable from deterministic stub numbers + disclaimer "
+            "banner. Without this flag, --full is required. This flag is mutually "
+            "exclusive with --full."
+        ),
     )
     parser.add_argument(
         "--full",
-        dest="skip_eval",
-        action="store_false",
-        help="Run the full live re-index + retrieval (requires Qdrant + Neo4j + GPU).",
+        action="store_true",
+        default=False,
+        help=(
+            "Run the full live re-index + retrieval (requires Qdrant + Neo4j + GPU). "
+            "Currently raises NotImplementedError — deferred to Phase 8 KnowledgeCurator. "
+            "Mutually exclusive with --stub."
+        ),
     )
     args = parser.parse_args()
+
+    if args.stub and args.full:
+        parser.error("--stub and --full are mutually exclusive")
+
+    if not args.stub and not args.full:
+        raise NotImplementedError(
+            "Live A/B eval is deferred to Phase 8 KnowledgeCurator. "
+            "For an interim deliverable with placeholder metrics, re-run with "
+            "--stub (a disclaimer banner is embedded automatically). "
+            "Tracked in ROADMAP under Phase 8 KnowledgeCurator."
+        )
 
     if not args.testset.exists():
         logger.error("testset_missing path=%s — run generate_rag_testset.py first", args.testset)
@@ -273,18 +310,17 @@ def main() -> int:
     testset_bytes = args.testset.read_bytes()
     testset_hash = hashlib.sha256(testset_bytes).hexdigest()[:16]
 
-    if args.skip_eval:
-        logger.info("running_stub_eval reason=skip-eval-flag")
+    if args.stub:
+        logger.info("running_stub_eval reason=stub-flag")
         summary = _stub_summary()
-    else:  # pragma: no cover — requires live infra
+    else:  # args.full — pragma: no cover — requires live infra
         logger.info("running_live_eval testset=%s", args.testset)
         # Live path is reserved for maintainers (Qdrant + Neo4j + GPU required).
-        # The CI deliverable uses --skip-eval; the full run path here is intentionally
-        # left as a stub raise so the script never silently produces zero metrics.
+        # Deferred to Phase 8 KnowledgeCurator; tracked in ROADMAP.
         raise NotImplementedError(
-            "Full live eval is implemented separately for the maintainer "
-            "workflow; CI uses --skip-eval. See docs/eval/rag-ab-test-bge-m3-vs-e5.md "
-            "for the reproducibility command."
+            "Full live eval is deferred to Phase 8 KnowledgeCurator (requires Qdrant + "
+            "Neo4j + GPU). Use --stub for the interim placeholder deliverable. "
+            "Tracked in ROADMAP under Phase 8 KnowledgeCurator."
         )
 
     deliverable = _render_deliverable(
@@ -292,7 +328,7 @@ def main() -> int:
         testset_path=args.testset,
         testset_hash=testset_hash,
         seed=args.seed,
-        skipped=bool(args.skip_eval),
+        skipped=bool(args.stub),
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(deliverable, encoding="utf-8")
