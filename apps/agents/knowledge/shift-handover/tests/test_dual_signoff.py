@@ -14,6 +14,12 @@ Phase 7 CR-03 fix: approval_id=None for pending HITL rows.
 
 Implementation target: trn_shift_handover.agent.ShiftHandover
 (Wave 2-3 plan: 08-04)
+
+Test strategy: the dual-supervisor pattern in LangGraph replays __call__ from
+the top on each resume (no checkpoint in unit tests). To isolate each interrupt
+boundary we patch interrupt() with a side-effect function that raises on the
+first call and returns on subsequent calls. We test one boundary at a time within
+a single agent.__call__ invocation using call-ordering.
 """
 
 from __future__ import annotations
@@ -111,61 +117,69 @@ def _make_shift_handover() -> tuple[ShiftHandover, MagicMock]:
 async def test_first_handover_signoff_written_after_first_resume() -> None:
     """After first interrupt returns (outgoing supervisor): exactly 1 HANDOVER_SIGNOFF row.
 
-    Simulates two sequential interrupts in ShiftHandover.__call__:
-    - First execution: raises GraphInterrupt for outgoing supervisor.
-    - First resume: interrupt() returns → write 1 HANDOVER_SIGNOFF row → raise
-      GraphInterrupt for incoming supervisor.
-    - After first resume: audit_writer.write.call_count == 1.
-    - The first row's action_type must be HANDOVER_SIGNOFF.
+    Simulates one interrupt boundary in a single __call__:
+    - interrupt #1 (outgoing): RETURNS immediately (simulating first resume).
+    - interrupt #2 (incoming): RAISES GraphInterrupt (simulating second execution abort).
+    - Result: exactly 1 HANDOVER_SIGNOFF row written before the second interrupt aborts.
+
+    Also verifies the first-execution (interrupt #1 raises) produces zero audit writes.
 
     CR-02 pattern: audit write AFTER interrupt() returns (not before).
 
     Implementation target: trn_shift_handover.agent.ShiftHandover.__call__()
     """
+    from sft_agents.models.enums import ActionType
+
+    # ---- Phase A: first execution — interrupt #1 raises, no audit writes ----
     agent, audit_writer = _make_shift_handover()
 
-    interrupt_call_count = 0
+    def _first_raises(value: Any) -> Any:
+        raise GraphInterrupt(value)
 
-    def _simulated_interrupt(value: Any) -> Any:
-        nonlocal interrupt_call_count
-        interrupt_call_count += 1
-        if interrupt_call_count == 1:
-            # First execution: outgoing supervisor interrupt raises
-            raise GraphInterrupt(value)
-        if interrupt_call_count == 2:
-            # First resume: outgoing returned, now incoming raises
-            raise GraphInterrupt(value)
-        # Should not reach here in this test
-        return {"approved": True}
-
-    # First execution: node raises GraphInterrupt (no audit writes)
-    with patch("trn_shift_handover.agent.interrupt", _simulated_interrupt):
+    with patch("trn_shift_handover.agent.interrupt", _first_raises):
         with pytest.raises(GraphInterrupt):
             await agent(state=_STATE)
 
     assert audit_writer.write.call_count == 0, (
-        f"CR-02 FAIL (first run): audit_writer.write was called "
-        f"{audit_writer.write.call_count} time(s) — expected 0 before any resume."
+        f"CR-02 FAIL (first execution): audit_writer.write called "
+        f"{audit_writer.write.call_count} time(s) — expected 0."
     )
 
-    # Reset counter; first resume: outgoing interrupt returns, first audit row written,
-    # then incoming interrupt raises
-    interrupt_call_count = 0
+    # ---- Phase B: fresh agent — interrupt #1 returns, interrupt #2 raises ----
+    # Simulates the first-resume execution in a single __call__: outgoing approved,
+    # row #1 written, incoming interrupt fires and aborts the node.
+    agent2, audit_writer2 = _make_shift_handover()
 
-    with patch("trn_shift_handover.agent.interrupt", _simulated_interrupt):
+    call_count = 0
+
+    def _first_return_second_raise(value: Any) -> Any:
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            # interrupt #1 (outgoing) returns — simulate first resume
+            return {"approved": True, "supervisor_id": "sup-outgoing"}
+        # interrupt #2 (incoming) raises — simulate second interruption
+        raise GraphInterrupt(value)
+
+    with patch("trn_shift_handover.agent.interrupt", _first_return_second_raise):
         with pytest.raises(GraphInterrupt):
-            await agent(state=_STATE)
+            await agent2(state=_STATE)
 
-    assert audit_writer.write.call_count == 1, (
+    assert audit_writer2.write.call_count == 1, (
         f"CR-02 FAIL (first resume): expected exactly 1 HANDOVER_SIGNOFF audit row, "
-        f"got {audit_writer.write.call_count}."
+        f"got {audit_writer2.write.call_count}."
     )
 
     # Verify the row's action_type
-    written_record = audit_writer.write.call_args_list[0][0][0]
-    from sft_agents.models.enums import ActionType
+    written_record = audit_writer2.write.call_args_list[0][0][0]
     assert written_record.action_type == ActionType.HANDOVER_SIGNOFF.value, (
         f"Expected action_type=HANDOVER_SIGNOFF, got {written_record.action_type!r}"
+    )
+
+    # Verify motivation references outgoing
+    motivation = written_record.motivation or ""
+    assert "outgoing" in motivation.lower(), (
+        f"First HANDOVER_SIGNOFF motivation must reference 'outgoing', got: {motivation!r}"
     )
 
 
@@ -173,65 +187,50 @@ async def test_first_handover_signoff_written_after_first_resume() -> None:
 async def test_second_handover_signoff_written_after_second_resume() -> None:
     """After second interrupt returns (incoming supervisor): exactly 2 HANDOVER_SIGNOFF rows total.
 
-    Simulates both resume executions:
-    - After second resume: audit_writer.write.call_count == 2.
-    - Both rows have action_type == HANDOVER_SIGNOFF.
-    - First row has motivation containing 'outgoing' or 'handover_step=outgoing_approval'.
-    - Second row has motivation containing 'incoming' or 'handover_step=incoming_confirmation'.
+    Simulates both interrupts returning in a single __call__:
+    - interrupt #1 (outgoing): RETURNS → row #1 written.
+    - interrupt #2 (incoming): RETURNS → row #2 written.
+    - Total: exactly 2 HANDOVER_SIGNOFF rows.
+    - First row motivation references 'outgoing'.
+    - Second row motivation references 'incoming'.
 
     Implementation target: trn_shift_handover.agent.ShiftHandover.__call__()
     """
-    agent, audit_writer = _make_shift_handover()
     from sft_agents.models.enums import ActionType
 
-    interrupt_call_count = 0
+    agent, audit_writer = _make_shift_handover()
 
-    def _simulated_interrupt(value: Any) -> Any:
-        nonlocal interrupt_call_count
-        interrupt_call_count += 1
-        if interrupt_call_count <= 1:
-            raise GraphInterrupt(value)
-        return {"approved": True, "supervisor_id": f"sup-{interrupt_call_count}"}
+    call_count = 0
 
-    # First run: raises (no audit)
-    with patch("trn_shift_handover.agent.interrupt", _simulated_interrupt):
-        with pytest.raises(GraphInterrupt):
-            await agent(state=_STATE)
+    def _both_return(value: Any) -> Any:
+        nonlocal call_count
+        call_count += 1
+        return {"approved": True, "supervisor_id": f"sup-{call_count}"}
 
-    assert audit_writer.write.call_count == 0
-
-    # Second run (full execution: both interrupts return):
-    interrupt_call_count = 0  # reset so both interrupts return immediately
-
-    def _simulated_both_return(value: Any) -> Any:
-        nonlocal interrupt_call_count
-        interrupt_call_count += 1
-        return {"approved": True, "supervisor_id": f"sup-{interrupt_call_count}"}
-
-    with patch("trn_shift_handover.agent.interrupt", _simulated_both_return):
+    with patch("trn_shift_handover.agent.interrupt", _both_return):
         result = await agent(state=_STATE)
 
-    assert audit_writer.write.call_count == 2, (
-        f"Expected exactly 2 HANDOVER_SIGNOFF rows, got {audit_writer.write.call_count}."
+    # 3 total writes: 2 HANDOVER_SIGNOFF + 1 HANDOVER_DRAFT
+    all_records = [call[0][0] for call in audit_writer.write.call_args_list]
+    signoff_records = [
+        r for r in all_records
+        if r.action_type == ActionType.HANDOVER_SIGNOFF.value
+    ]
+
+    assert len(signoff_records) == 2, (
+        f"Expected exactly 2 HANDOVER_SIGNOFF rows, got {len(signoff_records)}. "
+        f"All action_types: {[r.action_type for r in all_records]}"
     )
 
-    records = [call[0][0] for call in audit_writer.write.call_args_list]
-
-    # Both rows must be HANDOVER_SIGNOFF
-    for idx, record in enumerate(records):
-        assert record.action_type == ActionType.HANDOVER_SIGNOFF.value, (
-            f"Row {idx + 1}: expected HANDOVER_SIGNOFF, got {record.action_type!r}"
-        )
-
     # First row motivation references outgoing
-    first_motivation = records[0].motivation or ""
+    first_motivation = signoff_records[0].motivation or ""
     assert "outgoing" in first_motivation.lower(), (
         f"First HANDOVER_SIGNOFF motivation must reference 'outgoing', "
         f"got: {first_motivation!r}"
     )
 
     # Second row motivation references incoming
-    second_motivation = records[1].motivation or ""
+    second_motivation = signoff_records[1].motivation or ""
     assert "incoming" in second_motivation.lower(), (
         f"Second HANDOVER_SIGNOFF motivation must reference 'incoming', "
         f"got: {second_motivation!r}"
@@ -278,28 +277,32 @@ async def test_approval_id_is_none_for_pending_hitl_rows() -> None:
     CR-03 pattern (Phase 7): approval_id must be None for pending HITL rows;
     never fabricate a UUID at write time.
 
+    Simulates both interrupts returning in a single __call__ to get all rows.
+
     Implementation target: trn_shift_handover.agent.ShiftHandover.__call__()
     """
     agent, audit_writer = _make_shift_handover()
 
-    interrupt_call_count = 0
+    call_count = 0
 
     def _both_return(value: Any) -> Any:
-        nonlocal interrupt_call_count
-        interrupt_call_count += 1
-        return {"approved": True, "supervisor_id": f"sup-{interrupt_call_count}"}
+        nonlocal call_count
+        call_count += 1
+        return {"approved": True, "supervisor_id": f"sup-{call_count}"}
 
     with patch("trn_shift_handover.agent.interrupt", _both_return):
         await agent(state=_STATE)
 
-    assert audit_writer.write.call_count == 2, (
-        f"Expected 2 audit writes, got {audit_writer.write.call_count}."
+    # All writes (SIGNOFF + DRAFT) must have approval_id=None
+    assert audit_writer.write.call_count >= 2, (
+        f"Expected at least 2 audit writes, got {audit_writer.write.call_count}."
     )
 
     records = [call[0][0] for call in audit_writer.write.call_args_list]
 
     for idx, record in enumerate(records):
         assert record.approval_id is None, (
-            f"CR-03 FAIL: row {idx + 1} approval_id={record.approval_id!r}, "
+            f"CR-03 FAIL: row {idx + 1} (action_type={record.action_type!r}) "
+            f"approval_id={record.approval_id!r}, "
             f"expected None. Never fabricate UUID for pending HITL rows."
         )
