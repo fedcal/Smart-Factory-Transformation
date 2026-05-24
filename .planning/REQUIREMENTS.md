@@ -177,10 +177,10 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 ### Economics & OEPV (ECO)
 
 - [ ] **ECO-01**: Modello economico simulato con Base d'Asta €108.000 e parametri configurabili
-- [ ] **ECO-02**: Formula OEPV documentata: scoring tecnico (70) + economico (30) con curva non lineare per ribasso
+- [x] **ECO-02**: Formula OEPV documentata: scoring tecnico (70) + economico (30) con curva non lineare per ribasso
 - [ ] **ECO-03**: Calcolatore TCO 3 anni: licenze, infrastruttura on-prem (GPU, server), ops FTE, energia, change management
 - [ ] **ECO-04**: Value driver quantificati: riduzione downtime, scrap, MTTR, training time, knowledge reuse
-- [ ] **ECO-05**: Ribasso simulator con sensitivity analysis e warning su soglia di anomalia (Codice Appalti)
+- [x] **ECO-05**: Ribasso simulator con sensitivity analysis e warning su soglia di anomalia (Codice Appalti)
 - [ ] **ECO-06**: Cost component breakdown: tech, IT/OT integration, training, change management
 - [ ] **ECO-07**: Risk register con probability/impact e mitigation per ogni rischio economico
 - [ ] **ECO-08**: Documento `docs/economic-analysis/` con fogli di calcolo riproducibili (es. Python notebook o CSV+script)
@@ -367,10 +367,10 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | DOC-16 | Phase 12 | Pending |
 | DOC-17 | Phase 12 | Pending |
 | ECO-01 | Phase 12 | Pending |
-| ECO-02 | Phase 12 | Pending |
+| ECO-02 | Phase 12 | Complete |
 | ECO-03 | Phase 12 | Pending |
 | ECO-04 | Phase 12 | Pending |
-| ECO-05 | Phase 12 | Pending |
+| ECO-05 | Phase 12 | Complete |
 | ECO-06 | Phase 12 | Pending |
 | ECO-07 | Phase 12 | Pending |
 | ECO-08 | Phase 12 | Pending |
