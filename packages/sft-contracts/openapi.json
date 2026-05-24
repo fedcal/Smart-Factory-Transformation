@@ -1,0 +1,3053 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SFT API Gateway",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "operationId": "health_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Ready",
+        "operationId": "ready_v1_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Authenticate with dev-mode seeded credentials",
+        "description": "Exchange dev-mode persona credentials for a signed HS256 JWT.\n\nOn success returns { access_token, token_type: \"bearer\", role }.\nOn failure always returns HTTP 401 with generic detail \"invalid_credentials\"\nto avoid leaking user enumeration information (T-10-01-03 / CR-02).",
+        "operationId": "post_login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Return the authenticated principal",
+        "description": "Echo the decoded JWT principal: sub, email, role.\n\nRequires a valid Bearer token with any recognised role.  The RBAC dependency\nhandles 401 (no/invalid token) and 403 (unknown role) automatically.",
+        "operationId": "get_me_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/kpi": {
+      "get": {
+        "tags": [
+          "kpi"
+        ],
+        "summary": "Current KPI snapshot",
+        "description": "Returns the 6 real KPIs (OEE, MTTR, MTBF, scrap rate, throughput, downtime) computed from TimescaleDB.  Requires one of: operator, shift-supervisor, manager, admin.  OEE is Availability-only (P=1.0, Q=1.0 PoC approximation).",
+        "operationId": "get_kpi_snapshot_v1_kpi_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiSnapshot"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/stream/kpi": {
+      "get": {
+        "tags": [
+          "sse"
+        ],
+        "summary": "Live KPI stream (SSE)",
+        "description": "Server-Sent Events stream emitting kpi_update (every 5 s) and sse_heartbeat (every 30 s). Authenticate via ?token=<JWT>. Allowed roles: operator, shift-supervisor, manager, admin.",
+        "operationId": "stream_kpi_v1_stream_kpi_get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "JWT token (SSE — EventSource cannot set headers)",
+              "title": "Token"
+            },
+            "description": "JWT token (SSE — EventSource cannot set headers)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stream/approvals": {
+      "get": {
+        "tags": [
+          "sse"
+        ],
+        "summary": "Live approvals stream (SSE)",
+        "description": "Server-Sent Events stream emitting approval_pending, approval_resolved, and sse_heartbeat. Authenticate via ?token=<JWT>.",
+        "operationId": "stream_approvals_v1_stream_approvals_get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "JWT token (SSE — EventSource cannot set headers)",
+              "title": "Token"
+            },
+            "description": "JWT token (SSE — EventSource cannot set headers)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stream/alerts": {
+      "get": {
+        "tags": [
+          "sse"
+        ],
+        "summary": "Live alerts stream (SSE, HITL-10 rate-limited)",
+        "description": "Server-Sent Events stream emitting alert_new (HITL-10 max 12/hr/persona), rate_limit (when limit exceeded), and sse_heartbeat. Authenticate via ?token=<JWT>.",
+        "operationId": "stream_alerts_v1_stream_alerts_get",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "JWT token (SSE — EventSource cannot set headers)",
+              "title": "Token"
+            },
+            "description": "JWT token (SSE — EventSource cannot set headers)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/approvals": {
+      "get": {
+        "tags": [
+          "approvals"
+        ],
+        "summary": "List Approvals",
+        "description": "List approvals — D-55 dashboard endpoint.",
+        "operationId": "list_approvals_v1_approvals_get",
+        "parameters": [
+          {
+            "name": "tier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "operator",
+                    "supervisor",
+                    "manager",
+                    "safety_interlock"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by tier (D-55)",
+              "title": "Tier"
+            },
+            "description": "Filter by tier (D-55)"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "approved",
+                    "rejected",
+                    "escalated",
+                    "timed_out"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by ApprovalStatus",
+              "title": "Status"
+            },
+            "description": "Filter by ApprovalStatus"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApprovalListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/approvals/{approval_id}/decide": {
+      "post": {
+        "tags": [
+          "approvals"
+        ],
+        "summary": "Decide Approval",
+        "description": "Decide a pending approval — atomic UPDATE + supervisor graph resume.",
+        "operationId": "decide_approval_v1_approvals__approval_id__decide_post",
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Approval Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecideRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecideResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/threads/{thread_id}/resume": {
+      "post": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Resume Thread",
+        "operationId": "resume_thread_v1_threads__thread_id__resume_post",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/quality/events": {
+      "post": {
+        "tags": [
+          "quality"
+        ],
+        "summary": "Post Quality Event",
+        "description": "Accept an operator-submitted QualityEvent and forward to NATS.\n\nReturns 202 Accepted because the downstream QualityInspector agent runs\nasynchronously via the NATS consumer wiring (see Plan 06-07 worker loop).",
+        "operationId": "post_quality_event_v1_quality_events_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QualityEventOperatorRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualityEventAcceptedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/anomaly-detector/scan": {
+      "post": {
+        "tags": [
+          "ops-agents"
+        ],
+        "summary": "Post Anomaly Scan",
+        "description": "Run one AnomalyDetector tick via the supervisor graph (OPS-01).",
+        "operationId": "post_anomaly_scan_v1_agents_anomaly_detector_scan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnomalyScanRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Anomaly Scan V1 Agents Anomaly Detector Scan Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/production-planner/plan": {
+      "post": {
+        "tags": [
+          "ops-agents"
+        ],
+        "summary": "Post Production Plan",
+        "description": "Draft a production schedule via ProductionPlanner (OPS-02).\n\nReturns 202 — the HITL approval is asynchronous; the operator polls\n``GET /v1/approvals`` (or the existing NATS push) and resolves the draft\nvia ``POST /v1/approvals/{id}/decide``.",
+        "operationId": "post_production_plan_v1_agents_production_planner_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Production Plan V1 Agents Production Planner Plan Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/operator-assistant/chat": {
+      "post": {
+        "tags": [
+          "ops-agents"
+        ],
+        "summary": "Post Operator Chat",
+        "description": "One chat turn through the OperatorAssistant ReAct loop (OPS-03).",
+        "operationId": "post_operator_chat_v1_agents_operator_assistant_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperatorChatRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Operator Chat V1 Agents Operator Assistant Chat Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/predictive-maintenance/score": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Pm Score",
+        "description": "Run one PredictiveMaintenance tick via the supervisor graph (MNT-01).",
+        "operationId": "post_pm_score_v1_agents_predictive_maintenance_score_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PMScoreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PMScoreResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/rca-specialist/analyze": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Rca Analyze",
+        "description": "Initiate RCA chain via RCASpecialist — always 202 (HITL async, D-RCA-02).",
+        "operationId": "post_rca_analyze_v1_agents_rca_specialist_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RCAAnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RCAAnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/maintenance-coach/start": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Coach Start",
+        "description": "Open a new coaching intervention (or return awaiting_technician_assignment).\n\nServer generates intervention_id when absent. If technician_id is None,\nthe supervisor coach node emits a technician_assignment_required HITL\ninterrupt and the response carries state='awaiting_technician_assignment'.\nClient must then call /resume with technician_id to proceed.",
+        "operationId": "post_coach_start_v1_agents_maintenance_coach_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoachStartRequestHTTP"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Coach Start V1 Agents Maintenance Coach Start Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/maintenance-coach/step": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Coach Step",
+        "description": "Advance an existing coaching intervention by one step.\n\nReturns 409 Conflict if the intervention thread still has technician_id=None\n(technician must be assigned first via /resume with technician_id).\n\nDesign note: LangGraph replays the checkpoint automatically when the same\nthread_id is used in config. The supervisor routes to maintenance-coach\nwhich reads the persisted step state + advances it.",
+        "operationId": "post_coach_step_v1_agents_maintenance_coach_step_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoachStepRequestHTTP"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Coach Step V1 Agents Maintenance Coach Step Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/maintenance-coach/resume": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Coach Resume",
+        "description": "Resume a coaching intervention after HITL interrupt resolution.\n\nTwo paths (Open Q3 RESOLVED in 07-08):\n  (a) post request_help interrupt — supervisor_input required\n      → invoke supervisor with Command(resume=supervisor_input) semantics\n      → state carries escalation_trigger='technician_request' marker\n  (b) post technician_assignment_required interrupt — technician_id required\n      → invoke supervisor with Command(update={'technician_id': ...}, resume=True)\n      → state advances from step 0 with technician assigned",
+        "operationId": "post_coach_resume_v1_agents_maintenance_coach_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoachResumeRequestHTTP"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Coach Resume V1 Agents Maintenance Coach Resume Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/downtime-analyzer/report": {
+      "post": {
+        "tags": [
+          "maintenance-agents"
+        ],
+        "summary": "Post Da Report",
+        "description": "Run on-demand OEE + Pareto report via DowntimeAnalyzer (MNT-04).\n\nNO Idempotency-Key required — read-only analytics; the same window always\nyields the same OEE within CAGG refresh tolerance (maintenance.oee_hourly\nCAGG from 07-05 migration 008). Documented as idempotency-not-needed:\nthe caller can safely retry without risk of duplicate side-effects.",
+        "operationId": "post_da_report_v1_agents_downtime_analyzer_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/_ReportRequestHTTP"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Da Report V1 Agents Downtime Analyzer Report Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/shift-handover/compile": {
+      "post": {
+        "tags": [
+          "knowledge-agents"
+        ],
+        "summary": "Post Shift Handover Compile",
+        "description": "Compile shift handover report via ShiftHandover dual-supervisor HITL (D-SH-01).\n\nReturns 202 Accepted immediately (HITL async). Thread_id identifies the LangGraph\nthread for subsequent approval workflow via /approvals endpoints.",
+        "operationId": "post_shift_handover_compile_v1_agents_shift_handover_compile_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShiftHandoverCompileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Shift Handover Compile V1 Agents Shift Handover Compile Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/training-coach/session": {
+      "post": {
+        "tags": [
+          "knowledge-agents"
+        ],
+        "summary": "Post Training Session",
+        "description": "Start a new adaptive MCQ quiz session for an operator (TRN-02).\n\nReturns 200 with the session result or 'awaiting_supervisor_signoff' when the\noperator passes and HITL interrupt is raised (D-TC-03).",
+        "operationId": "post_training_session_v1_agents_training_coach_session_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Training Session V1 Agents Training Coach Session Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/training-coach/resume": {
+      "post": {
+        "tags": [
+          "knowledge-agents"
+        ],
+        "summary": "Post Training Resume",
+        "description": "Resume a training session after supervisor competency HITL resolution (D-TC-03).\n\nUses the original thread_id from the session so LangGraph replays the\ncheckpoint and continues from the interrupt() point.",
+        "operationId": "post_training_resume_v1_agents_training_coach_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingResumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Training Resume V1 Agents Training Coach Resume Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/knowledge-curator/ingest": {
+      "post": {
+        "tags": [
+          "knowledge-agents"
+        ],
+        "summary": "Post Knowledge Curator Ingest",
+        "description": "Autonomous document curation: dedup detection + staleness flagging (D-KC-04).\n\nNO Idempotency-Key required — fully autonomous read/flag operation;\nsame document body yields the same dedup/stale verdict (idempotent by nature).\nDecision is always Decision.AUTO (D-KC-04 — no HITL gating).",
+        "operationId": "post_knowledge_curator_ingest_v1_agents_knowledge_curator_ingest_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KnowledgeCuratorIngestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Knowledge Curator Ingest V1 Agents Knowledge Curator Ingest Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/documentation-synthesizer/draft": {
+      "post": {
+        "tags": [
+          "knowledge-agents"
+        ],
+        "summary": "Post Documentation Draft",
+        "description": "Initiate bilingual SOP draft with pre-index HITL gating (D-DS-03, TRN-04).\n\nReturns 202 Accepted — generation and Qdrant indexing happen asynchronously\nvia the interrupt() / resume pattern. Thread_id identifies the thread for the\nsubsequent approval workflow.",
+        "operationId": "post_documentation_draft_v1_agents_documentation_synthesizer_draft_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentationDraftRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Documentation Draft V1 Agents Documentation Synthesizer Draft Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/inventory-manager/check": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Inventory Check",
+        "description": "Trigger inventory reorder check with HITL supervisor sign-off (SCM-01).\n\nReturns 202 Accepted — HITL async. Thread_id identifies the LangGraph thread\nfor subsequent supervisor approval via /approvals endpoints.",
+        "operationId": "post_inventory_check_v1_agents_inventory_manager_check_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Inventory Check V1 Agents Inventory Manager Check Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/inventory-manager/resume": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Inventory Resume",
+        "description": "Resume inventory reorder check after supervisor HITL resolution (SCM-01).\n\nUses the original thread_id so LangGraph replays the checkpoint and continues\nfrom the interrupt() point. Returns the final reorder_recommendation.",
+        "operationId": "post_inventory_resume_v1_agents_inventory_manager_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InventoryResumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Inventory Resume V1 Agents Inventory Manager Resume Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/energy-optimizer/optimize": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Energy Optimize",
+        "description": "Trigger energy off-peak scheduling proposal with HITL supervisor sign-off (SCM-02).\n\nReturns 202 Accepted — HITL async. Thread_id identifies the LangGraph thread\nfor subsequent supervisor approval.",
+        "operationId": "post_energy_optimize_v1_agents_energy_optimizer_optimize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnergyOptimizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Energy Optimize V1 Agents Energy Optimizer Optimize Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/energy-optimizer/resume": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Energy Resume",
+        "description": "Resume energy optimization after supervisor off-peak sign-off (SCM-02).\n\nUses the original thread_id so LangGraph replays the checkpoint and continues\nfrom the interrupt() point. Returns the final energy_proposal.",
+        "operationId": "post_energy_resume_v1_agents_energy_optimizer_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnergyResumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Energy Resume V1 Agents Energy Optimizer Resume Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/cost-analyzer/analyze": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Cost Analyze",
+        "description": "Autonomous cost analysis + OEPV simulation (SCM-03, D-SCM-AUTO).\n\nNO Idempotency-Key required — fully autonomous deterministic operation;\nDecision.AUTO, no HITL interrupt. Returns 200 synchronously.\nNO resume endpoint (cost-analyzer is read-only, always autonomous).",
+        "operationId": "post_cost_analyze_v1_agents_cost_analyzer_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CostAnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Cost Analyze V1 Agents Cost Analyzer Analyze Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/demand-forecaster/forecast": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Demand Forecast",
+        "description": "Trigger Holt-Winters demand forecast with HITL supervisor sign-off (SCM-04).\n\nReturns 202 Accepted — HITL async. Thread_id identifies the LangGraph thread\nfor subsequent supervisor approval. On resume, publishes demand_plan to\nProductionPlanner via state['demand_plan'] (Open Question 2 resolution).",
+        "operationId": "post_demand_forecast_v1_agents_demand_forecaster_forecast_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandForecastRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Demand Forecast V1 Agents Demand Forecaster Forecast Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/demand-forecaster/resume": {
+      "post": {
+        "tags": [
+          "supply-agents"
+        ],
+        "summary": "Post Demand Resume",
+        "description": "Resume demand forecast after supervisor plan sign-off (SCM-04).\n\nUses the original thread_id so LangGraph replays the checkpoint and continues\nfrom the interrupt() point. Returns the final demand_plan which the gateway\nroutes to ProductionPlanner via state['demand_plan'] (Open Question 2 resolution).",
+        "operationId": "post_demand_resume_v1_agents_demand_forecaster_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemandResumeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Demand Resume V1 Agents Demand Forecaster Resume Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnomalyScanRequestBody": {
+        "properties": {
+          "window_minutes": {
+            "type": "integer",
+            "maximum": 180.0,
+            "minimum": 1.0,
+            "title": "Window Minutes",
+            "description": "Sliding window in minutes (1..180; default 15).",
+            "default": 15
+          },
+          "triggered_by": {
+            "type": "string",
+            "enum": [
+              "scheduler",
+              "operator",
+              "agent"
+            ],
+            "title": "Triggered By",
+            "description": "Caller class — observability tag for the audit row.",
+            "default": "scheduler"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AnomalyScanRequestBody",
+        "description": "POST /v1/agents/anomaly-detector/scan body (mirrors ops_anomaly_detector.models.AnomalyScanRequest)."
+      },
+      "ApprovalListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ApprovalResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "ApprovalListResponse"
+      },
+      "ApprovalResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "thread_id": {
+            "type": "string",
+            "title": "Thread Id"
+          },
+          "tier": {
+            "type": "string",
+            "title": "Tier"
+          },
+          "action_type": {
+            "type": "string",
+            "title": "Action Type"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "sla_deadline": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sla Deadline"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "decided_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided By"
+          },
+          "decision": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decision"
+          },
+          "escalated_to_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Escalated To Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "agent_id",
+          "thread_id",
+          "tier",
+          "action_type",
+          "payload",
+          "status",
+          "created_at",
+          "sla_deadline"
+        ],
+        "title": "ApprovalResponse",
+        "description": "Mirror of hitl.approvals (D-55) decoupled from DB record shape."
+      },
+      "CoachResumeRequestHTTP": {
+        "properties": {
+          "intervention_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Intervention Id"
+          },
+          "supervisor_input": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supervisor Input",
+            "description": "Supervisor response text (required for post-help resume path)"
+          },
+          "supervisor_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Supervisor Id",
+            "description": "Supervisor identifier for audit trail"
+          },
+          "technician_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Technician Id",
+            "description": "Technician ID to assign (required for post-technician-assignment path)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "intervention_id",
+          "supervisor_id"
+        ],
+        "title": "CoachResumeRequestHTTP",
+        "description": "Request body for POST /v1/agents/maintenance-coach/resume.\n\nTwo resume paths (Open Q3 RESOLVED in 07-08):\n  (a) post request_help interrupt — ``supervisor_input`` required\n  (b) post technician_assignment_required interrupt — ``technician_id`` required\n\nAt least one of supervisor_input or technician_id MUST be provided (422 otherwise)."
+      },
+      "CoachStartRequestHTTP": {
+        "properties": {
+          "intervention_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intervention Id",
+            "description": "Client-generated intervention ID; server generates UUID4 if absent"
+          },
+          "asset_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Asset Id",
+            "description": "Asset under maintenance (e.g. LOOM-01)"
+          },
+          "sop_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Sop Id",
+            "description": "SOP identifier (e.g. SOP-LOOM-001)"
+          },
+          "technician_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Technician Id",
+            "description": "Optional: omit for RCA auto-open path (Open Q3 RESOLVED in 07-08)"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for RAG search ACL (Phase 5)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "sop_id"
+        ],
+        "title": "CoachStartRequestHTTP",
+        "description": "Request body for POST /v1/agents/maintenance-coach/start.\n\n``intervention_id`` is optional at the HTTP boundary — the server generates\na UUID4 when absent. This wraps 07-08's CoachStartRequest which requires\nintervention_id; the server fills it in before invoking the supervisor."
+      },
+      "CoachStepRequestHTTP": {
+        "properties": {
+          "intervention_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Intervention Id"
+          },
+          "technician_input": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Technician Input",
+            "description": "Technician confirmation / notes (cap 4000 — T-V7-coach-injection)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "intervention_id",
+          "technician_input"
+        ],
+        "title": "CoachStepRequestHTTP",
+        "description": "Request body for POST /v1/agents/maintenance-coach/step."
+      },
+      "CostAnalyzeRequest": {
+        "properties": {
+          "ribasso_pct": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Ribasso Pct",
+            "description": "Ribasso percentage for OEPV simulation (0–100)",
+            "default": 10.0
+          },
+          "pt": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Pt",
+            "description": "Punteggio tecnico for OEPV simulation (0–100)",
+            "default": 50.0
+          },
+          "oepv_config": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oepv Config",
+            "description": "Optional OepvConfig overrides (alpha, beta, gamma, delta weights)"
+          },
+          "ts_from": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts From",
+            "description": "Cost aggregation window start (tz-aware UTC)"
+          },
+          "ts_to": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts To",
+            "description": "Cost aggregation window end (tz-aware UTC)"
+          },
+          "window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Window Days",
+            "description": "Cost aggregation window in days (fallback when ts_from/ts_to not set)",
+            "default": 30
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 11 — WR-03)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CostAnalyzeRequest",
+        "description": "Request body for POST /v1/agents/cost-analyzer/analyze (SCM-03, D-SCM-AUTO).\n\nTriggers the fully autonomous CostAnalyzer (no HITL, Decision.AUTO)."
+      },
+      "DecideRequest": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "escalate"
+            ],
+            "title": "Decision"
+          },
+          "motivation": {
+            "type": "string",
+            "title": "Motivation",
+            "description": "Free-text motivation. REQUIRED for supervisor/manager/safety_interlock tiers on approve/reject (router-level check).",
+            "default": ""
+          },
+          "decided_by": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Decided By",
+            "description": "Identifier of the human decision-maker"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decision",
+          "decided_by"
+        ],
+        "title": "DecideRequest"
+      },
+      "DecideResponse": {
+        "properties": {
+          "approval": {
+            "$ref": "#/components/schemas/ApprovalResponse"
+          },
+          "audit_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audit Id"
+          },
+          "resumed": {
+            "type": "boolean",
+            "title": "Resumed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "approval",
+          "resumed"
+        ],
+        "title": "DecideResponse"
+      },
+      "DemandForecastRequest": {
+        "properties": {
+          "sku_groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sku Groups",
+            "description": "SKU groups to forecast (e.g. ['jersey', 'twill']); None means defaults"
+          },
+          "horizon": {
+            "type": "integer",
+            "maximum": 36.0,
+            "minimum": 1.0,
+            "title": "Horizon",
+            "description": "Forecast horizon in months (1–36)",
+            "default": 6
+          },
+          "months_back": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 6.0,
+            "title": "Months Back",
+            "description": "Historical months to use for training (6–120)",
+            "default": 24
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 11 — WR-03)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DemandForecastRequest",
+        "description": "Request body for POST /v1/agents/demand-forecaster/forecast (SCM-04).\n\nTriggers DemandForecaster Holt-Winters HITL flow."
+      },
+      "DemandResumeRequest": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Thread Id",
+            "description": "LangGraph thread_id from the original forecast (supply.demand-forecaster.<uuid>)"
+          },
+          "decision": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Decision",
+            "description": "Supervisor demand-plan decision (e.g. 'approved', 'rejected')"
+          },
+          "decision_actor": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Decision Actor",
+            "description": "Identity of the supervisor who made the decision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "decision",
+          "decision_actor"
+        ],
+        "title": "DemandResumeRequest",
+        "description": "Request body for POST /v1/agents/demand-forecaster/resume (SCM-04).\n\nResume demand forecasting after supervisor plan sign-off.\nPublishes demand_plan to ProductionPlanner via returned state."
+      },
+      "DocumentationDraftRequest": {
+        "properties": {
+          "failure_mode": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Failure Mode",
+            "description": "Failure mode description for SOP context (D-DS-02)"
+          },
+          "asset_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Asset Id",
+            "description": "Asset identifier for event aggregation (e.g. 'LOOM-01')"
+          },
+          "window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Window Days",
+            "description": "Historical event window in days for aggregation (default 30)",
+            "default": 30
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "failure_mode",
+          "asset_id"
+        ],
+        "title": "DocumentationDraftRequest",
+        "description": "Request body for POST /v1/agents/documentation-synthesizer/draft (TRN-04, D-DS-03).\n\nTriggers bilingual SOP draft generation with pre-index HITL gating."
+      },
+      "EnergyOptimizeRequest": {
+        "properties": {
+          "process": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Process",
+            "description": "Factory process to analyse (e.g. 'dyeing', 'spinning'); None means all"
+          },
+          "ts_from": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts From",
+            "description": "Time-window start (tz-aware UTC) for energy readings"
+          },
+          "ts_to": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts To",
+            "description": "Time-window end (tz-aware UTC) for energy readings"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 11 — WR-03)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "EnergyOptimizeRequest",
+        "description": "Request body for POST /v1/agents/energy-optimizer/optimize (SCM-02).\n\nTriggers EnergyOptimizer off-peak scheduling HITL flow."
+      },
+      "EnergyResumeRequest": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Thread Id",
+            "description": "LangGraph thread_id from the original optimize (supply.energy-optimizer.<uuid>)"
+          },
+          "decision": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Decision",
+            "description": "Supervisor off-peak proposal decision (e.g. 'approved', 'rejected')"
+          },
+          "decision_actor": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Decision Actor",
+            "description": "Identity of the supervisor who made the decision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "decision",
+          "decision_actor"
+        ],
+        "title": "EnergyResumeRequest",
+        "description": "Request body for POST /v1/agents/energy-optimizer/resume (SCM-02).\n\nResume an energy optimization after supervisor off-peak sign-off."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "dependencies": {
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "up",
+                "down"
+              ]
+            },
+            "type": "object",
+            "title": "Dependencies"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "dependencies"
+        ],
+        "title": "HealthResponse",
+        "description": "JSON body for /v1/health and /v1/ready."
+      },
+      "InventoryCheckRequest": {
+        "properties": {
+          "sku_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sku Ids",
+            "description": "Optional list of SKU identifiers to check; None means all SKUs"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 11 — WR-03)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "InventoryCheckRequest",
+        "description": "Request body for POST /v1/agents/inventory-manager/check (SCM-01).\n\nManual trigger for InventoryManager single-supervisor HITL flow."
+      },
+      "InventoryResumeRequest": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Thread Id",
+            "description": "LangGraph thread_id from the original check (supply.inventory-manager.<uuid>)"
+          },
+          "decision": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Decision",
+            "description": "Supervisor reorder decision (e.g. 'approved', 'rejected')"
+          },
+          "decision_actor": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Decision Actor",
+            "description": "Identity of the supervisor who made the decision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "decision",
+          "decision_actor"
+        ],
+        "title": "InventoryResumeRequest",
+        "description": "Request body for POST /v1/agents/inventory-manager/resume (SCM-01).\n\nResume an inventory check after supervisor reorder sign-off."
+      },
+      "KnowledgeCuratorIngestRequest": {
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Document Id",
+            "description": "Unique document identifier (client-provided or SHA256 of content)"
+          },
+          "document_text": {
+            "type": "string",
+            "maxLength": 100000,
+            "minLength": 1,
+            "title": "Document Text",
+            "description": "Full document text to curate (max 100 KiB)"
+          },
+          "doc_type": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Doc Type",
+            "description": "Document type (e.g. 'sop', 'manual', 'training_material')"
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Updated",
+            "description": "Document last-updated timestamp (tz-aware) for staleness check"
+          },
+          "source_uri": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Source Uri",
+            "description": "Document source URI for citation traceability (TRN-05)"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Caller roles for future ACL enforcement (Phase 11)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "document_text",
+          "doc_type",
+          "last_updated",
+          "source_uri"
+        ],
+        "title": "KnowledgeCuratorIngestRequest",
+        "description": "Request body for POST /v1/agents/knowledge-curator/ingest (D-KC-04).\n\nTriggers autonomous dedup + staleness flagging. No HITL gating."
+      },
+      "KpiSnapshot": {
+        "properties": {
+          "oee": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oee"
+          },
+          "mttr": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mttr"
+          },
+          "mtbf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mtbf"
+          },
+          "scrap_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scrap Rate"
+          },
+          "throughput": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Throughput"
+          },
+          "downtime": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downtime"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "oee",
+          "mttr",
+          "mtbf",
+          "scrap_rate",
+          "throughput",
+          "downtime"
+        ],
+        "title": "KpiSnapshot",
+        "description": "Snapshot of the 6 real KPIs computed from TimescaleDB.\n\nAll fields are float | None: None indicates no data was available for\nthe computed window (no downtime events, no orders, etc.).\n\nUnits:\n    oee          — percentage [0, 100]\n    mttr         — minutes\n    mtbf         — hours\n    scrap_rate   — percentage [0, 100]\n    throughput   — kg/h\n    downtime     — percentage [0, 100]"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest",
+        "description": "Credentials for POST /auth/login (dev-mode seeded personas only).\n\nextra=\"forbid\" and frozen=True enforce strict input validation (CR-03)."
+      },
+      "LoginResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type",
+          "role"
+        ],
+        "title": "LoginResponse",
+        "description": "Successful login response containing a signed JWT."
+      },
+      "MeResponse": {
+        "properties": {
+          "sub": {
+            "type": "string",
+            "title": "Sub"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sub",
+          "email",
+          "role"
+        ],
+        "title": "MeResponse",
+        "description": "Principal echo for GET /auth/me."
+      },
+      "OperatorChatRequestBody": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Query",
+            "description": "Operator question (free text, IT or EN)."
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "RBAC roles propagated to RagSearchTool ACL pre-filter."
+          },
+          "thread_id": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Thread Id",
+            "description": "LangGraph thread_id for checkpoint persistence."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "query",
+          "user_roles",
+          "thread_id"
+        ],
+        "title": "OperatorChatRequestBody",
+        "description": "POST /v1/agents/operator-assistant/chat body (mirrors ops_operator_assistant.models.OperatorChatRequest)."
+      },
+      "PMScoreRequest": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Asset Id"
+          },
+          "triggered_by_action_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Triggered By Action Id",
+            "description": "Upstream AnomalyDetector audit row action_id for MNT-06 chain"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 5)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "user_roles"
+        ],
+        "title": "PMScoreRequest",
+        "description": "Request body for POST /v1/agents/predictive-maintenance/score (MNT-01)."
+      },
+      "PMScoreResponse": {
+        "properties": {
+          "rul_estimate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RULEstimate"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "RUL estimate (None when agent escalated to HITL supervisor)"
+          },
+          "thread_id": {
+            "type": "string",
+            "title": "Thread Id",
+            "description": "LangGraph thread_id for this invocation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id"
+        ],
+        "title": "PMScoreResponse",
+        "description": "Response envelope for POST /v1/agents/predictive-maintenance/score."
+      },
+      "PlanRequestBody": {
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "enum": [
+              "spt",
+              "edd"
+            ],
+            "title": "Strategy",
+            "description": "Scheduling strategy: 'spt' or 'edd'."
+          },
+          "horizon_days": {
+            "type": "integer",
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Horizon Days",
+            "description": "Horizon window in days (1..30)."
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "User Roles",
+            "description": "Operator roles for RAG ACL pre-filter (Phase 5 D-72)."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "strategy",
+          "horizon_days"
+        ],
+        "title": "PlanRequestBody",
+        "description": "POST /v1/agents/production-planner/plan body (mirrors ops_production_planner.models.PlanRequest)."
+      },
+      "QualityEventAcceptedResponse": {
+        "properties": {
+          "accepted": {
+            "type": "boolean",
+            "title": "Accepted"
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Event Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "accepted",
+          "event_id"
+        ],
+        "title": "QualityEventAcceptedResponse",
+        "description": "202 envelope returned by POST /v1/quality/events."
+      },
+      "QualityEventOperatorRequest": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Asset Id",
+            "description": "Asset ID"
+          },
+          "dye_lot_id": {
+            "type": "string",
+            "pattern": "^DL-[A-Z0-9-]+-\\d{8}-[0-9a-f]+$",
+            "title": "Dye Lot Id",
+            "description": "Dye-lot identifier (D-QI-04 regex)."
+          },
+          "defect_type": {
+            "type": "string",
+            "enum": [
+              "broken_end",
+              "mispick",
+              "slub",
+              "neppy",
+              "selvage_fault",
+              "shade_deviation",
+              "unlevel_dyeing"
+            ],
+            "title": "Defect Type",
+            "description": "Tipo difetto (7-defect taxonomy)"
+          },
+          "defect_length_inches": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Defect Length Inches",
+            "description": "Defect length in inches (>=0)"
+          },
+          "full_width": {
+            "type": "boolean",
+            "title": "Full Width",
+            "description": "Full-width (selvedge-to-selvedge)",
+            "default": false
+          },
+          "position_meters": {
+            "type": "number",
+            "title": "Position Meters",
+            "description": "Linear position on the roll (meters)"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "UTC tz-aware observation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "dye_lot_id",
+          "defect_type",
+          "defect_length_inches",
+          "position_meters",
+          "timestamp"
+        ],
+        "title": "QualityEventOperatorRequest",
+        "description": "Operator-facing QualityEvent payload (T-V6-source-spoof mitigation).\n\nMirrors ``sft_domain.ops.quality.QualityEvent`` but DELIBERATELY OMITS:\n\n  * ``event_id``  — server generates fresh UUID4.\n  * ``source``    — server forces \"operator\"; reject unknown keys via\n                    ``extra=\"forbid\"`` so a client cannot smuggle\n                    ``source=\"simulator\"`` into the publish payload.\n\nAll other validation rules (regex on dye_lot_id, defect_type Literal,\ntz-aware timestamp, bounded defect_length_inches) are mirrored."
+      },
+      "RCAAnalyzeRequest": {
+        "properties": {
+          "problem_statement": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 10,
+            "title": "Problem Statement",
+            "description": "Problem description (min 10 chars for meaningful RCA)"
+          },
+          "downtime_event_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downtime Event Id",
+            "description": "Optional downtime_event_id from maintenance.downtime_events (07-05)"
+          },
+          "asset_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Id",
+            "description": "Optional asset_id scope filter"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "User Roles",
+            "description": "Caller roles (min 1 required for ACL)"
+          },
+          "lang": {
+            "type": "string",
+            "enum": [
+              "it",
+              "en"
+            ],
+            "title": "Lang",
+            "description": "RCA report language (IT default per D-RCA-01)",
+            "default": "it"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "problem_statement",
+          "user_roles"
+        ],
+        "title": "RCAAnalyzeRequest",
+        "description": "Request body for POST /v1/agents/rca-specialist/analyze (MNT-02)."
+      },
+      "RCAAnalyzeResponse": {
+        "properties": {
+          "chain_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chain Id",
+            "description": "RCAChain UUID4 (None until supervisor approves post-HITL)"
+          },
+          "thread_id": {
+            "type": "string",
+            "title": "Thread Id",
+            "description": "LangGraph thread_id for this invocation"
+          },
+          "hitl_status": {
+            "type": "string",
+            "const": "supervisor_pending",
+            "title": "Hitl Status",
+            "description": "Always 'supervisor_pending' per D-RCA-02 always-HITL contract"
+          },
+          "validation_exhausted": {
+            "type": "boolean",
+            "title": "Validation Exhausted",
+            "description": "True when 07-07 retry budget (3 attempts) was exhausted before escalation",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "hitl_status"
+        ],
+        "title": "RCAAnalyzeResponse",
+        "description": "Response envelope for POST /v1/agents/rca-specialist/analyze."
+      },
+      "RULEstimate": {
+        "properties": {
+          "estimate_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Estimate Id",
+            "description": "str(uuid4())"
+          },
+          "asset_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Asset Id",
+            "description": "Asset identifier (e.g. LOOM-01)"
+          },
+          "rul_cycles": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Rul Cycles",
+            "description": "Remaining useful cycles point estimate"
+          },
+          "confidence_band_lower": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Confidence Band Lower",
+            "description": "CI lower bound (>=0)"
+          },
+          "confidence_band_upper": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Confidence Band Upper",
+            "description": "CI upper bound (>=0)"
+          },
+          "health_index": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Index",
+            "description": "clamp(rul_cycles / 125.0, 0.0, 1.0)"
+          },
+          "recommended_action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommended Action",
+            "description": "HITL-branch IT intervention message; None for AUTO"
+          },
+          "triggered_by_action_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Triggered By Action Id",
+            "description": "AnomalyDetector audit row action_id for MNT-06 chain"
+          },
+          "model_version": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Model Version",
+            "description": "Loaded model identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "UTC tz-aware timestamp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "estimate_id",
+          "asset_id",
+          "rul_cycles",
+          "confidence_band_lower",
+          "confidence_band_upper",
+          "health_index",
+          "model_version",
+          "created_at"
+        ],
+        "title": "RULEstimate",
+        "description": "Remaining Useful Life estimate per D-PM-04.\n\nFrozen + extra=forbid ensures the estimate is immutable once constructed\nand no undocumented fields can be injected downstream.\n\nFields\n------\nestimate_id:\n    str(uuid4()) — unique identifier for this estimate.\nasset_id:\n    Textile asset identifier (e.g. 'LOOM-01').\nrul_cycles:\n    Point estimate of remaining useful cycles (>= 0).\nconfidence_band_lower:\n    Lower bound of the ±10% CI band (>= 0).\nconfidence_band_upper:\n    Upper bound of the ±10% CI band (>= 0).\nhealth_index:\n    Derived deterministically from rul_cycles: clamp(rul_cycles / 125.0, 0.0, 1.0).\n    Bound to [0.0, 1.0]; values < 0.3 trigger the HITL supervisor gate.\nrecommended_action:\n    Human-readable IT intervention message populated ONLY when health_index < 0.3\n    (HITL branch). None for AUTO branch.\ntriggered_by_action_id:\n    UUID string of the upstream AnomalyDetector audit row's action_id.\n    Enables MNT-06 SQL JOIN audit chain reconstruction.\nmodel_version:\n    Identifier of the loaded joblib model (e.g. 'ridge-fd001-fd003-v1.0').\ncreated_at:\n    UTC tz-aware timestamp of estimate creation. Naive datetime rejected\n    (Pattern S-6 / T-V7-pm-naive-datetime)."
+      },
+      "ResumeRequest": {
+        "properties": {
+          "approval_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Approval Id",
+            "description": "Pending hitl.approvals row id"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "escalate"
+            ],
+            "title": "Decision"
+          },
+          "motivation": {
+            "type": "string",
+            "title": "Motivation",
+            "description": "Mandatory on supervisor/manager/safety_interlock tiers",
+            "default": ""
+          },
+          "decided_by": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Decided By"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "approval_id",
+          "decision",
+          "decided_by"
+        ],
+        "title": "ResumeRequest"
+      },
+      "ResumeResponse": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "title": "Thread Id"
+          },
+          "state_after": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "State After"
+          },
+          "audit_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Audit Ids"
+          },
+          "completed": {
+            "type": "boolean",
+            "title": "Completed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "state_after",
+          "audit_ids",
+          "completed"
+        ],
+        "title": "ResumeResponse"
+      },
+      "ShiftHandoverCompileRequest": {
+        "properties": {
+          "shift_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Shift Start",
+            "description": "Shift window start (tz-aware UTC)"
+          },
+          "shift_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Shift End",
+            "description": "Shift window end (tz-aware UTC)"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement (Phase 11)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "shift_start",
+          "shift_end",
+          "user_roles"
+        ],
+        "title": "ShiftHandoverCompileRequest",
+        "description": "Request body for POST /v1/agents/shift-handover/compile (TRN-03, D-SH-01).\n\nManual trigger for the ShiftHandover dual-supervisor HITL flow.\nComplements the NATS-scheduled trigger (D-SH-01)."
+      },
+      "TrainingResumeRequest": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Thread Id",
+            "description": "LangGraph thread_id from the original session (knowledge.training-coach.<uuid>)"
+          },
+          "decision": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Decision",
+            "description": "Supervisor competency decision (e.g. 'approved', 'rejected')"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "decision"
+        ],
+        "title": "TrainingResumeRequest",
+        "description": "Request body for POST /v1/agents/training-coach/resume (TRN-02, D-TC-03).\n\nResume a training session after supervisor competency HITL sign-off."
+      },
+      "TrainingSessionRequest": {
+        "properties": {
+          "persona_role": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Persona Role",
+            "description": "Operator role from SOP frontmatter (D-X-03, D-TC-01)"
+          },
+          "user_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "User Roles",
+            "description": "Caller roles for ACL enforcement"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "persona_role",
+          "user_roles"
+        ],
+        "title": "TrainingSessionRequest",
+        "description": "Request body for POST /v1/agents/training-coach/session (TRN-02, D-TC-01).\n\nStarts a new adaptive MCQ quiz session for the operator."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "_ReportRequestHTTP": {
+        "properties": {
+          "window_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Window Start",
+            "description": "Window start (tz-aware)."
+          },
+          "window_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Window End",
+            "description": "Window end (tz-aware, > window_start)."
+          },
+          "by_asset": {
+            "type": "boolean",
+            "title": "By Asset",
+            "description": "Include per-asset breakdown.",
+            "default": false
+          },
+          "top_n_pareto": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Top N Pareto",
+            "description": "Top-N Pareto entries to return (1..100; T-V7-da-pareto-flood cap).",
+            "default": 10
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "window_start",
+          "window_end"
+        ],
+        "title": "_ReportRequestHTTP",
+        "description": "HTTP wrapper for ReportRequest that enforces window_end > window_start at ingestion.\n\nReportRequest (from 07-09) does not validate window order (OEEReport does).\nThis wrapper adds the cross-field validator so the 422 fires at request\nparsing rather than at response serialization."
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

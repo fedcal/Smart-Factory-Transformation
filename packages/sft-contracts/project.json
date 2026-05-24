@@ -4,10 +4,35 @@
   "projectType": "library",
   "sourceRoot": "packages/sft-contracts/src",
   "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "uv run python ../../packages/sft-contracts/scripts/generate-openapi.py",
+            "cwd": "apps/api-gateway"
+          },
+          {
+            "command": "node_modules/.bin/openapi-typescript packages/sft-contracts/openapi.json -o packages/sft-contracts/src/api-types.ts",
+            "cwd": "{workspaceRoot}"
+          }
+        ],
+        "parallel": false
+      },
+      "cache": false
+    },
+    "check-types": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node_modules/.bin/openapi-typescript packages/sft-contracts/openapi.json -o /tmp/sft-contracts-api-types-check.ts && diff packages/sft-contracts/src/api-types.ts /tmp/sft-contracts-api-types-check.ts",
+        "cwd": "{workspaceRoot}"
+      },
+      "dependsOn": ["generate"]
+    },
     "test": {
       "executor": "@nxlv/python:run-commands",
       "options": {
-        "command": "uv run pytest",
+        "command": "uv run pytest --tb=short",
         "cwd": "packages/sft-contracts"
       }
     },

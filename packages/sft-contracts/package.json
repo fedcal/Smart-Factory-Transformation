@@ -8,5 +8,10 @@
     "type": "git",
     "url": "https://github.com/fedcal/Smart-Factory-Transformation.git",
     "directory": "packages/sft-contracts"
-  }
+  },
+  "types": "src/api-types.ts",
+  "files": [
+    "src/api-types.ts",
+    "openapi.json"
+  ]
 }
