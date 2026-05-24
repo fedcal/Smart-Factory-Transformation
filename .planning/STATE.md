@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 11 Plan 00 complete (Wave 1 foundation)
-last_updated: "2026-05-25T00:17:00Z"
-last_activity: 2026-05-25 -- Phase 11 Plan 00 executed (OTEL package + obs.yml + migration 014 + eval scaffold)
+stopped_at: Phase 11 Plan 01 complete (Wave 2 OTEL propagation e2e)
+last_updated: "2026-05-25T00:32:00Z"
+last_activity: 2026-05-25 -- Phase 11 Plan 01 executed (traceparent gateway→NATS→agent + phase11 Langfuse tag)
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 114
-  completed_plans: 111
-  percent: 83
+  completed_plans: 112
+  percent: 84
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 11 (observability-evaluation-security-hardening) — EXECUTING
-Plan: 2 of 6
-Status: Executing Phase 11 (Plan 00 complete)
-Last activity: 2026-05-25 -- Phase 11 Plan 00 complete (Wave 1 foundation)
+Plan: 3 of 6
+Status: Executing Phase 11 (Plans 00-01 complete)
+Last activity: 2026-05-25 -- Phase 11 Plan 01 complete (OTEL e2e propagation)
 
 Progress: [██████████] 78% (Phase 10 complete — 10 of 12 phases done)
 
@@ -64,6 +64,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 11 P01  | 6min | 2 tasks | 6 files |
 | Phase 11 P00  | 17min | 5 tasks | 19 files |
 | Phase 10 P11  | 30min | 2 tasks | 15 files |
 | Phase 10 P10  | 15min | 2 tasks | 4 files |
@@ -148,6 +149,11 @@ Recent decisions affecting current work:
 - [Phase 11-00]: NatsHeaderCarrier(MutableMapping) pattern manuale ~30 righe (opentelemetry-instrumentation-nats non esiste su PyPI — RESEARCH Pitfall 1)
 - [Phase 11-00]: setup_tracer_provider singleton-guarded con _initialized flag modulo-level (evita ProviderOverride warning su doppio call)
 - [Phase 11-00]: Grafana su host port 3001 (Langfuse possiede 3000) — RESEARCH Pitfall 4; MinIO chainguard preesistente senza comando server: acceptance Langfuse OTLP deferred a fix MinIO
+- [Phase 11-01]: publish_agent_command è sync (non async) per testabilità con fake callables; publish_agent_command_async per nats-py reale
+- [Phase 11-01]: handle_agent_command sync con process_fn callable — caller responsabile dell'await per async; pattern più testabile
+- [Phase 11-01]: setup_tracer_provider nel lifespan è best-effort (try/except) — OTEL failure non impedisce avvio gateway
+- [Phase 11-01]: tag 'phase11' aggiunto in build_invocation_metadata (additivo — preserva 'phase4' + tag caller-provided)
+- [Phase 11-01]: nessun OTLP exporter verso Langfuse (RESEARCH Pitfall 3: evita trace duplicate); solo CallbackHandler
 
 ### Pending Todos
 

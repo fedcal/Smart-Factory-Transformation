@@ -254,7 +254,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   5. The OT Bridge data-diode boundary is verified by an automated network policy test that attempts to send a write command from the agent layer into the OPC-UA simulator and confirms it is blocked
 **Plans**: 6 plans (3 waves)
   - [x] 11-00-PLAN.md — Wave 1: infra/deps/scaffolds (obs.yml Grafana/Prometheus/Tempo, OTEL package, migration 014, eval scaffolds, Langfuse/RAGAS verify)
-  - [ ] 11-01-PLAN.md — Wave 2: OTEL trace propagation end-to-end gateway→NATS→agent (OBS-02)
+  - [x] 11-01-PLAN.md — Wave 2: OTEL trace propagation end-to-end gateway→NATS→agent (OBS-02)
   - [ ] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
   - [ ] 11-03-PLAN.md — Wave 2: security hardening — auditor RBAC, sanitizer, OT AST guard, restricted audit (SEC-03/04/06/07)
   - [ ] 11-04-PLAN.md — Wave 3: Grafana dashboards JSON + LGTM doc (OBS-03/04/07)
