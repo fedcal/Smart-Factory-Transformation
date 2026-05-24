@@ -16,8 +16,8 @@ import { KpiTileComponent, KpiKey } from '../../shared/kpi-tile/kpi-tile.compone
 /** KPI keys shown in the compact summary row on the operator area */
 const OPERATOR_KPI_KEYS: KpiKey[] = ['oee', 'scrap_rate', 'downtime'];
 
-/** Default SSE stream endpoint */
-const SSE_STREAM_URL = '/v1/stream/events';
+/** SSE stream endpoint for KPI updates (UI-SPEC SSE Contract) */
+const SSE_STREAM_URL = '/v1/stream/kpi';
 
 /**
  * OperatorComponent — Area Operatore.

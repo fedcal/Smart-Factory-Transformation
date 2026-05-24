@@ -19,8 +19,8 @@ import { ApprovalQueueFeedComponent } from '../../shared/approval-queue/approval
 /** KPI keys relevant to the technician (maintenance-focused) */
 const TECHNICIAN_KPI_KEYS: KpiKey[] = ['mttr', 'mtbf', 'downtime'];
 
-/** Default SSE stream endpoint */
-const SSE_STREAM_URL = '/v1/stream/events';
+/** SSE stream endpoint for KPI updates (UI-SPEC SSE Contract) */
+const SSE_STREAM_URL = '/v1/stream/kpi';
 
 /**
  * Procedure step — step-by-step maintenance procedure UI.
