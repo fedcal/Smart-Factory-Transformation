@@ -13,7 +13,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [ ] **Phase 5: Knowledge Layer (RAG + Graph)** - Qdrant collections, BGE-M3 embeddings, document ingest pipeline, provenance, ACL, entity graph, hybrid retrieval (functional 2026-05-19; 3 gap-closure plans in progress 2026-05-19)
 - [x] **Phase 6: Agents — Operations & Production** - OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector with cluster tests (completed 2026-05-23)
 - [x] **Phase 7: Agents — Maintenance & Reliability** - PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer with tests (completed 2026-05-23)
-- [ ] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests
+- [x] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests (completed 2026-05-24)
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
 - [ ] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests
 - [ ] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations
@@ -191,7 +191,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 08-06-PLAN.md — KnowledgeCurator autonomous hybrid dedup + staleness + reuse-rate KPI (D-KC-01/02/03/04, SC-3)
   - [x] 08-07-PLAN.md — DocumentationSynthesizer bilingual SOP + citation re-anchoring + pre-index HITL (D-DS-01/02/03, SC-4)
   - [x] 08-08-PLAN.md — knowledge_agents.py gateway router + lifespan DI wiring (D-X-04)
-  - [ ] 08-09-PLAN.md — four-agent E2E + TRN-05 opaque-output rejection + bilingual docs (SC-5)
+  - [x] 08-09-PLAN.md — four-agent E2E + TRN-05 opaque-output rejection + bilingual docs (SC-5)
 
 ### Phase 9: Agents — Supply Chain & Economics
 **Goal**: All four Supply Chain cluster agents (InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster) are implemented with realistic Mantis Textile Group example data, OEPV ribasso simulation, ISO 50001 energy tracking, and HITL-gated purchase recommendations.
@@ -257,7 +257,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Knowledge Layer (RAG + Graph) | 10/10 | Complete   | 2026-05-19 |
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
-| 8. Agents — Knowledge & Training | 9/10 | In Progress|  |
+| 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 0/TBD | Not started | - |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |

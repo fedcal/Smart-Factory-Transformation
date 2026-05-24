@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 08-08 Knowledge Agents HTTP Router
-last_updated: "2026-05-24T12:00:00.000Z"
+stopped_at: Completed 08-09 Knowledge Cluster E2E + Bilingual Docs
+last_updated: "2026-05-24T11:37:58.671Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 85
-  completed_plans: 84
-  percent: 50
+  completed_plans: 85
+  percent: 58
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 08 (agents-knowledge-training) — EXECUTING
-Plan: 7 of 10
+Plan: 8 of 10
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [██████████] 99%
+Progress: [██████████] 100%
 
 ### Phase 1 plans (waves — DAG-computed)
 
@@ -66,6 +66,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 08 P06 | 35 | 2 tasks | 12 files |
 | Phase 08 P04 | 25min | 2 tasks | 4 files |
 | Phase 08 P08 | 40min | 2 tasks | 6 files |
+| Phase 08 P09 | 40min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 08-02: ShiftAggregator derives alerts from audit.actions ANOMALY_ALERT only (D-SH-02); WR-03 datetime objects for asyncpg
 - [Phase ?]: Phase 08-06: KnowledgeCurator autonomous pattern — audit rows written immediately before return, no HITL gating (D-KC-04)
 - [Phase ?]: Phase 08-08: knowledge-curator/ingest is 200 not 202 (autonomous D-KC-04); pyproject.toml extended with trn-* workspace deps for lifespan imports
+- [Phase ?]: Phase 08-09: E2E uses MagicMock(spec=SOPDraft) for negative TRN-05 gate to bypass Pydantic frozen model
 
 ### Pending Todos
 
@@ -104,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T12:00:00.000Z
-Stopped at: Completed 08-08 Knowledge Agents HTTP Router
+Last session: 2026-05-24T11:37:58.639Z
+Stopped at: Completed 08-09 Knowledge Cluster E2E + Bilingual Docs
 Resume file: None
