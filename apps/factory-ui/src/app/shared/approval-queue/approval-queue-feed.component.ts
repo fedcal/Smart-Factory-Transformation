@@ -93,7 +93,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             class="sft-queue__filter-btn"
             [class.sft-queue__filter-btn--active]="activeFilter() === 'all'"
             (click)="setFilter('all')"
-            aria-pressed="{{ activeFilter() === 'all' }}">
+            [attr.aria-pressed]="activeFilter() === 'all'">
             Tutti
           </button>
           <button
@@ -102,7 +102,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             class="sft-queue__filter-btn"
             [class.sft-queue__filter-btn--active]="activeFilter() === 'mine'"
             (click)="setFilter('mine')"
-            aria-pressed="{{ activeFilter() === 'mine' }}">
+            [attr.aria-pressed]="activeFilter() === 'mine'">
             Solo miei
           </button>
           <button
@@ -111,7 +111,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             class="sft-queue__filter-btn"
             [class.sft-queue__filter-btn--active]="activeFilter() === 'expiring'"
             (click)="setFilter('expiring')"
-            aria-pressed="{{ activeFilter() === 'expiring' }}">
+            [attr.aria-pressed]="activeFilter() === 'expiring'">
             Per scadenza
           </button>
         </div>
