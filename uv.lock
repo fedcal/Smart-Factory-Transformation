@@ -3876,6 +3876,11 @@ dev = [
 name = "trn-training-coach"
 version = "0.1.0"
 source = { editable = "apps/agents/knowledge/training-coach" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "sft-agents" },
+    { name = "structlog" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -3884,6 +3889,11 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.7.0,<3.0.0" },
+    { name = "sft-agents", editable = "packages/sft-agents" },
+    { name = "structlog", specifier = ">=24.4" },
+]
 
 [package.metadata.requires-dev]
 dev = [

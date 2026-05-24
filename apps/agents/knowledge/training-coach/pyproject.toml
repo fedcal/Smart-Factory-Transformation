@@ -3,7 +3,14 @@ name = "trn-training-coach"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 description = "Knowledge agent: personalized training coach for factory operators"
-dependencies = []
+dependencies = [
+  "sft-agents",
+  "pydantic>=2.7.0,<3.0.0",
+  "structlog>=24.4",
+]
+
+[tool.uv.sources]
+sft-agents = { workspace = true }
 
 [dependency-groups]
 dev = [
