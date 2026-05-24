@@ -28,7 +28,8 @@ logger = structlog.get_logger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # All seeded persona roles — used for /auth/me (any authenticated user passes).
-_ALL_ROLES = ("operator", "shift-supervisor", "technician", "manager", "admin")
+# Phase 11 (SEC-03): added 'auditor' to allow auditor@mantis.it to call /auth/me.
+_ALL_ROLES = ("operator", "shift-supervisor", "technician", "manager", "admin", "auditor")
 
 
 # ---------------------------------------------------------------------------

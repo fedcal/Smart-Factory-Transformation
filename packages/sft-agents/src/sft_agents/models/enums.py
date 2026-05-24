@@ -108,8 +108,10 @@ class ActionType(str, Enum):
     the Phase 7 values; migration `infra/migrations/timescale/010_extend_audit_knw.sql`
     extends it with the Phase 8 values; migration
     `infra/migrations/timescale/012_extend_audit_scm.sql` extends it with
-    the Phase 9 values below. The SQL CHECK string must stay in lockstep
-    with the .value strings here — drift triggers PG CheckViolationError
+    the Phase 9 values below; migration
+    `infra/migrations/timescale/014_extend_audit_phase11.sql` extends it with
+    the Phase 11 values (RESTRICTED_DOC_ACCESS). The SQL CHECK string must stay
+    in lockstep with the .value strings here — drift triggers PG CheckViolationError
     at runtime.
     """
 
@@ -147,3 +149,7 @@ class ActionType(str, Enum):
     DEMAND_PLAN_DRAFT = "DEMAND_PLAN_DRAFT"                  # SCM-04: DemandForecaster demand plan draft
     DEMAND_PLAN_SIGNOFF = "DEMAND_PLAN_SIGNOFF"              # SCM-04: ProductionPlanner publish sign-off
     COST_REPORT = "COST_REPORT"                              # SCM-03: CostAnalyzer autonomous ROI/OEPV report row (Decision.AUTO)
+    # Phase 11 additions — keep in lockstep with migration 014 (SEC-07).
+    # migration `infra/migrations/timescale/014_extend_audit_phase11.sql` adds
+    # the RESTRICTED_DOC_ACCESS value to the audit.actions.action_type CHECK constraint.
+    RESTRICTED_DOC_ACCESS = "RESTRICTED_DOC_ACCESS"          # SEC-07: access to acl_level=restricted chunk — always audited

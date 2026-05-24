@@ -82,6 +82,14 @@ SEEDED_USERS: dict[str, dict[str, str]] = {
         "password": "mantis2026",  # dev-mode seed — NOT a production secret
         "role": "admin",
     },
+    # Phase 11 addition (SEC-03): auditor persona for read-only audit access.
+    # Naming note: REQUIREMENTS SEC-03 uses 'supervisor' as alias for the
+    # existing 'shift-supervisor' role (canonical value); 'auditor' is a NEW
+    # independent role and is NOT an alias for any existing role.
+    "auditor@mantis.it": {
+        "password": "mantis2026",  # dev-mode seed — NOT a production secret
+        "role": "auditor",
+    },
 }
 
 
