@@ -213,7 +213,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 09-05-PLAN.md — DemandForecaster: Holt-Winters + rolling MAPE + HITL agent publishing to ProductionPlanner via state (SCM-04)
   - [x] 09-06-PLAN.md — API gateway supply_agents.py router + DI wiring (build_supply_subgraph) with Phase 8 boundary fixes (SCM-01..04, SEC-02)
   - [x] 09-07-PLAN.md — Four-agent supply cluster E2E against the Mantis seed (per-agent audit-row counts, OEPV, cross-cluster plan) (SCM-01..05)
-  - [ ] 09-08-PLAN.md — Bilingual IT+EN supply-cluster docs + Mantis synthetic-dataset page + mkdocs nav (SCM-05)
+  - [x] 09-08-PLAN.md — Bilingual IT+EN supply-cluster docs + Mantis synthetic-dataset page + mkdocs nav (SCM-05)
 
 
 ### Phase 10: Backend API & Frontend
@@ -269,7 +269,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 6. Agents — Operations & Production | 15/15 | Complete   | 2026-05-23 |
 | 7. Agents — Maintenance & Reliability | 17/17 | Complete   | 2026-05-23 |
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
-| 9. Agents — Supply Chain & Economics | 7/10 | In Progress|  |
+| 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 0/TBD | Not started | - |
 | 11. Observability, Evaluation & Security Hardening | 0/TBD | Not started | - |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |
