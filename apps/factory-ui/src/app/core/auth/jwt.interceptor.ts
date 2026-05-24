@@ -40,8 +40,30 @@ export const jwtInterceptor: HttpInterceptorFn = (
 };
 
 /**
- * Returns true when the URL matches a protected API pattern.
+ * Returns true when the URL is same-origin AND matches a protected API pattern.
+ *
+ * WR-06: limits Bearer token attachment to same-origin or relative URLs only.
+ * An absolute URL pointing to an external host (e.g. https://evil.example.com/v1/kpi)
+ * could contain a BEARER_URL_PATTERNS match, leaking the JWT to a third party.
+ *
+ * Rules:
+ *  - Relative URLs (starting with '/') are always same-origin — allowed.
+ *  - Absolute URLs must start with window.location.origin — checked when window
+ *    is available (browser environment). On SSR (no window) absolute URLs are
+ *    rejected for safety; only relative paths pass.
  */
 function shouldAttachBearer(url: string): boolean {
+  // Relative URL — always same-origin
+  if (url.startsWith('/')) {
+    return BEARER_URL_PATTERNS.some((pattern) => url.includes(pattern));
+  }
+
+  // Absolute URL — must match the current origin
+  const currentOrigin =
+    typeof window !== 'undefined' ? window.location.origin : null;
+  if (!currentOrigin || !url.startsWith(currentOrigin)) {
+    return false;
+  }
+
   return BEARER_URL_PATTERNS.some((pattern) => url.includes(pattern));
 }
