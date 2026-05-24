@@ -106,10 +106,10 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 
 ### Agenti Supply Chain & Economics (SCM)
 
-- [ ] **SCM-01**: `InventoryManager` — monitora livelli magazzino (filato grezzo, accessori, ricambi), suggerisce riordini
-- [ ] **SCM-02**: `EnergyOptimizer` — analizza consumi (kWh, vapore, acqua) e suggerisce schedule energy-efficient
-- [ ] **SCM-03**: `CostAnalyzer` — calcola impatto economico di downtime/scrap, alimenta dashboard OEPV
-- [ ] **SCM-04**: `DemandForecaster` — proietta domanda da ordini storici + segnali esterni configurabili
+- [x] **SCM-01**: `InventoryManager` — monitora livelli magazzino (filato grezzo, accessori, ricambi), suggerisce riordini
+- [x] **SCM-02**: `EnergyOptimizer` — analizza consumi (kWh, vapore, acqua) e suggerisce schedule energy-efficient
+- [x] **SCM-03**: `CostAnalyzer` — calcola impatto economico di downtime/scrap, alimenta dashboard OEPV
+- [x] **SCM-04**: `DemandForecaster` — proietta domanda da ordini storici + segnali esterni configurabili
 - [ ] **SCM-05**: Esempi numerici realistici per Mantis (gamma prodotti, capacità, costi) documentati come sintetici
 
 ### Frontend & UX (UI)
@@ -318,10 +318,10 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | TRN-03 | Phase 8 | Complete |
 | TRN-04 | Phase 8 | Complete |
 | TRN-05 | Phase 8 | Complete |
-| SCM-01 | Phase 9 | Pending |
-| SCM-02 | Phase 9 | Pending |
-| SCM-03 | Phase 9 | Pending |
-| SCM-04 | Phase 9 | Pending |
+| SCM-01 | Phase 9 | Complete |
+| SCM-02 | Phase 9 | Complete |
+| SCM-03 | Phase 9 | Complete |
+| SCM-04 | Phase 9 | Complete |
 | SCM-05 | Phase 9 | Pending |
 | SRV-01 | Phase 10 | Pending |
 | SRV-02 | Phase 10 | Pending |
