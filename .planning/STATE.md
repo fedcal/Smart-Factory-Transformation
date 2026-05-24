@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "10-09 complete — plan 13 of 13 in Phase 10 (ROADMAP SC5 complete)"
-last_updated: "2026-05-24T19:38:00Z"
+stopped_at: "10-10 complete — Playwright E2E project + HITL approval flow spec (UI-10 satisfied)"
+last_updated: "2026-05-24T19:55:00Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
   completed_phases: 9
   total_plans: 108
-  completed_plans: 106
-  percent: 76
+  completed_plans: 107
+  percent: 77
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 Phase: 10 (backend-api-frontend) — EXECUTING
 Plan: 13 of 13
-Status: Executing (10-10 and 10-11 remaining)
+Status: Executing (10-11 remaining)
 Last activity: 2026-05-24
 
 Progress: [██████████] 97%
@@ -63,6 +63,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 10 P10  | 15min | 2 tasks | 4 files |
 | Phase 10 P09  | 8min | 2 tasks | 7 files |
 | Phase 10 P08  | 25min | 2 tasks | 10 files |
 | Phase 10 P07  | 18min | 2 tasks | 5 files |
@@ -138,6 +139,7 @@ Recent decisions affecting current work:
 - [Phase 10-08]: app.routes.ts /operator and /manager use loadChildren pointing to feature routes files (operator.routes.ts / manager.routes.ts); RBAC defined inside feature routes
 - [Phase 10-09]: All 5 persona routes migrated to loadChildren; CIO Elena reuses ManagerComponent (UI-SPEC maps cio → /manager); AdminComponent demo fallback rows (17/20 AUTO) ensures governor alert demonstrable in dev; DemoComponent placeholder retained as dead file
 - [Phase 10-03]: Finite async generator for SSE HTTP tests avoids sse-starlette AppStatus event-loop collision; X-Accel-Buffering + Content-Type combined in one test; auth schema isolation for auth_users; OTEL best-effort guard (try/except) in build_app()
+- [Phase 10-10]: Separate Nx project apps/factory-ui-e2e/ (not inline) per Nx e2e convention; audit via GET /v1/approvals filtered by approval_id (no /v1/audit/{id} endpoint); beforeAll reachability guard prevents silent false-green; ubuntu26.04-x64 lacks Playwright browser support — live run is CI/human item
 
 ### Pending Todos
 
@@ -158,6 +160,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T19:38:00Z
-Stopped at: "10-09 complete — ROADMAP SC5 complete. Next: 10-10 (Playwright E2E)"
-Resume file: .planning/phases/10-backend-api-frontend/10-10-PLAN.md
+Last session: 2026-05-24T19:55:00Z
+Stopped at: "10-10 complete — apps/factory-ui-e2e + hitl-flow.spec.ts (8-step HITL approval E2E). Next: 10-11 (TS contract test + bilingual mock UI)"
+Resume file: .planning/phases/10-backend-api-frontend/10-11-PLAN.md
