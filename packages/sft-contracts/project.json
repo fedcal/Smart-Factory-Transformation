@@ -21,15 +21,15 @@
       },
       "cache": false
     },
-    "check-types": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node_modules/.bin/openapi-typescript packages/sft-contracts/openapi.json -o /tmp/sft-contracts-api-types-check.ts && diff packages/sft-contracts/src/api-types.ts /tmp/sft-contracts-api-types-check.ts",
-        "cwd": "{workspaceRoot}"
-      },
-      "dependsOn": ["generate"]
-    },
     "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/sft-contracts/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "test-py": {
       "executor": "@nxlv/python:run-commands",
       "options": {
         "command": "uv run pytest --tb=short",

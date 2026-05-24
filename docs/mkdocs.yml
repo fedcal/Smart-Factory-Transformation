@@ -91,6 +91,8 @@ plugins:
             Supply Chain: Supply Chain
             Supply Cluster: Supply Cluster
             Mantis Synthetic Dataset: Mantis Synthetic Dataset
+            Interfaccia Utente: User Interface
+            Mock UI: Mock UI
       reconfigure_material: true
 
 markdown_extensions:
@@ -170,4 +172,6 @@ nav:
     - Supply Chain:
       - Supply Cluster: agents/supply/supply-cluster.md
       - Mantis Synthetic Dataset: agents/supply/mantis-synthetic-dataset.md
+  - Interfaccia Utente:
+    - Mock UI: ui-mock.md
   - Contributing: contributing/index.md
