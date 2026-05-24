@@ -3,7 +3,9 @@ name = "scm-demand-forecaster"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 description = "Supply chain agent: demand forecasting using historical orders and market signals"
-dependencies = []
+dependencies = [
+    "numpy>=1.26.0,<3.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]

@@ -19,6 +19,27 @@ from __future__ import annotations
 
 import pytest
 
+from scm_demand_forecaster.holt_winters import (
+    HoltWintersConfig,
+    ForecastResult,
+    _seasonal_naive_fallback,
+    forecast_holt_winters,
+)
+
+# ---------------------------------------------------------------------------
+# Synthetic 24-element series (2 full seasons of 12 months)
+# Anchored on Mantis SKU group "jersey": ~12,000 kg/month, seasonal peaks
+# ---------------------------------------------------------------------------
+
+_JERSEY_SERIES: list[float] = [
+    8000, 9000, 10000, 12000, 11000, 9000, 8000, 8500, 9000, 10500, 11500, 12500,
+    8200, 9100, 10200, 12200, 11200, 9100, 8100, 8600, 9100, 10600, 11600, 12600,
+]
+
+_DEFAULT_CONFIG = HoltWintersConfig(
+    alpha=0.3, beta=0.1, gamma=0.3, season_length=12, min_periods=24
+)
+
 
 # ---------------------------------------------------------------------------
 # Deterministic output contract
@@ -32,28 +53,27 @@ def test_forecast_holt_winters_deterministic_output_for_fixed_params() -> None:
     Two calls with identical inputs must return identical forecast values.
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "Calling forecast_holt_winters(series, horizon=6, config=HoltWintersConfig()) twice "
-        "with the same series must return identical forecast lists. "
-        "No random seed or optimization — purely deterministic with fixed alpha/beta/gamma."
-    )
+    r1 = forecast_holt_winters(_JERSEY_SERIES, horizon=6, config=_DEFAULT_CONFIG, sku_group="jersey")
+    r2 = forecast_holt_winters(_JERSEY_SERIES, horizon=6, config=_DEFAULT_CONFIG, sku_group="jersey")
+    assert r1.forecast == r2.forecast, "forecast_holt_winters must be deterministic"
+    assert len(r1.forecast) == 6
 
 
 def test_forecast_holt_winters_exact_values_for_fixed_series() -> None:
     """forecast_holt_winters: known series + fixed params → exact rounded forecast values (SCM-04).
 
-    Uses a 24-element synthetic series with known seasonal pattern.
-    Expected forecast values are pre-computed from the Holt-Winters formula.
+    Uses the 24-element synthetic series from test module header.
+    Expected values computed from the Holt-Winters formula in 09-RESEARCH.md Pattern 9
+    (seasonals[n + h - m + (h % m)], n+m sized seasonal array).
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "For series=[8000,9000,10000,12000,11000,9000,8000,8500,9000,10500,11500,12500, "
-        "8200,9100,10200,12200,11200,9100,8100,8600,9100,10600,11600,12600], "
-        "horizon=3, config=HoltWintersConfig(alpha=0.3, beta=0.1, gamma=0.3, season_length=12, min_periods=24): "
-        "compute the expected values via the formula in 09-RESEARCH.md Pattern 9 and assert exact results "
-        "(rounded to 2dp). The test body must contain the expected values once computed."
+    result = forecast_holt_winters(
+        _JERSEY_SERIES, horizon=3, config=_DEFAULT_CONFIG, sku_group="jersey"
+    )
+    # Expected values computed from Pattern 9 formula (verified via test helper script).
+    expected = [8123.58, 10122.83, 11124.45]
+    assert result.forecast == pytest.approx(expected, abs=0.01), (
+        f"Expected {expected}, got {result.forecast}"
     )
 
 
@@ -64,12 +84,14 @@ def test_forecast_holt_winters_returns_forecast_result_with_correct_fields() -> 
             method (str), config (HoltWintersConfig).
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "result.sku_group == 'jersey', result.horizon == 6, "
-        "len(result.forecast) == 6, result.method == 'holt_winters', "
-        "result.config is a HoltWintersConfig instance."
+    result = forecast_holt_winters(
+        _JERSEY_SERIES, horizon=6, config=_DEFAULT_CONFIG, sku_group="jersey"
     )
+    assert result.sku_group == "jersey"
+    assert result.horizon == 6
+    assert len(result.forecast) == 6
+    assert result.method == "holt_winters"
+    assert isinstance(result.config, HoltWintersConfig)
 
 
 # ---------------------------------------------------------------------------
@@ -83,11 +105,11 @@ def test_seasonal_naive_fallback_when_series_shorter_than_min_periods() -> None:
     Default min_periods = 24. A 12-element series triggers the fallback.
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "forecast_holt_winters(series=[8000]*12, horizon=3, config=HoltWintersConfig(min_periods=24)) "
-        "→ result.method == 'seasonal_naive'. "
-        "Series of 12 elements < min_periods=24 triggers the fallback."
+    result = forecast_holt_winters(
+        [8000.0] * 12, horizon=3, config=HoltWintersConfig(min_periods=24)
+    )
+    assert result.method == "seasonal_naive", (
+        f"Expected 'seasonal_naive', got '{result.method}'"
     )
 
 
@@ -98,12 +120,13 @@ def test_seasonal_naive_forecast_repeats_last_season() -> None:
     → forecast=[100,200,300,400,100,200] (cycles through last season).
     Implementation target: scm_demand_forecaster.holt_winters._seasonal_naive_fallback
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "With series=[100,200,300,400] and config=HoltWintersConfig(season_length=4, min_periods=8), "
-        "forecast_holt_winters(series, horizon=6) → "
-        "result.forecast == [100.0, 200.0, 300.0, 400.0, 100.0, 200.0] "
-        "(cycles through last season, rounded to 2dp)."
+    result = forecast_holt_winters(
+        [100.0, 200.0, 300.0, 400.0],
+        horizon=6,
+        config=HoltWintersConfig(season_length=4, min_periods=8),
+    )
+    assert result.forecast == [100.0, 200.0, 300.0, 400.0, 100.0, 200.0], (
+        f"Expected [100.0, 200.0, 300.0, 400.0, 100.0, 200.0], got {result.forecast}"
     )
 
 
@@ -114,11 +137,13 @@ def test_seasonal_naive_method_tag_in_result() -> None:
     indicate to operators that the forecast uses the simpler fallback.
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "When series length < min_periods, result.method == 'seasonal_naive'. "
-        "When full HW is used, result.method == 'holt_winters'."
-    )
+    # Short series → seasonal_naive
+    short_result = forecast_holt_winters([8000.0] * 12, horizon=3, config=_DEFAULT_CONFIG)
+    assert short_result.method == "seasonal_naive"
+
+    # Full series → holt_winters
+    full_result = forecast_holt_winters(_JERSEY_SERIES, horizon=3, config=_DEFAULT_CONFIG)
+    assert full_result.method == "holt_winters"
 
 
 # ---------------------------------------------------------------------------
@@ -137,9 +162,9 @@ def test_forecast_values_are_non_negative() -> None:
 
     Implementation target: scm_demand_forecaster.holt_winters.forecast_holt_winters
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "A strongly declining series (e.g. [1000,500,200,100,50,25,10,5,2,1,0.5,0.1]*2) "
-        "must produce non-negative forecasts. All values: max(0.0, raw_value). "
-        "Never return negative demand in ForecastResult.forecast."
+    # Strongly declining series — likely to produce negative raw HW forecasts
+    declining = [1000, 500, 200, 100, 50, 25, 10, 5, 2, 1, 0.5, 0.1] * 2
+    result = forecast_holt_winters(declining, horizon=6, config=_DEFAULT_CONFIG)
+    assert all(f >= 0.0 for f in result.forecast), (
+        f"All forecast values must be >= 0.0, got {result.forecast}"
     )

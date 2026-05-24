@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import pytest
 
+from scm_demand_forecaster.mape import compute_mape
+
 
 # ---------------------------------------------------------------------------
 # Basic MAPE computation
@@ -33,11 +35,8 @@ def test_compute_mape_basic_accuracy() -> None:
     - MAPE = (0.10+0.10)/2 * 100 = 10.0%
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[100.0, 200.0], forecasts=[110.0, 180.0]) == 10.0. "
-        "(Exact value; both contributions are 0.10, average is 0.10, * 100 = 10.0%)"
-    )
+    result = compute_mape([100.0, 200.0], [110.0, 180.0])
+    assert result == pytest.approx(10.0, abs=1e-9), f"Expected 10.0, got {result}"
 
 
 def test_compute_mape_perfect_forecast_returns_zero() -> None:
@@ -45,10 +44,8 @@ def test_compute_mape_perfect_forecast_returns_zero() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[100.0, 200.0, 300.0], forecasts=[100.0, 200.0, 300.0]) == 0.0."
-    )
+    result = compute_mape([100.0, 200.0, 300.0], [100.0, 200.0, 300.0])
+    assert result == pytest.approx(0.0, abs=1e-9), f"Expected 0.0, got {result}"
 
 
 # ---------------------------------------------------------------------------
@@ -65,11 +62,8 @@ def test_compute_mape_skips_pairs_where_actual_is_zero() -> None:
     - MAPE = 0.10/1 * 100 = 10.0%
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[0.0, 200.0], forecasts=[50.0, 180.0]) == 10.0. "
-        "The first pair (actual=0) is skipped entirely."
-    )
+    result = compute_mape([0.0, 200.0], [50.0, 180.0])
+    assert result == pytest.approx(10.0, abs=1e-9), f"Expected 10.0, got {result}"
 
 
 def test_compute_mape_skips_pairs_where_actual_is_negative() -> None:
@@ -77,10 +71,9 @@ def test_compute_mape_skips_pairs_where_actual_is_negative() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[-50.0, 100.0], forecasts=[30.0, 120.0]) == 20.0. "
-        "Negative actual is invalid — skip. Only pair 2: |100-120|/100=0.20 → MAPE=20.0%."
+    result = compute_mape([-50.0, 100.0], [30.0, 120.0])
+    assert result == pytest.approx(20.0, abs=1e-9), (
+        f"Expected 20.0 (only pair 2: |100-120|/100=0.20), got {result}"
     )
 
 
@@ -89,11 +82,8 @@ def test_compute_mape_returns_zero_when_all_actuals_are_zero_or_negative() -> No
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[0.0, -10.0, 0.0], forecasts=[5.0, 8.0, 3.0]) == 0.0. "
-        "No valid pairs → return 0.0 (not ZeroDivisionError)."
-    )
+    result = compute_mape([0.0, -10.0, 0.0], [5.0, 8.0, 3.0])
+    assert result == pytest.approx(0.0, abs=1e-9), f"Expected 0.0, got {result}"
 
 
 # ---------------------------------------------------------------------------
@@ -112,11 +102,9 @@ def test_per_point_contribution_clamped_to_one_hundred_percent() -> None:
     - MAPE = 1.0/1 * 100 = 100.0%
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[100.0], forecasts=[300.0]) == 100.0 (not 200.0). "
-        "Per-point contribution = min(|a-f|/a, 1.0). "
-        "Raw error would be 2.0; clamped to 1.0 → MAPE=100.0%."
+    result = compute_mape([100.0], [300.0])
+    assert result == pytest.approx(100.0, abs=1e-9), (
+        f"Expected 100.0 (clamped from 200%), got {result}"
     )
 
 
@@ -125,11 +113,11 @@ def test_per_point_clamp_does_not_affect_normal_contributions() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[100.0, 100.0], forecasts=[110.0, 300.0]) == 55.0. "
-        "Pair 1: 0.10 (no clamp). Pair 2: min(2.0, 1.0) = 1.0. "
-        "Average: (0.10+1.0)/2 * 100 = 55.0%."
+    result = compute_mape([100.0, 100.0], [110.0, 300.0])
+    # Pair 1: 0.10 (no clamp). Pair 2: min(2.0, 1.0) = 1.0.
+    # Average: (0.10+1.0)/2 * 100 = 55.0%
+    assert result == pytest.approx(55.0, abs=1e-6), (
+        f"Expected 55.0, got {result}"
     )
 
 
@@ -143,10 +131,8 @@ def test_compute_mape_empty_actuals_returns_zero() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[], forecasts=[]) == 0.0. No exception."
-    )
+    result = compute_mape([], [])
+    assert result == 0.0
 
 
 def test_compute_mape_empty_forecasts_returns_zero() -> None:
@@ -154,11 +140,9 @@ def test_compute_mape_empty_forecasts_returns_zero() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract: "
-        "compute_mape(actuals=[100.0], forecasts=[]) == 0.0. "
-        "Mismatched lengths: zip stops at shortest list; if empty → 0.0."
-    )
+    result = compute_mape([100.0], [])
+    # zip stops at shortest list → 0 pairs → returns 0.0
+    assert result == 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -176,10 +160,10 @@ def test_mape_is_clamped_to_100_before_model_construction() -> None:
 
     Implementation target: scm_demand_forecaster.mape.compute_mape (or caller site)
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-05) — contract (CR-05): "
-        "compute_mape must return a value in [0.0, 100.0]. "
-        "Even if per-point clamping theoretically bounds it, the function "
-        "must guarantee: result = min(raw_mape, 100.0). "
-        "Verify: compute_mape result is always <= 100.0 regardless of input."
-    )
+    # Even with extreme error, result must be clamped to <= 100.0
+    result = compute_mape([100.0], [300.0])
+    assert result <= 100.0, f"MAPE must be <= 100.0, got {result}"
+
+    # Verify with multiple outlier pairs
+    result_multi = compute_mape([1.0, 1.0, 1.0], [1000.0, 2000.0, 3000.0])
+    assert result_multi <= 100.0, f"MAPE with outliers must be <= 100.0, got {result_multi}"
