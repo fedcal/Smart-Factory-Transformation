@@ -47,6 +47,7 @@ def build_app() -> FastAPI:
     from svc_api_gateway.routers import approvals as approvals_router  # noqa: PLC0415
     from svc_api_gateway.routers import auth as auth_router  # noqa: PLC0415
     from svc_api_gateway.routers import health as health_router  # noqa: PLC0415
+    from svc_api_gateway.routers import kpi as kpi_router  # noqa: PLC0415
     from svc_api_gateway.routers import knowledge_agents as knowledge_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import maintenance_agents as maintenance_agents_router  # noqa: PLC0415
     from svc_api_gateway.routers import ops_agents as ops_agents_router  # noqa: PLC0415
@@ -61,6 +62,7 @@ def build_app() -> FastAPI:
     )
     app.include_router(health_router.router)
     app.include_router(auth_router.router)  # Plan 10-01 — SRV-01 JWT auth + RBAC
+    app.include_router(kpi_router.router)   # Plan 10-02 — SRV-02 KPI snapshot
     app.include_router(approvals_router.router)
     app.include_router(threads_router.router)
     app.include_router(quality_router.router)  # Plan 06-12 — OPS-04 ingest
