@@ -241,11 +241,10 @@ async def lifespan(app: FastAPI):  # noqa: C901 — startup is necessarily wide
         audit_writer=audit_writer,
         llm=None,  # Phase 11: inject LLM (EnPI path is LLM-free)
     )
-    # CostAnalyzer.__init__ takes positional args (not keyword-only *-args).
     cost_analyzer_agent = CostAnalyzer(
-        pool,
-        audit_writer,
-        None,  # llm — not used (LLM-free, deterministic OEPV)
+        pool=pool,
+        audit_writer=audit_writer,
+        llm=None,  # not used (LLM-free, deterministic OEPV)
     )
     demand_forecaster_agent = DemandForecaster(
         pool=pool,

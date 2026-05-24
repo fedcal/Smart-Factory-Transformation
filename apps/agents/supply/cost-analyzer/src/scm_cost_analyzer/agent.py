@@ -91,6 +91,7 @@ class CostAnalyzer:
 
     def __init__(
         self,
+        *,                                 # keyword-only — matches InventoryManager, EnergyOptimizer, DemandForecaster
         pool: Any,
         audit_writer: AuditWriter | Any,
         llm: Any = None,
