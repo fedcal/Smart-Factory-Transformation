@@ -93,3 +93,4 @@ playwright-report/
 simulators/sim-textile/replay-data/*
 !simulators/sim-textile/replay-data/.gitkeep
 !simulators/sim-textile/replay-data/CHECKSUMS.txt
+.deepeval/
