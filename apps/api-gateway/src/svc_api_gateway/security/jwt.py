@@ -17,6 +17,7 @@ SEEDED_USERS:
 
 from __future__ import annotations
 
+import logging as _logging
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -26,12 +27,30 @@ from fastapi import HTTPException, status
 
 # ---------------------------------------------------------------------------
 # Secret key — always read from env, dev default documented above (T-10-01-04).
+# CR-02: refuse to start with dev default in non-development environments.
 # ---------------------------------------------------------------------------
 
 # DEV DEFAULT — override via API_SECRET_KEY env var before any non-dev usage.
 _DEV_ONLY_DEFAULT = "_dev_only_change_before_production_"
 
-SECRET_KEY: str = os.environ.get("API_SECRET_KEY", _DEV_ONLY_DEFAULT)
+_DEV_ENVS = frozenset({"development", "dev", "test"})
+
+_raw_secret = os.environ.get("API_SECRET_KEY")
+if _raw_secret is None:
+    _app_env = os.environ.get("APP_ENV", "development").lower()
+    if _app_env not in _DEV_ENVS:
+        raise RuntimeError(
+            "API_SECRET_KEY env var is required in non-development environments. "
+            f"Current APP_ENV={_app_env!r}. "
+            "Set API_SECRET_KEY to a strong random secret before starting the gateway."
+        )
+    _logging.warning(
+        "API_SECRET_KEY not set — using insecure dev default. "
+        "DO NOT use in production. Set APP_ENV=production and API_SECRET_KEY."
+    )
+    _raw_secret = _DEV_ONLY_DEFAULT
+
+SECRET_KEY: str = _raw_secret
 
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_HOURS = 8
