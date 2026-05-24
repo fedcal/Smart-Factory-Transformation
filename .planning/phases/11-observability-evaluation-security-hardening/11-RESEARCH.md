@@ -700,7 +700,7 @@ async def retrieve_with_audit(query: str, principal: dict, ...) -> list[Chunk]:
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED — AR-07 doc-only in 11-05; Langfuse OTLP auth + RAGAS determinism are 11-00 acceptance steps; migration 014 follows the 010/012 lockstep pattern)
 
 1. **Redis rate-limiter (AR-07)**
    - What we know: AR-07 (10-SECURITY.md) ha accettato il rate-limit in-process con `RuntimeWarning` se `WEB_CONCURRENCY>1`. CONTEXT.md deferred la Redis-based rate-limit ma dice "se scoped dal planner".
