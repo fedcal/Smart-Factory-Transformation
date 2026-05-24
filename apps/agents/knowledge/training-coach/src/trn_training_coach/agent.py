@@ -42,10 +42,17 @@ import structlog
 try:
     from langgraph.types import interrupt
 except ImportError:  # Pattern G — test shim
-    from unittest.mock import MagicMock
-    interrupt = MagicMock(return_value={"approved": True, "decision": "proceed"})  # type: ignore[assignment]
+    def interrupt(value: Any) -> Any:  # type: ignore[misc]
+        """Fallback stub — only in non-langgraph test environments."""
+        raise NotImplementedError(
+            "langgraph.types.interrupt non disponibile. "
+            "Usare patch('trn_training_coach.agent.interrupt', ...) nei test HITL."
+        )
 
+from sft_agents.models.audit import AuditRecord
+from sft_agents.models.budget import BudgetSnapshot
 from sft_agents.models.enums import ActionType, Decision, Tier
+from sft_agents.models.evidence import EvidencePanel, TokenUsage
 
 from trn_training_coach.difficulty import next_difficulty
 from trn_training_coach.metadata import AGENT_ID, CLUSTER, DEFAULT_PASS_THRESHOLD
@@ -54,6 +61,21 @@ from trn_training_coach.quiz import MCQQuestion, MCQSession, score_session
 
 UTC = timezone.utc
 logger = structlog.get_logger("agent.training-coach")
+
+# ---------------------------------------------------------------------------
+# Empty budget snapshot for training-coach (deterministic scoring path).
+# ---------------------------------------------------------------------------
+
+_EMPTY_BUDGET = BudgetSnapshot(
+    tokens_input=0,
+    tokens_output=0,
+    tokens_total=0,
+    cost_usd_simulated=0.0,
+    duration_ms=0,
+    limit_tokens=0,
+    limit_cost_usd=0.0,
+    limit_duration_s=0,
+)
 
 # ---------------------------------------------------------------------------
 # Valid persona roles from SOP frontmatter (D-X-03)
@@ -241,40 +263,81 @@ class TrainingCoach:
 
             # AFTER interrupt() returns (resume): write both rows exactly once.
             # TRAINING_SESSION written here (not before) to prevent double-write on replay.
-            await self._audit.write(
-                action_type=ActionType.TRAINING_SESSION,
+            _thread_id = f"knowledge.training-coach.{session_id}"
+            _now = datetime.now(UTC)
+            _session_evidence = EvidencePanel(
+                input_summary=f"session={session_id} role={persona_role} score={score:.2f}"[:500],
+                input_truncated=False,
+                tool_calls=[],
+                rag_citations=[],
+                confidence=1.0,
+                model="deterministic@training-coach",
+                prompt_hash="0" * 64,
+                tokens=TokenUsage(input=0, output=0, total=0),
+                duration_ms=0,
+            )
+            await self._audit.write(AuditRecord(
+                id=uuid.uuid4(),
+                ts=_now,
+                action_id=uuid.uuid4(),
+                agent_id=AGENT_ID,
+                thread_id=_thread_id,
+                cluster=CLUSTER,
+                action_type=ActionType.TRAINING_SESSION.value,
+                evidence_panel=_session_evidence,
                 decision=Decision.HITL_SUPERVISOR,
-                session_id=session_id,
-                persona_role=persona_role,
-                score=score,
-                passed=passed,
-                approval_id=None,  # CR-03: pending HITL — supervisor assigns real ID
+                decision_actor=None,
                 motivation=f"Training session completed: score={score:.2f} >= threshold={self._pass_threshold}",
-            )
-            await self._audit.write(
-                action_type=ActionType.TRAINING_SIGNOFF,
+                budget_snapshot=_EMPTY_BUDGET,
+                approval_id=None,  # CR-03: pending HITL — supervisor assigns real ID
+            ))
+            await self._audit.write(AuditRecord(
+                id=uuid.uuid4(),
+                ts=_now,
+                action_id=uuid.uuid4(),
+                agent_id=AGENT_ID,
+                thread_id=_thread_id,
+                cluster=CLUSTER,
+                action_type=ActionType.TRAINING_SIGNOFF.value,
+                evidence_panel=_session_evidence,
                 decision=Decision.HITL_SUPERVISOR,
-                session_id=session_id,
-                persona_role=persona_role,
-                score=score,
-                passed=True,
-                approval_id=None,  # CR-03: never fabricate UUID for pending HITL
+                decision_actor=None,
                 motivation=f"Supervisor competency sign-off: score={score:.2f} >= threshold={self._pass_threshold}",
-            )
+                budget_snapshot=_EMPTY_BUDGET,
+                approval_id=None,  # CR-03: never fabricate UUID for pending HITL
+            ))
             hitl_status = "supervisor_pending"
 
         else:
             # FAILING PATH: write TRAINING_SESSION immediately, no interrupt, no TRAINING_SIGNOFF.
-            await self._audit.write(
-                action_type=ActionType.TRAINING_SESSION,
-                decision=Decision.AUTO,
-                session_id=session_id,
-                persona_role=persona_role,
-                score=score,
-                passed=False,
-                approval_id=None,
-                motivation=None,
+            _thread_id = f"knowledge.training-coach.{session_id}"
+            _now = datetime.now(UTC)
+            _fail_evidence = EvidencePanel(
+                input_summary=f"session={session_id} role={persona_role} score={score:.2f} FAILED"[:500],
+                input_truncated=False,
+                tool_calls=[],
+                rag_citations=[],
+                confidence=1.0,
+                model="deterministic@training-coach",
+                prompt_hash="0" * 64,
+                tokens=TokenUsage(input=0, output=0, total=0),
+                duration_ms=0,
             )
+            await self._audit.write(AuditRecord(
+                id=uuid.uuid4(),
+                ts=_now,
+                action_id=uuid.uuid4(),
+                agent_id=AGENT_ID,
+                thread_id=_thread_id,
+                cluster=CLUSTER,
+                action_type=ActionType.TRAINING_SESSION.value,
+                evidence_panel=_fail_evidence,
+                decision=Decision.AUTO,
+                decision_actor=None,
+                motivation=None,
+                budget_snapshot=_EMPTY_BUDGET,
+                approval_id=None,
+            ))
             hitl_status = "none"
 
         logger.info(
