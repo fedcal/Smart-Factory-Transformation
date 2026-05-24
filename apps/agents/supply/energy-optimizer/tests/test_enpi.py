@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import pytest
 
+from scm_energy_optimizer.enpi import compute_enpi
+
 
 # ---------------------------------------------------------------------------
 # enpi_actual contract
@@ -34,11 +36,16 @@ def test_enpi_actual_is_sum_kwh_over_sum_kg_for_valid_slots() -> None:
     enpi = (200+150)/(50+30) = 350/80 = 4.375 kWh/kg
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: compute_enpi("
-        "kwh_readings=[100.0, 200.0, 150.0], kg_readings=[0.0, 50.0, 30.0], "
-        "enpi_baseline_kwh_per_kg=3.80, is_peak_hour_flags=[False,False,False]) "
-        "→ enpi_actual == 4.375. Slots with kg=0 must be skipped."
+    report = compute_enpi(
+        kwh_readings=[100.0, 200.0, 150.0],
+        kg_readings=[0.0, 50.0, 30.0],
+        enpi_baseline_kwh_per_kg=3.80,
+        is_peak_hour_flags=[False, False, False],
+    )
+    # Slot kg=0 must be skipped: valid slots are (200,50) and (150,30)
+    # enpi_actual = (200+150)/(50+30) = 350/80 = 4.375
+    assert abs(report.enpi_actual - 4.375) < 0.001, (
+        f"Expected enpi_actual ≈ 4.375, got {report.enpi_actual}"
     )
 
 
@@ -48,11 +55,21 @@ def test_enpi_actual_mantis_dyeing_baseline() -> None:
     Mantis synthetic dataset: tintoria YTD 4.12 kWh/kg vs baseline 3.80 kWh/kg.
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: Mantis dyeing anchor: "
-        "kwh_readings=[412.0], kg_readings=[100.0], baseline=3.80 "
-        "→ enpi_actual=4.12, deviation_pct≈8.42, is_above_baseline=True."
+    report = compute_enpi(
+        kwh_readings=[412.0],
+        kg_readings=[100.0],
+        enpi_baseline_kwh_per_kg=3.80,
+        is_peak_hour_flags=[True],
     )
+    # enpi_actual = 412/100 = 4.12
+    assert abs(report.enpi_actual - 4.12) < 0.001, (
+        f"Expected enpi_actual ≈ 4.12, got {report.enpi_actual}"
+    )
+    # deviation_pct = (4.12 - 3.80) / 3.80 * 100 ≈ 8.42
+    assert abs(report.deviation_pct - 8.42) < 0.05, (
+        f"Expected deviation_pct ≈ 8.42, got {report.deviation_pct}"
+    )
+    assert report.is_above_baseline is True, "Mantis dyeing is above baseline"
 
 
 # ---------------------------------------------------------------------------
@@ -66,10 +83,16 @@ def test_deviation_pct_formula_actual_minus_baseline_over_baseline() -> None:
     Example: actual=4.375, baseline=3.80 → deviation_pct=(4.375-3.80)/3.80*100 ≈ 15.13%
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: deviation_pct formula: "
-        "(enpi_actual - enpi_baseline) / enpi_baseline * 100. "
-        "Example: actual=4.375, baseline=3.80 → deviation_pct ≈ 15.13 (rounded to 2dp)."
+    report = compute_enpi(
+        kwh_readings=[100.0, 200.0, 150.0],
+        kg_readings=[0.0, 50.0, 30.0],
+        enpi_baseline_kwh_per_kg=3.80,
+        is_peak_hour_flags=[False, False, False],
+    )
+    # enpi_actual = 4.375; deviation = (4.375 - 3.80) / 3.80 * 100 ≈ 15.13
+    expected_deviation = (4.375 - 3.80) / 3.80 * 100
+    assert abs(report.deviation_pct - round(expected_deviation, 2)) < 0.01, (
+        f"Expected deviation_pct ≈ {round(expected_deviation, 2)}, got {report.deviation_pct}"
     )
 
 
@@ -79,10 +102,18 @@ def test_deviation_pct_negative_when_below_baseline() -> None:
     Mantis finishing: actual=2.18, baseline=2.20 → deviation_pct ≈ -0.91 (within target).
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: deviation_pct is negative when "
-        "enpi_actual < enpi_baseline. "
-        "Mantis finishing: actual=2.18, baseline=2.20 → deviation_pct ≈ -0.91."
+    report = compute_enpi(
+        kwh_readings=[218.0],
+        kg_readings=[100.0],
+        enpi_baseline_kwh_per_kg=2.20,
+        is_peak_hour_flags=[False],
+    )
+    # enpi_actual = 2.18; deviation = (2.18 - 2.20) / 2.20 * 100 ≈ -0.91
+    assert report.deviation_pct < 0, (
+        f"Expected deviation_pct < 0 for below-baseline case, got {report.deviation_pct}"
+    )
+    assert abs(report.deviation_pct - (-0.91)) < 0.05, (
+        f"Expected deviation_pct ≈ -0.91, got {report.deviation_pct}"
     )
 
 
@@ -96,9 +127,15 @@ def test_is_above_baseline_true_when_enpi_actual_exceeds_baseline() -> None:
 
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: is_above_baseline=True when "
-        "enpi_actual (4.375) > enpi_baseline (3.80)."
+    report = compute_enpi(
+        kwh_readings=[100.0, 200.0, 150.0],
+        kg_readings=[0.0, 50.0, 30.0],
+        enpi_baseline_kwh_per_kg=3.80,
+        is_peak_hour_flags=[False, False, False],
+    )
+    # enpi_actual = 4.375 > baseline 3.80
+    assert report.is_above_baseline is True, (
+        f"Expected is_above_baseline=True (actual={report.enpi_actual} > baseline={report.enpi_baseline})"
     )
 
 
@@ -107,10 +144,15 @@ def test_is_above_baseline_false_when_enpi_actual_below_baseline() -> None:
 
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: is_above_baseline=False when "
-        "enpi_actual (2.18) <= enpi_baseline (2.20). "
-        "Mantis finishing example (within target)."
+    report = compute_enpi(
+        kwh_readings=[218.0],
+        kg_readings=[100.0],
+        enpi_baseline_kwh_per_kg=2.20,
+        is_peak_hour_flags=[False],
+    )
+    # enpi_actual = 2.18 < baseline 2.20 → is_above_baseline = False
+    assert report.is_above_baseline is False, (
+        f"Expected is_above_baseline=False for Mantis finishing (actual={report.enpi_actual} <= baseline={report.enpi_baseline})"
     )
 
 
@@ -126,10 +168,17 @@ def test_off_peak_kwh_pct_is_percentage_of_total_kwh_in_off_peak_hours() -> None
     off_peak_kwh=350, total=450, off_peak_pct=77.78%
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: off_peak_kwh_pct uses ALL kwh_readings "
-        "(not just valid kg>0 slots). Example: kwh=[100,200,150], is_peak=[True,False,False] "
-        "→ off_peak_pct ≈ 77.78 (rounded to 2dp)."
+    report = compute_enpi(
+        kwh_readings=[100.0, 200.0, 150.0],
+        kg_readings=[0.0, 50.0, 30.0],
+        enpi_baseline_kwh_per_kg=3.80,
+        is_peak_hour_flags=[True, False, False],
+    )
+    # All kwh_readings used: off_peak = 200+150 = 350; total = 450
+    # off_peak_pct = 350/450*100 ≈ 77.78
+    expected_pct = 350 / 450 * 100
+    assert abs(report.off_peak_kwh_pct - round(expected_pct, 2)) < 0.01, (
+        f"Expected off_peak_kwh_pct ≈ {round(expected_pct, 2)}, got {report.off_peak_kwh_pct}"
     )
 
 
@@ -145,9 +194,10 @@ def test_compute_enpi_raises_value_error_when_no_kg_positive_slot() -> None:
     fail explicitly rather than returning inf or NaN.
     Implementation target: scm_energy_optimizer.enpi.compute_enpi
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-03) — contract: compute_enpi("
-        "kwh_readings=[100.0, 200.0], kg_readings=[0.0, 0.0], ...) "
-        "must raise ValueError('Nessun dato valido (kg > 0) nei readings forniti') "
-        "or similar. No silent inf/NaN return."
-    )
+    with pytest.raises(ValueError, match="Nessun dato valido"):
+        compute_enpi(
+            kwh_readings=[100.0, 200.0],
+            kg_readings=[0.0, 0.0],
+            enpi_baseline_kwh_per_kg=3.80,
+            is_peak_hour_flags=[False, False],
+        )
