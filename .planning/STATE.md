@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "10-06 complete — plan 10 of 13 in Phase 10"
-last_updated: "2026-05-24T19:00:00Z"
+stopped_at: "10-07 complete — plan 11 of 13 in Phase 10"
+last_updated: "2026-05-24T20:00:00Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 10 (backend-api-frontend) — EXECUTING
-Plan: 10 of 13
+Plan: 11 of 13
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -63,6 +63,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 10 P07  | 18min | 2 tasks | 5 files |
 | Phase 10 P06  | 9min | 2 tasks | 7 files |
 | Phase 10 P03  | 14min | 3 tasks | 6 files |
 | Phase 10 P05  | 35min | 3 tasks | 12 files |
@@ -128,6 +129,9 @@ Recent decisions affecting current work:
 - [Phase 10-06]: Shared beforeEach in approval-card spec (not per-test async createComponent) eliminates compileComponents 5s timeout — all 17 tests pass in 2.9s
 - [Phase 10-06]: window.confirm for reject destructive dialog (SSR-safe, keyboard-accessible, avoids MatDialog CDK overlay zone timeout in tests)
 - [Phase 10-06]: ApprovalCardComponent uses signal()/_touched pattern for motivation gate; EvidencePanelComponent bridges @Input to computed() via OnChanges+signal()
+- [Phase 10-07]: input() signal API (Angular 17+) instead of @Input+ngOnChanges for KpiTile — avoids manual signal bridging, fixture.componentRef.setInput() required in specs
+- [Phase 10-07]: computeKpiStatus() exported pure function for direct unit testing; throughput uses ratio (value/baseline) vs 1.0/0.9 bounds per UI-SPEC
+- [Phase 10-07]: AlertFeed visibleAlerts() caps at 12 (RATE_LIMIT) newest-first mirroring HITL-10 12/hr backend limit; ApprovalQueueFeed maps ApprovalPendingEvent → ApprovalCardData locally
 - [Phase 10-03]: Finite async generator for SSE HTTP tests avoids sse-starlette AppStatus event-loop collision; X-Accel-Buffering + Content-Type combined in one test; auth schema isolation for auth_users; OTEL best-effort guard (try/except) in build_app()
 
 ### Pending Todos
@@ -149,6 +153,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T19:00:00Z
-Stopped at: "10-06 complete — plan 10 of 13 in Phase 10"
-Resume file: .planning/phases/10-backend-api-frontend/10-07-PLAN.md
+Last session: 2026-05-24T20:00:00Z
+Stopped at: "10-07 complete — plan 11 of 13 in Phase 10"
+Resume file: .planning/phases/10-backend-api-frontend/10-08-PLAN.md
