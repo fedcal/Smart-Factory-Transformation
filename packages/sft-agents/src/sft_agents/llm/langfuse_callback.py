@@ -91,7 +91,7 @@ def build_invocation_metadata(
         thread_id: LangGraph thread_id; reused as Langfuse session_id for trace
             grouping across multiple agent invocations within one user session.
         user_id: Optional operator identifier for trace attribution.
-        tags: Additional Langfuse tags appended after the default ["phase4"].
+        tags: Additional Langfuse tags appended after the default ["phase4", "phase11"].
 
     Returns:
         Immutable-style dict (caller should treat as frozen) with keys:
@@ -99,9 +99,11 @@ def build_invocation_metadata(
             langfuse_user_id  (only present when ``user_id`` is not None)
             langfuse_tags
     """
+    # "phase11" aggiunto additivamente (Plan 11-01 OBS-02 SC-1).
+    # I tag esistenti ("phase4") e quelli caller-provided coesistono.
     out: dict[str, Any] = {
         "langfuse_session_id": thread_id,
-        "langfuse_tags": ["phase4", *(tags or [])],
+        "langfuse_tags": ["phase4", "phase11", *(tags or [])],
     }
     if user_id is not None:
         out["langfuse_user_id"] = user_id
