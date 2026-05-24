@@ -181,7 +181,16 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   3. KnowledgeCurator detects a duplicate document during ingest, flags a stale document beyond its staleness threshold, and tracks the knowledge reuse rate KPI
   4. DocumentationSynthesizer generates a bilingual SOP draft from historical maintenance events and routes it to HITL approval before indexing; every output includes `source_uri` and timestamp
   5. All TRN agent outputs include citations with `source_uri` and timestamp; no opaque outputs are accepted by the test suite
-**Plans**: TBD
+**Plans**: 9 plans
+  - [ ] 08-00-PLAN.md — Wave 0: migration 010 + ActionType enum lockstep (D-X-01) + all agent test scaffolds (TRN-02/03/04/05)
+  - [ ] 08-01-PLAN.md — build_knowledge_subgraph + curator fallback (D-X-04)
+  - [ ] 08-02-PLAN.md — ShiftHandover data layer: models + cross-cluster aggregator (D-SH-02, TRN-03/05)
+  - [ ] 08-04-PLAN.md — ShiftHandover dual-supervisor HITL agent + NATS shift.boundary consumer (D-SH-01/03, SC-1)
+  - [ ] 08-05-PLAN.md — TrainingCoach deterministic quiz + dynamic difficulty + supervisor sign-off (D-TC-01/02/03, SC-2)
+  - [ ] 08-06-PLAN.md — KnowledgeCurator autonomous hybrid dedup + staleness + reuse-rate KPI (D-KC-01/02/03/04, SC-3)
+  - [ ] 08-07-PLAN.md — DocumentationSynthesizer bilingual SOP + citation re-anchoring + pre-index HITL (D-DS-01/02/03, SC-4)
+  - [ ] 08-08-PLAN.md — knowledge_agents.py gateway router + lifespan DI wiring (D-X-04)
+  - [ ] 08-09-PLAN.md — four-agent E2E + TRN-05 opaque-output rejection + bilingual docs (SC-5)
 
 ### Phase 9: Agents — Supply Chain & Economics
 **Goal**: All four Supply Chain cluster agents (InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster) are implemented with realistic Mantis Textile Group example data, OEPV ribasso simulation, ISO 50001 energy tracking, and HITL-gated purchase recommendations.
