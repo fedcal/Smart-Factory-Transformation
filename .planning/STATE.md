@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "10-01 complete — plan 4 of 13 in Phase 10"
-last_updated: "2026-05-24T17:55:00.000Z"
+stopped_at: "10-04 complete — plan 5 of 13 in Phase 10"
+last_updated: "2026-05-24T19:30:00.000Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 10 (backend-api-frontend) — EXECUTING
-Plan: 4 of 13
+Plan: 5 of 13
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -63,6 +63,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 10 P04  | 45min | 3 tasks | 18 files |
 | Phase 10 P01  | 35min | 2 tasks | 8 files |
 | Phase 10 P00b | 25min | 2 tasks | 9 files |
 | Phase 10 P00a | 20min | 3 tasks | 8 files |
@@ -117,6 +118,7 @@ Recent decisions affecting current work:
 - [Phase 10-00a]: sse-starlette pinned to 2.x (3.3+ requires starlette>=0.49.1 conflicting with fastapi<0.117); SCSS @use before @import required by Dart Sass; prerender:false in dev config (pre-existing NG0401 in empty scaffold)
 - [Phase 10-00b]: pytest.mark.skip per test function (not module-level) mirrors Phase 6 per-test reporting convention; test_kpi_sql_uses_parameterised_placeholders auto-skips if queries.py absent (no always-passing assertion); SSE scaffold uses direct pytest.skip() not MagicMock for interrupts; Jest it.skip (not xit/xdescribe) for per-case granularity
 - [Phase 10-01]: RBAC test route changed from /v1/approvals (unguarded, Phase 6 legacy) to /auth/me (guarded by require_roles) — backward-compat constraint; dev password "mantis2026" confirmed from test contracts (overrides plan text "operator123")
+- [Phase 10-04]: mat.define-theme() azure palette + --mat-sys-* CSS override pattern for SFT hex values; RBAC_GUARD_SERVICE_TOKEN InjectionToken as stable 10-04/10-05 boundary; ng-content slots in TopBar for LanguageToggle/ThemeToggle/UserChip (10-05/10-06 slot in without AppShell changes)
 
 ### Pending Todos
 
@@ -137,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T18:35:00.000Z
-Stopped at: "10-00b complete — plan 3 of 13 in Phase 10"
-Resume file: .planning/phases/10-backend-api-frontend/10-02-PLAN.md
+Last session: 2026-05-24T19:30:00.000Z
+Stopped at: "10-04 complete — plan 5 of 13 in Phase 10"
+Resume file: .planning/phases/10-backend-api-frontend/10-05-PLAN.md
