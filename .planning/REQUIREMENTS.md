@@ -147,11 +147,11 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 
 - [ ] **SEC-01**: Threat model documentato (STRIDE) per IT/OT, RAG ingestion, agent orchestration
 - [ ] **SEC-02**: Mitigation per OWASP LLM Top 10 (prompt injection, sensitive info leak, supply chain)
-- [ ] **SEC-03**: RBAC con ruoli `operator`, `supervisor`, `manager`, `technician`, `admin`, `auditor`
-- [ ] **SEC-04**: Sanitizzazione documenti in ingest (markdown safe, stripping di prompt-injection patterns noti)
+- [x] **SEC-03**: RBAC con ruoli `operator`, `supervisor`, `manager`, `technician`, `admin`, `auditor`
+- [x] **SEC-04**: Sanitizzazione documenti in ingest (markdown safe, stripping di prompt-injection patterns noti)
 - [ ] **SEC-05**: Secret management via env + `.env.example` documentato; nessun secret hard-coded
-- [ ] **SEC-06**: Network policy: OT Bridge non ha route inverso verso OPC-UA (verificato in test)
-- [ ] **SEC-07**: Audit log di ogni accesso a documenti `restricted`
+- [x] **SEC-06**: Network policy: OT Bridge non ha route inverso verso OPC-UA (verificato in test)
+- [x] **SEC-07**: Audit log di ogni accesso a documenti `restricted`
 
 ### Documentation (DOC)
 
@@ -346,11 +346,11 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | OBS-07 | Phase 11 | Pending |
 | SEC-01 | Phase 11 | Pending |
 | SEC-02 | Phase 11 | Pending |
-| SEC-03 | Phase 11 | Pending |
-| SEC-04 | Phase 11 | Pending |
+| SEC-03 | Phase 11 | Complete |
+| SEC-04 | Phase 11 | Complete |
 | SEC-05 | Phase 11 | Pending |
-| SEC-06 | Phase 11 | Pending |
-| SEC-07 | Phase 11 | Pending |
+| SEC-06 | Phase 11 | Complete |
+| SEC-07 | Phase 11 | Complete |
 | DOC-01 | Phase 12 | Pending |
 | DOC-02 | Phase 12 | Pending |
 | DOC-03 | Phase 12 | Pending |

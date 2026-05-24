@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 11 context gathered
-last_updated: "2026-05-24T23:11:49.913Z"
+stopped_at: Completed 11-03-PLAN.md
+last_updated: "2026-05-24T23:26:53.609Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 114
-  completed_plans: 114
+  completed_plans: 115
   percent: 83
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 11 (observability-evaluation-security-hardening) — EXECUTING
-Plan: 4 of 6
+Plan: 5 of 6
 Status: Ready to execute
 Last activity: 2026-05-24
 
@@ -96,6 +96,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 09 P07 | 35min | 1 task | 1 file |
 | Phase 09 P08 | 20min | 1 task | 5 files |
 | Phase 11 P02 | 31 | 2 tasks | 6 files |
+| Phase 11 P03 | 25min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -155,6 +156,9 @@ Recent decisions affecting current work:
 - [Phase 11-01]: setup_tracer_provider nel lifespan è best-effort (try/except) — OTEL failure non impedisce avvio gateway
 - [Phase 11-01]: tag 'phase11' aggiunto in build_invocation_metadata (additivo — preserva 'phase4' + tag caller-provided)
 - [Phase 11-01]: nessun OTLP exporter verso Langfuse (RESEARCH Pitfall 3: evita trace duplicate); solo CallbackHandler
+- [Phase ?]: Phase 11-03: shift-supervisor vs supervisor — valore canonico JWT è shift-supervisor; auditor è ruolo nuovo indipendente (SEC-03)
+- [Phase ?]: Phase 11-03: audit_writer duck-typed in RetrievalPipeline; import lazy AuditRecord/ActionType in _write_restricted_audit (no LangChain coupling)
+- [Phase ?]: Phase 11-03: sanitize_document() su chunk post-chunking (Pitfall 6); ricostruzione nuovi Chunk frozen (immutabilità)
 
 ### Pending Todos
 
@@ -175,6 +179,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-24T23:11:49.903Z
-Stopped at: Phase 11 context gathered
+Last session: 2026-05-24T23:26:53.598Z
+Stopped at: Completed 11-03-PLAN.md
 Resume file: None
