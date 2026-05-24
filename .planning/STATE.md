@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 11-04-PLAN.md
-last_updated: "2026-05-25T00:05:00Z"
+stopped_at: Completed 11-05-PLAN.md
+last_updated: "2026-05-25T01:00:00Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 12
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 11 (observability-evaluation-security-hardening) — EXECUTING
-Plan: 6 of 6
-Status: Ready to execute
-Last activity: 2026-05-24
+Plan: 6 of 6 (COMPLETE)
+Status: Phase 11 complete — all 6 plans executed
+Last activity: 2026-05-25
 
 Progress: [██████████] 100%
 
@@ -97,6 +97,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 09 P08 | 20min | 1 task | 5 files |
 | Phase 11 P02 | 31 | 2 tasks | 6 files |
 | Phase 11 P03 | 25min | 3 tasks | 10 files |
+| Phase 11 P05 | 25min | 3 tasks | 6 files |
 | Phase 11 P04 | 7min | 2 tasks | 5 files |
 
 ## Accumulated Context
@@ -161,6 +162,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 11-03: audit_writer duck-typed in RetrievalPipeline; import lazy AuditRecord/ActionType in _write_restricted_audit (no LangChain coupling)
 - [Phase ?]: Phase 11-03: sanitize_document() su chunk post-chunking (Pitfall 6); ricostruzione nuovi Chunk frozen (immutabilità)
 - [Phase 11-04]: Dashboard p50/p95/p99 usano ingest_latency_seconds_bucket (unico histogram dev disponibile); BudgetSnapshot metric wiring via Pushgateway deferred a 11-05; factory KPIs OEE/MTTR/MTBF richiedono Pushgateway o HTTP datasource (TimescaleDB non interrogabile direttamente via PromQL)
+- [Phase 11-05]: AR-02/AR-03 (SSE token/localStorage) rimangono dev-mode; HttpOnly cookie deferred post-v1.0; LANGFUSE_ENCRYPTION_KEY=0000... rimpiazzato con placeholder testuale per prevenire falsi positivi secret scanner; Redis rate-limit documentato ma non implementato (AR-07 documentation-only)
 
 ### Pending Todos
 
@@ -181,6 +183,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T00:05:00Z
-Stopped at: Completed 11-04-PLAN.md
+Last session: 2026-05-25T01:00:00Z
+Stopped at: Completed 11-05-PLAN.md (Phase 11 fully complete)
 Resume file: None

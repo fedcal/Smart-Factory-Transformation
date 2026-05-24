@@ -16,7 +16,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [x] **Phase 8: Agents — Knowledge & Training** - KnowledgeCurator, TrainingCoach, ShiftHandover, DocumentationSynthesizer with tests (completed 2026-05-24)
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
 - [x] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests (completed 2026-05-24)
-- [ ] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations
+- [x] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations (completed 2026-05-25)
 - [ ] **Phase 12: Documentation, Economic Model & Competition Deliverables** - MkDocs Material i18n, all doc sections, OEPV simulator, TCO, ribasso analysis, deliverable bundle, brand-scrub CI check
 
 ## Phase Details
@@ -258,7 +258,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 11-02-PLAN.md — Wave 2: DeepEval+RAGAS deterministic CI gate (OBS-05/06)
   - [x] 11-03-PLAN.md — Wave 2: security hardening — auditor RBAC, sanitizer, OT AST guard, restricted audit (SEC-03/04/06/07)
   - [x] 11-04-PLAN.md — Wave 3: Grafana dashboards JSON + LGTM doc (OBS-03/04/07)
-  - [ ] 11-05-PLAN.md — Wave 3: STRIDE doc + OWASP LLM + secrets/.env.example + AR-01..07 closure (SEC-01/02/05)
+  - [x] 11-05-PLAN.md — Wave 3: STRIDE doc + OWASP LLM + secrets/.env.example + AR-01..07 closure (SEC-01/02/05)
 
 ### Phase 12: Documentation, Economic Model & Competition Deliverables
 **Goal**: The complete bilingual MkDocs Material documentation site is deployed to GitHub Pages covering all required sections, the OEPV economic model with TCO and ribasso simulator is complete and defensible, all competition deliverables are bundled, and a CI check confirms zero references to Accenture or the original brand.
