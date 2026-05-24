@@ -341,7 +341,7 @@ const SEEDED_USERS: SeededUser[] = [
     }
 
     .sft-admin__nav-label {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
@@ -386,7 +386,7 @@ const SEEDED_USERS: SeededUser[] = [
     }
 
     .sft-admin__governor-ratio {
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       color: var(--sft-text-secondary, #9BA3B2);
     }
 
@@ -506,18 +506,18 @@ const SEEDED_USERS: SeededUser[] = [
     }
 
     .sft-admin__user-role {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       padding: 2px 8px;
       border-radius: 10px;
-      background-color: color-mix(in srgb, var(--sft-accent, #3B82F6) 20%, transparent);
-      color: var(--sft-accent, #3B82F6);
+      background-color: color-mix(in srgb, var(--sft-text-secondary, #9BA3B2) 15%, transparent);
+      color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .sft-admin__user-route {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       color: var(--sft-text-secondary, #9BA3B2);
       font-family: monospace;
     }
@@ -562,7 +562,7 @@ const SEEDED_USERS: SeededUser[] = [
     .sft-admin__th {
       padding: var(--sft-space-2, 8px) var(--sft-space-4, 16px);
       text-align: left;
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
@@ -600,27 +600,27 @@ const SEEDED_USERS: SeededUser[] = [
     .sft-admin__td--time {
       color: var(--sft-text-secondary, #9BA3B2);
       white-space: nowrap;
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
     }
 
     .sft-admin__td--cluster,
     .sft-admin__td--action {
       color: var(--sft-text-secondary, #9BA3B2);
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
     }
 
     .sft-admin__td--user {
       color: var(--sft-text-secondary, #9BA3B2);
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
     }
 
     .sft-admin__agent-chip {
       display: inline-block;
       padding: 2px 8px;
       border-radius: 4px;
-      background-color: color-mix(in srgb, var(--sft-accent, #3B82F6) 15%, transparent);
-      color: var(--sft-accent, #3B82F6);
-      font-size: 12px;
+      background-color: color-mix(in srgb, var(--sft-text-secondary, #9BA3B2) 15%, transparent);
+      color: var(--sft-text-primary, #F0F2F5);
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       white-space: nowrap;
     }
@@ -631,7 +631,7 @@ const SEEDED_USERS: SeededUser[] = [
       align-items: center;
       padding: 2px 8px;
       border-radius: 10px;
-      font-size: 11px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;

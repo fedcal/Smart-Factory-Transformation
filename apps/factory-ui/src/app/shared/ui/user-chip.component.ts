@@ -66,7 +66,7 @@ import { JwtService } from '../../core/auth/jwt.service';
 
     .sft-user-chip__role {
       color: var(--sft-text-secondary);
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }

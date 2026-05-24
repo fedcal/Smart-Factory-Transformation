@@ -235,7 +235,7 @@ function isValidUrl(uri: string): boolean {
       padding: 8px 12px;
       overflow-x: auto;
       max-height: 160px;
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       line-height: 1.5;
       background-color: var(--sft-surface, #121418);
       border-radius: 4px;
@@ -317,7 +317,7 @@ function isValidUrl(uri: string): boolean {
     .sft-evidence-citation-link {
       color: var(--sft-accent, #3B82F6);
       text-decoration: none;
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       word-break: break-all;
 
       &:hover {
@@ -332,7 +332,7 @@ function isValidUrl(uri: string): boolean {
 
     .sft-evidence-citation-uri {
       color: var(--sft-text-secondary, #9BA3B2);
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       word-break: break-all;
     }
 
@@ -340,19 +340,19 @@ function isValidUrl(uri: string): boolean {
     .sft-evidence-citation-lang,
     .sft-evidence-citation-score {
       color: var(--sft-text-secondary, #9BA3B2);
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
     }
 
     .sft-evidence-restricted {
       color: var(--sft-warning, #F59E0B);
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       font-style: italic;
       margin: 0;
     }
 
     .sft-evidence-chunk {
       color: var(--sft-text-primary, #F0F2F5);
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       line-height: 1.5;
       margin: 0;
     }
@@ -385,7 +385,7 @@ function isValidUrl(uri: string): boolean {
       align-items: center;
       padding: 2px 10px;
       border-radius: 12px;
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       width: fit-content;
     }

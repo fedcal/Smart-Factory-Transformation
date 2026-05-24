@@ -103,13 +103,14 @@ import { NavItem } from './nav-rail.component';
     }
 
     .sft-bottom-nav__label {
-      font-size: 10px;
+      font-size: var(--sft-type-label, 14px);
       color: inherit;
       text-align: center;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       max-width: 100%;
+      line-height: 1.2;
     }
   `],
   host: {

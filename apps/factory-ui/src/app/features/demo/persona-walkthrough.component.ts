@@ -395,7 +395,7 @@ const TOTAL_STEPS = PERSONA_STEPS.length;
       height: 28px;
       border-radius: 50%;
       border: 2px solid currentColor;
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       flex-shrink: 0;
     }

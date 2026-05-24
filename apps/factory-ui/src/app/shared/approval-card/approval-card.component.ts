@@ -320,8 +320,8 @@ const MOTIVATION_MIN_LENGTH = 10;
 
     /* Status chip colors */
     .sft-chip {
-      font-size: 12px;
-      height: 24px;
+      font-size: var(--sft-type-label, 14px);
+      height: 28px;
     }
 
     .sft-chip--status-pending {
@@ -375,7 +375,7 @@ const MOTIVATION_MIN_LENGTH = 10;
     .sft-motivation-counter {
       text-align: right;
       color: var(--sft-text-secondary, #9BA3B2);
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
     }
 
     .sft-motivation-counter--valid {

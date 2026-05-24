@@ -216,7 +216,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
       justify-content: center;
       background-color: var(--sft-destructive, #EF4444);
       color: #fff;
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       border-radius: 12px;
       padding: 2px 8px;

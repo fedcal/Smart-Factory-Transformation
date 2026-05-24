@@ -325,7 +325,7 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
     }
 
     .sft-tech__nav-label {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
@@ -421,12 +421,12 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
     }
 
     .sft-tech__task-tier-badge {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 12px;
-      background-color: color-mix(in srgb, var(--sft-accent, #3B82F6) 20%, transparent);
-      color: var(--sft-accent, #3B82F6);
+      background-color: color-mix(in srgb, var(--sft-text-secondary, #9BA3B2) 15%, transparent);
+      color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
@@ -438,7 +438,7 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
     }
 
     .sft-tech__task-issue-label {
-      font-size: 12px;
+      font-size: var(--sft-type-label, 14px);
       color: var(--sft-text-secondary, #9BA3B2);
       text-transform: uppercase;
       letter-spacing: 0.06em;
@@ -595,7 +595,7 @@ const SEEDED_PROCEDURE_STEPS: ProcedureStep[] = [
       background-color: color-mix(in srgb, var(--sft-warning, #F59E0B) 12%, transparent);
       border: 1px solid var(--sft-warning, #F59E0B);
       border-radius: 4px;
-      font-size: 13px;
+      font-size: var(--sft-type-label, 14px);
       color: var(--sft-warning, #F59E0B);
     }
 

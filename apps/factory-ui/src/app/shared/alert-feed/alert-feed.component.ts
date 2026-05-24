@@ -182,8 +182,8 @@ const RATE_LIMIT = 12;
     }
 
     .sft-chip {
-      font-size: 12px;
-      height: 24px;
+      font-size: var(--sft-type-label, 14px);
+      height: 28px;
     }
 
     .sft-chip--info {

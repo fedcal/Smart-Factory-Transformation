@@ -134,7 +134,7 @@ export interface NavItem {
     }
 
     .sft-nav-rail__label {
-      font-size: 10px;
+      font-size: var(--sft-type-label, 14px);
       color: inherit;
       text-align: center;
       letter-spacing: 0.06em;
@@ -142,6 +142,7 @@ export interface NavItem {
       text-overflow: ellipsis;
       white-space: nowrap;
       max-width: calc(var(--sft-nav-rail-width, 72px) - 8px);
+      line-height: 1.2;
 
       /* Tablet: hide label, show only icon */
       @media (max-width: 1023px) and (min-width: 768px) {
