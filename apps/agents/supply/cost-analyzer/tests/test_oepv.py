@@ -26,6 +26,8 @@ from __future__ import annotations
 import math
 import pytest
 
+from scm_cost_analyzer.oepv import OepvConfig, compute_oepv
+
 
 # ---------------------------------------------------------------------------
 # total_score = 0.70*Pt + 0.30*Pe contract
@@ -35,14 +37,18 @@ import pytest
 def test_total_score_is_weighted_sum_of_pt_and_pe() -> None:
     """compute_oepv: total_score = 0.70*Pt + 0.30*Pe (default OepvConfig weights, SCM-03).
 
-    Example: Pt=60, Ri=10% → Pe = 30*(1-exp(-3*10/20)) ≈ 28.35 →
-    total = 0.70*60 + 0.30*28.35 = 42 + 8.505 = 50.505
+    Example: Pt=60, Ri=10% → Pe = 30*(1-exp(-3*10/20)) ≈ 23.31 →
+    total = 0.70*60 + 0.30*23.31 ≈ 42 + 6.993 ≈ 48.99
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=10.0, pt=60.0) "
-        "→ total_score ≈ 50.505 (0.70*60 + 0.30*Pe where Pe=30*(1-exp(-1.5))). "
-        "Verify: abs(result.total_score - expected) < 1e-3."
+    cfg = OepvConfig()
+    result = compute_oepv(ribasso_pct=10.0, pt=60.0, config=cfg)
+
+    pe_expected = cfg.pe_max * (1 - math.exp(-cfg.lambda_curve * 10.0 / cfg.ribasso_ref_pct))
+    total_expected = cfg.weight_technical * 60.0 + cfg.weight_economic * pe_expected
+
+    assert abs(result.total_score - total_expected) < 1e-3, (
+        f"total_score={result.total_score!r} expected≈{total_expected:.4f}"
     )
 
 
@@ -52,11 +58,15 @@ def test_total_score_uses_config_weights_not_hardcoded() -> None:
     Testing with custom weights (0.60 technical, 0.40 economic) verifies no hardcoding.
     Implementation target: scm_cost_analyzer.oepv.compute_oepv + OepvConfig
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-05): "
-        "OepvConfig(weight_technical=0.60, weight_economic=0.40) produces "
-        "total_score = 0.60*pt + 0.40*pe (not the default 0.70/0.30). "
-        "No hardcoded coefficients in implementation."
+    cfg = OepvConfig(weight_technical=0.60, weight_economic=0.40)
+    result = compute_oepv(ribasso_pct=10.0, pt=50.0, config=cfg)
+
+    pe_expected = cfg.pe_max * (1 - math.exp(-cfg.lambda_curve * 10.0 / cfg.ribasso_ref_pct))
+    total_expected = 0.60 * 50.0 + 0.40 * pe_expected
+
+    assert abs(result.total_score - total_expected) < 1e-3, (
+        f"total_score={result.total_score!r} expected≈{total_expected:.4f} "
+        f"with custom weights 0.60/0.40"
     )
 
 
@@ -72,11 +82,13 @@ def test_pe_from_nonlinear_ribasso_curve() -> None:
     Example: Ri=10% → Pe = 30*(1-exp(-3*10/20)) = 30*(1-exp(-1.5)) ≈ 30*(1-0.2231) ≈ 23.31
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-02): "
-        "Pe = pe_max * (1 - exp(-lambda_curve * ribasso_pct / ribasso_ref_pct)). "
-        "Example: Ri=10% → Pe ≈ 23.31 (abs tolerance 1e-2). "
-        "Verify with default OepvConfig."
+    cfg = OepvConfig()
+    result = compute_oepv(ribasso_pct=10.0, pt=60.0, config=cfg)
+
+    pe_expected = cfg.pe_max * (1 - math.exp(-cfg.lambda_curve * 10.0 / cfg.ribasso_ref_pct))
+
+    assert abs(result.pe - pe_expected) < 1e-2, (
+        f"pe={result.pe!r} expected≈{pe_expected:.4f}"
     )
 
 
@@ -86,11 +98,15 @@ def test_pe_curve_monotonically_increases_with_ribasso() -> None:
     The non-linear exponential curve means higher ribasso always yields higher (or equal) Pe.
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: "
-        "Pe(Ri=5%) < Pe(Ri=10%) < Pe(Ri=15%) < Pe(Ri=20%). "
-        "Monotonically increasing — no ribasso should reduce the Pe score."
-    )
+    cfg = OepvConfig()
+    pe_5 = compute_oepv(ribasso_pct=5.0, pt=50.0, config=cfg).pe
+    pe_10 = compute_oepv(ribasso_pct=10.0, pt=50.0, config=cfg).pe
+    pe_15 = compute_oepv(ribasso_pct=15.0, pt=50.0, config=cfg).pe
+    pe_20 = compute_oepv(ribasso_pct=20.0, pt=50.0, config=cfg).pe
+
+    assert pe_5 < pe_10, f"Pe(5%)={pe_5} should be < Pe(10%)={pe_10}"
+    assert pe_10 < pe_15, f"Pe(10%)={pe_10} should be < Pe(15%)={pe_15}"
+    assert pe_15 < pe_20, f"Pe(15%)={pe_15} should be < Pe(20%)={pe_20}"
 
 
 # ---------------------------------------------------------------------------
@@ -104,10 +120,12 @@ def test_offer_eur_is_ba_times_one_minus_ribasso_fraction() -> None:
     Example: BA=108000, Ri=10% → offer_eur = 108000 * 0.90 = 97200.00
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: "
-        "compute_oepv(ribasso_pct=10.0, pt=60.0) with default OepvConfig (BA=108000) "
-        "→ result.offer_eur == 97200.00 (rounded to 2dp)."
+    cfg = OepvConfig()  # base_d_asta_eur=108000 (default)
+    result = compute_oepv(ribasso_pct=10.0, pt=60.0, config=cfg)
+
+    expected_offer = 108_000.0 * (1 - 10.0 / 100)
+    assert abs(result.offer_eur - expected_offer) < 1e-2, (
+        f"offer_eur={result.offer_eur!r} expected={expected_offer:.2f}"
     )
 
 
@@ -117,10 +135,13 @@ def test_offer_eur_uses_config_base_d_asta_not_hardcoded() -> None:
     Testing with custom BA=200000 verifies no hardcoding.
     Implementation target: scm_cost_analyzer.oepv.compute_oepv + OepvConfig
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-05): "
-        "OepvConfig(base_d_asta_eur=200000.0) → offer_eur = 200000 * (1 - Ri/100). "
-        "No hardcoded BA in implementation."
+    cfg = OepvConfig(base_d_asta_eur=200_000.0)
+    result = compute_oepv(ribasso_pct=10.0, pt=60.0, config=cfg)
+
+    expected_offer = 200_000.0 * (1 - 10.0 / 100)
+    assert abs(result.offer_eur - expected_offer) < 1e-2, (
+        f"offer_eur={result.offer_eur!r} expected={expected_offer:.2f} "
+        f"with custom BA=200000"
     )
 
 
@@ -135,10 +156,12 @@ def test_is_anomaly_warning_true_when_ribasso_at_or_above_threshold() -> None:
     Default threshold: 20.0%. F9 = warning only (NOT definitive Codice Appalti exclusion).
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=20.0, pt=60.0) "
-        "→ is_anomaly_warning=True (at threshold boundary). "
-        "IMPORTANT: this is a configurable WARNING, not a definitive legal exclusion (F12 scope)."
+    cfg = OepvConfig()  # anomaly_threshold_pct=20.0 (default)
+    result = compute_oepv(ribasso_pct=20.0, pt=60.0, config=cfg)
+
+    assert result.is_anomaly_warning is True, (
+        "is_anomaly_warning deve essere True quando Ri(20%) >= threshold(20%) — "
+        "NOTA: warning configurabile, NON esclusione definitiva (F12)."
     )
 
 
@@ -147,9 +170,11 @@ def test_is_anomaly_warning_false_when_ribasso_below_threshold() -> None:
 
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=15.0, pt=60.0) "
-        "→ is_anomaly_warning=False (below 20% default threshold)."
+    cfg = OepvConfig()  # anomaly_threshold_pct=20.0 (default)
+    result = compute_oepv(ribasso_pct=15.0, pt=60.0, config=cfg)
+
+    assert result.is_anomaly_warning is False, (
+        "is_anomaly_warning deve essere False quando Ri(15%) < threshold(20%)."
     )
 
 
@@ -159,10 +184,16 @@ def test_anomaly_threshold_is_configurable_via_oepv_config() -> None:
     Testing with custom threshold=30.0 verifies no hardcoding.
     Implementation target: scm_cost_analyzer.oepv.compute_oepv + OepvConfig
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-05): "
-        "OepvConfig(anomaly_threshold_pct=30.0): Ri=25% → is_anomaly_warning=False; "
-        "Ri=30% → is_anomaly_warning=True. No hardcoded threshold."
+    cfg = OepvConfig(anomaly_threshold_pct=30.0)
+
+    result_below = compute_oepv(ribasso_pct=25.0, pt=60.0, config=cfg)
+    assert result_below.is_anomaly_warning is False, (
+        "Ri(25%) < threshold(30%) deve produrre is_anomaly_warning=False."
+    )
+
+    result_at = compute_oepv(ribasso_pct=30.0, pt=60.0, config=cfg)
+    assert result_at.is_anomaly_warning is True, (
+        "Ri(30%) >= threshold(30%) deve produrre is_anomaly_warning=True."
     )
 
 
@@ -177,11 +208,12 @@ def test_sensitivity_dict_contains_plus_minus_1_5_10_percent_keys() -> None:
     Expected keys: '-10%', '-5%', '-1%', '+1%', '+5%', '+10%'
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-05): "
-        "result.sensitivity must be a dict with keys: "
-        "['-10%', '-5%', '-1%', '+1%', '+5%', '+10%']. "
-        "Each value is the score delta (positive or negative float)."
+    result = compute_oepv(ribasso_pct=10.0, pt=60.0)
+
+    expected_keys = {"-10%", "-5%", "-1%", "+1%", "+5%", "+10%"}
+    assert expected_keys.issubset(set(result.sensitivity.keys())), (
+        f"Chiavi sensitivity mancanti. Trovate: {set(result.sensitivity.keys())}, "
+        f"attese almeno: {expected_keys}"
     )
 
 
@@ -190,10 +222,17 @@ def test_sensitivity_values_are_score_deltas() -> None:
 
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract (ECO-05): "
-        "sensitivity['+1%'] == compute_oepv(Ri+1, pt).total_score - compute_oepv(Ri, pt).total_score. "
-        "Values must be rounded to 4dp."
+    ribasso = 10.0
+    pt = 60.0
+    result = compute_oepv(ribasso_pct=ribasso, pt=pt)
+
+    # Calcola il delta atteso per +1%
+    result_plus1 = compute_oepv(ribasso_pct=ribasso + 1.0, pt=pt)
+    expected_delta = round(result_plus1.total_score - result.total_score, 4)
+
+    assert abs(result.sensitivity["+1%"] - expected_delta) < 1e-4, (
+        f"sensitivity['+1%']={result.sensitivity['+1%']!r} "
+        f"expected≈{expected_delta:.4f}"
     )
 
 
@@ -207,10 +246,8 @@ def test_compute_oepv_raises_value_error_on_ribasso_above_100() -> None:
 
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=101.0, pt=60.0) "
-        "must raise ValueError('ribasso_pct deve essere in [0, 100]...')."
-    )
+    with pytest.raises(ValueError, match="ribasso_pct"):
+        compute_oepv(ribasso_pct=101.0, pt=60.0)
 
 
 def test_compute_oepv_raises_value_error_on_ribasso_below_zero() -> None:
@@ -218,10 +255,8 @@ def test_compute_oepv_raises_value_error_on_ribasso_below_zero() -> None:
 
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=-1.0, pt=60.0) "
-        "must raise ValueError."
-    )
+    with pytest.raises(ValueError):
+        compute_oepv(ribasso_pct=-1.0, pt=60.0)
 
 
 def test_compute_oepv_raises_value_error_on_pt_out_of_range() -> None:
@@ -230,7 +265,5 @@ def test_compute_oepv_raises_value_error_on_pt_out_of_range() -> None:
     Default max Pt = 100 * weight_technical = 70.0.
     Implementation target: scm_cost_analyzer.oepv.compute_oepv
     """
-    pytest.fail(
-        "NOT IMPLEMENTED YET (09-04) — contract: compute_oepv(ribasso_pct=10.0, pt=75.0) "
-        "must raise ValueError (pt=75 > max=70 with default weight_technical=0.70)."
-    )
+    with pytest.raises(ValueError, match="pt"):
+        compute_oepv(ribasso_pct=10.0, pt=75.0)
