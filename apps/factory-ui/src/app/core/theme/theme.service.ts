@@ -4,6 +4,7 @@ import {
   PLATFORM_ID,
   signal,
   computed,
+  afterNextRender,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT } from '@angular/common';
@@ -30,13 +31,29 @@ export class ThemeService {
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private readonly _theme = signal<Theme>(this._loadInitialTheme());
+  /**
+   * WR-07: _theme is initialised only from localStorage (no DOM access).
+   * DOM application is deferred to afterNextRender() in the constructor so
+   * that this.document is guaranteed to be fully initialised and the DOM is
+   * ready. This avoids any risk of calling _applyToDomDirect() before the
+   * DOCUMENT injection completes during field initialiser execution.
+   */
+  private readonly _theme = signal<Theme>(this._readStoredTheme());
 
   /** Current active theme. */
   readonly theme = computed<Theme>(() => this._theme());
 
   /** True when dark theme is active. */
   readonly isDark = computed<boolean>(() => this._theme() === 'dark');
+
+  constructor() {
+    // WR-07: apply the initial theme to the DOM after the next render cycle,
+    // guaranteeing that DOCUMENT is available and the DOM is ready.
+    // afterNextRender() is a no-op on SSR (server never calls the callback).
+    afterNextRender(() => {
+      this._applyToDomDirect(this._theme());
+    });
+  }
 
   /**
    * Sets the given theme, applies it to the document root,
@@ -62,15 +79,17 @@ export class ThemeService {
   // Private helpers
   // ---------------------------------------------------------------------------
 
-  private _loadInitialTheme(): Theme {
+  /**
+   * WR-07: reads the stored theme from localStorage without touching the DOM.
+   * DOM application is deferred to afterNextRender() in the constructor.
+   * On SSR this returns DEFAULT_THEME without any storage or DOM access.
+   */
+  private _readStoredTheme(): Theme {
     if (!this.isBrowser) {
       return DEFAULT_THEME; // SSR always dark
     }
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    const theme = stored === 'light' || stored === 'dark' ? stored : DEFAULT_THEME;
-    // Apply immediately on load (before first render)
-    this._applyToDomDirect(theme);
-    return theme;
+    return stored === 'light' || stored === 'dark' ? stored : DEFAULT_THEME;
   }
 
   private _applyToDom(theme: Theme): void {
