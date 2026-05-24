@@ -8,6 +8,7 @@ import {
   ApprovalCardData,
 } from '../approval-card/approval-card.component';
 import { ApprovalPendingEvent } from '../../core/sse/sse.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -64,6 +65,7 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
     MatButtonModule,
     ScrollingModule,
     ApprovalCardComponent,
+    TranslocoModule,
   ],
   template: `
     <div class="sft-queue" data-testid="approval-queue-feed" role="region" aria-label="Approvazioni pendenti">
@@ -169,10 +171,8 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
             aria-hidden="true">
             inbox
           </span>
-          <h3 class="sft-type-heading">Nessuna approvazione pendente</h3>
-          <p class="sft-type-body">
-            Il sistema è in attesa di nuove proposte dall'AI. Le notifiche arriveranno in tempo reale.
-          </p>
+          <h3 class="sft-type-heading">{{ 'empty_state.approvals_heading' | transloco }}</h3>
+          <p class="sft-type-body">{{ 'empty_state.approvals_body' | transloco }}</p>
         </div>
       }
     </div>
@@ -254,9 +254,9 @@ function pendingEventToCardData(event: ApprovalPendingEvent): ApprovalCardData {
 
     .sft-queue__filter-btn--active,
     .sft-queue__sort-btn--active {
-      background-color: color-mix(in srgb, var(--sft-accent, #3B82F6) 20%, transparent) !important;
-      border-color: var(--sft-accent, #3B82F6) !important;
-      color: var(--sft-accent, #3B82F6) !important;
+      background-color: color-mix(in srgb, var(--sft-text-primary, #F0F2F5) 12%, transparent) !important;
+      border-color: var(--sft-text-primary, #F0F2F5) !important;
+      color: var(--sft-text-primary, #F0F2F5) !important;
     }
 
     /* CDK virtual scroll viewport */

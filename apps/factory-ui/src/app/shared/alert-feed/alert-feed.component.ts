@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { AlertNewEvent } from '../../core/sse/sse.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 /** Maximum number of alerts displayable per HITL-10 (12/hour) */
 const RATE_LIMIT = 12;
@@ -24,7 +25,7 @@ const RATE_LIMIT = 12;
 @Component({
   selector: 'sft-alert-feed',
   standalone: true,
-  imports: [CommonModule, MatChipsModule, MatButtonModule],
+  imports: [CommonModule, MatChipsModule, MatButtonModule, TranslocoModule],
   template: `
     <div class="sft-alert-feed" data-testid="alert-feed" role="region" aria-label="Feed alert">
 
@@ -55,7 +56,7 @@ const RATE_LIMIT = 12;
           <!-- Empty state -->
           <div class="sft-alert-feed__empty">
             <span class="sft-type-body" style="color: var(--sft-text-secondary)">
-              Nessun alert nelle ultime 24 ore.
+              {{ 'empty_state.alert_feed' | transloco }}
             </span>
           </div>
         } @else {
@@ -92,7 +93,7 @@ const RATE_LIMIT = 12;
                   class="sft-alert-feed__action-btn"
                   [attr.aria-label]="'Vai alla approvazione per: ' + alert.message">
                   <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-                  Vai all'approvazione
+                  {{ 'alert.action_button' | transloco }}
                 </button>
               }
             </div>
@@ -159,7 +160,7 @@ const RATE_LIMIT = 12;
     }
 
     .sft-alert-feed__item--info {
-      border-left-color: var(--sft-accent, #3B82F6);
+      border-left-color: var(--sft-text-secondary, #9BA3B2);
     }
 
     .sft-alert-feed__item--warning {
@@ -187,8 +188,8 @@ const RATE_LIMIT = 12;
     }
 
     .sft-chip--info {
-      background-color: color-mix(in srgb, var(--sft-accent, #3B82F6) 20%, transparent) !important;
-      color: var(--sft-accent, #3B82F6) !important;
+      background-color: color-mix(in srgb, var(--sft-text-secondary, #9BA3B2) 20%, transparent) !important;
+      color: var(--sft-text-secondary, #9BA3B2) !important;
     }
 
     .sft-chip--warning {

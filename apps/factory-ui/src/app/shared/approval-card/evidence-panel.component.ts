@@ -5,11 +5,14 @@ import {
   signal,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoService } from '@jsverse/transloco';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { TranslocoModule } from '@jsverse/transloco';
 
 // ---------------------------------------------------------------------------
 // Evidence Panel — TypeScript Interfaces (10-UI-SPEC Component 4)
@@ -82,6 +85,7 @@ function isValidUrl(uri: string): boolean {
     MatExpansionModule,
     MatProgressBarModule,
     MatChipsModule,
+    TranslocoModule,
   ],
   template: `
     <div
@@ -96,7 +100,7 @@ function isValidUrl(uri: string): boolean {
           data-testid="evidence-section-input"
           class="sft-evidence-section">
           <mat-expansion-panel-header>
-            <mat-panel-title class="sft-type-label">Input agente</mat-panel-title>
+            <mat-panel-title class="sft-type-label">{{ 'approval.input_section' | transloco }}</mat-panel-title>
           </mat-expansion-panel-header>
           <div class="sft-evidence-input-wrap">
             <pre class="sft-evidence-pre"><code class="sft-evidence-code">{{ inputJson() }}</code></pre>
@@ -108,7 +112,7 @@ function isValidUrl(uri: string): boolean {
           data-testid="evidence-section-tool-calls"
           class="sft-evidence-section">
           <mat-expansion-panel-header>
-            <mat-panel-title class="sft-type-label">Tool call</mat-panel-title>
+            <mat-panel-title class="sft-type-label">{{ 'approval.tool_calls_section' | transloco }}</mat-panel-title>
           </mat-expansion-panel-header>
           @if (hasToolCalls()) {
             <div class="sft-evidence-tool-calls">
@@ -131,7 +135,7 @@ function isValidUrl(uri: string): boolean {
               }
             </div>
           } @else {
-            <p class="sft-evidence-empty">Nessuna tool call</p>
+            <p class="sft-evidence-empty">{{ 'empty_state.tool_calls' | transloco }}</p>
           }
         </mat-expansion-panel>
 
@@ -140,7 +144,7 @@ function isValidUrl(uri: string): boolean {
           data-testid="evidence-section-citations"
           class="sft-evidence-section">
           <mat-expansion-panel-header>
-            <mat-panel-title class="sft-type-label">Citazioni RAG</mat-panel-title>
+            <mat-panel-title class="sft-type-label">{{ 'approval.rag_citations_section' | transloco }}</mat-panel-title>
           </mat-expansion-panel-header>
           @if (hasRagCitations()) {
             <div class="sft-evidence-citations">
@@ -175,7 +179,7 @@ function isValidUrl(uri: string): boolean {
               }
             </div>
           } @else {
-            <p class="sft-evidence-empty">Nessuna citazione RAG</p>
+            <p class="sft-evidence-empty">{{ 'empty_state.rag_citations' | transloco }}</p>
           }
         </mat-expansion-panel>
 
@@ -185,7 +189,7 @@ function isValidUrl(uri: string): boolean {
           class="sft-evidence-section"
           [expanded]="true">
           <mat-expansion-panel-header>
-            <mat-panel-title class="sft-type-label">Confidenza</mat-panel-title>
+            <mat-panel-title class="sft-type-label">{{ 'approval.confidence_section' | transloco }}</mat-panel-title>
           </mat-expansion-panel-header>
           <div class="sft-evidence-confidence">
             <div class="sft-evidence-confidence-bar-wrap">
@@ -276,7 +280,7 @@ function isValidUrl(uri: string): boolean {
     }
 
     .sft-evidence-tool-name {
-      color: var(--sft-accent, #3B82F6);
+      color: var(--sft-text-primary, #F0F2F5);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -415,6 +419,7 @@ function isValidUrl(uri: string): boolean {
 export class EvidencePanelComponent implements OnChanges {
   @Input() evidence: EvidencePanel | null = null;
 
+  private readonly _transloco = inject(TranslocoService);
   private readonly _evidenceSignal = signal<EvidencePanel | null>(null);
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -455,9 +460,9 @@ export class EvidencePanelComponent implements OnChanges {
 
   readonly confidenceBadgeLabel = computed<string>(() => {
     switch (this.confidenceLevel()) {
-      case 'high':   return 'Alta confidenza';
-      case 'medium': return 'Confidenza media';
-      case 'low':    return 'Bassa confidenza';
+      case 'high':   return this._transloco.translate('approval.confidence_high');
+      case 'medium': return this._transloco.translate('approval.confidence_medium');
+      case 'low':    return this._transloco.translate('approval.confidence_low');
     }
   });
 
