@@ -88,6 +88,9 @@ plugins:
             Tassonomia Eventi: Event Taxonomy
             Knowledge: Knowledge
             Knowledge Cluster: Knowledge Cluster
+            Supply Chain: Supply Chain
+            Supply Cluster: Supply Cluster
+            Mantis Synthetic Dataset: Mantis Synthetic Dataset
       reconfigure_material: true
 
 markdown_extensions:
@@ -164,4 +167,7 @@ nav:
       - Tassonomia Eventi: agents/maintenance/event-taxonomy.md
     - Knowledge:
       - Knowledge Cluster: agents/knowledge/knowledge-cluster.md
+    - Supply Chain:
+      - Supply Cluster: agents/supply/supply-cluster.md
+      - Mantis Synthetic Dataset: agents/supply/mantis-synthetic-dataset.md
   - Contributing: contributing/index.md
