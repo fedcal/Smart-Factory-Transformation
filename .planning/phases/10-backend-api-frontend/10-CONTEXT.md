@@ -81,6 +81,15 @@ Real FastAPI aggregations over TimescaleDB.
 - Phase 11 owns: full auth hardening, OTEL/Langfuse stack, OWASP — do NOT duplicate here.
 </canonical_refs>
 
+<post_research_resolutions>
+## Post-Research Resolutions (3 open questions from 10-RESEARCH.md) — LOCKED
+1. **i18n runtime:** use `@jsverse/transloco` for runtime text translation (lazy-loaded locale JSON, SSR-compatible). Rationale: UI-07 requires EN toggle WITHOUT page reload; Angular `@angular/localize` cannot switch compiled text at runtime. Transloco satisfies the no-reload requirement.
+2. **SSE auth:** dev-mode passes the JWT as a query param to the SSE endpoint (EventSource cannot set custom headers), validated identically to the Authorization header. Harden to HttpOnly cookie in Phase 11.
+3. **Playwright:** separate Nx e2e project `apps/factory-ui-e2e/` (Nx convention), not inline.
+4. **ng2-charts version pin:** use ng2-charts@8.x (peer @angular/core>=19) — NOT @10 (requires @angular/cdk>=21, incompatible with the workspace's Angular 19.2). Pin the version explicitly to avoid an ERESOLVE/silent build break.
+5. **JWT lib:** PyJWT (already in repo) not python-jose (unmaintained).
+</post_research_resolutions>
+
 <deferred>
 ## Deferred Ideas
 - Real IdP/Keycloak, refresh tokens, JWKS rotation, full OWASP LLM/web hardening → Phase 11.
