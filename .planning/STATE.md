@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 12 context gathered
-last_updated: "2026-05-25T06:01:17.579Z"
-last_activity: 2026-05-25
+status: executing
+stopped_at: Phase 12 Plan 00 completed
+last_updated: "2026-05-25T06:34:13Z"
+last_activity: 2026-05-25 -- Phase 12 Plan 00 executed (mike pin, oepv vendor, stubs IT+EN, nav expansion)
 progress:
   total_phases: 12
   completed_phases: 11
-  total_plans: 114
-  completed_plans: 117
+  total_plans: 122
+  completed_plans: 118
   percent: 92
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** Ogni decisione critica dell'AI passa per un essere umano informato, ma nessun essere umano è mai solo davanti a un problema operativo.
-**Current focus:** Phase 12 — documentation, economic model & competition deliverables
+**Current focus:** Phase 12 — documentation-economic-model-competition-deliverables
 
 ## Current Position
 
-Phase: 12
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-05-25
+Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
+Plan: 2 of 8
+Status: Executing Phase 12
+Last activity: 2026-05-25 -- Phase 12 execution started
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 12 P00  | 6min | 3 tasks | 38 files |
 | Phase 11 P01  | 6min | 2 tasks | 6 files |
 | Phase 11 P00  | 17min | 5 tasks | 19 files |
 | Phase 10 P11  | 30min | 2 tasks | 15 files |
