@@ -233,8 +233,11 @@ def test_sc3_pipeline_wiring_sanitizes_before_embedding():
     import ast
     import pathlib
 
-    pipeline_path = pathlib.Path(
-        "services/knowledge-ingest/src/svc_knowledge_ingest/pipeline.py"
+    # Path assoluto basato su __file__ per evitare dipendenza dal CWD (WR-05:
+    # il test falliva se pytest invocato fuori dalla root del progetto).
+    _repo_root = pathlib.Path(__file__).parent.parent.parent
+    pipeline_path = (
+        _repo_root / "services" / "knowledge-ingest" / "src" / "svc_knowledge_ingest" / "pipeline.py"
     )
     source = pipeline_path.read_text()
 
