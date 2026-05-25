@@ -1,0 +1,1585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/index.html"/>
+    </url>
+    <url>
+        <loc>getting-started.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="getting-started.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/getting-started.html"/>
+    </url>
+    <url>
+        <loc>glossary.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="glossary.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/glossary.html"/>
+    </url>
+    <url>
+        <loc>transformation.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="transformation.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/transformation.html"/>
+    </url>
+    <url>
+        <loc>ui-mock.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="ui-mock.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/ui-mock.html"/>
+    </url>
+    <url>
+        <loc>adoption-roadmap/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adoption-roadmap/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adoption-roadmap/index.html"/>
+    </url>
+    <url>
+        <loc>adr/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/index.html"/>
+    </url>
+    <url>
+        <loc>adr/ADR-001-langgraph-supervisor.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-001-langgraph-supervisor.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-001-langgraph-supervisor.html"/>
+    </url>
+    <url>
+        <loc>adr/ADR-002-qdrant-bge-m3.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-002-qdrant-bge-m3.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-002-qdrant-bge-m3.html"/>
+    </url>
+    <url>
+        <loc>adr/ADR-003-self-hosted-llm.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-003-self-hosted-llm.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-003-self-hosted-llm.html"/>
+    </url>
+    <url>
+        <loc>adr/ADR-004-hitl-tiers.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-004-hitl-tiers.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-004-hitl-tiers.html"/>
+    </url>
+    <url>
+        <loc>adr/ADR-005-mkdocs-i18n.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-005-mkdocs-i18n.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-005-mkdocs-i18n.html"/>
+    </url>
+    <url>
+        <loc>agents/knowledge/knowledge-cluster.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/knowledge/knowledge-cluster.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/knowledge/knowledge-cluster.html"/>
+    </url>
+    <url>
+        <loc>agents/maintenance/downtime-analyzer.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/downtime-analyzer.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/downtime-analyzer.html"/>
+    </url>
+    <url>
+        <loc>agents/maintenance/event-taxonomy.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/event-taxonomy.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/event-taxonomy.html"/>
+    </url>
+    <url>
+        <loc>agents/maintenance/maintenance-coach.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/maintenance-coach.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/maintenance-coach.html"/>
+    </url>
+    <url>
+        <loc>agents/maintenance/predictive-maintenance.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/predictive-maintenance.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/predictive-maintenance.html"/>
+    </url>
+    <url>
+        <loc>agents/maintenance/rca-specialist.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/rca-specialist.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/rca-specialist.html"/>
+    </url>
+    <url>
+        <loc>agents/operations/anomaly-detector.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/anomaly-detector.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/anomaly-detector.html"/>
+    </url>
+    <url>
+        <loc>agents/operations/operator-assistant.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/operator-assistant.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/operator-assistant.html"/>
+    </url>
+    <url>
+        <loc>agents/operations/production-planner.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/production-planner.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/production-planner.html"/>
+    </url>
+    <url>
+        <loc>agents/operations/quality-inspector.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/quality-inspector.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/quality-inspector.html"/>
+    </url>
+    <url>
+        <loc>agents/supply/mantis-synthetic-dataset.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/supply/mantis-synthetic-dataset.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/supply/mantis-synthetic-dataset.html"/>
+    </url>
+    <url>
+        <loc>agents/supply/supply-cluster.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/supply/supply-cluster.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/supply/supply-cluster.html"/>
+    </url>
+    <url>
+        <loc>architecture/agentic-runtime.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/agentic-runtime.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/agentic-runtime.html"/>
+    </url>
+    <url>
+        <loc>architecture/c4-component.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-component.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-component.html"/>
+    </url>
+    <url>
+        <loc>architecture/c4-container.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-container.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-container.html"/>
+    </url>
+    <url>
+        <loc>architecture/c4-context.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-context.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-context.html"/>
+    </url>
+    <url>
+        <loc>architecture/hitl-cycle.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/hitl-cycle.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/hitl-cycle.html"/>
+    </url>
+    <url>
+        <loc>architecture/llm-serving.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/llm-serving.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/llm-serving.html"/>
+    </url>
+    <url>
+        <loc>architecture/overview.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/overview.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/overview.html"/>
+    </url>
+    <url>
+        <loc>assumptions/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/index.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-001.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-001.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-001.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-002.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-002.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-002.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-003.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-003.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-003.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-004.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-004.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-004.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-005.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-005.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-005.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-006.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-006.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-006.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-007.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-007.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-007.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-008.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-008.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-008.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-009.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-009.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-009.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-010.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-010.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-010.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-011.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-011.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-011.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-012.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-012.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-012.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-013.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-013.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-013.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-014.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-014.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-014.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-015.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-015.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-015.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-016.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-016.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-016.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-017.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-017.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-017.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-018.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-018.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-018.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-019.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-019.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-019.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-020.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-020.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-020.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-021.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-021.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-021.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-022.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-022.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-022.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-023.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-023.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-023.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-024.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-024.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-024.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-025.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-025.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-025.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-026.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-026.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-026.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-027.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-027.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-027.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-028.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-028.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-028.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-029.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-029.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-029.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-030.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-030.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-030.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-031.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-031.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-031.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-032.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-032.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-032.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-033.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-033.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-033.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-034.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-034.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-034.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-035.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-035.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-035.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-036.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-036.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-036.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-037.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-037.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-037.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-038.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-038.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-038.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-039.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-039.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-039.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-040.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-040.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-040.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-041.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-041.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-041.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-042.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-042.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-042.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-043.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-043.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-043.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-044.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-044.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-044.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-045.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-045.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-045.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-046.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-046.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-046.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-047.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-047.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-047.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-048.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-048.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-048.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-049.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-049.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-049.html"/>
+    </url>
+    <url>
+        <loc>assumptions/A-050.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-050.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-050.html"/>
+    </url>
+    <url>
+        <loc>contributing/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="contributing/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/contributing/index.html"/>
+    </url>
+    <url>
+        <loc>domain/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/index.html"/>
+    </url>
+    <url>
+        <loc>domain/processes/dyeing.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/dyeing.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/dyeing.html"/>
+    </url>
+    <url>
+        <loc>domain/processes/finishing.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/finishing.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/finishing.html"/>
+    </url>
+    <url>
+        <loc>domain/processes/spinning.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/spinning.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/spinning.html"/>
+    </url>
+    <url>
+        <loc>domain/processes/warping.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/warping.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/warping.html"/>
+    </url>
+    <url>
+        <loc>domain/processes/weaving.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/weaving.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/weaving.html"/>
+    </url>
+    <url>
+        <loc>domain/roles/operator.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/operator.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/operator.html"/>
+    </url>
+    <url>
+        <loc>domain/roles/quality-manager.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/quality-manager.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/quality-manager.html"/>
+    </url>
+    <url>
+        <loc>domain/roles/shift-supervisor.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/shift-supervisor.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/shift-supervisor.html"/>
+    </url>
+    <url>
+        <loc>domain/roles/technician.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/technician.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/technician.html"/>
+    </url>
+    <url>
+        <loc>economic-analysis/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/index.html"/>
+    </url>
+    <url>
+        <loc>economic-analysis/oepv.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/oepv.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/oepv.html"/>
+    </url>
+    <url>
+        <loc>economic-analysis/tco.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/tco.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/tco.html"/>
+    </url>
+    <url>
+        <loc>economic-analysis/value-drivers.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/value-drivers.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/value-drivers.html"/>
+    </url>
+    <url>
+        <loc>functional-analysis/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/index.html"/>
+    </url>
+    <url>
+        <loc>functional-analysis/maintenance-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/maintenance-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/maintenance-workflow.html"/>
+    </url>
+    <url>
+        <loc>functional-analysis/operations-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/operations-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/operations-workflow.html"/>
+    </url>
+    <url>
+        <loc>functional-analysis/training-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/training-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/training-workflow.html"/>
+    </url>
+    <url>
+        <loc>it-ot/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/index.html"/>
+    </url>
+    <url>
+        <loc>it-ot/ingest-schema.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/ingest-schema.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/ingest-schema.html"/>
+    </url>
+    <url>
+        <loc>it-ot/opcua-schema.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/opcua-schema.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/opcua-schema.html"/>
+    </url>
+    <url>
+        <loc>knowledge-layer/acl-model.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/acl-model.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/acl-model.html"/>
+    </url>
+    <url>
+        <loc>knowledge-layer/architecture.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/architecture.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/architecture.html"/>
+    </url>
+    <url>
+        <loc>knowledge-layer/eval-results.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/eval-results.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/eval-results.html"/>
+    </url>
+    <url>
+        <loc>knowledge-layer/retrieval-pipeline.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/retrieval-pipeline.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/retrieval-pipeline.html"/>
+    </url>
+    <url>
+        <loc>security/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="security/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/index.html"/>
+    </url>
+    <url>
+        <loc>security/owasp-llm.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="security/owasp-llm.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/owasp-llm.html"/>
+    </url>
+    <url>
+        <loc>security/stride-threat-model.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="security/stride-threat-model.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/stride-threat-model.html"/>
+    </url>
+    <url>
+        <loc>sop/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="sop/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/sop/index.html"/>
+    </url>
+    <url>
+        <loc>use-cases/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="it" href="use-cases/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="en/use-cases/index.html"/>
+    </url>
+    <url>
+        <loc>en/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="index.html"/>
+    </url>
+    <url>
+        <loc>en/getting-started.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/getting-started.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="getting-started.html"/>
+    </url>
+    <url>
+        <loc>en/glossary.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/glossary.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="glossary.html"/>
+    </url>
+    <url>
+        <loc>en/transformation.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/transformation.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="transformation.html"/>
+    </url>
+    <url>
+        <loc>en/ui-mock.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/ui-mock.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="ui-mock.html"/>
+    </url>
+    <url>
+        <loc>en/adoption-roadmap/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adoption-roadmap/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adoption-roadmap/index.html"/>
+    </url>
+    <url>
+        <loc>en/adr/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/index.html"/>
+    </url>
+    <url>
+        <loc>en/adr/ADR-001-langgraph-supervisor.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-001-langgraph-supervisor.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-001-langgraph-supervisor.html"/>
+    </url>
+    <url>
+        <loc>en/adr/ADR-002-qdrant-bge-m3.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-002-qdrant-bge-m3.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-002-qdrant-bge-m3.html"/>
+    </url>
+    <url>
+        <loc>en/adr/ADR-003-self-hosted-llm.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-003-self-hosted-llm.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-003-self-hosted-llm.html"/>
+    </url>
+    <url>
+        <loc>en/adr/ADR-004-hitl-tiers.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-004-hitl-tiers.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-004-hitl-tiers.html"/>
+    </url>
+    <url>
+        <loc>en/adr/ADR-005-mkdocs-i18n.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/adr/ADR-005-mkdocs-i18n.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="adr/ADR-005-mkdocs-i18n.html"/>
+    </url>
+    <url>
+        <loc>en/agents/knowledge/knowledge-cluster.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/knowledge/knowledge-cluster.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/knowledge/knowledge-cluster.html"/>
+    </url>
+    <url>
+        <loc>en/agents/maintenance/downtime-analyzer.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/downtime-analyzer.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/downtime-analyzer.html"/>
+    </url>
+    <url>
+        <loc>en/agents/maintenance/event-taxonomy.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/event-taxonomy.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/event-taxonomy.html"/>
+    </url>
+    <url>
+        <loc>en/agents/maintenance/maintenance-coach.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/maintenance-coach.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/maintenance-coach.html"/>
+    </url>
+    <url>
+        <loc>en/agents/maintenance/predictive-maintenance.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/predictive-maintenance.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/predictive-maintenance.html"/>
+    </url>
+    <url>
+        <loc>en/agents/maintenance/rca-specialist.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/maintenance/rca-specialist.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/maintenance/rca-specialist.html"/>
+    </url>
+    <url>
+        <loc>en/agents/operations/anomaly-detector.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/anomaly-detector.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/anomaly-detector.html"/>
+    </url>
+    <url>
+        <loc>en/agents/operations/operator-assistant.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/operator-assistant.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/operator-assistant.html"/>
+    </url>
+    <url>
+        <loc>en/agents/operations/production-planner.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/production-planner.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/production-planner.html"/>
+    </url>
+    <url>
+        <loc>en/agents/operations/quality-inspector.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/operations/quality-inspector.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/operations/quality-inspector.html"/>
+    </url>
+    <url>
+        <loc>en/agents/supply/mantis-synthetic-dataset.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/supply/mantis-synthetic-dataset.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/supply/mantis-synthetic-dataset.html"/>
+    </url>
+    <url>
+        <loc>en/agents/supply/supply-cluster.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/agents/supply/supply-cluster.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="agents/supply/supply-cluster.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/agentic-runtime.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/agentic-runtime.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/agentic-runtime.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/c4-component.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-component.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-component.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/c4-container.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-container.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-container.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/c4-context.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/c4-context.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/c4-context.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/hitl-cycle.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/hitl-cycle.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/hitl-cycle.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/llm-serving.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/llm-serving.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/llm-serving.html"/>
+    </url>
+    <url>
+        <loc>en/architecture/overview.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/architecture/overview.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="architecture/overview.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/index.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-001.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-001.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-001.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-002.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-002.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-002.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-003.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-003.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-003.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-004.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-004.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-004.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-005.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-005.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-005.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-006.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-006.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-006.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-007.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-007.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-007.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-008.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-008.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-008.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-009.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-009.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-009.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-010.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-010.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-010.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-011.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-011.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-011.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-012.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-012.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-012.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-013.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-013.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-013.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-014.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-014.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-014.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-015.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-015.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-015.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-016.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-016.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-016.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-017.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-017.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-017.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-018.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-018.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-018.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-019.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-019.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-019.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-020.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-020.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-020.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-021.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-021.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-021.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-022.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-022.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-022.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-023.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-023.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-023.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-024.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-024.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-024.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-025.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-025.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-025.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-026.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-026.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-026.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-027.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-027.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-027.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-028.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-028.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-028.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-029.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-029.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-029.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-030.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-030.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-030.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-031.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-031.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-031.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-032.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-032.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-032.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-033.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-033.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-033.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-034.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-034.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-034.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-035.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-035.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-035.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-036.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-036.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-036.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-037.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-037.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-037.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-038.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-038.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-038.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-039.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-039.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-039.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-040.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-040.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-040.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-041.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-041.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-041.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-042.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-042.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-042.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-043.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-043.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-043.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-044.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-044.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-044.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-045.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-045.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-045.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-046.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-046.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-046.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-047.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-047.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-047.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-048.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-048.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-048.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-049.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-049.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-049.html"/>
+    </url>
+    <url>
+        <loc>en/assumptions/A-050.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/assumptions/A-050.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="assumptions/A-050.html"/>
+    </url>
+    <url>
+        <loc>en/contributing/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/contributing/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="contributing/index.html"/>
+    </url>
+    <url>
+        <loc>en/domain/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/index.html"/>
+    </url>
+    <url>
+        <loc>en/domain/processes/dyeing.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/dyeing.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/dyeing.html"/>
+    </url>
+    <url>
+        <loc>en/domain/processes/finishing.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/finishing.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/finishing.html"/>
+    </url>
+    <url>
+        <loc>en/domain/processes/spinning.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/spinning.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/spinning.html"/>
+    </url>
+    <url>
+        <loc>en/domain/processes/warping.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/warping.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/warping.html"/>
+    </url>
+    <url>
+        <loc>en/domain/processes/weaving.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/processes/weaving.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/processes/weaving.html"/>
+    </url>
+    <url>
+        <loc>en/domain/roles/operator.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/operator.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/operator.html"/>
+    </url>
+    <url>
+        <loc>en/domain/roles/quality-manager.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/quality-manager.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/quality-manager.html"/>
+    </url>
+    <url>
+        <loc>en/domain/roles/shift-supervisor.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/shift-supervisor.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/shift-supervisor.html"/>
+    </url>
+    <url>
+        <loc>en/domain/roles/technician.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/domain/roles/technician.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="domain/roles/technician.html"/>
+    </url>
+    <url>
+        <loc>en/economic-analysis/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/index.html"/>
+    </url>
+    <url>
+        <loc>en/economic-analysis/oepv.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/oepv.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/oepv.html"/>
+    </url>
+    <url>
+        <loc>en/economic-analysis/tco.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/tco.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/tco.html"/>
+    </url>
+    <url>
+        <loc>en/economic-analysis/value-drivers.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/economic-analysis/value-drivers.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="economic-analysis/value-drivers.html"/>
+    </url>
+    <url>
+        <loc>en/functional-analysis/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/index.html"/>
+    </url>
+    <url>
+        <loc>en/functional-analysis/maintenance-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/maintenance-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/maintenance-workflow.html"/>
+    </url>
+    <url>
+        <loc>en/functional-analysis/operations-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/operations-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/operations-workflow.html"/>
+    </url>
+    <url>
+        <loc>en/functional-analysis/training-workflow.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/functional-analysis/training-workflow.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="functional-analysis/training-workflow.html"/>
+    </url>
+    <url>
+        <loc>en/it-ot/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/index.html"/>
+    </url>
+    <url>
+        <loc>en/it-ot/ingest-schema.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/ingest-schema.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/ingest-schema.html"/>
+    </url>
+    <url>
+        <loc>en/it-ot/opcua-schema.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/it-ot/opcua-schema.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="it-ot/opcua-schema.html"/>
+    </url>
+    <url>
+        <loc>en/knowledge-layer/acl-model.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/acl-model.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/acl-model.html"/>
+    </url>
+    <url>
+        <loc>en/knowledge-layer/architecture.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/architecture.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/architecture.html"/>
+    </url>
+    <url>
+        <loc>en/knowledge-layer/eval-results.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/eval-results.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/eval-results.html"/>
+    </url>
+    <url>
+        <loc>en/knowledge-layer/retrieval-pipeline.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/knowledge-layer/retrieval-pipeline.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="knowledge-layer/retrieval-pipeline.html"/>
+    </url>
+    <url>
+        <loc>en/security/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="security/index.html"/>
+    </url>
+    <url>
+        <loc>en/security/owasp-llm.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/owasp-llm.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="security/owasp-llm.html"/>
+    </url>
+    <url>
+        <loc>en/security/stride-threat-model.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/security/stride-threat-model.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="security/stride-threat-model.html"/>
+    </url>
+    <url>
+        <loc>en/sop/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/sop/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="sop/index.html"/>
+    </url>
+    <url>
+        <loc>en/use-cases/index.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="en/use-cases/index.html"/>
+        <xhtml:link rel="alternate" hreflang="it" href="use-cases/index.html"/>
+    </url>
+</urlset>
