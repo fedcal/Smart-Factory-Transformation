@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 12 Plan 02a completed
-last_updated: "2026-05-25T09:05:00Z"
-last_activity: 2026-05-25 -- Phase 12 Plan 02a executed (C4 Mermaid 3 livelli + OPS/MNT/TRN workflows, 16 file IT+EN)
+stopped_at: Phase 12 Plan 02b completed
+last_updated: "2026-05-25T10:30:00Z"
+last_activity: 2026-05-25 -- Phase 12 Plan 02b executed (9 use cases 3 orizzonti + roadmap adozione fasi/KPI/rischi, 4 file IT+EN)
 progress:
   total_phases: 12
   completed_phases: 11
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 4 of 8
+Plan: 5 of 8
 Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 Plan 02a complete (C4 Mermaid 3 livelli + OPS/MNT/TRN workflows, 16 file IT+EN)
+Last activity: 2026-05-25 -- Phase 12 Plan 02b complete (9 use cases 3 orizzonti + roadmap adozione fasi/KPI/rischi, 4 file IT+EN)
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 12 P02b | 25min | 2 tasks | 4 files |
 | Phase 12 P02a | 35min | 2 tasks | 16 files |
 | Phase 12 P01  | 25min | 2 tasks | 15 files |
 | Phase 12 P00  | 6min | 3 tasks | 38 files |
@@ -190,4 +191,4 @@ None yet.
 
 Last session: 2026-05-25T09:05:00Z
 Stopped at: Phase 12 Plan 02a completed
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-02a-SUMMARY.md
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-02b-SUMMARY.md
