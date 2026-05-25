@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 12 Plan 01 completed
-last_updated: "2026-05-25T08:30:00Z"
-last_activity: 2026-05-25 -- Phase 12 Plan 01 executed (TCO+OEPV script, 9 test, 8 pagine docs IT+EN)
+stopped_at: Phase 12 Plan 02a completed
+last_updated: "2026-05-25T09:05:00Z"
+last_activity: 2026-05-25 -- Phase 12 Plan 02a executed (C4 Mermaid 3 livelli + OPS/MNT/TRN workflows, 16 file IT+EN)
 progress:
   total_phases: 12
   completed_phases: 11
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 3 of 8
+Plan: 4 of 8
 Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 Plan 01 complete (TCO+OEPV, 9 test, docs IT+EN)
+Last activity: 2026-05-25 -- Phase 12 Plan 02a complete (C4 Mermaid 3 livelli + OPS/MNT/TRN workflows, 16 file IT+EN)
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 12 P02a | 35min | 2 tasks | 16 files |
 | Phase 12 P01  | 25min | 2 tasks | 15 files |
 | Phase 12 P00  | 6min | 3 tasks | 38 files |
 | Phase 11 P01  | 6min | 2 tasks | 6 files |
@@ -166,6 +167,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 11-03: sanitize_document() su chunk post-chunking (Pitfall 6); ricostruzione nuovi Chunk frozen (immutabilità)
 - [Phase 11-04]: Dashboard p50/p95/p99 usano ingest_latency_seconds_bucket (unico histogram dev disponibile); BudgetSnapshot metric wiring via Pushgateway deferred a 11-05; factory KPIs OEE/MTTR/MTBF richiedono Pushgateway o HTTP datasource (TimescaleDB non interrogabile direttamente via PromQL)
 - [Phase 11-05]: AR-02/AR-03 (SSE token/localStorage) rimangono dev-mode; HttpOnly cookie deferred post-v1.0; LANGFUSE_ENCRYPTION_KEY=0000... rimpiazzato con placeholder testuale per prevenire falsi positivi secret scanner; Redis rate-limit documentato ma non implementato (AR-07 documentation-only)
+- [Phase 12-02a]: C4 diagrams use Mermaid C4Context/C4Container/C4Component natively via pymdownx.superfences; SCM cluster deferred to Economic Analysis section (cost/value output, not operational); nav_translations for C4 labels are identity IT=EN
 
 ### Pending Todos
 
@@ -186,6 +188,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T08:30:00Z
-Stopped at: Phase 12 Plan 01 completed
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-01-SUMMARY.md
+Last session: 2026-05-25T09:05:00Z
+Stopped at: Phase 12 Plan 02a completed
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-02a-SUMMARY.md
