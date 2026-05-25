@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 12 Plan 00 completed
-last_updated: "2026-05-25T06:34:13Z"
-last_activity: 2026-05-25 -- Phase 12 Plan 00 executed (mike pin, oepv vendor, stubs IT+EN, nav expansion)
+stopped_at: Phase 12 Plan 01 completed
+last_updated: "2026-05-25T08:30:00Z"
+last_activity: 2026-05-25 -- Phase 12 Plan 01 executed (TCO+OEPV script, 9 test, 8 pagine docs IT+EN)
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 122
-  completed_plans: 118
-  percent: 92
+  completed_plans: 119
+  percent: 97
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 2 of 8
+Plan: 3 of 8
 Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 execution started
+Last activity: 2026-05-25 -- Phase 12 Plan 01 complete (TCO+OEPV, 9 test, docs IT+EN)
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Next command: `/gsd-execute-phase 1`
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 12 P01  | 25min | 2 tasks | 15 files |
 | Phase 12 P00  | 6min | 3 tasks | 38 files |
 | Phase 11 P01  | 6min | 2 tasks | 6 files |
 | Phase 11 P00  | 17min | 5 tasks | 19 files |
@@ -185,6 +186,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T06:01:17.568Z
-Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-CONTEXT.md
+Last session: 2026-05-25T08:30:00Z
+Stopped at: Phase 12 Plan 01 completed
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-01-SUMMARY.md

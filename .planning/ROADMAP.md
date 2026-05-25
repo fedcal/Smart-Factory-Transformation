@@ -273,7 +273,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 **UI hint**: yes
 **Plans**: 8 plans
   - [x] 12-00-PLAN.md — Wave 0: deps (mike) + nav expansion + stubs IT/EN + vendored oepv + strict build green (DOC-01, DOC-03, DOC-15)
-  - [ ] 12-01-PLAN.md — Reproducible economic model: TCO 3yr + OEPV reuse + value drivers + risk register (ECO-01/03/04/06/07/08, DOC-10, DEL-06)
+  - [x] 12-01-PLAN.md — Reproducible economic model: TCO 3yr + OEPV reuse + value drivers + risk register (ECO-01/03/04/06/07/08, DOC-10, DEL-06)
   - [ ] 12-02a-PLAN.md — Target Architecture C4 (Mermaid) + end-to-end OPS/MNT/TRN workflows (DOC-04, DOC-06, DEL-01, DEL-02)
   - [ ] 12-02b-PLAN.md — Prioritized Use Cases + Adoption Roadmap (DOC-07, DOC-09, DEL-03, DEL-05)
   - [ ] 12-03a-PLAN.md — Security & Governance section (STRIDE + OWASP LLM + AI explainability) (DOC-11)
