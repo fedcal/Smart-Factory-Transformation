@@ -109,7 +109,8 @@ jobs:
           # Gate 2: no f-string SQL (T-V5-sql — SQL injection prevention)
           ! grep -rE 'f"(INSERT|SELECT|UPDATE|DELETE)' services/ot-bridge packages/sft-tools
           # Gate 3: no OPC-UA write calls in ot-bridge (T-DATA-DIODE Layer 3)
-          ! grep -rE "(set_value|write_attribute|write_value)" services/ot-bridge/src/
+          # Pattern unificati con il test AST (test_ot_bridge_guard.py, SEC-06): CR-04
+          ! grep -rE "(set_value|write_value|write_attributes|set_attribute|call_method)" services/ot-bridge/src/
           # Gate 4: no naive datetime (all timestamps must be UTC-aware)
           ! grep -rE "datetime\.now\(\)" simulators/sim-textile/src services/ot-bridge/src
           # Gate 5: no pydantic.v1 import (langchain-core 1.x requires Pydantic v2 only)

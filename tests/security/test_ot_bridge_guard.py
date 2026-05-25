@@ -13,16 +13,19 @@ from __future__ import annotations
 import ast
 import pathlib
 
-# OT Bridge source directory (relativo alla root del progetto)
-_OT_BRIDGE_SRC = pathlib.Path("services/ot-bridge/src/svc_ot_bridge")
+# OT Bridge source directory — path assoluto basato su __file__ per evitare
+# dipendenza dal CWD (WR-05: test falliva se pytest invocato fuori dalla root).
+_REPO_ROOT = pathlib.Path(__file__).parent.parent.parent
+_OT_BRIDGE_SRC = _REPO_ROOT / "services" / "ot-bridge" / "src" / "svc_ot_bridge"
 
 # Pattern write API OPC-UA (asyncua e librerie compatibili)
 # D-51: SUBSCRIBER ONLY — nessuna di queste API deve essere chiamata.
 _WRITE_PATTERNS: frozenset[str] = frozenset({
     "write_value",        # asyncua Node.write_value()
-    "call_method",        # asyncua Node.call_method() — esegue metodi OPC-UA (write semantics)
+    "write_attributes",   # asyncua Node.write_attributes() (batch write — API reale asyncua)
     "set_attribute",      # asyncua Node.set_attribute()
-    "write_attributes",   # asyncua Node.write_attributes() (batch write)
+    "call_method",        # asyncua Node.call_method() — esegue metodi OPC-UA (write semantics)
+    "set_value",          # asyncua Node.set_value() — write semantics (CR-04, aggiunto per allineamento CI grep)
 })
 
 
@@ -78,8 +81,14 @@ def test_ot_bridge_src_contains_py_files():
 
 
 def test_ot_bridge_write_pattern_set_non_empty():
-    """Sanity check: il set WRITE_PATTERNS contiene esattamente i 4 pattern attesi."""
-    expected = frozenset({"write_value", "call_method", "set_attribute", "write_attributes"})
+    """Sanity check: il set WRITE_PATTERNS contiene esattamente i 5 pattern attesi (CR-04).
+
+    Set unificato con il grep CI (ci.yml Gate 3):
+    set_value aggiunto per coprire asyncua Node.set_value() con write semantics.
+    """
+    expected = frozenset({
+        "write_value", "write_attributes", "set_attribute", "call_method", "set_value"
+    })
     assert _WRITE_PATTERNS == expected, (
         f"WRITE_PATTERNS cambiato inaspettatamente: {_WRITE_PATTERNS!r}"
     )
