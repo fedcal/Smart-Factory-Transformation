@@ -164,6 +164,11 @@ jobs:
         # Real-Ollama eval: SKIP in CI (non impostato EVAL_REAL_LLM)
         run: uv run --python 3.12 python -m pytest tests/eval/ -x -q
 
+      - name: Run security gate (SEC-04 / SEC-06)
+        # Non-skippable: nessun continue-on-error / || true
+        # Verifica sanitizzazione anti-prompt-injection (SEC-04) e guardia AST OT bridge (SEC-06)
+        run: uv run --python 3.12 python -m pytest tests/security/ -x -q
+
       - name: Nx Affected Lint
         run: npx nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --parallel=3
 
