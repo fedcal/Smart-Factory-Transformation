@@ -27,6 +27,15 @@ import re
 
 import bleach
 
+# Pattern per rimuovere tag script/style con il CONTENUTO interno (WR-02).
+# bleach.clean(strip=True) rimuove i tag ma lascia il testo interno visibile:
+# "<script>alert('xss')</script>" → "alert('xss')" — il payload XSS sopravvive.
+# Questi pattern eliminano sia il tag che il contenuto (DOTALL per multi-linea).
+_SCRIPT_CONTENT_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"<script[^>]*>.*?</script>", re.IGNORECASE | re.DOTALL),
+    re.compile(r"<style[^>]*>.*?</style>", re.IGNORECASE | re.DOTALL),
+)
+
 # ---------------------------------------------------------------------------
 # Denylist regex per pattern injection noti (deterministic, IGNORECASE)
 # ---------------------------------------------------------------------------
@@ -58,10 +67,11 @@ def sanitize_document(text: str) -> str:
 
     Pipeline:
         1. Valida input (stringa — fail fast se non str).
-        2. Applica ogni pattern della denylist con .sub("[REDACTED]", ...).
-        3. Applica bleach.clean(tags=[], strip=True) per rimuovere HTML residuo.
-        4. Normalizza whitespace eccessivo (3+ → doppio newline).
-        5. Strip finale e ritorna stringa (mai None).
+        2. Rimuove tag script/style con il loro contenuto (WR-02: prevenzione XSS payload).
+        3. Applica ogni pattern della denylist con .sub("[REDACTED]", ...).
+        4. Applica bleach.clean(tags=[], strip=True) per rimuovere HTML residuo.
+        5. Normalizza whitespace eccessivo (3+ → doppio newline).
+        6. Strip finale e ritorna stringa (mai None).
 
     Args:
         text: Testo plain estratto dal parser (post-parse, prima dell'embedding).
@@ -83,12 +93,18 @@ def sanitize_document(text: str) -> str:
     if not text.strip():
         return ""
 
-    # 1. Denylist regex — ogni pattern sostituisce con [REDACTED]
+    # 1. Rimozione tag script/style con contenuto (WR-02: prevenzione XSS payload nel testo).
+    # Deve avvenire PRIMA del bleach pass perché bleach rimuove i tag ma lascia il contenuto:
+    # "<script>alert('xss')</script>" → bleach → "alert('xss')" — payload sopravvive.
     result: str = text
+    for pattern in _SCRIPT_CONTENT_PATTERNS:
+        result = pattern.sub("", result)
+
+    # 2. Denylist regex — ogni pattern sostituisce con [REDACTED]
     for pattern in _INJECTION_PATTERNS:
         result = pattern.sub("[REDACTED]", result)
 
-    # 2. bleach.clean() — strip HTML residuo (tags=[] = whitelist vuota, nessun tag permesso)
+    # 3. bleach.clean() — strip HTML residuo (tags=[] = whitelist vuota, nessun tag permesso)
     # strip=True rimuove i tag invece di escaping, producendo testo plain leggibile.
     result = bleach.clean(result, tags=[], strip=True)
 
