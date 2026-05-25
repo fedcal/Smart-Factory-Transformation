@@ -1735,3 +1735,73 @@ Insieme di norme, procedure e pratiche volte a prevenire infortuni e malattie pr
 
 *Fonte: iso-standard*
 
+## Economico / Gara
+
+_6 termini_
+
+### <a name="oepv"></a>`oepv`
+
+Offerta Economicamente Piu' Vantaggiosa — criterio di aggiudicazione degli appalti pubblici (Codice dei Contratti Pubblici, D.lgs 36/2023) che valuta le offerte con un punteggio composito: tipicamente 70% tecnico e 30% economico; il ribasso economico segue una curva non lineare per disincentivare ribassi anomali.
+
+**Termini correlati:** `ribasso_anomalo`, `tco`, `base_asta`
+
+**Esempi:**
+- _Il modello OEPV 70/30 della piattaforma assegna punteggio tecnico massimo 70 punti e calcola il punteggio economico con curva non lineare sulla base di ribasso 10-15% rispetto alla Base d'Asta €108.000._
+
+*Fonte: iso-standard*
+
+### <a name="base_asta"></a>`base_asta`
+
+Importo massimo posto a base di gara dall'ente appaltante in una procedura ad evidenza pubblica; il concorrente formula un'offerta economica indicando il ribasso percentuale rispetto a tale importo.
+
+**Termini correlati:** `oepv`, `ribasso_anomalo`, `tco`
+
+**Esempi:**
+- _La Base d'Asta per la piattaforma agentica e' €108.000; un ribasso del 12% porta l'offerta economica a €95.040._
+
+*Fonte: iso-standard*
+
+### <a name="ribasso_anomalo"></a>`ribasso_anomalo`
+
+Offerta economica che scende al di sotto della soglia di anomalia calcolata secondo il Codice dei Contratti Pubblici (D.lgs 36/2023 art. 54); l'ente appaltante puo' richiedere giustificazioni o escludere l'offerta.
+
+**Termini correlati:** `base_asta`, `oepv`, `tco`
+
+**Esempi:**
+- _Un ribasso superiore al 20% rispetto alla media delle offerte puo' essere classificato come ribasso_anomalo e richiede giustificazione documentata dei costi._
+
+*Fonte: iso-standard*
+
+### <a name="tco"></a>`tco`
+
+Total Cost of Ownership — costo totale di possesso su un periodo pluriennale (tipicamente 3-5 anni); include costi di acquisizione, infrastruttura, operazioni, manutenzione e formazione; criterio fondamentale per confrontare stack cloud vs self-hosted.
+
+**Termini correlati:** `base_asta`, `oepv`
+
+**Esempi:**
+- _Il TCO 3 anni dello stack self-hosted (GPU amortizzata + elettricita' 0,25 EUR/kWh + 0,5 FTE ops) e' inferiore del 35% rispetto a uno stack cloud equivalente a consumo._
+
+*Fonte: industry-standard*
+
+### <a name="stride"></a>`stride`
+
+Framework di threat modeling (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) usato per classificare sistematicamente le minacce ai componenti di un sistema; applicato in Phase 11 alla piattaforma agentica.
+
+**Termini correlati:** `audit_trail`, `eu_ai_act`, `gdpr`
+
+**Esempi:**
+- _L'analisi STRIDE identifica Tampering sui checkpoint LangGraph e Information Disclosure nel RAG come minacce prioritarie._
+
+*Fonte: agentic-community*
+
+### <a name="rca"></a>`rca`
+
+Root Cause Analysis — analisi sistematica per identificare la causa radice di un guasto o anomalia; eseguita dall'agente RCASpecialist a partire da dati di sensori, log di manutenzione e knowledge base.
+
+**Termini correlati:** `anomaly_detection`, `manutenzione_predittiva`, `hitl`
+
+**Esempi:**
+- _L'RCA dell'agente identifica usura del cursore (anello_rotante) come causa radice delle rotture di filo con confidence 0.87._
+
+*Fonte: project-specific*
+

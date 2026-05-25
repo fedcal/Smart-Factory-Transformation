@@ -1790,3 +1790,73 @@ Personal Protective Equipment — any equipment worn by the operator to protect 
 
 *Source: iso-standard*
 
+## Economic / Procurement
+
+_6 terms_
+
+### <a name="oepv"></a>`oepv`
+
+Most Economically Advantageous Tender (Italian: Offerta Economicamente Piu' Vantaggiosa) — public procurement award criterion (Italian Public Contracts Code, D.lgs 36/2023) that scores bids with a composite weight: typically 70% technical and 30% economic; the economic discount follows a non-linear curve to discourage abnormally low bids.
+
+**Related terms:** `abnormal_low_bid`, `base_bid`, `tco`
+
+**Examples:**
+- _The platform OEPV 70/30 model assigns a maximum of 70 technical points and computes the economic score using a non-linear curve applied to a 10-15% discount from the €108,000 Base Bid._
+
+*Source: iso-standard*
+
+### <a name="base_bid"></a>`base_bid`
+
+Maximum amount set by the contracting authority in a public procurement procedure (Italian: Base d'Asta); bidders submit an economic offer stating the percentage discount from this amount.
+
+**Related terms:** `abnormal_low_bid`, `oepv`, `tco`
+
+**Examples:**
+- _The Base Bid for the agentic platform is €108,000; a 12% discount brings the economic offer to €95,040._
+
+*Source: iso-standard*
+
+### <a name="abnormal_low_bid"></a>`abnormal_low_bid`
+
+An economic offer that falls below the abnormality threshold calculated under the Public Contracts Code (D.lgs 36/2023, art. 54); the contracting authority may request justification or exclude the offer.
+
+**Related terms:** `base_bid`, `oepv`, `tco`
+
+**Examples:**
+- _A discount more than 20% above the average of all offers may be classified as an abnormal low bid requiring documented cost justification._
+
+*Source: iso-standard*
+
+### <a name="tco"></a>`tco`
+
+Total Cost of Ownership — total cost over a multi-year period (typically 3-5 years); includes acquisition, infrastructure, operations, maintenance and training costs; fundamental criterion for comparing cloud vs self-hosted stacks.
+
+**Related terms:** `base_bid`, `oepv`
+
+**Examples:**
+- _The 3-year TCO of the self-hosted stack (amortised GPU + electricity at €0.25/kWh + 0.5 FTE ops) is 35% lower than an equivalent pay-as-you-go cloud stack._
+
+*Source: industry-standard*
+
+### <a name="stride"></a>`stride`
+
+Threat modeling framework (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) used to systematically classify threats against system components; applied in Phase 11 to the agentic platform.
+
+**Related terms:** `audit_trail`, `eu_ai_act`, `gdpr`
+
+**Examples:**
+- _The STRIDE analysis identifies Tampering of LangGraph checkpoints and Information Disclosure in the RAG layer as priority threats._
+
+*Source: agentic-community*
+
+### <a name="rca"></a>`rca`
+
+Root Cause Analysis — systematic analysis to identify the root cause of a failure or anomaly; performed by the RCASpecialist agent from sensor data, maintenance logs and the knowledge base.
+
+**Related terms:** `anomaly_detection`, `predictive_maintenance`, `hitl`
+
+**Examples:**
+- _The agent RCA identifies cursor (traveller) wear as the root cause of thread breaks with confidence 0.87._
+
+*Source: project-specific*
+
