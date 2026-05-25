@@ -290,5 +290,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Agents — Knowledge & Training | 10/10 | Complete   | 2026-05-24 |
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 13/13 | Complete    | 2026-05-24 |
-| 11. Observability, Evaluation & Security Hardening | 5/6 | In Progress|  |
+| 11. Observability, Evaluation & Security Hardening | 6/6 | Complete    | 2026-05-25 |
 | 12. Documentation, Economic Model & Competition Deliverables | 0/TBD | Not started | - |

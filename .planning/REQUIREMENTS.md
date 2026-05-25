@@ -136,20 +136,20 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 ### Observability & Evaluation (OBS)
 
 - [ ] **OBS-01**: Langfuse self-hosted v3 (Docker Compose dev + Helm prod) come traces backend
-- [ ] **OBS-02**: OpenTelemetry SDK su tutti gli agenti, OT Bridge, API Gateway con propagazione trace ID
-- [ ] **OBS-03**: Stack LGTM (Loki + Grafana + Tempo + Mimir/Prometheus) opzionale documentato
-- [ ] **OBS-04**: Dashboard Grafana preconfezionate per KPI agenti e KPI factory
+- [x] **OBS-02**: OpenTelemetry SDK su tutti gli agenti, OT Bridge, API Gateway con propagazione trace ID
+- [x] **OBS-03**: Stack LGTM (Loki + Grafana + Tempo + Mimir/Prometheus) opzionale documentato
+- [x] **OBS-04**: Dashboard Grafana preconfezionate per KPI agenti e KPI factory
 - [x] **OBS-05**: Suite di eval RAG con DeepEval e RAGAS, gate in CI con threshold configurabili
 - [x] **OBS-06**: Eval di agenti: ground truth dataset di 30+ scenari per cluster con scoring documentato
-- [ ] **OBS-07**: Cost dashboard: token consumati, costo simulato, latency p50/p95/p99 per agente
+- [x] **OBS-07**: Cost dashboard: token consumati, costo simulato, latency p50/p95/p99 per agente
 
 ### Security & Governance (SEC)
 
-- [ ] **SEC-01**: Threat model documentato (STRIDE) per IT/OT, RAG ingestion, agent orchestration
-- [ ] **SEC-02**: Mitigation per OWASP LLM Top 10 (prompt injection, sensitive info leak, supply chain)
+- [x] **SEC-01**: Threat model documentato (STRIDE) per IT/OT, RAG ingestion, agent orchestration
+- [x] **SEC-02**: Mitigation per OWASP LLM Top 10 (prompt injection, sensitive info leak, supply chain)
 - [x] **SEC-03**: RBAC con ruoli `operator`, `supervisor`, `manager`, `technician`, `admin`, `auditor`
 - [x] **SEC-04**: Sanitizzazione documenti in ingest (markdown safe, stripping di prompt-injection patterns noti)
-- [ ] **SEC-05**: Secret management via env + `.env.example` documentato; nessun secret hard-coded
+- [x] **SEC-05**: Secret management via env + `.env.example` documentato; nessun secret hard-coded
 - [x] **SEC-06**: Network policy: OT Bridge non ha route inverso verso OPC-UA (verificato in test)
 - [x] **SEC-07**: Audit log di ogni accesso a documenti `restricted`
 
@@ -338,17 +338,17 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | UI-08 | Phase 10 | Complete |
 | UI-09 | Phase 10 | Complete |
 | UI-10 | Phase 10 | Complete |
-| OBS-02 | Phase 11 | Pending |
-| OBS-03 | Phase 11 | Pending |
-| OBS-04 | Phase 11 | Pending |
+| OBS-02 | Phase 11 | Complete |
+| OBS-03 | Phase 11 | Complete |
+| OBS-04 | Phase 11 | Complete |
 | OBS-05 | Phase 11 | Complete |
 | OBS-06 | Phase 11 | Complete |
-| OBS-07 | Phase 11 | Pending |
-| SEC-01 | Phase 11 | Pending |
-| SEC-02 | Phase 11 | Pending |
+| OBS-07 | Phase 11 | Complete |
+| SEC-01 | Phase 11 | Complete |
+| SEC-02 | Phase 11 | Complete |
 | SEC-03 | Phase 11 | Complete |
 | SEC-04 | Phase 11 | Complete |
-| SEC-05 | Phase 11 | Pending |
+| SEC-05 | Phase 11 | Complete |
 | SEC-06 | Phase 11 | Complete |
 | SEC-07 | Phase 11 | Complete |
 | DOC-01 | Phase 12 | Pending |
