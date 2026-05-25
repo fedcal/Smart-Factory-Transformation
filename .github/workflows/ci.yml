@@ -24,6 +24,54 @@ jobs:
         with:
           fetch-depth: 0  # Critico per nrwl/nx-set-shas (Pitfall 2: storia completa necessaria)
 
+      - name: Brand-scrub gate (DEL-08 / SC-4)
+        # BLOCKING: zero occorrenze del brand su tutti i file tracciati escluso .planning/
+        # .planning/ è escluso perché contiene meta GSD interno (piani, state, roadmap) che non
+        # fanno parte della superficie deliverable e possono citare nomi di brand in contesti
+        # archivistici/storici. Vedere 12-CONTEXT gray area 3.
+        # Il termine è costruito a parti per evitare che questo stesso file di workflow
+        # faccia match con se stesso (Pitfall 5 / T-12-05-02).
+        run: |
+          TERM="accent"; TERM+="ure"
+          MATCHES=$(git ls-files | grep -v '^\.planning/' | xargs grep -ril "$TERM" 2>/dev/null || true)
+          if [ -n "$MATCHES" ]; then
+            printf 'BRAND LEAK nei seguenti file:\n%s\n' "$MATCHES"
+            exit 1
+          fi
+          echo "brand-scrub: OK (zero occorrenze)"
+
+      - name: No binary images in docs/ (SC-5)
+        # BLOCKING: zero file png/jpg/jpeg/svg/gif/webp tracciati sotto docs/docs/
+        # Le immagini binarie vengono sostituite con diagrammi Mermaid/D2 o placeholder testo.
+        run: |
+          BIN=$(git ls-files 'docs/docs/*' | grep -Ei '\.(png|jpe?g|svg|gif|webp)$' || true)
+          if [ -n "$BIN" ]; then
+            printf 'IMMAGINI BINARIE trovate sotto docs/docs/:\n%s\n' "$BIN"
+            exit 1
+          fi
+          echo "SC-5: OK (zero immagini binarie)"
+
+      - name: Personal-ref scrub
+        # BLOCKING: zero riferimenti a handle/email personali nei file tracciati (escluso .planning/)
+        # Riferimenti già neutralizzati a smart-factory-transformation (Phase 12-04).
+        # Il pattern è costruito a parti per evitare che questo file faccia match con se stesso.
+        run: |
+          PA="fed"; PB="cal"; PC="federicoc"; PD="alo"
+          PAT="${PA}${PB}|${PC}${PD}"
+          P=$(git ls-files | grep -v '^\.planning/' | xargs grep -ril -E "$PAT" 2>/dev/null || true)
+          if [ -n "$P" ]; then
+            printf 'RIFERIMENTI PERSONALI trovati:\n%s\n' "$P"
+            exit 1
+          fi
+          echo "personal-ref scrub: OK"
+
+      - name: Local navigability assertion
+        # Assicura che use_directory_urls: false sia presente in mkdocs.yml per navigabilità
+        # locale da filesystem (file://) senza web server.
+        run: |
+          grep -q 'use_directory_urls: false' docs/mkdocs.yml
+          echo "local-nav: OK (use_directory_urls: false)"
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

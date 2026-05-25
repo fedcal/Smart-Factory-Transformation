@@ -23,7 +23,7 @@ e vanno lette in congiunzione con il registro principale in `docs/docs/assumptio
 | A-052 | PT base = 55.0: punteggio tecnico realistico per offerta solida OEPV (SIMULATED TARGET) | cost | active |
 | A-053 | Riduzione downtime 15-25% derivata da baseline sintetica Mantis + letteratura McKinsey/Deloitte Industry 4.0 | simulation | active |
 | A-054 | Riduzione scarto (scrap rate) 10-20% derivata da proxy audit QUALITY_VERDICT + letteratura tessile | simulation | active |
-| A-055 | Riduzione MTTR 20-35% derivata da attivazione agente PredictiveMaintenance + letteratura Accenture/IDC Industry 4.0 | simulation | active |
+| A-055 | Riduzione MTTR 20-35% derivata da attivazione agente PredictiveMaintenance + letteratura IDC/Aveva Industry 4.0 | simulation | active |
 | A-056 | Riduzione tempo formazione 30-40% derivata da attivazione TrainingCoach + baseline SOP sintetica Phase 8 | simulation | active |
 | A-057 | Riuso conoscenza 40-60% derivata da KnowledgeCurator (Phase 8) + letteratura KM industry 4.0 | simulation | active |
 

@@ -23,7 +23,7 @@ with the main register at `docs/docs/assumptions/index.md`.
 | A-052 | Base PT = 55.0: realistic technical score for solid offer OEPV scenario (SIMULATED TARGET) | cost | active |
 | A-053 | Downtime reduction 15-25% derived from synthetic Mantis baseline + McKinsey/Deloitte Industry 4.0 literature | simulation | active |
 | A-054 | Scrap rate reduction 10-20% derived from QUALITY_VERDICT audit proxy + textile literature | simulation | active |
-| A-055 | MTTR reduction 20-35% derived from PredictiveMaintenance agent activation + Accenture/IDC Industry 4.0 literature | simulation | active |
+| A-055 | MTTR reduction 20-35% derived from PredictiveMaintenance agent activation + IDC/Aveva Industry 4.0 literature | simulation | active |
 | A-056 | Training time reduction 30-40% derived from TrainingCoach activation + synthetic SOP baseline Phase 8 | simulation | active |
 | A-057 | Knowledge reuse 40-60% derived from KnowledgeCurator (Phase 8) + KM industry 4.0 literature | simulation | active |
 
