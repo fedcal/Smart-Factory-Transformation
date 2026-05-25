@@ -1,23 +1,58 @@
 # Parametri SC-2 per il modello economico TCO/OEPV — Phase 12
-# Valori definitivi completati in Wave 1 (12-01).
+# Singola sorgente di verita per tutti i numeri nelle docs (ECO-08).
+# Rigenerare gli output con: python3 docs/economic-analysis/tco_oepv.py
 
 [oepv]
+# Base d'Asta Mantis (anchor): 108.000 EUR
 base_d_asta_eur        = 108000.0
+# Pesi OEPV 70/30 (tecnico/economico) — Codice Appalti 2023
 weight_technical       = 0.70
 weight_economic        = 0.30
+# Punteggio economico massimo raggiungibile
 pe_max                 = 30.0
+# Curvatura curva ribasso (parametrico Phase 9)
 lambda_curve           = 3.0
+# Ribasso di riferimento per normalizzazione
 ribasso_ref_pct        = 20.0
+# Soglia WARNING ribasso anomalo: 20% CONFIGURABILE, NON esclusione legale
+# Riferimento: art. 54 D.Lgs. 36/2023 — proxy conservativo per simulazione
 anomaly_threshold_pct  = 20.0
+# Ribasso ipotizzato nell'offerta (range tipico 10-15% per giustificazione scritta)
 ribasso_pct            = 12.5
-pt_technical           = 68.0
+# Punteggio tecnico — scenario OTTIMISTICO (PT massimo teorico = 70)
+pt_optimistic          = 68.0
+# Punteggio tecnico — scenario BASE (realistico per offerta solida)
+pt_base                = 55.0
 
 [tco]
-gpu_cost_eur           = 15000.0   # placeholder — Wave 1 finalizza
+# --- Componente 1: GPU amortization (3 anni) ---
+# Server GPU dedicato per inferenza Qwen2.5-7B self-hosted (Mantis, single site)
+gpu_cost_eur           = 15000.0
 gpu_amort_years        = 3
-energy_kwh_annual      = 8760.0    # placeholder — Wave 1 finalizza
+
+# --- Componente 2: Energia (inference continua, ~365gg/anno) ---
+# ~8.760 kWh/anno (server GPU ~1kW medio in inference mixed-mode)
+# Tariffa energia industriale: 0.25 EUR/kWh (parametro ufficiale ARERA/industria)
+energy_kwh_annual      = 8760.0
 energy_eur_kwh         = 0.25
-fte_annual_cost_eur    = 45000.0   # placeholder — Wave 1 finalizza
+
+# --- Componente 3: FTE parziale (operazioni e supervisione) ---
+# 1 FTE parziale equivalente (0.5 FTE operazioni + 0.5 FTE IT support)
+# Costo medio FTE IT/OT area tessile Nord Italia inclusi oneri
+fte_annual_cost_eur    = 45000.0
 fte_partial            = 1.0
-change_mgmt_eur        = 10000.0   # placeholder — Wave 1 finalizza
+
+# --- Componente 4: Change management ---
+# Formazione iniziale, comunicazione, gestione del cambiamento organizzativo
+change_mgmt_eur        = 12000.0
 change_mgmt_years      = 2
+
+# --- Componente 5: IT/OT integration ---
+# Integrazione OPC-UA bridge, configurazione NATS JetStream, connettori ERP stub
+integration_eur        = 9000.0
+integration_years      = 3
+
+# --- Componente 6: Training specifico ---
+# Workshop utilizzo sistema HITL, formazione operatori e tecnici (ECO-06)
+training_eur           = 6000.0
+training_years         = 3

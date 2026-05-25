@@ -1,0 +1,8 @@
+componente,descrizione,annual_eur,tco_3yr
+gpu_amortization,Ammortamento GPU/Server (3 anni),5000.0,15000.0
+energy,"Energia (kWh x 0.25 EUR/kWh, inference continua)",2190.0,6570.0
+fte_partial,"FTE parziale (ops + IT support, 1 FTE equivalente)",45000.0,135000.0
+change_management,"Change management (formazione organizzativa, 2 anni)",6000.0,18000.0
+it_ot_integration,"IT/OT integration (OPC-UA bridge, NATS, connettori ERP)",3000.0,9000.0
+training,Training specifico (operatori e tecnici HITL),2000.0,6000.0
+totale,TCO totale 3 anni,63190.0,189570.0
