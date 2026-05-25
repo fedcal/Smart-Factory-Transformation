@@ -34,11 +34,6 @@ def test_auditor_in_seeded_users():
     # Nessun secret in chiaro oltre il pattern dev esistente — verificato dal commento nel codice
 
 
-def test_auditor_login_returns_valid_jwt(app_with_mocks, anyio_backend):
-    """POST /auth/login con auditor@mantis.it deve restituire JWT con role=auditor."""
-    pass  # usare test HTTP inline per evitare dipendenza da anyio fixture
-
-
 @pytest.mark.anyio
 async def test_auditor_jwt_contains_role_claim(app_with_mocks):
     """POST /auth/login auditor ottiene JWT con claim role=auditor."""
