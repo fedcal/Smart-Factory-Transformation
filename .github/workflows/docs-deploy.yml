@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # needed for gh-deploy push to gh-pages branch
+  contents: write   # needed for gh-deploy / mike push to gh-pages branch
 
 concurrency:
   group: docs-deploy-${{ github.ref }}
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # mike needs full history to read gh-pages branch
 
       - uses: actions/setup-python@v5
         with:
@@ -29,12 +29,24 @@ jobs:
           cache: 'pip'
 
       - name: Install docs dependencies
+        # mike==2.2.0 is declared in docs/requirements.txt
         run: pip install -r docs/requirements.txt
 
-      - name: Build site (validate)
+      - name: Build site (strict validation)
+        # Fail fast if any page has broken links or missing references.
         run: mkdocs build --strict
         working-directory: docs/
 
-      - name: Deploy to gh-pages
-        run: mkdocs gh-deploy --force --clean --verbose
+      - name: Deploy versioned docs (mike)
+        # Deploys to gh-pages using mike versioning:
+        #   main  → versione di sviluppo (HEAD di main)
+        #   latest → alias che punta alla versione corrente stabile
+        # mike deploy --push aggiorna il branch gh-pages direttamente.
+        # Note: custom domain (CNAME) è opzionale; configurarlo aggiungendo
+        #   --cname <dominio> oppure un file docs/docs/CNAME — non configurato (deferred).
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mike deploy --push --update-aliases main latest
+          mike set-default --push latest
         working-directory: docs/
