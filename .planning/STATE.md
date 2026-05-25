@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 12 Plan 04 finalized — proceeding to execute 12-05
-last_updated: "2026-05-25T07:52:51.040Z"
-last_activity: 2026-05-25
+status: phase-complete
+stopped_at: Phase 12 complete (8/8 plans) — verification 4/5 auto, SC-1 deploy needs human
+last_updated: "2026-05-25T11:30:00Z"
+last_activity: 2026-05-25 -- Phase 12 eseguita end-to-end (12-04 Mock UI/transformation/glossary + 12-05 brand-scrub/SC-5 gate + mike versioning); verifica fase 4/5
 progress:
   total_phases: 12
   completed_phases: 12
   total_plans: 122
-  completed_plans: 125
+  completed_plans: 122
   percent: 100
 ---
 
@@ -25,20 +25,20 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 3 of 8
-Status: Ready to execute
-Last activity: 2026-05-25
+Phase: 12 (documentation-economic-model-competition-deliverables) — COMPLETE (8/8 plan)
+Plan: 8 of 8 — tutti completati
+Status: Phase complete — verifica 4/5 automatica, SC-1 (deploy GitHub Pages pubblico + navigabilità file://) richiede conferma umana
+Last activity: 2026-05-25 -- Fase 12 eseguita end-to-end (12-04 + 12-05)
 
-Progress: [██████████] 100%
+Progress: [██████████] 100% (8/8 plan Fase 12)
 
-### Phase 1 plans (waves — DAG-computed)
+### Verifiche umane in sospeso (Fase 12)
 
-- **Wave 1:** `01-01-nx-workspace-PLAN.md` (5 tasks — PLAT-01/02/03)
-- **Wave 2:** `01-02-compose-PLAN.md` (4 — PLAT-07/09 + OBS-01), `01-03-license-scanner-PLAN.md` (3 — PLAT-05), `01-04-pre-commit-PLAN.md` (3 — PLAT-06), `01-07-mkdocs-PLAN.md` (2 — PLAT-10 docs), `01-08-changesets-PLAN.md` (2 — PLAT-10 release)
-- **Wave 3:** `01-05-ci-PLAN.md` (2 — PLAT-04 + OBS-01), `01-06-helm-PLAN.md` (3 — PLAT-08)
+- SC-1: aprire l'URL pubblico GitHub Pages e confermare l'accessibilità del sito bilingue
+- SC-1: aprire `docs/site/index.html` via `file://` e confermare la navigabilità locale
+- Vedi `.planning/phases/12-documentation-economic-model-competition-deliverables/12-VERIFICATION.md`
 
-Next command: `/gsd-execute-phase 1`
+Next command: `/gsd-verify-work 12` (UAT) o `/gsd-complete-milestone` (chiusura v1.0)
 
 ## Performance Metrics
 
@@ -194,6 +194,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T07:52:51.030Z
-Stopped at: Phase 12 Plan 04 finalized — proceeding to execute 12-05
-Resume file: None
+Last session: 2026-05-25T11:30:00Z
+Stopped at: Phase 12 completa (8/8 plan) — verifica fase 4/5 automatica; SC-1 (deploy/navigabilità) demandata a UAT umano
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-VERIFICATION.md
