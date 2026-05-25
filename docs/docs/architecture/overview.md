@@ -1,10 +1,9 @@
 # Architettura: Overview
 
-!!! info "Dettagli in espansione"
-    Questa pagina mostra l'architettura ad alto livello del sistema. I dettagli
-    per ogni layer verranno documentati nelle fasi successive.
+Questa pagina illustra l'architettura ad alto livello di Smart Factory Transformation,
+con il data-flow end-to-end e i collegamenti ai tre livelli C4.
 
-## Schema ad alto livello
+## Stack e layer
 
 ```mermaid
 graph TD
@@ -39,6 +38,39 @@ graph TD
     PROD_STACK --> GW
 ```
 
+## Data-flow end-to-end
+
+Il flusso principale da evento sensore a risposta operatore:
+
+```mermaid
+flowchart LR
+    SIM["Simulatore OPC-UA\n(svc-ot-bridge)"]
+    NATS["NATS JetStream"]
+    GW["API Gateway\n(FastAPI)"]
+    SUP["Supervisor LangGraph"]
+    CLU["Cluster Agente\n(OPS / MNT / TRN / SCM)"]
+    RAG["RAG Pipeline\n(BGE-M3 + Qdrant)"]
+    LLM["Ollama — Qwen2.5"]
+    HITL["HITL\nInterrupt-Resume"]
+    DB["PostgreSQL\nAudit + KPI"]
+    UI["Factory UI\nAngular 18+ SSR"]
+    USER["Operatore / Tecnico\n/ Manager"]
+
+    SIM -->|"OPC-UA → NATS\n(unidirezionale)"| NATS
+    NATS --> GW
+    GW -->|"Invoca agente"| SUP
+    SUP -->|"Router condizionale"| CLU
+    CLU -->|"Retrieval contesto"| RAG
+    CLU -->|"Inference LLM"| LLM
+    CLU -->|"Tier REVIEW/BLOCK"| HITL
+    CLU -->|"Insert audit"| DB
+    HITL -->|"Espone approvazione"| GW
+    GW -->|"SSE stream"| UI
+    UI --> USER
+    USER -->|"Approva / Rigetta"| GW
+    GW -->|"Resume grafo"| SUP
+```
+
 ## Principi guida
 
 ### Human-in-the-Loop (HITL)
@@ -61,11 +93,18 @@ Tutto lo stack è progettato per deploy **on-premise single-tenant**: nessun dat
 | **Dev Stack** | Docker Compose, Langfuse, NATS, Qdrant | Fase 1 |
 | **Simulazione OT** | Simulatore tessile, mock OPC-UA, NASA C-MAPSS | Fase 3 |
 | **Core Agentico** | LangGraph supervisor, SDK, 16 agenti | Fase 4 |
-| **Frontend** | Angular 18+ SSR, dashboard control room | Fase 5 |
-| **Produzione** | Helm charts, Kubernetes, SealedSecrets | Fase 1 + 6+ |
+| **Knowledge Layer** | RAG ibrido BGE-M3 + Qdrant | Fase 5 |
+| **Agenti OPS** | OperatorAssistant, ProductionPlanner, QualityInspector, AnomalyDetector | Fase 6 |
+| **Agenti MNT** | PredictiveMaintenance, RCASpecialist, MaintenanceCoach, DowntimeAnalyzer | Fase 7 |
+| **Agenti TRN** | ShiftHandover, TrainingCoach, KnowledgeCurator, DocumentationSynthesizer | Fase 8 |
+| **Agenti SCM** | InventoryManager, EnergyOptimizer, DemandForecaster, CostAnalyzer | Fase 9 |
+| **Frontend** | Angular 18+ SSR, dashboard control room | Fase 10 |
+| **Osservabilità** | Langfuse v3, OpenTelemetry, Grafana | Fase 11 |
 
----
+## Livelli C4
 
-!!! note "Aggiornamento progressivo"
-    Questo diagramma verrà arricchito con i dettagli di ogni componente man mano
-    che le fasi successive vengono completate.
+| Livello | Contenuto |
+|---------|-----------|
+| [C4 Context](c4-context.md) | Attori (operatore, tecnico, manager) e sistemi esterni (OPC-UA, ERP) |
+| [C4 Container](c4-container.md) | Applicazioni interne: API Gateway, Agent Runtime, OT Bridge, Qdrant, NATS |
+| [C4 Component](c4-component.md) | Struttura interna Agent Runtime: supervisor, 4 cluster, HITL, audit, RAG |

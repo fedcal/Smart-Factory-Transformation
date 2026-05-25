@@ -58,6 +58,9 @@ plugins:
           site_name: Smart Factory Transformation
           nav_translations:
             Architettura: Architecture
+            C4 Context: C4 Context
+            C4 Container: C4 Container
+            C4 Component: C4 Component
             Iniziare: Getting Started
             Contributing: Contributing
             Dominio: Domain
@@ -144,6 +147,9 @@ nav:
   - Iniziare: getting-started.md
   - Architettura:
     - Overview: architecture/overview.md
+    - C4 Context: architecture/c4-context.md
+    - C4 Container: architecture/c4-container.md
+    - C4 Component: architecture/c4-component.md
     - LLM Serving: architecture/llm-serving.md
     - Agentic Runtime: architecture/agentic-runtime.md
     - HITL Cycle: architecture/hitl-cycle.md
