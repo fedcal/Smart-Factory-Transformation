@@ -81,7 +81,6 @@ plugins:
             Agentic Runtime: Agentic Runtime
             HITL Cycle: HITL Cycle
             Knowledge Layer: Knowledge Layer
-            Architettura: Architecture
             Pipeline di retrieval ibrida: Hybrid retrieval pipeline
             Modello ACL: ACL model
             Risultati A/B BGE-M3 vs multilingual-e5-large: A/B results — BGE-M3 vs multilingual-e5-large
@@ -96,6 +95,21 @@ plugins:
             Mantis Synthetic Dataset: Mantis Synthetic Dataset
             Interfaccia Utente: User Interface
             Mock UI: Mock UI
+            Analisi Funzionale: Functional Analysis
+            Workflow Operations: Operations Workflow
+            Workflow Maintenance: Maintenance Workflow
+            Workflow Training: Training Workflow
+            Casi d'Uso: Use Cases
+            Roadmap di Adozione: Adoption Roadmap
+            Analisi Economica: Economic Analysis
+            TCO: TCO
+            OEPV: OEPV
+            Value Driver: Value Drivers
+            Sicurezza & Governance: Security & Governance
+            STRIDE Threat Model: STRIDE Threat Model
+            OWASP LLM: OWASP LLM
+            ADR: ADR
+            Trasformazione: Transformation
       reconfigure_material: true
 
 markdown_extensions:
@@ -175,6 +189,24 @@ nav:
     - Supply Chain:
       - Supply Cluster: agents/supply/supply-cluster.md
       - Mantis Synthetic Dataset: agents/supply/mantis-synthetic-dataset.md
+  - Analisi Funzionale:
+    - Indice: functional-analysis/index.md
+    - Workflow Operations: functional-analysis/operations-workflow.md
+    - Workflow Maintenance: functional-analysis/maintenance-workflow.md
+    - Workflow Training: functional-analysis/training-workflow.md
+  - Casi d'Uso: use-cases/index.md
+  - Roadmap di Adozione: adoption-roadmap/index.md
+  - Analisi Economica:
+    - Panoramica: economic-analysis/index.md
+    - TCO: economic-analysis/tco.md
+    - OEPV: economic-analysis/oepv.md
+    - Value Driver: economic-analysis/value-drivers.md
+  - Sicurezza & Governance:
+    - Panoramica: security/index.md
+    - STRIDE Threat Model: security/stride-threat-model.md
+    - OWASP LLM: security/owasp-llm.md
+  - ADR: adr/index.md
+  - Trasformazione: transformation.md
   - Interfaccia Utente:
     - Mock UI: ui-mock.md
   - Contributing: contributing/index.md
