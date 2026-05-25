@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
 Plan: 5 of 8
 Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 Plan 02b complete (9 use cases 3 orizzonti + roadmap adozione fasi/KPI/rischi, 4 file IT+EN)
+Last activity: 2026-05-25 -- Phase 12 Plan 03a complete (Security & Governance pubblicata: STRIDE 6x3 + OWASP LLM Top-10 + AI explainability HITL/audit/recursion_limit, 6 file IT+EN; DOC-11 chiuso)
 
 Progress: [██████████] 100%
 
@@ -44,7 +44,7 @@ Next command: `/gsd-execute-phase 1`
 
 **Velocity:**
 
-- Total plans completed: 70
+- Total plans completed: 71
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -189,6 +189,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T09:05:00Z
-Stopped at: Phase 12 Plan 02a completed
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-02b-SUMMARY.md
+Last session: 2026-05-25T09:20:00Z
+Stopped at: Phase 12 Plan 03a completed
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-03a-SUMMARY.md

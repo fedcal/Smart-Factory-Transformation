@@ -165,7 +165,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **DOC-08**: Sezione **Mock UI / User Journey** con screenshot e flow diagram per ogni persona
 - [ ] **DOC-09**: Sezione **Adoption Roadmap** con fasi, KPI, rischi, mitigazioni
 - [ ] **DOC-10**: Sezione **Economic Analysis**: OEPV simulato, TCO 3 anni, value driver, cost breakdown
-- [ ] **DOC-11**: Sezione **Security & Governance**: threat model, mitigations, AI explainability
+- [x] **DOC-11**: Sezione **Security & Governance**: threat model, mitigations, AI explainability
 - [ ] **DOC-12**: Sezione **Assumption Register**: assunzioni esplicite su data quality, simulazione, limiti
 - [ ] **DOC-13**: ADR (Architecture Decision Records) tracciate in `docs/adr/`
 - [ ] **DOC-14**: README progetto con quick start, struttura, contributing guide
@@ -360,7 +360,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | DOC-08 | Phase 12 | Pending |
 | DOC-09 | Phase 12 | Pending |
 | DOC-10 | Phase 12 | Pending |
-| DOC-11 | Phase 12 | Pending |
+| DOC-11 | Phase 12 | Complete |
 | DOC-13 | Phase 12 | Pending |
 | DOC-14 | Phase 12 | Pending |
 | DOC-15 | Phase 12 | Pending |
