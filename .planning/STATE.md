@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 12 Plan 03b finalized
-last_updated: "2026-05-25T11:00:00Z"
-last_activity: 2026-05-25 -- Phase 12 Plan 03b finalized (5 ADR IT+EN + README + CONTRIBUTING; CODE_OF_CONDUCT deferred su richiesta utente, DOC-16 parziale)
+stopped_at: Phase 12 Plan 04 finalized — proceeding to execute 12-05
+last_updated: "2026-05-25T07:46:16.295Z"
+last_activity: 2026-05-25
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 122
-  completed_plans: 121
-  percent: 99
+  completed_plans: 124
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 5 of 8 complete (12-00, 12-01, 12-02a, 12-02b, 12-03a, 12-03b done; next: 12-04)
-Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 Plan 03b finalizzato (5 ADR tracciate IT+EN + index + nav; README + CONTRIBUTING root; DOC-13/DOC-14 chiusi, DOC-16 parziale — CODE_OF_CONDUCT deferred su richiesta utente)
+Plan: 2 of 8
+Status: Ready to execute
+Last activity: 2026-05-25
 
-Progress: [████████░░] ~83% (6/8 plan Fase 12)
+Progress: [██████████] 100%
 
 ### Phase 1 plans (waves — DAG-computed)
 
@@ -104,6 +104,7 @@ Next command: `/gsd-execute-phase 1`
 | Phase 11 P03 | 25min | 3 tasks | 10 files |
 | Phase 11 P05 | 25min | 3 tasks | 6 files |
 | Phase 11 P04 | 7min | 2 tasks | 5 files |
+| Phase 12 P04 | 26min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -169,6 +170,9 @@ Recent decisions affecting current work:
 - [Phase 11-04]: Dashboard p50/p95/p99 usano ingest_latency_seconds_bucket (unico histogram dev disponibile); BudgetSnapshot metric wiring via Pushgateway deferred a 11-05; factory KPIs OEE/MTTR/MTBF richiedono Pushgateway o HTTP datasource (TimescaleDB non interrogabile direttamente via PromQL)
 - [Phase 11-05]: AR-02/AR-03 (SSE token/localStorage) rimangono dev-mode; HttpOnly cookie deferred post-v1.0; LANGFUSE_ENCRYPTION_KEY=0000... rimpiazzato con placeholder testuale per prevenire falsi positivi secret scanner; Redis rate-limit documentato ma non implementato (AR-07 documentation-only)
 - [Phase 12-02a]: C4 diagrams use Mermaid C4Context/C4Container/C4Component natively via pymdownx.superfences; SCM cluster deferred to Economic Analysis section (cost/value output, not operational); nav_translations for C4 labels are identity IT=EN
+- [Phase ?]: SC-4: transformation.md uses neutral competition-track wording — never the brand name
+- [Phase ?]: SC-5: 6 placeholder PNGs git-removed; zero binary images under docs/docs/
+- [Phase ?]: DOC-18: OEPV/STRIDE/TCO/RCA terms added to IT+EN glossary (new Economico/Gara section)
 
 ### Pending Todos
 
@@ -189,6 +193,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-25T11:00:00Z
-Stopped at: Phase 12 Plan 03b finalized — proceeding to execute 12-04
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-03b-SUMMARY.md
+Last session: 2026-05-25T07:46:16.284Z
+Stopped at: Phase 12 Plan 04 finalized — proceeding to execute 12-05
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-04-SUMMARY.md

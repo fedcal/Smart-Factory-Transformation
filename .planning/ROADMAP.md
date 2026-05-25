@@ -278,7 +278,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 12-02b-PLAN.md — Prioritized Use Cases + Adoption Roadmap (DOC-07, DOC-09, DEL-03, DEL-05)
   - [x] 12-03a-PLAN.md — Security & Governance section (STRIDE + OWASP LLM + AI explainability) (DOC-11)
   - [x] 12-03b-PLAN.md — ADRs + README + CONTRIBUTING (DOC-13, DOC-14; DOC-16 parziale — CODE_OF_CONDUCT deferred)
-  - [ ] 12-04-PLAN.md — ui-mock rewritten as Mermaid + screenshot PNGs removed + transformation (no brand) + glossary (DOC-08, DOC-17, DOC-18, DEL-04)
+  - [x] 12-04-PLAN.md — ui-mock rewritten as Mermaid + screenshot PNGs removed + transformation (no brand) + glossary (DOC-08, DOC-17, DOC-18, DEL-04)
   - [ ] 12-05-PLAN.md — Brand-scrub + SC-5 CI gate + mike versioning + final strict build + SC-3 review (DEL-08, DOC-02, DOC-03)
 
 ## Progress
@@ -299,4 +299,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 13/13 | Complete    | 2026-05-24 |
 | 11. Observability, Evaluation & Security Hardening | 6/6 | Complete    | 2026-05-25 |
-| 12. Documentation, Economic Model & Competition Deliverables | 5/8 | In Progress | - |
+| 12. Documentation, Economic Model & Competition Deliverables | 7/8 | In Progress|  |
