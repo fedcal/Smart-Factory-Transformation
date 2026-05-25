@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 12 Plan 02b completed
-last_updated: "2026-05-25T10:30:00Z"
-last_activity: 2026-05-25 -- Phase 12 Plan 02b executed (9 use cases 3 orizzonti + roadmap adozione fasi/KPI/rischi, 4 file IT+EN)
+stopped_at: Phase 12 Plan 03b finalized
+last_updated: "2026-05-25T11:00:00Z"
+last_activity: 2026-05-25 -- Phase 12 Plan 03b finalized (5 ADR IT+EN + README + CONTRIBUTING; CODE_OF_CONDUCT deferred su richiesta utente, DOC-16 parziale)
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 122
-  completed_plans: 119
-  percent: 97
+  completed_plans: 121
+  percent: 99
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 12 (documentation-economic-model-competition-deliverables) — EXECUTING
-Plan: 5 of 8
+Plan: 5 of 8 complete (12-00, 12-01, 12-02a, 12-02b, 12-03a, 12-03b done; next: 12-04)
 Status: Executing Phase 12
-Last activity: 2026-05-25 -- Phase 12 Plan 03a complete (Security & Governance pubblicata: STRIDE 6x3 + OWASP LLM Top-10 + AI explainability HITL/audit/recursion_limit, 6 file IT+EN; DOC-11 chiuso)
+Last activity: 2026-05-25 -- Phase 12 Plan 03b finalizzato (5 ADR tracciate IT+EN + index + nav; README + CONTRIBUTING root; DOC-13/DOC-14 chiusi, DOC-16 parziale — CODE_OF_CONDUCT deferred su richiesta utente)
 
-Progress: [██████████] 100%
+Progress: [████████░░] ~83% (6/8 plan Fase 12)
 
 ### Phase 1 plans (waves — DAG-computed)
 
@@ -185,10 +185,10 @@ None yet.
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
-| *(none)* | | | |
+| Docs/Community | CODE_OF_CONDUCT.md (DOC-16) — README/CONTRIBUTING linkano già al file; creare per chiudere DOC-16 o rimuovere i link | Deferred (richiesta utente) | Phase 12-03b (2026-05-25) |
 
 ## Session Continuity
 
-Last session: 2026-05-25T09:20:00Z
-Stopped at: Phase 12 Plan 03a completed
-Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-03a-SUMMARY.md
+Last session: 2026-05-25T11:00:00Z
+Stopped at: Phase 12 Plan 03b finalized — proceeding to execute 12-04
+Resume file: .planning/phases/12-documentation-economic-model-competition-deliverables/12-03b-SUMMARY.md
