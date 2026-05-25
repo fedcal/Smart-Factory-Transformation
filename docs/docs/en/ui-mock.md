@@ -11,7 +11,6 @@ tags:
   - ui
   - mock-ui
   - i18n
-  - screenshot
   - UI-09
 ---
 
@@ -19,20 +18,21 @@ tags:
 
 ## Overview
 
-This page documents the key screens of the **Smart Factory Transformation** Angular 19 SSR
-application, captured in both Italian (default) and English.
+This page documents the main user flows of the **Smart Factory Transformation** Angular 19 SSR
+application via Mermaid diagrams by persona and Angular SSR component references.
 The UI is designed for use on industrial screens and tablets on the factory floor:
 touch targets ≥ 64px, WCAG AA contrast, dark theme by default.
 
-!!! info "Auto-generated screenshots"
-    The images on this page are generated automatically by the Playwright spec
-    `apps/factory-ui-e2e/src/screenshots.spec.ts` during CI. To regenerate manually:
-    
+!!! note "On-demand screenshots"
+    UI screenshots are not included in the static documentation.
+    They can be regenerated on-demand from the Playwright spec
+    `apps/factory-ui-e2e/src/screenshots.spec.ts` with:
+
     ```bash
     # Start the full stack
     docker compose up -d
-    
-    # Generate screenshots
+
+    # Generate screenshots (outside docs/)
     SFT_SKIP_SCREENSHOTS=false nx e2e ui-factory-e2e --spec=screenshots.spec.ts
     ```
 
@@ -40,7 +40,8 @@ touch targets ≥ 64px, WCAG AA contrast, dark theme by default.
 
 ## Login Screen
 
-**Route:** `/auth/login`  
+**Route:** `/auth/login`
+**Component:** `LoginPage`
 **Requirement:** UI-01 (design system), UI-09 (mock-UI docs)
 
 The login page is vertically centred on a `--sft-surface` background (`#121418`).
@@ -51,13 +52,20 @@ The card has max-width 400px and contains:
 - "Sign In" CTA (mat-flat-button, 64px height, full width)
 - Quick chip selectors for the 5 seed personas (dev-mode only)
 
-=== "Italiano (IT)"
+### Login Flow — Operator
 
-    ![Login IT](../assets/screenshots/it/login.png)
-
-=== "English (EN)"
-
-    ![Login EN](../assets/screenshots/en/login.png)
+```mermaid
+flowchart TD
+    A([User opens /auth/login]) --> B[Login form<br/>email + password]
+    B --> C{Valid credentials?}
+    C -- No --> D[Error: 'Invalid credentials.<br/>Check email and password.']
+    D --> B
+    C -- Yes --> E{Dev-mode?}
+    E -- Yes --> F[Quick persona chips:<br/>'Sign in as Operator'<br/>'Sign in as Manager' ...]
+    E -- No --> G[Redirect to role dashboard<br/>from JWT claims]
+    F --> G
+    G --> H([Persona dashboard])
+```
 
 | IT Copy | EN Copy |
 |---------|---------|
@@ -67,12 +75,15 @@ The card has max-width 400px and contains:
 | "Credenziali non valide. Controlla email e password." | "Invalid credentials. Check email and password." |
 | "Accedi come [Ruolo]" | "Sign in as [Role]" |
 
+**Relevant data-testids:** `email-input`, `password-input`, `login-btn`, `persona-chip-*`
+
 ---
 
 ## Operator Dashboard — Approval Queue
 
-**Route:** `/operator`  
-**Roles:** `operator`  
+**Route:** `/operator`
+**Component:** `OperatorComponent` → `ApprovalQueueFeed` + `AlertFeed`
+**Roles:** `operator`
 **Requirements:** UI-03 (approval queue), UI-09
 
 The operator dashboard shows the **HITL approval queue** as the primary focal point
@@ -85,25 +96,26 @@ Each `ApprovalCard` includes:
 - Motivation textarea (min 10 chars, mandatory)
 - Action bar: "Reject" (destructive) + "Approve" (accent)
 
-=== "Italiano (IT)"
+### Operator Flow — HITL Approval / Rejection
 
-    ![Operator IT](../assets/screenshots/it/operator-approval.png)
+```mermaid
+flowchart TD
+    START([Operator opens /operator]) --> QUEUE[ApprovalQueueFeed<br/>red badge with pending count]
+    QUEUE --> CARD[First ApprovalCard highlighted<br/>agent • action type • SLA countdown]
+    CARD --> EP[EvidencePanel open<br/>agent input • tool calls • RAG citations • confidence]
+    EP --> MOT{Operator enters motivation}
+    MOT -- less than 10 chars --> VAL[Validation: 'The reason must be<br/>at least 10 characters.']
+    VAL --> MOT
+    MOT -- 10+ chars OK --> ACT{Action}
+    ACT -- Approve --> APP[POST /v1/approvals/id/decide<br/>decision=APPROVED]
+    ACT -- Reject --> REJ[POST /v1/approvals/id/decide<br/>decision=REJECTED]
+    APP --> SSE[SSE approval_resolved<br/>Card → green 'Approved']
+    REJ --> SSE2[SSE approval_resolved<br/>Card → red 'Rejected']
+    SSE --> NEXT[Next card in queue]
+    SSE2 --> NEXT
+```
 
-=== "English (EN)"
-
-    ![Operator EN](../assets/screenshots/en/operator-approval.png)
-
-| IT Copy | EN Copy |
-|---------|---------|
-| "Approvazioni Pendenti" | "Pending Approvals" |
-| "Nessuna approvazione pendente" | "No pending approvals" |
-| "Approva azione" | "Approve action" |
-| "Rifiuta" | "Reject" |
-| "Motivazione" | "Reason" |
-| "Inserisci la motivazione (min. 10 caratteri)..." | "Enter your reason (min. 10 characters)..." |
-| "La motivazione deve contenere almeno 10 caratteri." | "The reason must be at least 10 characters." |
-
-### HITL Interaction Flow
+### Full HITL Sequence — Agent → UI → Operator
 
 ```mermaid
 sequenceDiagram
@@ -124,16 +136,76 @@ sequenceDiagram
     UI->>O: Card → "Approved" (green)
 ```
 
+| IT Copy | EN Copy |
+|---------|---------|
+| "Approvazioni Pendenti" | "Pending Approvals" |
+| "Nessuna approvazione pendente" | "No pending approvals" |
+| "Approva azione" | "Approve action" |
+| "Rifiuta" | "Reject" |
+| "Motivazione" | "Reason" |
+| "Inserisci la motivazione (min. 10 caratteri)..." | "Enter your reason (min. 10 characters)..." |
+| "La motivazione deve contenere almeno 10 caratteri." | "The reason must be at least 10 characters." |
+| "2 min rimasti" | "2 min remaining" |
+| "Limite di 12 alert/ora raggiunto. Nuovi alert sospesi temporaneamente." | "12 alerts/hour limit reached. New alerts temporarily suspended." |
+
+**Relevant data-testids:** `approval-queue-feed`, `approval-card`, `evidence-panel`,
+`motivation-textarea`, `approve-btn`, `reject-btn`, `alert-feed`
+
 ---
 
-## Manager Dashboard — KPI Control Room
+## Technician Dashboard — RCA / Maintenance View
 
-**Route:** `/manager`  
-**Roles:** `shift-supervisor`, `manager`  
+**Route:** `/technician`
+**Component:** `TechnicianComponent`
+**Roles:** `technician`, `maintenance-engineer`
+**Requirements:** UI-02, UI-09
+
+The technician dashboard is the entry point for Root Cause Analysis and maintenance
+intervention flows suggested by the `RCASpecialist` and `PredictiveMaintenance` agents.
+
+### Technician Flow — RCA and Maintenance
+
+```mermaid
+flowchart TD
+    START([Technician opens /technician]) --> ALERTS[AlertFeed: anomalies detected<br/>by AnomalyDetector/PredictiveMaintenance]
+    ALERTS --> SEL{Select alert}
+    SEL --> RCA[RCA view:<br/>root cause suggested by agent<br/>+ sensor evidence + confidence]
+    RCA --> DEC{Technician evaluates}
+    DEC -- Approves intervention plan --> HITL[HITL approval:<br/>POST /v1/approvals/id/decide APPROVED]
+    DEC -- Modifies plan --> MOD[Enters modification reason<br/>+ updated parameters]
+    MOD --> HITL
+    DEC -- Escalation --> ESC[Escalate to shift-supervisor<br/>tier 2 HITL]
+    HITL --> WO[Work order created<br/>in MES system]
+    WO --> DONE([Intervention scheduled])
+```
+
+---
+
+## Manager / CIO Dashboard — KPI Control Room
+
+**Route:** `/manager` (CIO Elena also redirected here)
+**Component:** `ManagerComponent` → `KpiGrid` + `ChartsRow`
+**Roles:** `shift-supervisor`, `manager`, `cio`
 **Requirements:** UI-04 (KPI dashboard), UI-09
 
 The manager dashboard shows the **KPI grid** in real time via SSE.
 CSS Grid layout: 3 columns on desktop (≥1024px), 2 on tablet, 1 on mobile.
+
+### Manager Flow — Real-Time KPI Monitoring
+
+```mermaid
+flowchart TD
+    START([Manager opens /manager]) --> SSE_CONN[SseService connects to<br/>/v1/stream/kpi + /v1/stream/approvals]
+    SSE_CONN --> KPI[KpiGrid: 6 live tiles<br/>OEE • MTTR • MTBF • Scrap Rate • Throughput • Downtime]
+    KPI --> THRES{Threshold breached?}
+    THRES -- No --> KPI
+    THRES -- Yes --> TILE_RED[Tile turns red<br/>Governor alert if >80% AUTO]
+    TILE_RED --> REVIEW{Manager reviews}
+    REVIEW -- Drill-down --> CHART[ChartsRow: trend charts<br/>LineChart OEE • BarChart downtime]
+    REVIEW -- Corrective action --> HITL[Manual HITL override<br/>via ApprovalQueue]
+    CHART --> KPI
+    HITL --> KPI
+```
 
 The 6 monitored KPIs with thresholds:
 
@@ -146,14 +218,6 @@ The 6 monitored KPIs with thresholds:
 | Throughput | kg/h | ≥ baseline | 90–99% | < 90% |
 | Downtime | % | ≤ 5% | 5–10% | > 10% |
 
-=== "Italiano (IT)"
-
-    ![Manager IT](../assets/screenshots/it/manager-dashboard.png)
-
-=== "English (EN)"
-
-    ![Manager EN](../assets/screenshots/en/manager-dashboard.png)
-
 | IT Copy | EN Copy |
 |---------|---------|
 | "Sala Controllo" | "Control Room" |
@@ -161,6 +225,9 @@ The 6 monitored KPIs with thresholds:
 | "Non connesso" | "Disconnected" |
 | "Dati non disponibili. Controlla la connessione al server." | "Data unavailable. Check server connection." |
 | "Attenzione: più dell'80% delle azioni recenti è stato auto-approvato." | "Warning: more than 80% of recent actions were auto-approved." |
+
+**Relevant data-testids:** `kpi-grid`, `kpi-tile-oee`, `kpi-tile-mttr`, `charts-row`,
+`sse-indicator`, `governor-alert`
 
 ### Real-Time KPI via SSE
 
@@ -179,7 +246,7 @@ The `SseService` manages the Server-Sent Events connection with automatic reconn
 
 ## Language Toggle (IT / EN)
 
-**Position:** TopBar, always visible.  
+**Position:** TopBar, always visible.
 **Requirement:** UI-07 (i18n runtime switch)
 
 The language toggle uses `@jsverse/transloco` to switch language at runtime without
