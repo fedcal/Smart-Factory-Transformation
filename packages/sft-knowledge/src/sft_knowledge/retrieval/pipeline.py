@@ -345,9 +345,12 @@ class RetrievalPipeline:
         # If audit_writer is configured and any returned hit has acl_level=='restricted',
         # write a RESTRICTED_DOC_ACCESS audit row. The query text is never stored in
         # clear — only query_hash (SHA-256) to avoid information leakage (T-11-03-04).
+        # WR-03: l'audit è eseguito sui chunk top-k effettivamente restituiti all'utente,
+        # non su fused_hits pre-top-k. Auditare il prefetch completo produceva falsi positivi
+        # su chunk restricted mai visti dall'utente (chunk in posizione 11-20 non restituiti).
         if self._audit_writer is not None:
             await self._write_restricted_audit(
-                fused_hits=fused_hits,
+                top_k_hits=[hit for hit, _ in top_k],
                 query=query,
                 principal=principal or {},
                 retrieved_at=retrieved_at,
@@ -357,7 +360,7 @@ class RetrievalPipeline:
 
     async def _write_restricted_audit(
         self,
-        fused_hits: list[Any],
+        top_k_hits: list[Any],
         query: str,
         principal: dict[str, Any],
         retrieved_at: datetime,
@@ -368,14 +371,16 @@ class RetrievalPipeline:
         Il query hash SHA-256 è incluso nei details (T-11-03-04 mitigation).
 
         Args:
-            fused_hits: lista di ScoredPoint da Qdrant (pre-top-k, per catturare tutti i restricted).
+            top_k_hits: lista di ScoredPoint da Qdrant effettivamente restituiti all'utente
+                (post-rerank, post-top-k slicing). WR-03: NON includere il prefetch completo
+                pre-top-k per evitare falsi positivi su chunk mai visti dall'utente.
             query: testo della query originale (non incluso in chiaro nell'audit).
             principal: dict JWT payload (sub, role) del chiamante.
             retrieved_at: timestamp UTC del retrieval.
         """
-        # Cerca chunk restricted nella lista totale di hits (non solo top-k)
+        # Cerca chunk restricted SOLO tra quelli effettivamente restituiti all'utente (top-k)
         restricted_hits = [
-            h for h in fused_hits
+            h for h in top_k_hits
             if (h.payload or {}).get("acl_level") == "restricted"
         ]
 
