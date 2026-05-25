@@ -1,0 +1,23 @@
+# Parametri SC-2 per il modello economico TCO/OEPV — Phase 12
+# Valori definitivi completati in Wave 1 (12-01).
+
+[oepv]
+base_d_asta_eur        = 108000.0
+weight_technical       = 0.70
+weight_economic        = 0.30
+pe_max                 = 30.0
+lambda_curve           = 3.0
+ribasso_ref_pct        = 20.0
+anomaly_threshold_pct  = 20.0
+ribasso_pct            = 12.5
+pt_technical           = 68.0
+
+[tco]
+gpu_cost_eur           = 15000.0   # placeholder — Wave 1 finalizza
+gpu_amort_years        = 3
+energy_kwh_annual      = 8760.0    # placeholder — Wave 1 finalizza
+energy_eur_kwh         = 0.25
+fte_annual_cost_eur    = 45000.0   # placeholder — Wave 1 finalizza
+fte_partial            = 1.0
+change_mgmt_eur        = 10000.0   # placeholder — Wave 1 finalizza
+change_mgmt_years      = 2
