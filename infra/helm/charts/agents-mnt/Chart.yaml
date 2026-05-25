@@ -8,9 +8,9 @@ keywords:
   - smart-factory
   - agents
   - maintenance
-home: https://github.com/fedcal/smart-factory-transformation
+home: https://github.com/smart-factory-transformation/smart-factory-transformation
 sources:
-  - https://github.com/fedcal/smart-factory-transformation
+  - https://github.com/smart-factory-transformation/smart-factory-transformation
 maintainers:
-  - name: fedcal
-    email: fedcal01@gmail.com
+  - name: Smart Factory Transformation Team
+    email: team@smart-factory-transformation.example

@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/fedcal/sft-api-gateway
+  repository: ghcr.io/smart-factory-transformation/sft-api-gateway
   pullPolicy: IfNotPresent
   # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
   tag: ""

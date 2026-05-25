@@ -10,7 +10,7 @@ tags:
 
 # Glossary
 
-Canonical source: [`packages/sft-domain/src/sft_domain/glossary/en.yaml`](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/packages/sft-domain/src/sft_domain/glossary/en.yaml)
+Canonical source: [`packages/sft-domain/src/sft_domain/glossary/en.yaml`](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/packages/sft-domain/src/sft_domain/glossary/en.yaml)
 (D-29 dual-channel: structured YAML + MkDocs render).
 
 > **Note:** This page is generated automatically by `scripts/generate-glossary-pages.py`.

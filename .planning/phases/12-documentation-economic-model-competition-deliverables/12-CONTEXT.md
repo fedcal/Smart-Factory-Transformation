@@ -68,6 +68,12 @@ All diagrams Mermaid/D2 (text); user-journey as Mermaid; UI screenshots EXCLUDED
 - Prior phase SUMMARY/SECURITY/VERIFICATION files — source of truth for "what is actually implemented" (SC-3 no-aspirational-content traceability).
 </canonical_refs>
 
+<user_addendum>
+## User Addendum (2026-05-25) — LOCKED
+1. **Local navigability:** the documentation site MUST be navigable locally — `docs/mkdocs.yml` sets `use_directory_urls: false` so the built `site/` is browsable directly via `file://` (no web server) and `mkdocs serve` works offline. The 12-05 final-build gate must assert `use_directory_urls: false` is present and that the built site opens without a server.
+2. **No personal references:** every reference to the maintainer's personal domain/handle/email has been scrubbed — `federicocalo.dev` (never present), `fedcal` (GitHub handle in mkdocs site_url/repo_url/links + docs content + helm charts + package.json), and the personal email `fedcal01@gmail.com` are ALL replaced with neutral org placeholders (`smart-factory-transformation`, `team@smart-factory-transformation.example`). The 12-05 brand-scrub CI gate MUST extend the zero-occurrence check to `fedcal` and `federicocalo` (case-insensitive) over tracked non-`.planning` files, alongside the `accenture` check, all blocking.
+</user_addendum>
+
 <deferred>
 ## Deferred Ideas
 - Custom domain for GitHub Pages (DOC-03 "optional") — document, optional.

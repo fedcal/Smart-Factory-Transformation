@@ -25,5 +25,5 @@ arriverà in Fase 6-9 (D-03) quando i singoli agenti saranno deployati come app 
 | Parametro | Default | Descrizione |
 |-----------|---------|-------------|
 | `replicaCount` | `1` | Numero di repliche |
-| `image.repository` | `ghcr.io/fedcal/sft-agents-ops` | Repository immagine |
+| `image.repository` | `ghcr.io/smart-factory-transformation/sft-agents-ops` | Repository immagine |
 | `networkPolicy.enabled` | `true` | Abilita NetworkPolicy |

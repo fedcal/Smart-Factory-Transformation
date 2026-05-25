@@ -48,4 +48,4 @@ The project develops across successive phases:
 
 ---
 
-*Project: [fedcal/Smart-Factory-Transformation](https://github.com/fedcal/Smart-Factory-Transformation) — License: Apache 2.0*
+*Project: [smart-factory-transformation/smart-factory-transformation](https://github.com/smart-factory-transformation/smart-factory-transformation) — License: Apache 2.0*

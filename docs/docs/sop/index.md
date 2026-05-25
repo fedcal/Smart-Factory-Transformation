@@ -31,7 +31,7 @@ simulators/synthetic-corpus/
     └── quality_grading/
 ```
 
-Per navigare il corpus direttamente: [simulators/synthetic-corpus/ su GitHub](https://github.com/fedcal/Smart-Factory-Transformation/tree/main/simulators/synthetic-corpus).
+Per navigare il corpus direttamente: [simulators/synthetic-corpus/ su GitHub](https://github.com/smart-factory-transformation/smart-factory-transformation/tree/main/simulators/synthetic-corpus).
 
 !!! note "Mantis context"
     Il corpus è calibrato su uno stabilimento tessile italiano di medie dimensioni (riferimento Mantis Textile Group): produzione di tessuti per abbigliamento outdoor, mix filati cotone/lana/lino, due turni produttivi. Le SOP usano unità di misura europee e terminologia di settore italiana/inglese conforme agli standard UNI EN ISO.
@@ -52,7 +52,7 @@ Questo schema segue il contratto ibrido **D-25** (LLM draft + human review): Cla
 
 ## Schema frontmatter
 
-Ogni SOP segue lo schema definito in [`packages/sft-domain/src/sft_domain/schemas/sop.schema.json`](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/packages/sft-domain/src/sft_domain/schemas/sop.schema.json).
+Ogni SOP segue lo schema definito in [`packages/sft-domain/src/sft_domain/schemas/sop.schema.json`](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/packages/sft-domain/src/sft_domain/schemas/sop.schema.json).
 
 Campi obbligatori:
 
@@ -76,8 +76,8 @@ La validazione è eseguita in CI da `python3 scripts/validate-corpus-frontmatter
 
 Alcune SOP rappresentative del corpus:
 
-- **SOP-LOOM-001** — [Diagnosi rottura trama (IT)](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/it/loom/SOP-LOOM-001-troubleshoot-broken-end-it.md) / [EN](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/en/loom/SOP-LOOM-001-troubleshoot-broken-end-en.md)
-- **SOP-DYE-001** — [Preparazione bagno di tintura (IT)](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/it/dyeing/SOP-DYE-001-bath-preparation-it.md) / [EN](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/en/dyeing/SOP-DYE-001-bath-preparation-en.md)
-- **SOP-SPN-001** — [Calibrazione fusi (IT)](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/it/spinning/SOP-SPN-001-spindle-calibration-it.md) / [EN](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/en/spinning/SOP-SPN-001-spindle-calibration-en.md)
-- **SOP-QLT-001** — [Ispezione 4-point grading (IT)](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/it/quality_grading/SOP-QLT-001-four-point-grading-it.md) / [EN](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/en/quality_grading/SOP-QLT-001-four-point-grading-en.md)
-- **SOP-LOOM-002** — [Deriva tensione ordito (IT)](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/it/loom/SOP-LOOM-002-warp-tension-drift-it.md) / [EN](https://github.com/fedcal/Smart-Factory-Transformation/blob/main/simulators/synthetic-corpus/en/loom/SOP-LOOM-002-warp-tension-drift-en.md)
+- **SOP-LOOM-001** — [Diagnosi rottura trama (IT)](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/it/loom/SOP-LOOM-001-troubleshoot-broken-end-it.md) / [EN](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/en/loom/SOP-LOOM-001-troubleshoot-broken-end-en.md)
+- **SOP-DYE-001** — [Preparazione bagno di tintura (IT)](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/it/dyeing/SOP-DYE-001-bath-preparation-it.md) / [EN](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/en/dyeing/SOP-DYE-001-bath-preparation-en.md)
+- **SOP-SPN-001** — [Calibrazione fusi (IT)](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/it/spinning/SOP-SPN-001-spindle-calibration-it.md) / [EN](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/en/spinning/SOP-SPN-001-spindle-calibration-en.md)
+- **SOP-QLT-001** — [Ispezione 4-point grading (IT)](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/it/quality_grading/SOP-QLT-001-four-point-grading-it.md) / [EN](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/en/quality_grading/SOP-QLT-001-four-point-grading-en.md)
+- **SOP-LOOM-002** — [Deriva tensione ordito (IT)](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/it/loom/SOP-LOOM-002-warp-tension-drift-it.md) / [EN](https://github.com/smart-factory-transformation/smart-factory-transformation/blob/main/simulators/synthetic-corpus/en/loom/SOP-LOOM-002-warp-tension-drift-en.md)

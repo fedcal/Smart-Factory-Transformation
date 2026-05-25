@@ -85,7 +85,7 @@ gh api -X PUT repos/<owner>/<repo>/branches/main/protection \
 EOF
 ```
 
-Sostituire `<owner>` e `<repo>` con i valori reali (es. `fedcal` e `Smart-Factory-Transformation`).
+Sostituire `<owner>` e `<repo>` con i valori reali (es. `your-org` e `Smart-Factory-Transformation`).
 
 **Nota:** `enforce_admins: true` applica le regole anche agli admin. Se serve un canale
 di emergenza per hotfix critico, si puo' impostare a `false` con delibera esplicita.

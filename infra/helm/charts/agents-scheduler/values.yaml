@@ -10,7 +10,7 @@
 replicas: 1
 
 image:
-  repository: ghcr.io/fedcal/sft-agents-scheduler
+  repository: ghcr.io/smart-factory-transformation/sft-agents-scheduler
   pullPolicy: IfNotPresent
   # Empty tag = Chart.yaml appVersion. In production set an explicit tag (no latest).
   tag: ""

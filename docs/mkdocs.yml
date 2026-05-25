@@ -1,12 +1,15 @@
 site_name: Smart Factory Transformation
 site_description: Piattaforma opensource agentica per la trasformazione digitale di un'industria tessile manifatturiera
-site_url: https://fedcal.github.io/Smart-Factory-Transformation/
-repo_url: https://github.com/fedcal/Smart-Factory-Transformation
-repo_name: fedcal/Smart-Factory-Transformation
+site_url: ""
+repo_url: https://github.com/smart-factory-transformation/smart-factory-transformation
+repo_name: smart-factory-transformation
 edit_uri: edit/main/docs/docs/
 
 docs_dir: docs
 site_dir: site
+# Local navigability: relative URLs so the built site is browsable directly from
+# the filesystem (file://) without a web server, and `mkdocs serve` works offline.
+use_directory_urls: false
 
 theme:
   name: material
@@ -120,7 +123,7 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/fedcal/Smart-Factory-Transformation
+      link: https://github.com/smart-factory-transformation/smart-factory-transformation
 
 nav:
   - Home: index.md

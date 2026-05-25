@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/fedcal/sft-ot-bridge
+  repository: ghcr.io/smart-factory-transformation/sft-ot-bridge
   pullPolicy: IfNotPresent
   # Tag vuoto = usa Chart.yaml appVersion. In produzione impostare tag esplicito (no latest).
   tag: ""

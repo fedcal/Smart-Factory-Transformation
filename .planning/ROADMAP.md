@@ -271,7 +271,15 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   4. A CI grep scan finds zero occurrences of "Accenture" or the original brand name across all files in the repository, including generated docs
   5. All diagrams in `docs/` are Mermaid or D2 source files committed as text; no binary diagram images are present in the repository
 **UI hint**: yes
-**Plans**: TBD
+**Plans**: 8 plans
+  - [ ] 12-00-PLAN.md — Wave 0: deps (mike) + nav expansion + stubs IT/EN + vendored oepv + strict build green (DOC-01, DOC-03, DOC-15)
+  - [ ] 12-01-PLAN.md — Reproducible economic model: TCO 3yr + OEPV reuse + value drivers + risk register (ECO-01/03/04/06/07/08, DOC-10, DEL-06)
+  - [ ] 12-02a-PLAN.md — Target Architecture C4 (Mermaid) + end-to-end OPS/MNT/TRN workflows (DOC-04, DOC-06, DEL-01, DEL-02)
+  - [ ] 12-02b-PLAN.md — Prioritized Use Cases + Adoption Roadmap (DOC-07, DOC-09, DEL-03, DEL-05)
+  - [ ] 12-03a-PLAN.md — Security & Governance section (STRIDE + OWASP LLM + AI explainability) (DOC-11)
+  - [ ] 12-03b-PLAN.md — ADRs + README + CONTRIBUTING + CODE_OF_CONDUCT (DOC-13, DOC-14, DOC-16)
+  - [ ] 12-04-PLAN.md — ui-mock rewritten as Mermaid + screenshot PNGs removed + transformation (no brand) + glossary (DOC-08, DOC-17, DOC-18, DEL-04)
+  - [ ] 12-05-PLAN.md — Brand-scrub + SC-5 CI gate + mike versioning + final strict build + SC-3 review (DEL-08, DOC-02, DOC-03)
 
 ## Progress
 

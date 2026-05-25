@@ -9,7 +9,7 @@
 ```mermaid
 graph TD
     DEV[Developer / Operatore]
-    REPO[Monorepo GitHub\nfedcal/Smart-Factory-Transformation]
+    REPO[Monorepo GitHub\nsmart-factory-transformation/smart-factory-transformation]
     CI[GitHub Actions CI\nnx affected + required checks]
 
     subgraph DEV_STACK["Stack Dev (Docker Compose)"]
