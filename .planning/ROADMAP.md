@@ -17,7 +17,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
 - [ ] **Phase 9: Agents — Supply Chain & Economics** - InventoryManager, EnergyOptimizer, CostAnalyzer, DemandForecaster with tests
 - [x] **Phase 10: Backend API & Frontend** - FastAPI gateway, SSE/WebSocket, RBAC, Angular Universal app, HITL UI, control room dashboard, i18n IT/EN, E2E tests (completed 2026-05-24)
 - [x] **Phase 11: Observability, Evaluation & Security Hardening** - OTEL across services, Langfuse traces, LGTM dashboards, RAG/agent evals in CI, STRIDE threat model, OWASP LLM mitigations (completed 2026-05-25)
-- [ ] **Phase 12: Documentation, Economic Model & Competition Deliverables** - MkDocs Material i18n, all doc sections, OEPV simulator, TCO, ribasso analysis, deliverable bundle, brand-scrub CI check
+- [x] **Phase 12: Documentation, Economic Model & Competition Deliverables** - MkDocs Material i18n, all doc sections, OEPV simulator, TCO, ribasso analysis, deliverable bundle, brand-scrub CI check (completed 2026-05-25)
 
 ## Phase Details
 
@@ -279,7 +279,7 @@ The platform is built in 12 horizontal layers, each completing one coherent tech
   - [x] 12-03a-PLAN.md — Security & Governance section (STRIDE + OWASP LLM + AI explainability) (DOC-11)
   - [x] 12-03b-PLAN.md — ADRs + README + CONTRIBUTING (DOC-13, DOC-14; DOC-16 parziale — CODE_OF_CONDUCT deferred)
   - [x] 12-04-PLAN.md — ui-mock rewritten as Mermaid + screenshot PNGs removed + transformation (no brand) + glossary (DOC-08, DOC-17, DOC-18, DEL-04)
-  - [ ] 12-05-PLAN.md — Brand-scrub + SC-5 CI gate + mike versioning + final strict build + SC-3 review (DEL-08, DOC-02, DOC-03)
+  - [x] 12-05-PLAN.md — Brand-scrub + SC-5 CI gate + mike versioning + final strict build + SC-3 review (DEL-08, DOC-02, DOC-03)
 
 ## Progress
 
@@ -299,4 +299,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 9. Agents — Supply Chain & Economics | 8/10 | In Progress|  |
 | 10. Backend API & Frontend | 13/13 | Complete    | 2026-05-24 |
 | 11. Observability, Evaluation & Security Hardening | 6/6 | Complete    | 2026-05-25 |
-| 12. Documentation, Economic Model & Competition Deliverables | 7/8 | In Progress|  |
+| 12. Documentation, Economic Model & Competition Deliverables | 8/8 | Complete   | 2026-05-25 |

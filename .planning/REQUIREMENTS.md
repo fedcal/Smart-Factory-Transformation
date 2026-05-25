@@ -156,8 +156,8 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 ### Documentation (DOC)
 
 - [ ] **DOC-01**: `docs/` con MkDocs Material e plugin i18n (IT default, EN parallelo)
-- [ ] **DOC-02**: Workflow GitHub Actions che fa build docs e deploy su branch `gh-pages`
-- [ ] **DOC-03**: GitHub Pages configurato con custom domain opzionale e versionato con `mike`
+- [x] **DOC-02**: Workflow GitHub Actions che fa build docs e deploy su branch `gh-pages`
+- [x] **DOC-03**: GitHub Pages configurato con custom domain opzionale e versionato con `mike`
 - [ ] **DOC-04**: Sezione **Target Architecture**: diagrammi C4 (context, container, component), data flow
 - [ ] **DOC-05**: Sezione **Domain Analysis**: dominio tessile manifatturiero (processi, ruoli, pain point)
 - [ ] **DOC-06**: Sezione **Functional Analysis**: end-to-end workflows Operations / Maintenance / Training
@@ -169,7 +169,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **DOC-12**: Sezione **Assumption Register**: assunzioni esplicite su data quality, simulazione, limiti
 - [ ] **DOC-13**: ADR (Architecture Decision Records) tracciate in `docs/adr/`
 - [ ] **DOC-14**: README progetto con quick start, struttura, contributing guide
-- [ ] **DOC-15**: Diagrammi Mermaid/D2 versionati come testo (no immagini binarie statiche)
+- [x] **DOC-15**: Diagrammi Mermaid/D2 versionati come testo (no immagini binarie statiche)
 - [ ] **DOC-16**: CONTRIBUTING.md, CODE_OF_CONDUCT.md, LICENSE (Apache 2.0) presenti
 - [x] **DOC-17**: Trasformazione esplicita della traccia originale documentata: cosa è stato cambiato e perché
 - [x] **DOC-18**: Glossario IT+EN dei termini tessili + agentici
@@ -194,7 +194,7 @@ Requirements del rilascio iniziale. Ogni REQ è atomico, testabile e mappato a u
 - [ ] **DEL-05**: Adoption Roadmap deliverable con KPI, rischi, mitigations
 - [ ] **DEL-06**: Economic Evaluation deliverable (OEPV completo, BA, Ri, rationale)
 - [ ] **DEL-07**: Assumption Register dichiarato (data quality, simulazione, limiti)
-- [ ] **DEL-08**: Zero riferimenti ad Accenture o brand della traccia originale (verifica automatica in CI)
+- [x] **DEL-08**: Zero riferimenti ad Accenture o brand della traccia originale (verifica automatica in CI)
 
 ## v2 Requirements
 
@@ -352,8 +352,8 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | SEC-06 | Phase 11 | Complete |
 | SEC-07 | Phase 11 | Complete |
 | DOC-01 | Phase 12 | Pending |
-| DOC-02 | Phase 12 | Pending |
-| DOC-03 | Phase 12 | Pending |
+| DOC-02 | Phase 12 | Complete |
+| DOC-03 | Phase 12 | Complete |
 | DOC-04 | Phase 12 | Pending |
 | DOC-06 | Phase 12 | Pending |
 | DOC-07 | Phase 12 | Pending |
@@ -363,7 +363,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | DOC-11 | Phase 12 | Complete |
 | DOC-13 | Phase 12 | Pending |
 | DOC-14 | Phase 12 | Pending |
-| DOC-15 | Phase 12 | Pending |
+| DOC-15 | Phase 12 | Complete |
 | DOC-16 | Phase 12 | Pending |
 | DOC-17 | Phase 12 | Complete |
 | ECO-01 | Phase 12 | Pending |
@@ -381,7 +381,7 @@ Mappatura REQ ↔ fase. Popolata dal roadmapper. Aggiornata dopo `/gsd:plan-phas
 | DEL-05 | Phase 12 | Pending |
 | DEL-06 | Phase 12 | Pending |
 | DEL-07 | Phase 12 | Pending |
-| DEL-08 | Phase 12 | Pending |
+| DEL-08 | Phase 12 | Complete |
 
 **Coverage:**
 - v1 requirements: **135 totali** (PLAT 10, CORE 10, HITL 10, IOT 10, KNW 10, OPS 6, MNT 6, TRN 5, SCM 5, UI 10, SRV 5, OBS 7, SEC 7, DOC 18, ECO 8, DEL 8)
