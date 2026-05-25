@@ -62,12 +62,15 @@ _PREFETCH_LIMIT = 20
 # ---------------------------------------------------------------------------
 
 ROLE_TO_ACL: dict[str, frozenset[str]] = {
-    "operator":   frozenset({"public"}),
-    "technician": frozenset({"public", "internal"}),
-    "supervisor": frozenset({"public", "internal"}),
-    "manager":    frozenset({"public", "internal", "restricted"}),
-    "engineer":   frozenset({"public", "internal", "restricted"}),
-    "safety":     frozenset({"public", "internal", "restricted"}),
+    "operator":        frozenset({"public"}),
+    "technician":      frozenset({"public", "internal"}),
+    "supervisor":      frozenset({"public", "internal"}),
+    "shift-supervisor": frozenset({"public", "internal"}),       # ruolo canonico JWT (alias di supervisor)
+    "manager":         frozenset({"public", "internal", "restricted"}),
+    "engineer":        frozenset({"public", "internal", "restricted"}),
+    "safety":          frozenset({"public", "internal", "restricted"}),
+    "admin":           frozenset({"public", "internal", "restricted"}),   # SEC-03 Phase 11
+    "auditor":         frozenset({"public", "internal", "restricted"}),   # SEC-03 Phase 11: read-only su tutti i livelli
 }
 
 

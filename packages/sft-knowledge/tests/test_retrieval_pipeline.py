@@ -73,6 +73,28 @@ def test_role_to_acl_locked_mapping() -> None:
     )
 
 
+def test_acl_filter_phase11_roles_resolve_without_error() -> None:
+    """CR-03: auditor, admin, shift-supervisor devono risolvere senza ValueError.
+
+    Prima del fix, questi ruoli JWT emessi dall'auth system non erano in
+    ROLE_TO_ACL → build_acl_filter lanciava ValueError → HTTP 500 per utenti legittimi.
+    """
+    # auditor: read-only su tutti i livelli (SEC-03, Phase 11)
+    flt_auditor = build_acl_filter(["auditor"])
+    cond_auditor = list(flt_auditor.must)
+    assert sorted(cond_auditor[0].match.any) == ["internal", "public", "restricted"]
+
+    # admin: accesso completo
+    flt_admin = build_acl_filter(["admin"])
+    cond_admin = list(flt_admin.must)
+    assert sorted(cond_admin[0].match.any) == ["internal", "public", "restricted"]
+
+    # shift-supervisor: ruolo canonico JWT (alias di supervisor)
+    flt_ss = build_acl_filter(["shift-supervisor"])
+    cond_ss = list(flt_ss.must)
+    assert sorted(cond_ss[0].match.any) == ["internal", "public"]
+
+
 # ===========================================================================
 # Test doubles for integration tests (CI CPU-only friendly)
 # ===========================================================================
