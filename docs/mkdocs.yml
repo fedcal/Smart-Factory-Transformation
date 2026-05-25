@@ -211,7 +211,13 @@ nav:
     - Panoramica: security/index.md
     - STRIDE Threat Model: security/stride-threat-model.md
     - OWASP LLM: security/owasp-llm.md
-  - ADR: adr/index.md
+  - ADR:
+    - Indice: adr/index.md
+    - ADR-001 LangGraph Supervisor: adr/ADR-001-langgraph-supervisor.md
+    - ADR-002 Qdrant BGE-M3: adr/ADR-002-qdrant-bge-m3.md
+    - ADR-003 Self-hosted LLM: adr/ADR-003-self-hosted-llm.md
+    - ADR-004 HITL Tiers: adr/ADR-004-hitl-tiers.md
+    - ADR-005 MkDocs i18n: adr/ADR-005-mkdocs-i18n.md
   - Trasformazione: transformation.md
   - Interfaccia Utente:
     - Mock UI: ui-mock.md
