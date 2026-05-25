@@ -23,6 +23,7 @@ Variabili d'ambiente:
 from __future__ import annotations
 
 import os
+import threading
 
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
@@ -30,6 +31,8 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # Modulo-level singleton guard — evita double-init e ProviderOverride warning.
+# _lock protegge la sezione critica check-then-act (thread-safe double-checked locking).
+_lock = threading.Lock()
 _initialized: bool = False
 _provider_instance: TracerProvider | None = None
 
@@ -51,34 +54,42 @@ def setup_tracer_provider(service_name: str) -> TracerProvider:
     """
     global _initialized, _provider_instance  # noqa: PLW0603
 
+    # Fast-path: controlla prima senza lock per evitare contention dopo la prima init.
     if _initialized and _provider_instance is not None:
         return _provider_instance
 
-    resolved_name = os.environ.get("OTEL_SERVICE_NAME", service_name)
-    endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT", _DEFAULT_ENDPOINT)
+    with _lock:
+        # Double-checked locking: ricontrolla dentro il lock per evitare race condition
+        # tra il fast-path e l'acquisizione del lock (GIL non protegge blocchi check-then-act).
+        if _initialized and _provider_instance is not None:
+            return _provider_instance
 
-    resource = Resource.create({"service.name": resolved_name})
-    provider = TracerProvider(resource=resource)
+        resolved_name = os.environ.get("OTEL_SERVICE_NAME", service_name)
+        endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT", _DEFAULT_ENDPOINT)
 
-    # Sceglie il protocollo in base all'endpoint: HTTP se path /v1/traces, gRPC altrimenti.
-    if endpoint.endswith("/v1/traces"):
-        from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
-            OTLPSpanExporter as OTLPHttpExporter,
-        )
+        resource = Resource.create({"service.name": resolved_name})
+        provider = TracerProvider(resource=resource)
 
-        exporter = OTLPHttpExporter(endpoint=endpoint)
-    else:
-        from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
-            OTLPSpanExporter as OTLPGrpcExporter,
-        )
+        # Sceglie il protocollo in base all'endpoint: HTTP se path /v1/traces, gRPC altrimenti.
+        if endpoint.endswith("/v1/traces"):
+            from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
+                OTLPSpanExporter as OTLPHttpExporter,
+            )
 
-        exporter = OTLPGrpcExporter(endpoint=endpoint, insecure=True)
+            exporter = OTLPHttpExporter(endpoint=endpoint)
+        else:
+            from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+                OTLPSpanExporter as OTLPGrpcExporter,
+            )
 
-    provider.add_span_processor(BatchSpanProcessor(exporter))
+            exporter = OTLPGrpcExporter(endpoint=endpoint, insecure=True)
 
-    # Registra il provider globale solo alla prima inizializzazione.
-    trace.set_tracer_provider(provider)
+        provider.add_span_processor(BatchSpanProcessor(exporter))
 
-    _initialized = True
-    _provider_instance = provider
+        # Registra il provider globale solo alla prima inizializzazione.
+        trace.set_tracer_provider(provider)
+
+        _initialized = True
+        _provider_instance = provider
+
     return provider
